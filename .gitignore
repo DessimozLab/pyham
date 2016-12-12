@@ -1,0 +1,8 @@
+build
+dist
+*/__pycache__
+familyanalyzer.egg-info
+*.pyc
+.ropeproject
+.idea
+.ipynb_checkpoints
