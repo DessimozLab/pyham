@@ -1,1 +1,2 @@
-from orthoxmlparser import *
+from . import parsers
+from . import abstractGene
