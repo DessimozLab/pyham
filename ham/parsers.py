@@ -2,19 +2,20 @@ from . import abstractGene
 
 
 class orthoxmlParser(object):
-    '''
+    """
     OrthoXML parser use to read the orthoxml file containing the hogs.
     It creates on the fly the gene mapping and the abstractGene.
-    '''
+    """
 
 
-    def __init__(self):
+    def __init__(self, taxonomy):
         self.current_species = None # target the species currently parse
         self.mapping_id = {}  # Map genes using unique ids (internal to orthoxml) with their external id and their species
         self.mapping_hog = {0:None} # tmp map a depth of an HOG with the last HOG visited at this level (usefull for paralogy).
         self.depth = 0 # current depth parsed
         self.genes = set() # set of all abstractGene.Gene create in this orthoxml
         self.hogs = set() # set of all abstractGene.HOG create in this orthoxml
+        self.map_taxon_node = taxonomy.map_name_taxa_node # map a taxon name with a ete3 node
         return
 
     def start(self, tag, attrib):
@@ -36,6 +37,7 @@ class orthoxmlParser(object):
             del mapping_info["id"]
             del mapping_info["species"]
             extant_gene.mapping = mapping_info
+            extant_gene.extant_genome =  self.map_taxon_node[extant_gene.species]
 
             self.mapping_hog[self.depth].children.append(extant_gene)
             self.genes.add(extant_gene)
@@ -59,6 +61,7 @@ class orthoxmlParser(object):
 
         elif tag == "{http://orthoXML.org/2011/}property":
             self.mapping_hog[self.depth].taxon = attrib["value"]
+            self.mapping_hog[self.depth].ancestral_genome =  self.map_taxon_node[attrib["value"]]
 
     def end(self, tag):
 

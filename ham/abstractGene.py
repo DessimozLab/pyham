@@ -1,6 +1,6 @@
 __author__ = 'admin'
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 
 class AbstractGene(metaclass=ABCMeta):
@@ -15,6 +15,7 @@ class HOG(AbstractGene):
         self.taxon = None
         self.depth = 0
         self.children = []
+        self.ancestral_genome = None
 
 
 class Gene(AbstractGene):
@@ -24,3 +25,4 @@ class Gene(AbstractGene):
         self.parent = None
         self.species = None
         self.mapping = {}
+        self.extant_genome = None
