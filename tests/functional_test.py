@@ -2,6 +2,7 @@ import unittest
 
 from ham import ham
 from ham import queries
+from ham import utils
 
 class SetUpHamAnalysis(unittest.TestCase):
 
@@ -10,9 +11,7 @@ class SetUpHamAnalysis(unittest.TestCase):
         # Clement select a nwk file as a taxonomy reference
         nwk_path = './tests/simpleEx.nwk'
         # And extract the newick tree as a string
-        nwk_file = open(nwk_path, 'r')
-        tree_str = nwk_file.read()
-        nwk_file.close()
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
 
         # Then he build the taxonomy objects induced by the newick tree.
         taxonomy = ham.build_taxonomy_and_ancestral_genomes(tree_str)
