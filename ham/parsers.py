@@ -8,6 +8,7 @@ class orthoxmlParser(object):
         self.mapping_id = {}
         self.mapping_hog = {0:None}
         self.depth = 0
+        self.cpt = 0
         return
 
     def start(self, tag, attrib):
@@ -20,6 +21,7 @@ class orthoxmlParser(object):
 
         elif tag == "{http://orthoXML.org/2011/}species":
             self.current_species = attrib["name"]
+            print("start parsing:", attrib["name"])
 
         elif tag == "{http://orthoXML.org/2011/}database":
             pass
@@ -69,6 +71,9 @@ class orthoxmlParser(object):
             self.depth += -1
             if self.depth == 0:
                 self.mapping_hog = {0:None}
+                self.cpt += 1
+                if self.cpt % 1000 == 0:
+                    print("Already " + str(self.cpt) + " HOGs parsed")
         pass
 
     def data(self, data):

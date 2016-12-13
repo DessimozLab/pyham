@@ -4,8 +4,8 @@ from abc import ABCMeta
 from xml.etree.ElementTree import XMLParser
 from . import parsers
 
-class AbstractGene(metaclass=ABCMeta):
 
+class AbstractGene(metaclass=ABCMeta):
     @classmethod
     def create_abstract_gene_from_orthoxml(cls, orthoxml):
         target = parsers.orthoxmlParser()
@@ -16,7 +16,6 @@ class AbstractGene(metaclass=ABCMeta):
 
 
 class HOG(AbstractGene):
-
     instances = []
 
     def __init__(self):
@@ -29,7 +28,6 @@ class HOG(AbstractGene):
 
 
 class Gene(AbstractGene):
-
     instances = []
 
     def __init__(self):

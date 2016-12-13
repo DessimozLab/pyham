@@ -31,5 +31,5 @@ setup(
          'Programming Language :: Python :: 3.6',
          ],
     packages=find_packages(),
-    install_requires=['lxml'],
+    install_requires=['ete3','six','scipy'],
 )
