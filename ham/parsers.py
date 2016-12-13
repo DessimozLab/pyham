@@ -3,33 +3,26 @@ from . import abstractGene
 
 class orthoxmlParser(object):
 
+
+
     def __init__(self):
         self.current_species = None
         self.mapping_id = {}
         self.mapping_hog = {0:None}
         self.depth = 0
         self.cpt = 0
+        self.genes = set()
+        self.hogs = set()
         return
 
     def start(self, tag, attrib):
 
-        if tag == "{http://orthoXML.org/2011/}orthoXML":
-            pass
-
-        elif tag == "{http://orthoXML.org/2011/}notes":
-            pass
-
-        elif tag == "{http://orthoXML.org/2011/}species":
+        if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = attrib["name"]
-            print("start parsing:", attrib["name"])
-
-        elif tag == "{http://orthoXML.org/2011/}database":
-            pass
 
         elif tag == "{http://orthoXML.org/2011/}gene":
             self.mapping_id[attrib["id"]] = attrib
             self.mapping_id[attrib["id"]]["species"] = self.current_species
-
 
         elif tag == "{http://orthoXML.org/2011/}groups":
             self.current_species = None
@@ -37,7 +30,6 @@ class orthoxmlParser(object):
         elif tag == "{http://orthoXML.org/2011/}geneRef":
 
             extant_gene = abstractGene.Gene()
-
             info = self.mapping_id[attrib["id"]]
             extant_gene.unique_id = info["id"]
             extant_gene.species = info["species"]
@@ -45,6 +37,7 @@ class orthoxmlParser(object):
             del info["species"]
             extant_gene.mapping = info
             self.mapping_hog[self.depth].children.append(extant_gene)
+            self.genes.add(extant_gene)
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
 
@@ -57,7 +50,7 @@ class orthoxmlParser(object):
             if current_hog.parent != None:
                 current_hog.parent.children.append(current_hog)
             self.mapping_hog[self.depth] = current_hog
-
+            self.hogs.add(current_hog)
 
         elif tag == "{http://orthoXML.org/2011/}property":
             self.mapping_hog[self.depth].taxon = attrib["value"]
@@ -71,9 +64,6 @@ class orthoxmlParser(object):
             self.depth += -1
             if self.depth == 0:
                 self.mapping_hog = {0:None}
-                self.cpt += 1
-                if self.cpt % 1000 == 0:
-                    print("Already " + str(self.cpt) + " HOGs parsed")
         pass
 
     def data(self, data):
