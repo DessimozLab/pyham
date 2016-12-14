@@ -1,6 +1,6 @@
 from .parsers import *
 from .ham import *
-from .abstractGene import *
+from .abstractgene import *
 from .taxonomy import *
 from .genome import *
 from .queries import *

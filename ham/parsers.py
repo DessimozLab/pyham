@@ -1,4 +1,4 @@
-from . import abstractGene
+from . import abstractgene
 from . import genome
 
 
@@ -23,7 +23,7 @@ class OrthoXMLParser(object):
             self.current_species = genome.ExtantGenome(**attrib)
 
         elif tag == "{http://orthoXML.org/2011/}gene":
-            gene = abstractGene.Gene(**attrib)
+            gene = abstractgene.Gene(**attrib)
             self.current_species.add_gene(gene)
             self.extant_gene_map[gene.unique_id] = gene
 
@@ -32,7 +32,7 @@ class OrthoXMLParser(object):
             self.hog_stack[-1].add_child(gene)
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
-            hog = abstractGene.HOG(**attrib)
+            hog = abstractgene.HOG(**attrib)
             if len(self.hog_stack) > 0:
                 self.hog_stack[-1].add_child(hog)
             self.hog_stack.append(hog)

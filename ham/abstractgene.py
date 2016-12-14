@@ -27,6 +27,8 @@ class HOG(AbstractGene):
             raise TypeError("expect subclass obj of '{}', got {}"
                             .format(AbstractGene.__name__,
                                     type(elem).__name__))
+        if self == elem:
+            raise EvolutionaryConceptError('Cannot be a child of itself')
         self.children.append(elem)
         elem.parent = self
 
@@ -39,6 +41,9 @@ class HOG(AbstractGene):
             self.taxon = set([])
         self.taxon.add(tax)
 
+    def __repr__(self):
+        return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
+
 
 class Gene(AbstractGene):
     def __init__(self, id, geneId=None, protId=None, transcriptId=None, **kwargs):
@@ -50,7 +55,12 @@ class Gene(AbstractGene):
 
     def set_taxon_range(self, tax):
         if self.taxon is not None and tax != self.taxon:
-            raise KeyError("Gene can only belong to one genome")
+            raise EvolutionaryConceptError("Gene can only belong to one genome")
         self.taxon = tax
 
+    def __repr__(self):
+        return "{}({}{})".format(self.__class__.__name__, self.unique_id)
 
+
+class EvolutionaryConceptError(Exception):
+    pass
