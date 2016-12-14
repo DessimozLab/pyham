@@ -19,9 +19,6 @@ class OrthoXMLParserTest(unittest.TestCase):
         self.hogs = factory.toplevel_hogs
         self.genes = factory.extant_gene_map
 
-    def test_nrOfToplevelFamilies(self):
-        self.assertEqual(len(self.hogs), 3)
-
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=4, PANTR=4, MOUSE=4, RATNO=2,
                             CANFA=3, XENTR=2)

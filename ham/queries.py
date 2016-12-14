@@ -15,12 +15,3 @@ def get_ancestral_genomes(taxonomy):
     """
     return set(internal_node.genome for internal_node in taxonomy.internal_nodes)
 
-
-def get_top_level_hogs(hogs):
-    """
-    return all the top level rooted hogs from set of hogs
-    :param hogs: set of abstract.HOG
-    :return: set of top level rooted hogs
-    """
-    return set(hog for hog in hogs if hog.depth == 1)
-
