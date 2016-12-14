@@ -4,6 +4,7 @@ from ham import ham
 from ham import queries
 from ham import utils
 
+
 class SetUpHamAnalysis(unittest.TestCase):
 
     def test_load_taxonomy_from_nwk_file_and_all_hogs_from_orthoxml_file_no_filter(self):
@@ -16,9 +17,11 @@ class SetUpHamAnalysis(unittest.TestCase):
         # Then he build the taxonomy objects induced by the newick tree.
         taxonomy = ham.build_taxonomy_and_ancestral_genomes(tree_str)
         # And verifying if all tree elements are created
-        self.assertEqual(taxonomy.newick_str, "(XENTR, (((HUMAN, PANTR)Primates, (MOUSE, RATNO)Rodents)Euarchontoglires, CANFA)Mammalia)Vertebrata;")
-        self.assertEqual(len(taxonomy.internal_nodes), 5 )
-        self.assertEqual(len(taxonomy.leaves), 6 )
+        self.assertEqual(taxonomy.newick_str,
+                         "(XENTR, (((HUMAN, PANTR)Primates, (MOUSE, RATNO)Rodents)Euarchontoglires, "
+                         "CANFA)Mammalia)Vertebrata;")
+        self.assertEqual(len(taxonomy.internal_nodes), 5)
+        self.assertEqual(len(taxonomy.leaves), 6)
 
         # Clement is curious to look at the species present within this taxonomy
         extant_genomes = queries.get_extant_genomes(taxonomy)
@@ -30,19 +33,18 @@ class SetUpHamAnalysis(unittest.TestCase):
         ancestral_genomes = queries.get_ancestral_genomes(taxonomy)
         # And inspect if they are all present
         ancestral_genomes_name = set(anc_genome.taxon.name for anc_genome in ancestral_genomes)
-        self.assertEqual(ancestral_genomes_name, {'Vertebrata', 'Primates', 'Mammalia', 'Rodents', 'Euarchontoglires'})
+        self.assertEqual(ancestral_genomes_name,
+                         {'Vertebrata', 'Primates', 'Mammalia', 'Rodents', 'Euarchontoglires'})
 
         # then clement select his favorite orthoXML file
         orthoxml_path = './tests/simpleEx.orthoxml'
-        orthoxml_file = open(orthoxml_path, 'r')
+        with open(orthoxml_path, 'r') as orthoxml_file:
+            # And build the Abstract_gene objects from file object
+            top_hogs, genes = ham.build_hogs_and_genes(orthoxml_file)
 
-        # And build the Abstract_gene objects from file object
-        hogs, genes = ham.build_hogs_and_genes(orthoxml_file)
-        orthoxml_file.close()
         # After he get all the top level hogs
-        top_hogs = queries.get_top_level_hogs(hogs)
-        self.assertEqual(len(top_hogs),3 )
-        self.assertEqual(len(genes),17 )
+        self.assertEqual(len(top_hogs), 3)
+        self.assertEqual(len(genes), 19)
 
         # To finish, he resolve taxonomy problem that can occured
         # due to incomplete lineage name within hogs hierarchy

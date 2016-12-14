@@ -18,7 +18,8 @@ def build_taxonomy_and_ancestral_genomes(newick_str):
 
     for node in taxonomy.tree.traverse("postorder"):
         if node.is_leaf():
-            leaf_genome = genome.ExtantGenome()
+            # TODO: this is not a good way. we should map here the hierarchy we built when parsing the file in my view
+            leaf_genome = genome.ExtantGenome('id', 'name')
             leaf_genome.taxon = node
             node.genome = leaf_genome
             taxonomy.leaves.add(node)
@@ -39,13 +40,13 @@ def build_hogs_and_genes(file_object):
     :return: a set of AbstractGene.HOG and a set of  AbstractGene.Gene
     '''
 
-    factory = parsers.orthoxmlParser()
+    factory = parsers.OrthoXMLParser()
     parser = XMLParser(target=factory)
 
     for line in file_object:
         parser.feed(line)
 
-    return factory.hogs, factory.genes
+    return factory.toplevel_hogs, factory.extant_gene_map
 
 
 def resolve_taxonomy_and_hogs():
