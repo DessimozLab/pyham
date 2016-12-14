@@ -3,12 +3,13 @@ from . import genome
 
 
 class OrthoXMLParser(object):
-    '''
+    """
+
     OrthoXML parser use to read the orthoxml file containing the hogs.
     It creates on the fly the gene mapping and the abstractGene.
-    '''
+    """
 
-    def __init__(self, hog_filter=None):
+    def __init__(self, taxonomy=None, hog_filter=None):
         self.extant_gene_map = {}
         self.current_species = None # target the species currently parse
         self.hog_stack = []
@@ -16,6 +17,7 @@ class OrthoXMLParser(object):
         if hog_filter is None:
             hog_filter = lambda x: x
         self.filter = hog_filter
+        self.map_taxon_node = taxonomy.map_name_taxa_node
 
     def start(self, tag, attrib):
 

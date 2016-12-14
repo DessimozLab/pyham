@@ -12,6 +12,7 @@ def build_taxonomy_and_ancestral_genomes(newick_str):
     :return : a Taxonomy object
     '''
 
+
     taxonomy = tax.Taxonomy()
     taxonomy.newick_str = newick_str
     taxonomy.tree = ete3.Tree(taxonomy.newick_str, format=1)
@@ -23,24 +24,27 @@ def build_taxonomy_and_ancestral_genomes(newick_str):
             leaf_genome.taxon = node
             node.genome = leaf_genome
             taxonomy.leaves.add(node)
+            taxonomy.map_name_taxa_node[node.name] = node
 
         else:
             internal_genome = genome.AncestralGenome()
             internal_genome.taxon = node
             node.genome = internal_genome
             taxonomy.internal_nodes.add(node)
+            taxonomy.map_name_taxa_node[node.name] = node
 
     return taxonomy
 
 
-def build_hogs_and_genes(file_object):
+def build_hogs_and_genes(file_object, taxonomy=None):
     '''
     build AbstractGene.HOG and AbstractGene.Gene using a given orthoXML file object
     :param file_object: orthoXML file object
+    :param taxonomy: Taxonomy object used to map taxon with ete3 node
     :return: a set of AbstractGene.HOG and a set of  AbstractGene.Gene
     '''
 
-    factory = parsers.OrthoXMLParser()
+    factory = parsers.OrthoXMLParser(taxonomy)
     parser = XMLParser(target=factory)
 
     for line in file_object:
@@ -50,4 +54,8 @@ def build_hogs_and_genes(file_object):
 
 
 def resolve_taxonomy_and_hogs():
+    '''
+    Map taxonomic range not covered by hog to their most closely related younger hog.
+    :return:
+    '''
     pass

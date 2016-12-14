@@ -1,6 +1,6 @@
 __author__ = 'admin'
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 
 class Genome(metaclass=ABCMeta):

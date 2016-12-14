@@ -9,6 +9,7 @@ class SetUpHamAnalysis(unittest.TestCase):
 
     def test_load_taxonomy_from_nwk_file_and_all_hogs_from_orthoxml_file_no_filter(self):
 
+
         # Clement select a nwk file as a taxonomy reference
         nwk_path = './tests/simpleEx.nwk'
         # And extract the newick tree as a string
@@ -40,7 +41,7 @@ class SetUpHamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/simpleEx.orthoxml'
         with open(orthoxml_path, 'r') as orthoxml_file:
             # And build the Abstract_gene objects from file object
-            top_hogs, genes = ham.build_hogs_and_genes(orthoxml_file)
+            top_hogs, genes = ham.build_hogs_and_genes(orthoxml_file, taxonomy)
 
         # After he get all the top level hogs
         self.assertEqual(len(top_hogs), 3)
@@ -48,7 +49,7 @@ class SetUpHamAnalysis(unittest.TestCase):
 
         # To finish, he resolve taxonomy problem that can occured
         # due to incomplete lineage name within hogs hierarchy
-        ham.resolve_taxonomy_and_hogs()
+        ham.resolve_taxonomy_and_hogs() # TODO
 
 
 if __name__ == "__main__":
