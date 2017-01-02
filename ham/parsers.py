@@ -42,6 +42,9 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}property" and attrib['name'] == "TaxRange":
             self.hog_stack[-1].set_taxon_range(attrib["value"])
 
+        elif tag == "{http://orthoXML.org/2011/}score":
+            self.hog_stack[-1].score(attrib['id'], float(attrib['value']))
+
     def end(self, tag):
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = None

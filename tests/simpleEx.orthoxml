@@ -58,16 +58,25 @@ Example Notes without meaning
    </genes>
   </database>
  </species>
+ <scores>
+  <scoreDef id="consistency" desc="A consistency based score, just an example"/>
+  <scoreDef id="coverage" desc="yet another example score"/>
+ </scores>
  <groups>
   <orthologGroup id="1">
+   <score id="consistency" value="1.0"/>
    <property name="TaxRange" value="Vertebrata"/>
    <geneRef id="51"/>
    <orthologGroup >
+    <score id="coverage" value="0.84"/>
+    <score id="consistency" value="0.932"/>
     <property name="TaxRange" value="Mammalia"/>
     <geneRef id="21"/>
     <orthologGroup >
-    <property name="TaxRange" value="Euarchontoglires" />
+     <score id="consistency" value="1.0"/>
+     <property name="TaxRange" value="Euarchontoglires" />
      <orthologGroup >
+      <score id="coverage" value="1.0"/>
       <property name="TaxRange" value="Primates"/>
       <geneRef id="1" />
       <geneRef id="11" />
@@ -112,6 +121,7 @@ Example Notes without meaning
       </orthologGroup>
      </orthologGroup>
      <orthologGroup >
+      <score id="coverage" value="0.3"/>
       <property name="TaxRange" value="Euarchontoglires" />
       <geneRef id="34" />
       <geneRef id="14" />

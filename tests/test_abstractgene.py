@@ -44,3 +44,13 @@ class HogTest(unittest.TestCase):
     def test_represenation_of_Hog(self):
         a = HOG(id="441.2a", bla="don't know")
         self.assertEqual("{!r}".format(a), "<HOG(441.2a)>")
+
+    def test_add_score(self):
+        a = HOG()
+        a.score('testscore', 0.932)
+        self.assertAlmostEqual(a.score('testscore'), 0.932)
+
+    def test_unknown_score_raises_keyerror(self):
+        a = HOG()
+        with self.assertRaises(KeyError):
+            a.score('testscore')

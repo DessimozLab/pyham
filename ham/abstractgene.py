@@ -1,6 +1,7 @@
 __author__ = 'admin'
 
 from abc import ABCMeta, abstractmethod
+import numbers
 
 
 class AbstractGene(metaclass=ABCMeta):
@@ -19,7 +20,6 @@ class HOG(AbstractGene):
     def __init__(self, id=None, **kwargs):
         super(HOG, self).__init__()
         self.hog_id = id
-        self.depth = 0
         self.children = []
 
     def add_child(self, elem):
@@ -34,6 +34,27 @@ class HOG(AbstractGene):
 
     def append(self, elem):
         self.add_child(elem)
+
+    def score(self, score_id, value=None):
+        """get or set a score attribute for this HOG.
+
+        If no value is passed, the stored value is returned or a KeyError is raised
+        if this score has not been stored.
+
+        :param score_id: score to be set or returned.
+        :param value: (optional) A numeric value for the score of this HOG.
+        :raises KeyError: if score_id is unknown and accessed."""
+        if value is None:
+            try:
+                return self.scores[score_id]
+            except (AttributeError, KeyError):
+                raise KeyError("Score '{}' not set".format(score_id))
+
+        if not isinstance(value, numbers.Number):
+            raise ValueError("value must be numeric")
+        scores = getattr(self, 'scores', {})
+        scores[score_id] = value
+        self.scores = scores
 
     def set_taxon_range(self, tax):
         """A HOG can potentially belong to several taxonomic ranges"""

@@ -27,6 +27,13 @@ class OrthoXMLParserTest(unittest.TestCase):
             observed_cnts[g.taxon.name] += 1
         self.assertDictEqual(observed_cnts, expected_cnts)
 
+    def test_scores_on_toplevel(self):
+        self.assertEqual(self.hogs["1"].score('consistency'), 1)
+        with self.assertRaises(KeyError):
+            self.hogs["2"].score('consistency')
+        with self.assertRaises(KeyError):
+            self.hogs["1"].score('coverage')
+
 
 if __name__ == "__main__":
     unittest.main()
