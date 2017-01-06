@@ -5,7 +5,7 @@ from . import genome
 from ham import parsers
 
 
-def build_taxonomy_and_ancestral_genomes(newick_str):
+def build_taxonomy(newick_str):
     '''
     Take newick tree string as reference to build Taxonomy object and AncestralGenome objects
     :param newick_str: string containing a newick tree
@@ -16,6 +16,8 @@ def build_taxonomy_and_ancestral_genomes(newick_str):
     taxonomy = tax.Taxonomy()
     taxonomy.newick_str = newick_str
     taxonomy.tree = ete3.Tree(taxonomy.newick_str, format=1)
+
+    '''
 
     for node in taxonomy.tree.traverse("postorder"):
         if node.is_leaf():
@@ -33,7 +35,11 @@ def build_taxonomy_and_ancestral_genomes(newick_str):
             taxonomy.internal_nodes.add(node)
             taxonomy.map_name_taxa_node[node.name] = node
 
+    '''
+
     return taxonomy
+
+
 
 
 def build_hogs_and_genes(file_object, taxonomy=None):

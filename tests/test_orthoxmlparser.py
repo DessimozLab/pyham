@@ -9,7 +9,7 @@ from ham import utils
 class OrthoXMLParserTest(unittest.TestCase):
 
     def setUp(self):
-        taxonomy = ham.build_taxonomy_and_ancestral_genomes(utils.get_newick_string('./tests/simpleEx.nwk', type="nwk"))
+        taxonomy = ham.build_taxonomy(utils.get_newick_string('./tests/simpleEx.nwk', type="nwk"))
         factory = parsers.OrthoXMLParser(taxonomy)
         parser = XMLParser(target=factory)
         with open('./tests/simpleEx.orthoxml', 'r') as orthoxml_file:

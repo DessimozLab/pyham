@@ -16,6 +16,7 @@ class Genome(metaclass=ABCMeta):
 class AncestralGenome(Genome):
 
     def __init__(self):
+        super(AncestralGenome, self).__init__()
         self.parent = None
         self.children = []
 

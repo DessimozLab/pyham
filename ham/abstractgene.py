@@ -80,7 +80,7 @@ class Gene(AbstractGene):
         self.taxon = tax
 
     def __repr__(self):
-        return "{}({}{})".format(self.__class__.__name__, self.unique_id)
+        return "{}({})".format(self.__class__.__name__, self.unique_id)
 
 
 class EvolutionaryConceptError(Exception):
