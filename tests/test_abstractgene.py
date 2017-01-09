@@ -10,11 +10,11 @@ class GeneTest(unittest.TestCase):
 
     def test_cannot_add_multiple_taxon_ranges(self):
         g = Gene(id="423")
-        g.set_taxon_range("test")
+        g.set_genome("test")
         with self.assertRaises(EvolutionaryConceptError):
-            g.set_taxon_range("bla")
+            g.set_genome("bla")
         # but same twice should be ok
-        g.set_taxon_range("test")
+        g.set_genome("test")
 
 
 class HogTest(unittest.TestCase):
@@ -38,8 +38,8 @@ class HogTest(unittest.TestCase):
         a = HOG()
         taxranges = ("Primates", "Mammalia")
         for tax in taxranges:
-            a.set_taxon_range(tax)
-        self.assertEqual(set(taxranges), a.taxon)
+            a.set_genome(tax)
+        self.assertEqual(set(taxranges), a.genome)
 
     def test_represenation_of_Hog(self):
         a = HOG(id="441.2a", bla="don't know")

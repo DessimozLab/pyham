@@ -4,7 +4,8 @@ from ham import parsers
 from xml.etree.ElementTree import XMLParser
 from ham import ham
 from ham import utils
-
+import logging
+logger = logging.getLogger(__name__)
 
 class OrthoXMLParserTest(unittest.TestCase):
 
@@ -18,6 +19,7 @@ class OrthoXMLParserTest(unittest.TestCase):
 
         self.hogs = factory.toplevel_hogs
         self.genes = factory.extant_gene_map
+        logger.debug("setup up dinfis")
 
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=4, PANTR=4, MOUSE=4, RATNO=2,

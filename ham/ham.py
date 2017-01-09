@@ -3,52 +3,19 @@ import ete3
 from . import taxonomy as tax
 from . import genome
 from ham import parsers
+import logging
+import sys
+
+logger = logging.getLogger(__name__)
 
 
-def build_taxonomy(newick_str):
-    '''
-    Take newick tree string as reference to build Taxonomy object and AncestralGenome objects
-    :param newick_str: string containing a newick tree
-    :return : a Taxonomy object
-    '''
-
-
-    taxonomy = tax.Taxonomy()
-    taxonomy.newick_str = newick_str
-    taxonomy.tree = ete3.Tree(taxonomy.newick_str, format=1)
-
-    '''
-
-    for node in taxonomy.tree.traverse("postorder"):
-        if node.is_leaf():
-            # TODO: this is not a good way. we should map here the hierarchy we built when parsing the file in my view
-            leaf_genome = genome.ExtantGenome('id', 'name')
-            leaf_genome.taxon = node
-            node.genome = leaf_genome
-            taxonomy.leaves.add(node)
-            taxonomy.map_name_taxa_node[node.name] = node
-
-        else:
-            internal_genome = genome.AncestralGenome()
-            internal_genome.taxon = node
-            node.genome = internal_genome
-            taxonomy.internal_nodes.add(node)
-            taxonomy.map_name_taxa_node[node.name] = node
-
-    '''
-
-    return taxonomy
-
-
-
-
-def build_hogs_and_genes(file_object, taxonomy=None):
-    '''
+def _build_hogs_and_genes(file_object, taxonomy=None):
+    """
     build AbstractGene.HOG and AbstractGene.Gene using a given orthoXML file object
     :param file_object: orthoXML file object
     :param taxonomy: Taxonomy object used to map taxon with ete3 node
     :return: a set of AbstractGene.HOG and a set of  AbstractGene.Gene
-    '''
+    """
 
     factory = parsers.OrthoXMLParser(taxonomy)
     parser = XMLParser(target=factory)
@@ -59,9 +26,91 @@ def build_hogs_and_genes(file_object, taxonomy=None):
     return factory.toplevel_hogs, factory.extant_gene_map
 
 
-def resolve_taxonomy_and_hogs():
-    '''
-    Map taxonomic range not covered by hog to their most closely related younger hog.
-    :return:
-    '''
-    pass
+class HAM(object):
+    def __init__(self, newick_str=None, hog_file=None, type="orthoxml"):
+
+        if newick_str is None or hog_file is None:
+            logger.debug('newick_str: {}, hogs_file: {}'.format(newick_str, hog_file))
+            sys.exit('Both newick string or hogs file are required to create HAM object')
+
+        self.newick_str = newick_str
+        self.hog_file = hog_file
+        self.hog_file_type = type
+
+        self.taxonomy = tax.Taxonomy(self.newick_str)
+        logger.info('Build taxonomy: completed.'.format(self.newick_str))
+
+        if type == "orthoxml":
+            with open(self.hog_file, 'r') as orthoxml_file:
+                self.toplevel_hogs, self.extant_gene_map = _build_hogs_and_genes(orthoxml_file, self)
+            logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.toplevel_hogs),
+                                                                                                len(
+                                                                                                    self.extant_gene_map)))
+
+        elif type == "hdf5":
+            # Looping through all orthoXML within the hdf5
+            #   for each run self.build_...
+            #       update self.toplevel_hogs and self.extant_gene_map for each
+            pass
+
+        logger.info(
+            'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),
+                                                                                              len(
+                                                                                                  self.taxonomy.leaves)))
+
+    def get_extant_genomes(self):
+        """
+        return all Genome.ExtantGenome attach to a leaf within a taxonomy object
+        :param taxonomy: taxonomy.Taxonomy
+        :return: set of Genome.ExtantGenome
+        """
+        return set(leaf.genome for leaf in self.taxonomy.leaves)
+
+    def get_ancestral_genomes(self):
+        """
+        return all Genome.AncestralGenome attach to an internal node within a taxonomy object
+        :param taxonomy: taxonomy.Taxonomy
+        :return: set of Genome.AncestralGenome
+        """
+        return set(internal_node.genome for internal_node in self.taxonomy.internal_nodes)
+
+    def get_extant_genome_by_name(self,**kwargs):
+
+        nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
+
+        if len(nodes_founded) == 1:
+            if "genome" in nodes_founded[0].features:
+                return nodes_founded[0].genome
+
+            else:
+                extant_genome = genome.ExtantGenome(**kwargs)
+                self.taxonomy.add_extant_genome_to_node(nodes_founded[0], extant_genome)
+                return extant_genome
+        else:
+            sys.exit('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
+
+    def get_mrca_ancestral_genome_using_hog_children(self, hog):
+
+            children_genomes = set()
+            children_nodes = set()
+
+            for child in hog.children:
+                if isinstance(child.genome, genome.ExtantGenome):
+                    children_genomes.add(child.genome)
+                elif isinstance(child.genome, set):
+                    children_genomes.update(child.genome)
+
+            for e in children_genomes:
+                children_nodes.add(e.taxon)
+
+            source = children_nodes.pop()
+            common = source.get_common_ancestor(children_nodes)
+
+            if "genome" in common.features:
+                return common.genome
+
+            else:
+                ancestral_genome = genome.AncestralGenome()
+                self.taxonomy.add_ancestral_genome_to_node(common, ancestral_genome)
+
+                return ancestral_genome

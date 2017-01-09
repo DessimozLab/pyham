@@ -7,12 +7,23 @@ import numbers
 class AbstractGene(metaclass=ABCMeta):
     def __init__(self):
         self.parent = None
-        self.taxon = None
+        self.genome = None
 
     @abstractmethod
-    def set_taxon_range(self, tax):
-        """Set the taxonomic range"""
+    def set_genome(self, tax):
+        """Set the genome"""
         pass
+
+    @abstractmethod
+    def get_oldest_genome(self):
+        """Set the genome"""
+        pass
+
+    @abstractmethod
+    def get_newest_genome(self):
+        """Set the genome"""
+        pass
+
 
 
 class HOG(AbstractGene):
@@ -56,11 +67,29 @@ class HOG(AbstractGene):
         scores[score_id] = value
         self.scores = scores
 
-    def set_taxon_range(self, tax):
+    def set_genome(self, tax):
         """A HOG can potentially belong to several taxonomic ranges"""
-        if self.taxon is None:
-            self.taxon = set([])
-        self.taxon.add(tax)
+        if self.genome is None:
+            self.genome = set([])
+        self.genome.add(tax)
+
+    def get_oldest_genome(self):
+        maxd = 0
+        g = None
+        for genome in self.genome:
+            if genome.taxon.depth > maxd:
+                maxd == genome.taxon.depth
+                g = genome
+        return g
+
+    def get_newest_genome(self):
+        mind = 1000000
+        g = None
+        for genome in self.genome:
+            if genome.taxon.depth < mind:
+                mind == genome.taxon.depth
+                g = genome
+        return g
 
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
@@ -74,10 +103,16 @@ class Gene(AbstractGene):
         self.prot_id = protId
         self.transcript_id = transcriptId
 
-    def set_taxon_range(self, tax):
-        if self.taxon is not None and tax != self.taxon:
+    def set_genome(self, tax):
+        if self.genome is not None and tax != self.genome:
             raise EvolutionaryConceptError("Gene can only belong to one genome")
-        self.taxon = tax
+        self.genome = tax
+
+    def get_oldest_genome(self):
+        return self.genome
+
+    def get_newest_genome(self):
+        return self.genome
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)

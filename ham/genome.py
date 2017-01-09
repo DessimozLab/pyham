@@ -10,7 +10,8 @@ class Genome(metaclass=ABCMeta):
 
     def add_gene(self, gene):
         self.genes.append(gene)
-        gene.set_taxon_range(self)
+        gene.set_genome(self)
+
 
 
 class AncestralGenome(Genome):

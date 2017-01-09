@@ -1,6 +1,7 @@
 from . import abstractgene
 from . import genome
-
+import logging
+logger = logging.getLogger(__name__)
 
 class OrthoXMLParser(object):
     """
@@ -9,36 +10,25 @@ class OrthoXMLParser(object):
     It creates on the fly the gene mapping and the abstractGene.
     """
 
-    def __init__(self, taxonomy, hog_filter=None):
+    def __init__(self, ham_object, hog_filter=None):
         self.extant_gene_map = {}
-        self.current_species = None # target the species currently parse
+        self.current_species = None  # target the species currently parse
         self.hog_stack = []
         self.toplevel_hogs = {}
         if hog_filter is None:
             hog_filter = lambda x: x
         self.filter = hog_filter
-        #self.map_taxon_node = taxonomy.map_name_taxa_node
-        self.taxonomy = taxonomy
+        self.ham_object = ham_object
 
     def start(self, tag, attrib):
 
         if tag == "{http://orthoXML.org/2011/}species":
-            nodes_founded = self.taxonomy.tree.search_nodes(name=attrib['name'])
 
-            if len(nodes_founded) == 1:
-                if "genome" in nodes_founded[0].features:
-                    self.current_species = nodes_founded[0].genome
-
-                else:
-                    self.current_species = genome.ExtantGenome(**attrib)
-                    nodes_founded[0].add_feature("genome", self.current_species)
-                    self.taxonomy.leaves.add(nodes_founded[0])
-                    self.current_species.taxon = nodes_founded[0]
-            else:
-                print('{} node(s) founded for the species name: {}'.format(len(nodes_founded), self.current_species.name))
+            self.current_species = self.ham_object.get_extant_genome_by_name(**attrib)
 
         elif tag == "{http://orthoXML.org/2011/}gene":
             gene = abstractgene.Gene(**attrib)
+            gene.set_genome(self.current_species)
             self.current_species.add_gene(gene)
             self.extant_gene_map[gene.unique_id] = gene
 
@@ -53,7 +43,7 @@ class OrthoXMLParser(object):
             self.hog_stack.append(hog)
 
         elif tag == "{http://orthoXML.org/2011/}property" and attrib['name'] == "TaxRange":
-            #self.hog_stack[-1].set_taxon_range(attrib["value"])
+            #self.hog_stack[-1].set_genome(attrib["value"])
             pass
 
         elif tag == "{http://orthoXML.org/2011/}score":
@@ -63,41 +53,20 @@ class OrthoXMLParser(object):
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = None
 
+
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             hog = self.hog_stack.pop()
 
-            ## Find the taxonomic range based on the MRCA of all the children nodes
+            ancestral_genome = self.ham_object.get_mrca_ancestral_genome_using_hog_children(hog)
+            hog.set_genome(ancestral_genome)
+            ancestral_genome.taxon.genome.add_gene(hog)
 
-            children_genomes = set()
-            children_nodes = set()
-
-            print(hog, hog.children)
-
+            newest_g = hog.get_newest_genome()
             for child in hog.children:
-                if isinstance(child.taxon, genome.ExtantGenome):
-                    children_genomes.add(child.taxon)
-                elif isinstance(child.taxon, set):
-                    children_genomes.update(child.taxon)
+                oldest_g = child.get_oldest_genome()
 
-            for e in children_genomes:
-                children_nodes.add(e.taxon)
-
-            source = children_nodes.pop()
-            common = source.get_common_ancestor(children_nodes)
-
-            if "genome" in common.features:
-                hog.set_taxon_range(common.genome)
-                common.genome.add_gene(hog)
-
-            else:
-                ancestral_genome = genome.AncestralGenome()
-                ancestral_genome.taxon = common
-                self.taxonomy.internal_nodes.add(common)
-                common.add_feature("genome", ancestral_genome)
-                hog.set_taxon_range(ancestral_genome)
-                ancestral_genome.add_gene(hog)
-
-            ## End
+                #print(newest_g.taxon.depth)
+                #print(oldest_g.taxon.depth)
 
             if len(self.hog_stack) == 0:
                 filter_res = self.filter(hog)
