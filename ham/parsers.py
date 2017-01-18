@@ -32,6 +32,7 @@ class OrthoXMLParser(object):
             self.current_species.add_gene(gene)
             self.extant_gene_map[gene.unique_id] = gene
 
+
         elif tag == "{http://orthoXML.org/2011/}geneRef":
             gene = self.extant_gene_map[attrib['id']]
             self.hog_stack[-1].add_child(gene)
@@ -61,12 +62,15 @@ class OrthoXMLParser(object):
             hog.set_genome(ancestral_genome)
             ancestral_genome.taxon.genome.add_gene(hog)
 
-            newest_g = hog.get_newest_genome()
+            hog_genome = hog.genome
+            change = {}
             for child in hog.children:
-                oldest_g = child.get_oldest_genome()
+                child_genome = child.genome
+                if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
+                    change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
-                #print(newest_g.taxon.depth)
-                #print(oldest_g.taxon.depth)
+            for hog_child, missing in change.items():
+                self.ham_object.add_missing_taxon(hog_child,hog,missing)
 
             if len(self.hog_stack) == 0:
                 filter_res = self.filter(hog)

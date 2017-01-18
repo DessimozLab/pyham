@@ -5,6 +5,7 @@ from . import genome
 from ham import parsers
 import logging
 import sys
+from . import abstractgene
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,17 @@ class HAM(object):
         """
         return set(internal_node.genome for internal_node in self.taxonomy.internal_nodes)
 
+    def get_ancestral_genome(self, tax_node):
+
+        if "genome" in tax_node.features:
+                return tax_node.genome
+
+        else:
+            ancestral_genome = genome.AncestralGenome()
+            self.taxonomy.add_ancestral_genome_to_node(tax_node, ancestral_genome)
+
+            return ancestral_genome
+
     def get_extant_genome_by_name(self,**kwargs):
 
         nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
@@ -95,10 +107,7 @@ class HAM(object):
             children_nodes = set()
 
             for child in hog.children:
-                if isinstance(child.genome, genome.ExtantGenome):
-                    children_genomes.add(child.genome)
-                elif isinstance(child.genome, set):
-                    children_genomes.update(child.genome)
+                children_genomes.add(child.genome)
 
             for e in children_genomes:
                 children_nodes.add(e.taxon)
@@ -106,11 +115,26 @@ class HAM(object):
             source = children_nodes.pop()
             common = source.get_common_ancestor(children_nodes)
 
-            if "genome" in common.features:
-                return common.genome
+            return self.get_ancestral_genome(common)
 
-            else:
-                ancestral_genome = genome.AncestralGenome()
-                self.taxonomy.add_ancestral_genome_to_node(common, ancestral_genome)
+    def add_missing_taxon(self, source_hog , target_hog, missing_taxons):
+        """
 
-                return ancestral_genome
+        :param source_hog: hog
+        :param target_hog: hog
+        :param missing_taxons: array
+        :return:
+        """
+
+        target_hog.remove_child(source_hog)
+
+        current_child = source_hog
+
+        for tax in missing_taxons:
+            ancestral_genome = self.get_ancestral_genome(tax)
+            hog = abstractgene.HOG()
+            hog.set_genome(ancestral_genome)
+            hog.add_child(current_child)
+            current_child = hog
+
+        target_hog.add_child(current_child)

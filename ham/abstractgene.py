@@ -14,17 +14,6 @@ class AbstractGene(metaclass=ABCMeta):
         """Set the genome"""
         pass
 
-    @abstractmethod
-    def get_oldest_genome(self):
-        """Set the genome"""
-        pass
-
-    @abstractmethod
-    def get_newest_genome(self):
-        """Set the genome"""
-        pass
-
-
 
 class HOG(AbstractGene):
 
@@ -42,6 +31,17 @@ class HOG(AbstractGene):
             raise EvolutionaryConceptError('Cannot be a child of itself')
         self.children.append(elem)
         elem.parent = self
+
+    def remove_child(self, elem):
+        if not isinstance(elem, AbstractGene):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(AbstractGene.__name__,
+                                    type(elem).__name__))
+        if elem in self.children:
+            self.children.remove(elem)
+            elem.parent = None
+        else:
+            raise ValueError("element not found in the hog children")
 
     def append(self, elem):
         self.add_child(elem)
@@ -68,28 +68,9 @@ class HOG(AbstractGene):
         self.scores = scores
 
     def set_genome(self, tax):
-        """A HOG can potentially belong to several taxonomic ranges"""
-        if self.genome is None:
-            self.genome = set([])
-        self.genome.add(tax)
-
-    def get_oldest_genome(self):
-        maxd = 0
-        g = None
-        for genome in self.genome:
-            if genome.taxon.depth > maxd:
-                maxd == genome.taxon.depth
-                g = genome
-        return g
-
-    def get_newest_genome(self):
-        mind = 1000000
-        g = None
-        for genome in self.genome:
-            if genome.taxon.depth < mind:
-                mind == genome.taxon.depth
-                g = genome
-        return g
+        if self.genome is not None and tax != self.genome:
+            raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
+        self.genome = tax
 
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
@@ -107,12 +88,6 @@ class Gene(AbstractGene):
         if self.genome is not None and tax != self.genome:
             raise EvolutionaryConceptError("Gene can only belong to one genome")
         self.genome = tax
-
-    def get_oldest_genome(self):
-        return self.genome
-
-    def get_newest_genome(self):
-        return self.genome
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)

@@ -27,3 +27,16 @@ class Taxonomy(object):
         node.add_feature("genome", genome)
         genome.taxon = node
         self.leaves.add(node)
+
+    def get_path_up(self, lowest_node, ancestor_node):
+
+        intermediate_level = []
+
+        for tax in lowest_node.iter_ancestors():
+            if tax == ancestor_node:
+                break
+            intermediate_level.append(tax)
+
+        return intermediate_level
+
+
