@@ -1,6 +1,5 @@
 import unittest
-from ham import Gene, HOG, AbstractGene, EvolutionaryConceptError
-
+from ham import Gene, HOG, AbstractGene, AncestralGenome, EvolutionaryConceptError
 
 class GeneTest(unittest.TestCase):
     def test_id_required(self):
@@ -34,12 +33,14 @@ class HogTest(unittest.TestCase):
         with self.assertRaises(EvolutionaryConceptError):
             a.add_child(a)
 
-    def test_several_taxon_ranges_possible(self):
+    def test_only_one_genome_possible(self):
         a = HOG()
-        taxranges = ("Primates", "Mammalia")
-        for tax in taxranges:
-            a.set_genome(tax)
-        self.assertEqual(set(taxranges), a.genome)
+        b = AncestralGenome()
+        a.set_genome(b)
+        c = AncestralGenome()
+
+        with self.assertRaises(EvolutionaryConceptError):
+            a.set_genome(c)
 
     def test_represenation_of_Hog(self):
         a = HOG(id="441.2a", bla="don't know")
@@ -54,3 +55,7 @@ class HogTest(unittest.TestCase):
         a = HOG()
         with self.assertRaises(KeyError):
             a.score('testscore')
+
+
+if __name__ == "__main__":
+    unittest.main()

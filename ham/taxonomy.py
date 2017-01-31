@@ -20,12 +20,12 @@ class Taxonomy(object):
 
     def add_ancestral_genome_to_node(self, node, genome):
         node.add_feature("genome", genome)
-        genome.taxon = node
+        genome.set_taxon(node)
         self.internal_nodes.add(node)
 
     def add_extant_genome_to_node(self, node, genome):
         node.add_feature("genome", genome)
-        genome.taxon = node
+        genome.set_taxon(node)
         self.leaves.add(node)
 
     def get_path_up(self, lowest_node, ancestor_node):

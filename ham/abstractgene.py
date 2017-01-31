@@ -5,23 +5,39 @@ import numbers
 
 
 class AbstractGene(metaclass=ABCMeta):
+    """AbstractGene class for gene entities.
+
+    Attributes:
+        parent      direct parent AbstractGene (can only be a HOG) of this AbstractGene
+        genome      Genome containing this AbstractGene.
+
+    """
     def __init__(self):
         self.parent = None
         self.genome = None
 
     @abstractmethod
-    def set_genome(self, tax):
-        """Set the genome"""
+    def set_genome(self, genome):
+        """Set the genome attribute using the """
         pass
 
 
 class HOG(AbstractGene):
+    """HOG class for HOGs (inherit from AbstractGene).
+
+    Attributes:
+        hog_id      internal unique id
+        children    AbstractGene objects that have descended from this HOG.
+
+    """
 
     def __init__(self, id=None, **kwargs):
         super(HOG, self).__init__()
         self.hog_id = id
         self.children = []
 
+
+    # add a AbstractGene to the hog children
     def add_child(self, elem):
         if not isinstance(elem, AbstractGene):
             raise TypeError("expect subclass obj of '{}', got {}"
@@ -32,6 +48,7 @@ class HOG(AbstractGene):
         self.children.append(elem)
         elem.parent = self
 
+    # safely remove a child from the HOG children and its parent reference to the HOG
     def remove_child(self, elem):
         if not isinstance(elem, AbstractGene):
             raise TypeError("expect subclass obj of '{}', got {}"
@@ -67,16 +84,25 @@ class HOG(AbstractGene):
         scores[score_id] = value
         self.scores = scores
 
-    def set_genome(self, tax):
-        if self.genome is not None and tax != self.genome:
+    def set_genome(self, genome):
+        if self.genome is not None and genome != self.genome:
             raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
-        self.genome = tax
+        self.genome = genome
 
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
 
 
 class Gene(AbstractGene):
+    """Gene class for extant genes (inherit from AbstractGene).
+
+    Attributes:
+        unique_id  internal unique id
+        gene_id    id used to mapped to external ids.
+        prot_id    id used to mapped to external ids.
+        transcript_id    id used to mapped to external ids.
+
+    """
     def __init__(self, id, geneId=None, protId=None, transcriptId=None, **kwargs):
         super(Gene, self).__init__()
         self.unique_id = id
@@ -84,10 +110,10 @@ class Gene(AbstractGene):
         self.prot_id = protId
         self.transcript_id = transcriptId
 
-    def set_genome(self, tax):
-        if self.genome is not None and tax != self.genome:
+    def set_genome(self, genome):
+        if self.genome is not None and genome != self.genome:
             raise EvolutionaryConceptError("Gene can only belong to one genome")
-        self.genome = tax
+        self.genome = genome
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)
