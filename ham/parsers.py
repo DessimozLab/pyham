@@ -24,7 +24,7 @@ class OrthoXMLParser(object):
 
         if tag == "{http://orthoXML.org/2011/}species":
 
-            self.current_species = self.ham_object.get_extant_genome_by_name(**attrib)
+            self.current_species = self.ham_object._get_extant_genome_by_name(**attrib)
 
         elif tag == "{http://orthoXML.org/2011/}gene":
             gene = abstractgene.Gene(**attrib)
@@ -58,7 +58,7 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             hog = self.hog_stack.pop()
 
-            ancestral_genome = self.ham_object.get_mrca_ancestral_genome_using_hog_children(hog)
+            ancestral_genome = self.ham_object._get_mrca_ancestral_genome_using_hog_children(hog)
             hog.set_genome(ancestral_genome)
             ancestral_genome.taxon.genome.add_gene(hog)
 
@@ -70,7 +70,7 @@ class OrthoXMLParser(object):
                     change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
             for hog_child, missing in change.items():
-                self.ham_object.add_missing_taxon(hog_child,hog,missing)
+                self.ham_object._add_missing_taxon(hog_child,hog,missing)
 
             if len(self.hog_stack) == 0:
                 filter_res = self.filter(hog)

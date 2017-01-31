@@ -1,7 +1,7 @@
 __author__ = 'admin'
 
 from abc import ABCMeta, abstractmethod
-from .abstractgene import AbstractGene
+from . import abstractgene
 import ete3
 
 class Genome(metaclass=ABCMeta):
@@ -20,9 +20,9 @@ class Genome(metaclass=ABCMeta):
 
 
     def add_gene(self, gene):
-        if not isinstance(gene, AbstractGene):
+        if not isinstance(gene, abstractgene.AbstractGene):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(AbstractGene.__name__,
+                            .format(abstractgene.AbstractGene.__name__,
                                     type(gene).__name__))
         self.genes.append(gene)
         gene.set_genome(self)

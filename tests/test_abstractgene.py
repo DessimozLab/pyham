@@ -1,5 +1,7 @@
 import unittest
-from ham import Gene, HOG, AbstractGene, AncestralGenome, EvolutionaryConceptError
+from ham import Gene, HOG, AbstractGene, AncestralGenome, ExtantGenome
+
+from ham.abstractgene import EvolutionaryConceptError as ECE
 
 class GeneTest(unittest.TestCase):
     def test_id_required(self):
@@ -9,11 +11,18 @@ class GeneTest(unittest.TestCase):
 
     def test_cannot_add_multiple_taxon_ranges(self):
         g = Gene(id="423")
-        g.set_genome("test")
-        with self.assertRaises(EvolutionaryConceptError):
-            g.set_genome("bla")
+        # invalid genome
+        with self.assertRaises(TypeError):
+            g.set_genome("wrong")
+        # valid
+        b = ExtantGenome(name="HUMAN", NCBITaxId="9601")
+        g.set_genome(b)
+        # cannot reassign a genome is already set
+        c = ExtantGenome(name="MONDO", NCBITaxId="96")
+        with self.assertRaises(ECE):
+            g.set_genome(c)
         # but same twice should be ok
-        g.set_genome("test")
+        g.set_genome(b)
 
 
 class HogTest(unittest.TestCase):
@@ -30,17 +39,24 @@ class HogTest(unittest.TestCase):
 
     def test_cannot_be_child_of_self(self):
         a = HOG()
-        with self.assertRaises(EvolutionaryConceptError):
+        with self.assertRaises(ECE):
             a.add_child(a)
 
     def test_only_one_genome_possible(self):
-        a = HOG()
+        h = HOG()
+        # invalid genome
+        with self.assertRaises(TypeError):
+            h.set_genome("wrong")
+        # valid
+        a = AncestralGenome()
+        h.set_genome(a)
+        # cannot reassign a genome is already set
         b = AncestralGenome()
-        a.set_genome(b)
-        c = AncestralGenome()
+        with self.assertRaises(ECE):
+            h.set_genome(b)
+        # but same twice should be ok
+        h.set_genome(a)
 
-        with self.assertRaises(EvolutionaryConceptError):
-            a.set_genome(c)
 
     def test_represenation_of_Hog(self):
         a = HOG(id="441.2a", bla="don't know")

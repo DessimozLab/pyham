@@ -1,32 +1,24 @@
 import collections
 import unittest
-from ham import parsers
-from xml.etree.ElementTree import XMLParser
 from ham import ham
 from ham import utils
-import logging
-logger = logging.getLogger(__name__)
 
 class OrthoXMLParserTest(unittest.TestCase):
 
     def setUp(self):
-        taxonomy = ham.build_taxonomy(utils.get_newick_string('./tests/simpleEx.nwk', type="nwk"))
-        factory = parsers.OrthoXMLParser(taxonomy)
-        parser = XMLParser(target=factory)
-        with open('./tests/simpleEx.orthoxml', 'r') as orthoxml_file:
-            for line in orthoxml_file:
-                parser.feed(line)
-
-        self.hogs = factory.toplevel_hogs
-        self.genes = factory.extant_gene_map
-        logger.debug("setup up dinfis")
+        nwk_path = './tests/simpleEx.nwk'
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
+        orthoxml_path = './tests/simpleEx.orthoxml'
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+        self.hogs = ham_analysis.get_all_top_level_hogs()
+        self.genes = ham_analysis.get_all_extant_genes_dict()
 
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=4, PANTR=4, MOUSE=4, RATNO=2,
                             CANFA=3, XENTR=2)
         observed_cnts = collections.defaultdict(int)
         for g in self.genes.values():
-            observed_cnts[g.taxon.name] += 1
+            observed_cnts[g.genome.name] += 1
         self.assertDictEqual(observed_cnts, expected_cnts)
 
     def test_scores_on_toplevel(self):
@@ -36,6 +28,10 @@ class OrthoXMLParserTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             self.hogs["1"].score('coverage')
 
+    def test_hog_hierarchy(self):
+        # TODO
+        # test that the hogs reconstruction fit to the schema with all missing taxon, etc..
+        pass
 
 if __name__ == "__main__":
     unittest.main()

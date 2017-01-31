@@ -2,7 +2,7 @@ __author__ = 'admin'
 
 from abc import ABCMeta, abstractmethod
 import numbers
-
+from ham.genome import ExtantGenome, AncestralGenome
 
 class AbstractGene(metaclass=ABCMeta):
     """AbstractGene class for gene entities.
@@ -85,9 +85,14 @@ class HOG(AbstractGene):
         self.scores = scores
 
     def set_genome(self, genome):
-        if self.genome is not None and genome != self.genome:
-            raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
-        self.genome = genome
+        if not isinstance(genome, AncestralGenome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(AncestralGenome.__name__,
+                                    type(genome).__name__))
+        else:
+            if self.genome is not None and genome != self.genome:
+                raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
+            self.genome = genome
 
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
@@ -111,9 +116,14 @@ class Gene(AbstractGene):
         self.transcript_id = transcriptId
 
     def set_genome(self, genome):
-        if self.genome is not None and genome != self.genome:
-            raise EvolutionaryConceptError("Gene can only belong to one genome")
-        self.genome = genome
+        if not isinstance(genome, ExtantGenome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(ExtantGenome.__name__,
+                                    type(genome).__name__))
+        else:
+            if self.genome is not None and genome != self.genome:
+                raise EvolutionaryConceptError("Gene can only belong to one genome")
+            self.genome = genome
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)

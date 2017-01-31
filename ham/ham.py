@@ -37,6 +37,8 @@ class HAM(object):
         self.newick_str = newick_str
         self.hog_file = hog_file
         self.hog_file_type = type
+        self.toplevel_hogs = None
+        self.extant_gene_map = None
 
         self.taxonomy = tax.Taxonomy(self.newick_str)
         logger.info('Build taxonomy: completed.'.format(self.newick_str))
@@ -59,18 +61,22 @@ class HAM(object):
                                                                                               len(
                                                                                                   self.taxonomy.leaves)))
 
+    def get_all_top_level_hogs(self):
+        return self.toplevel_hogs
+
+    def get_all_extant_genes_dict(self):
+        return self.extant_gene_map
+
     def get_extant_genomes(self):
         """
-        return all Genome.ExtantGenome attach to a leaf within a taxonomy object
-        :param taxonomy: taxonomy.Taxonomy
+        return all Genome.ExtantGenome
         :return: set of Genome.ExtantGenome
         """
         return set(leaf.genome for leaf in self.taxonomy.leaves)
 
     def get_ancestral_genomes(self):
         """
-        return all Genome.AncestralGenome attach to an internal node within a taxonomy object
-        :param taxonomy: taxonomy.Taxonomy
+        return all Genome.AncestralGenome
         :return: set of Genome.AncestralGenome
         """
         return set(internal_node.genome for internal_node in self.taxonomy.internal_nodes)
@@ -86,7 +92,7 @@ class HAM(object):
 
             return ancestral_genome
 
-    def get_extant_genome_by_name(self,**kwargs):
+    def _get_extant_genome_by_name(self,**kwargs):
 
         nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
 
@@ -99,9 +105,9 @@ class HAM(object):
                 self.taxonomy.add_extant_genome_to_node(nodes_founded[0], extant_genome)
                 return extant_genome
         else:
-            sys.exit('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
+            raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
 
-    def get_mrca_ancestral_genome_using_hog_children(self, hog):
+    def _get_mrca_ancestral_genome_using_hog_children(self, hog):
 
             children_genomes = set()
             children_nodes = set()
@@ -117,7 +123,7 @@ class HAM(object):
 
             return self.get_ancestral_genome(common)
 
-    def add_missing_taxon(self, source_hog , target_hog, missing_taxons):
+    def _add_missing_taxon(self, source_hog , target_hog, missing_taxons):
         """
 
         :param source_hog: hog
