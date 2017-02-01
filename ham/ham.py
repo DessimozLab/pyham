@@ -64,6 +64,15 @@ class HAM(object):
     def get_all_top_level_hogs(self):
         return self.toplevel_hogs
 
+    def get_all_genes_of_hog(self, hog):
+
+        def append_child(current, child, list):
+            list.append(child)
+            return list
+
+        return hog.recursive_call([], function_leaf=append_child)
+
+
     def get_all_extant_genes_dict(self):
         return self.extant_gene_map
 

@@ -94,6 +94,22 @@ class HOG(AbstractGene):
                 raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
             self.genome = genome
 
+
+    def recursive_call(self, elem, function_leaf=None, function_after_child=None, function_first=None):
+
+        if function_first != None:
+            elem = function_first(self, elem)
+
+        for child in self.children:
+            if isinstance(child, Gene):
+                if function_leaf != None:
+                    elem = function_leaf(self, child, elem)
+            else:
+                child.recursive_call(elem, function_leaf=function_leaf, function_after_child=function_after_child, function_first=function_first)
+                if function_after_child != None:
+                    elem = function_after_child(self, child, elem)
+        return elem
+
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
 

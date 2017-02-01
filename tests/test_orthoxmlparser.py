@@ -5,13 +5,38 @@ from ham import utils
 
 class OrthoXMLParserTest(unittest.TestCase):
 
+    # function to get unique_id (Gene) or taxon name (HOG) for unit test purposes only (!!!)
+    def _get_identifier(self, item):
+        if isinstance(item, ham.abstractgene.Gene):
+            return item.unique_id
+        elif isinstance(item, ham.abstractgene.HOG):
+            return item.genome.taxon.name
+        else:
+            raise TypeError("expect subclass obj of '{}', got {}"
+                        .format(ham.abstractgene.AbstractGene.__name__,
+                                type(item).__name__))
+
+    def _get_child_by_identifier(self, item, query):
+            founded_children = []
+            for child in item.children:
+                if self._get_identifier(child) == query:
+                    founded_children.append(child)
+            if len(founded_children) == 1:
+                return founded_children[0]
+            return founded_children
+
+    def _check_children_consistency(self, hog, expected_members):
+        expected_members = sorted(list(expected_members))
+        observed_members = sorted(list(self._get_identifier(item) for item in hog.children))
+        self.assertEqual(expected_members, observed_members)
+
     def setUp(self):
         nwk_path = './tests/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
-        self.hogs = ham_analysis.get_all_top_level_hogs()
-        self.genes = ham_analysis.get_all_extant_genes_dict()
+        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+        self.hogs = self.ham_analysis.get_all_top_level_hogs()
+        self.genes = self.ham_analysis.get_all_extant_genes_dict()
 
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=4, PANTR=4, MOUSE=4, RATNO=2,
@@ -28,10 +53,99 @@ class OrthoXMLParserTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             self.hogs["1"].score('coverage')
 
-    def test_hog_hierarchy(self):
-        # TODO
-        # test that the hogs reconstruction fit to the schema with all missing taxon, etc..
-        pass
+    def test_hog_membership(self):
+
+        hog1 = self.hogs["1"]
+        hog2 = self.hogs["2"]
+        hog3 = self.hogs["3"]
+
+        expectedMembers_1 = {'51', '21', '1', '11', '31', '41'}
+        expectedMembers_2 = {'22', '32', '2', '12'}
+        expectedMembers_3 = {'3', '13', '23', '33', '53', '14', '34'}
+
+        hog1_genes = self.ham_analysis.get_all_genes_of_hog(hog1)
+        hog2_genes = self.ham_analysis.get_all_genes_of_hog(hog2)
+        hog3_genes = self.ham_analysis.get_all_genes_of_hog(hog3)
+
+        members_1 = set(x.unique_id for x in hog1_genes)
+        members_2 = set(x.unique_id for x in hog2_genes)
+        members_3 = set(x.unique_id for x in hog3_genes)
+
+        self.assertSetEqual(expectedMembers_1, members_1)
+        self.assertSetEqual(expectedMembers_2, members_2)
+        self.assertSetEqual(expectedMembers_3, members_3)
+
+    def test_simple_hog_structure(self):
+
+        hog1 = self.hogs["1"]
+
+        # Vertebrata
+        self.assertEqual("Vertebrata", hog1.genome.taxon.name)
+        self._check_children_consistency(hog1, ["51", "Mammalia"])
+
+        # Mammalia
+        mammalia = self._get_child_by_identifier(hog1, "Mammalia")
+        self._check_children_consistency(mammalia, ["21", "Euarchontoglires"])
+
+        # Euarchontoglires
+        euarchontoglires = self._get_child_by_identifier(mammalia, "Euarchontoglires")
+        self._check_children_consistency(euarchontoglires, ["Rodents", "Primates"])
+
+        # Rodents
+        rodents = self._get_child_by_identifier(euarchontoglires, "Rodents")
+        self._check_children_consistency(rodents,  ["41", "31"])
+
+        # Primates
+        primates = self._get_child_by_identifier(euarchontoglires, "Primates")
+        self._check_children_consistency(primates, ["1", "11"])
+
+    def test_incomplete_lineage_taxon_expansion(self):
+
+        hog2 = self.hogs["2"]
+
+        # Mammalia
+        self.assertEqual("Mammalia", hog2.genome.taxon.name)
+        self._check_children_consistency(hog2,["22", "Euarchontoglires"])
+
+        # Euarchontoglires
+        euarchontoglires = self._get_child_by_identifier(hog2, "Euarchontoglires")
+        self._check_children_consistency(euarchontoglires,["Rodents", "Primates"])
+
+        # Primates
+        primates = self._get_child_by_identifier(euarchontoglires, "Primates")
+        self._check_children_consistency(primates,["2", "12"])
+
+        # Rodents
+        rodents = self._get_child_by_identifier(euarchontoglires, "Rodents")
+        self._check_children_consistency(rodents,  {"32"})
+
+    def test_hog_with_duplication(self):
+
+        hog3 = self.hogs["3"]
+
+        # Vertebrata
+        self.assertEqual("Vertebrata", hog3.genome.taxon.name)
+        self._check_children_consistency(hog3,["53", "Mammalia"])
+
+        # Mammalia
+        mammalia = self._get_child_by_identifier(hog3, "Mammalia")
+        self._check_children_consistency(mammalia,["23", "Euarchontoglires","Euarchontoglires"])
+
+        # Euarchontoglires
+        euarchontoglires = self._get_child_by_identifier(mammalia, "Euarchontoglires")
+        for euarchontoglire in euarchontoglires:
+            self._check_children_consistency(euarchontoglire,["Primates","Rodents"])
+
+            # Primates and Rodents
+            primates = self._get_child_by_identifier(euarchontoglire, "Primates")
+            rodents = self._get_child_by_identifier(euarchontoglire, "Rodents")
+            if len(primates.children) == 2:
+                self._check_children_consistency(rodents,["33"])
+                self._check_children_consistency(primates,["3","13"])
+            else:
+                self._check_children_consistency(rodents,["34"])
+                self._check_children_consistency(primates,["14"])
+
 
 if __name__ == "__main__":
     unittest.main()
