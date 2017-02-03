@@ -41,6 +41,17 @@ class SetUpHamAnalysis(unittest.TestCase):
         self.assertEqual(len(ham_analysis.taxonomy.leaves), 6)
         self.assertEqual(len(ham_analysis.taxonomy.internal_nodes), 5)
 
+        # Clement is happy the parsing went well he celebrates...
+
+    def test_single_hog_analysis(self):
+        pass
+
+    def test_ancestral_genome_analysis(self):
+        pass
+
+    def test_comparative_analysis(self):
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

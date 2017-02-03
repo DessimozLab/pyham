@@ -3,6 +3,7 @@ import unittest
 from ham import ham
 from ham import utils
 
+
 class OrthoXMLParserTest(unittest.TestCase):
 
     def _get_identifier(self, item):
@@ -151,7 +152,6 @@ class OrthoXMLParserTest(unittest.TestCase):
             else:
                 self._check_children_consistency(rodents,["34"])
                 self._check_children_consistency(primates,["14"])
-
 
 
 if __name__ == "__main__":

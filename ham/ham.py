@@ -114,21 +114,40 @@ class HAM(object):
         else:
             raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
 
+    def _get_mrca_ancestral_genome_from_genome_set(self, genome_set):
+        """
+        return the MRCA of all the genomes present in genome_set.
+        :param genome_set: set of ancestral genomes.
+        :return: ancestral genome
+        """
+        if len(genome_set) < 2:
+            raise ValueError('Only one genome is not enough to computed MRCA: {}'.format(genome_set))
+        pass
+
+        for g in genome_set:
+            if not isinstance(g, genome.Genome):
+                raise TypeError("expect subclass obj of '{}', got {}"
+                                .format(genome.Genome.__name__,
+                                        type(g).__name__))
+
+        children_nodes = set()
+
+        for e in genome_set:
+            children_nodes.add(e.taxon)
+
+        source = children_nodes.pop()
+        common = source.get_common_ancestor(children_nodes)
+
+        return self.get_ancestral_genome(common)
+
     def _get_mrca_ancestral_genome_using_hog_children(self, hog):
 
-            children_genomes = set()
-            children_nodes = set()
+        children_genomes = set()
 
-            for child in hog.children:
-                children_genomes.add(child.genome)
+        for child in hog.children:
+            children_genomes.add(child.genome)
 
-            for e in children_genomes:
-                children_nodes.add(e.taxon)
-
-            source = children_nodes.pop()
-            common = source.get_common_ancestor(children_nodes)
-
-            return self.get_ancestral_genome(common)
+        return self._get_mrca_ancestral_genome_from_genome_set(children_genomes)
 
     def _add_missing_taxon(self, source_hog , target_hog, missing_taxons):
         """
@@ -152,3 +171,5 @@ class HAM(object):
 
         target_hog.add_child(current_child)
 
+    def _get_oldest_genome(self):
+        pass

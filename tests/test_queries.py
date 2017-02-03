@@ -32,5 +32,22 @@ class QueryTest(unittest.TestCase):
         # TODO
         pass
 
+    def test_get_mrca_ancestral_genome_from_genome_set(self):
+        human = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")
+        mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
+
+        with self.assertRaises(ValueError):
+            self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([mouse]))
+
+        with self.assertRaises(TypeError):
+            self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([mouse, "human"]))
+
+        mrca_euch = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([human,mouse]))
+        self.assertEqual("Euarchontoglires", mrca_euch.taxon.name)
+
+        mrca_euch2 = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([mrca_euch,mouse]))
+        self.assertEqual("Euarchontoglires", mrca_euch2.taxon.name)
+
+
 if __name__ == "__main__":
     unittest.main()
