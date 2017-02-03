@@ -31,10 +31,11 @@ class HOG(AbstractGene):
 
     """
 
-    def __init__(self, id=None, **kwargs):
+    def __init__(self, id=None, is_paralog=False, **kwargs):
         super(HOG, self).__init__()
         self.hog_id = id
         self.children = []
+        self.is_paralog = is_paralog
 
 
     # add a AbstractGene to the hog children
@@ -95,19 +96,19 @@ class HOG(AbstractGene):
             self.genome = genome
 
 
-    def recursive_call(self, elem, function_leaf=None, function_after_child=None, function_first=None):
+    def visit(self, elem, function_leaf=None, function_postfix=None, function_prefix=None):
 
-        if function_first != None:
-            elem = function_first(self, elem)
+        if function_prefix != None:
+            elem = function_prefix(self, elem)
 
         for child in self.children:
             if isinstance(child, Gene):
                 if function_leaf != None:
                     elem = function_leaf(self, child, elem)
             else:
-                child.recursive_call(elem, function_leaf=function_leaf, function_after_child=function_after_child, function_first=function_first)
-                if function_after_child != None:
-                    elem = function_after_child(self, child, elem)
+                child.visit(elem, function_leaf=function_leaf, function_postfix=function_postfix, function_prefix=function_prefix)
+                if function_postfix != None:
+                    elem = function_postfix(self, child, elem)
         return elem
 
     def __repr__(self):

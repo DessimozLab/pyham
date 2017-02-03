@@ -19,8 +19,13 @@ class OrthoXMLParser(object):
             hog_filter = lambda x: x
         self.filter = hog_filter
         self.ham_object = ham_object
+        self.in_paralogGroup = None
+
 
     def start(self, tag, attrib):
+
+        if tag == "{http://orthoXML.org/2011/}paralogGroup":
+            self.in_paralogGroup = len(self.hog_stack)
 
         if tag == "{http://orthoXML.org/2011/}species":
 
@@ -38,7 +43,11 @@ class OrthoXMLParser(object):
             self.hog_stack[-1].add_child(gene)
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
-            hog = abstractgene.HOG(**attrib)
+            if self.in_paralogGroup == len(self.hog_stack):
+                hog = abstractgene.HOG(is_paralog=True,**attrib)
+            else:
+                hog = abstractgene.HOG(is_paralog=False,**attrib)
+
             if len(self.hog_stack) > 0:
                 self.hog_stack[-1].add_child(hog)
             self.hog_stack.append(hog)
@@ -53,6 +62,9 @@ class OrthoXMLParser(object):
     def end(self, tag):
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = None
+
+        if tag == "{http://orthoXML.org/2011/}paralogGroup":
+            self.in_paralogGroup = None
 
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":

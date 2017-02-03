@@ -69,7 +69,7 @@ class HAM(object):
             list.append(child)
             return list
 
-        return hog.recursive_call([], function_leaf=append_child)
+        return hog.visit([], function_leaf=append_child)
 
     def get_all_extant_genes_dict(self):
         return self.extant_gene_map

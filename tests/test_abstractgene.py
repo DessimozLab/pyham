@@ -57,7 +57,6 @@ class HogTest(unittest.TestCase):
         # but same twice should be ok
         h.set_genome(a)
 
-
     def test_represenation_of_Hog(self):
         a = HOG(id="441.2a", bla="don't know")
         self.assertEqual("{!r}".format(a), "<HOG(441.2a)>")

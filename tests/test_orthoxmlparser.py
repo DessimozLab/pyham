@@ -125,25 +125,33 @@ class OrthoXMLParserTest(unittest.TestCase):
         # Vertebrata
         self.assertEqual("Vertebrata", hog3.genome.taxon.name)
         self._check_children_consistency(hog3,["53", "Mammalia"])
+        self.assertFalse(hog3.is_paralog)
+
 
         # Mammalia
         mammalia = self._get_child_by_identifier(hog3, "Mammalia")
         self._check_children_consistency(mammalia,["23", "Euarchontoglires","Euarchontoglires"])
+        self.assertFalse(mammalia.is_paralog)
 
         # Euarchontoglires
         euarchontoglires = self._get_child_by_identifier(mammalia, "Euarchontoglires")
         for euarchontoglire in euarchontoglires:
+            self.assertTrue(euarchontoglire.is_paralog)
             self._check_children_consistency(euarchontoglire,["Primates","Rodents"])
 
             # Primates and Rodents
             primates = self._get_child_by_identifier(euarchontoglire, "Primates")
+            self.assertFalse(primates.is_paralog)
             rodents = self._get_child_by_identifier(euarchontoglire, "Rodents")
+            self.assertFalse(rodents.is_paralog)
+
             if len(primates.children) == 2:
                 self._check_children_consistency(rodents,["33"])
                 self._check_children_consistency(primates,["3","13"])
             else:
                 self._check_children_consistency(rodents,["34"])
                 self._check_children_consistency(primates,["14"])
+
 
 
 if __name__ == "__main__":
