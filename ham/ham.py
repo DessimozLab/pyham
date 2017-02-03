@@ -166,6 +166,7 @@ class HAM(object):
             ancestral_genome = self.get_ancestral_genome(tax)
             hog = abstractgene.HOG()
             hog.set_genome(ancestral_genome)
+            ancestral_genome.add_gene(hog)
             hog.add_child(current_child)
             current_child = hog
 

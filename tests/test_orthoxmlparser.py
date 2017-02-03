@@ -46,6 +46,14 @@ class OrthoXMLParserTest(unittest.TestCase):
             observed_cnts[g.genome.name] += 1
         self.assertDictEqual(observed_cnts, expected_cnts)
 
+    def test_number_hog_per_ancestral_genome(self):
+        ags = self.ham_analysis.get_ancestral_genomes()
+        expected_numbers = {'Vertebrata': 2, 'Mammalia': 3, 'Euarchontoglires': 4, 'Rodents': 4, 'Primates': 4 }
+        observed_numbers = {'Vertebrata': 0, 'Mammalia': 0, 'Euarchontoglires': 0, 'Rodents': 0, 'Primates': 0}
+        for ag in ags:
+            observed_numbers[ag.taxon.name] += len(ag.genes)
+        self.assertDictEqual(expected_numbers, observed_numbers)
+
     def test_scores_on_toplevel(self):
         self.assertEqual(self.hogs["1"].score('consistency'), 1)
         with self.assertRaises(KeyError):

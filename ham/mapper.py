@@ -27,10 +27,18 @@ class HOGsMap(object):
 
     def computeDownMap(self):
         downMap = {}  # key|HOGi -> value|{key|genome -> value|HOGj or "None" }
+
+        # build empty shell for downMap
         for hog_ancestor in self.ancestor.genes:
             downMap[hog_ancestor] = {}
-            for descandant in self.descendants.values():
-                downMap[hog_ancestor][descandant] = [None]
+            for g in self.descendants.values():
+                downMap[hog_ancestor][g] = []
+
+        # feed the downMap
+        for descendant, upMap in self.upMaps.items():
+            for hog_descendant, hog_target in upMap.items():
+                if hog_target is not None:
+                    downMap[hog_target][descendant].append(hog_descendant)
         return downMap
 
     def computeUpMaps(self):
@@ -42,7 +50,7 @@ class HOGsMap(object):
     def build_UpMap(self, descendant):
         upMap = {}  # value|{key|HOGj -> value|HOGi or "None"
         for hog_source in descendant.genes:
-            if hog_source.parent is not None:  # avoid singletons
+            if hog_source.parent is not None:  # avoid singletons TODO check for if taxon = gain...
                 hog_target = self.search_ancestor_hog_in_ancestral_genome(hog_source, self.ancestor)
                 upMap[hog_source] = hog_target
         return upMap
@@ -55,6 +63,8 @@ class HOGsMap(object):
             if current_hog.genome == ancestral_genome:
                 found = current_hog
         return found
+
+    ## need to store all types information on the fly (lost,dupl, etc..) so need to include the og.paralog flag !!
 
     def getLost(self):
         pass

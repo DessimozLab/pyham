@@ -1,8 +1,7 @@
-__author__ = 'admin'
-
 from abc import ABCMeta, abstractmethod
 import numbers
 from ham.genome import ExtantGenome, AncestralGenome
+
 
 class AbstractGene(metaclass=ABCMeta):
     """AbstractGene class for gene entities.
@@ -94,7 +93,6 @@ class HOG(AbstractGene):
             if self.genome is not None and genome != self.genome:
                 raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
             self.genome = genome
-
 
     def visit(self, elem, function_leaf=None, function_postfix=None, function_prefix=None):
 
