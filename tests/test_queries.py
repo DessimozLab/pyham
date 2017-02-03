@@ -28,6 +28,9 @@ class QueryTest(unittest.TestCase):
         self.assertIsInstance(a, ExtantGenome)
         self.assertEqual(query_name, a.name)
 
+    def test_get_all_genes_of_hog(self):
+        # TODO
+        pass
 
 if __name__ == "__main__":
     unittest.main()

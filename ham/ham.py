@@ -1,5 +1,4 @@
 from xml.etree.ElementTree import XMLParser
-import ete3
 from . import taxonomy as tax
 from . import genome
 from ham import parsers
@@ -71,7 +70,6 @@ class HAM(object):
             return list
 
         return hog.recursive_call([], function_leaf=append_child)
-
 
     def get_all_extant_genes_dict(self):
         return self.extant_gene_map
@@ -153,3 +151,4 @@ class HAM(object):
             current_child = hog
 
         target_hog.add_child(current_child)
+

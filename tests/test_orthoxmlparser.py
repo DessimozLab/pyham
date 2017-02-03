@@ -5,7 +5,6 @@ from ham import utils
 
 class OrthoXMLParserTest(unittest.TestCase):
 
-    # function to get unique_id (Gene) or taxon name (HOG) for unit test purposes only (!!!)
     def _get_identifier(self, item):
         if isinstance(item, ham.abstractgene.Gene):
             return item.unique_id
