@@ -1,4 +1,5 @@
 import unittest
+from unittest import skip
 from ham import ham
 from ham import utils
 from ham import HOGsMap
@@ -8,6 +9,7 @@ from ham import HOGsMap
 ##########################################################################################
 ####  ATTENTION THIS I QUICK AND DIRTY UNIT TEST TO DEBUG NEED TO BE REDO        #########
 ##########################################################################################
+
 
 class MapperTest(unittest.TestCase):
 
@@ -21,8 +23,10 @@ class MapperTest(unittest.TestCase):
         self.frog = self.ham_analysis._get_extant_genome_by_name(name="XENTR")
         self.mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
         self.rat = self.ham_analysis._get_extant_genome_by_name(name="RATNO")
+        self.chimp = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
         self.vertebrates = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set({self.human, self.frog})
         self.rodents = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set({self.mouse, self.rat})
+        self.primates = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set({self.human, self.chimp})
         self.euarchontoglires = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set({self.human, self.mouse})
 
     def _get_identifier(self, item):
@@ -48,32 +52,41 @@ class MapperTest(unittest.TestCase):
 
     def test_set_ancestor_and_descendants(self):
 
-        # genomes not on the same lineage
+        # genomes (two extant genomes) not on the same lineage
         map = HOGsMap(self.ham_analysis, {self.human, self.mouse})
         self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
         self.assertEqual({self.human:self.human, self.mouse:self.mouse}, map.descendants)
 
-        # genomes on the same lineage
+        # two genomes on the same lineage
         map = HOGsMap(self.ham_analysis, {self.human, self.euarchontoglires})
         self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
         self.assertEqual({self.human:self.human}, map.descendants)
+
+        # genomes (one extant genomes and one ancestral genome) not on the same lineage
+        map = HOGsMap(self.ham_analysis, {self.human, self.rodents})
+        self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
+        self.assertEqual({self.human:self.human, self.rodents:self.rodents}, map.descendants)
+
+        # genomes (two ancestral genome) not on the same lineage
+        map = HOGsMap(self.ham_analysis, {self.rodents, self.primates})
+        self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
+        self.assertEqual({self.primates:self.primates, self.rodents:self.rodents}, map.descendants)
 
     def test_UpMaps(self):
 
         def _convert_map(single_mapUp):
             observed_map = {}
             for source, target in single_mapUp.items():
-                observed_map[self._get_identifier(source)] = self._get_identifier(target)
+                observed_map[self._get_identifier(source)] = self._get_identifier(target[0])
             return observed_map
 
-        # an extant genome and its ancestor
-
+        # an extant genome (human) and its ancestor (Vertebrates)
         map = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
         expected_map = {'1': '1', '2': None, '3': '3'}
         observed_map = _convert_map(map.upMaps[self.human])
         self.assertDictEqual(expected_map, observed_map)
 
-        # two extant genomes and their MRCA
+         # two extant genomes(human,mouse) and their MRCA(Euarchontoglires)
         map = HOGsMap(self.ham_analysis, {self.human, self.mouse})
 
         expected_map_human = {'1': 'Euarchontoglires', '2': 'Euarchontoglires', '3': 'Euarchontoglires'}
@@ -97,9 +110,10 @@ class MapperTest(unittest.TestCase):
             sum_child = 0
             for child in hog_rodents.children:
                 sum_child += int(child.unique_id)
-            observed_map_rodents[sum_child]= self._get_topLevel_id(hog_euarch)
+            observed_map_rodents[sum_child]= self._get_topLevel_id(hog_euarch[0])
         self.assertDictEqual(expected_map_rodents, observed_map_rodents)
 
+    @skip
     def test_DownMap(self):
 
         def _convert_map(downMap):
@@ -162,6 +176,80 @@ class MapperTest(unittest.TestCase):
                 else:
                     observed_map["<HOG()>"] = item
         self.assertDictEqual(expected_map, observed_map)
+
+    def test_buildEventClusters(self):
+
+        def convert_LOSS(LOSS):
+            cLOSS = {}
+            for hog_ancestor, descendants in LOSS.items():
+                cLOSS[str(hog_ancestor)] = descendants
+            return cLOSS
+
+        def convert_GAIN(GAIN):
+            cGAIN = {}
+            for genome, list_genes in GAIN.items():
+                clist = []
+                for g in list_genes:
+                    clist.append(str(g))
+                cGAIN[genome]=clist
+            return cGAIN
+
+        def convert_SINGLE(SINGLE):
+            cSINGLE = set()
+            for hog_ancestor, descendant in SINGLE.items():
+                x = []
+                for genome, gene in descendant.items():
+                    x = x + [str(hog_ancestor), genome, str(gene)]
+
+                cSINGLE.add(frozenset(x))
+            return cSINGLE
+
+        def convert_DUPLICATE(DUPLICATE):
+            cDUPLICATE = set()
+            for hog_ancestor, descendant in DUPLICATE.items():
+                x = []
+                for genome, genes in descendant.items():
+                    x = x + [str(hog_ancestor), genome]
+                    for g in genes:
+                        x.append(str(g))
+                cDUPLICATE.add(frozenset(x))
+            return cDUPLICATE
+
+        # an extant genome (human) and its ancestor (Vertebrates)
+        map = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
+
+        expected_LOSS = {}
+        self.assertDictEqual(expected_LOSS, convert_LOSS(map.LOSS))
+
+        expected_GAIN = {self.human: ["Gene(2)"]}
+        self.assertDictEqual(expected_GAIN, convert_GAIN(map.GAIN))
+
+        expected_SINGLE = set()
+        expected_SINGLE.add(frozenset(["<HOG(1)>",self.human,"Gene(1)"]))
+        self.assertSetEqual(expected_SINGLE, convert_SINGLE(map.SINGLE))
+
+        expected_DUPLICATE = set()
+        expected_DUPLICATE.add(frozenset(["<HOG(3)>",self.human,"Gene(3)"]))
+        self.assertSetEqual(expected_DUPLICATE, convert_DUPLICATE(map.DUPLICATE))
+
+        # two extant genomes(human,mouse) and their MRCA(Euarchontoglires)
+        map = HOGsMap(self.ham_analysis, {self.human, self.mouse})
+
+        expected_LOSS = {"<HOG()>": [self.human]}
+        self.assertDictEqual(expected_LOSS, convert_LOSS(map.LOSS))
+
+        expected_GAIN = {self.human:[], self.mouse:[]}
+        self.assertDictEqual(expected_GAIN, convert_GAIN(map.GAIN))
+
+        expected_SINGLE = set()
+        expected_SINGLE.add(frozenset(["<HOG()>", self.human,"Gene(1)",self.mouse,"Gene(31)"]))
+        expected_SINGLE.add(frozenset(["<HOG()>",self.human,"Gene(2)", self.mouse,"Gene(32)"]))
+        expected_SINGLE.add(frozenset(["<HOG()>",self.human,"Gene(3)", self.mouse,"Gene(33)"]))
+        expected_SINGLE.add(frozenset(["<HOG()>", self.mouse,"Gene(34)"]))
+        self.assertSetEqual(expected_SINGLE, convert_SINGLE(map.SINGLE))
+
+        expected_DUPLICATE = set()
+        self.assertSetEqual(expected_DUPLICATE, convert_DUPLICATE(map.DUPLICATE))
 
 
 if __name__ == "__main__":

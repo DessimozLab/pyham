@@ -42,6 +42,10 @@ class OrthoXMLParser(object):
             gene = self.extant_gene_map[attrib['id']]
             self.hog_stack[-1].add_child(gene)
 
+            # if the gene is contained within a paralogousGroup need to update its .is_paralog flag. TODO unittest
+            if self.in_paralogGroup == len(self.hog_stack):
+                gene.is_paralog=True
+
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             if self.in_paralogGroup == len(self.hog_stack):
                 hog = abstractgene.HOG(is_paralog=True,**attrib)
@@ -50,6 +54,7 @@ class OrthoXMLParser(object):
 
             if len(self.hog_stack) > 0:
                 self.hog_stack[-1].add_child(hog)
+
             self.hog_stack.append(hog)
 
         elif tag == "{http://orthoXML.org/2011/}property" and attrib['name'] == "TaxRange":
@@ -65,7 +70,6 @@ class OrthoXMLParser(object):
 
         if tag == "{http://orthoXML.org/2011/}paralogGroup":
             self.in_paralogGroup = None
-
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             hog = self.hog_stack.pop()

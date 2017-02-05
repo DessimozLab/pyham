@@ -34,7 +34,8 @@ class HOG(AbstractGene):
         super(HOG, self).__init__()
         self.hog_id = id
         self.children = []
-        self.is_paralog = is_paralog
+        self.is_paralog = is_paralog  ## TODO make it global to the class
+
 
 
     # add a AbstractGene to the hog children
@@ -93,7 +94,6 @@ class HOG(AbstractGene):
             if self.genome is not None and genome != self.genome:
                 raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
             self.genome = genome
-
     def visit(self, elem, function_leaf=None, function_postfix=None, function_prefix=None):
 
         if function_prefix != None:
@@ -123,12 +123,13 @@ class Gene(AbstractGene):
         transcript_id    id used to mapped to external ids.
 
     """
-    def __init__(self, id, geneId=None, protId=None, transcriptId=None, **kwargs):
+    def __init__(self, id, geneId=None, protId=None, transcriptId=None, is_paralog = False, **kwargs):
         super(Gene, self).__init__()
         self.unique_id = id
         self.gene_id = geneId
         self.prot_id = protId
         self.transcript_id = transcriptId
+        self.is_paralog = is_paralog
 
     def set_genome(self, genome):
         if not isinstance(genome, ExtantGenome):
