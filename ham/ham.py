@@ -171,6 +171,3 @@ class HAM(object):
             current_child = hog
 
         target_hog.add_child(current_child)
-
-    def _get_oldest_genome(self):
-        pass

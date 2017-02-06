@@ -1,5 +1,3 @@
-__author__ = 'admin'
-
 from abc import ABCMeta, abstractmethod
 from . import abstractgene
 import ete3

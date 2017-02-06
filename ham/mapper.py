@@ -33,7 +33,7 @@ class HOGsMap(object):
         self.HAM = ham_object
         self.ancestor, self.descendants = self.set_ancestor_and_descendants(genome_set)
         self.upMaps = self.computeUpMaps()
-        self.downMap = self.computeDownMap()
+        #self.downMap = self.computeDownMap()
         self.LOSS, self.GAIN, self.SINGLE, self.DUPLICATE = self.buildEventClusters()
 
     def set_ancestor_and_descendants(self, genome_set):
