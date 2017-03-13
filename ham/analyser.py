@@ -56,20 +56,11 @@ class AncestralGenomeAnalyser(Analyser):
         ## Filter all the hogs that fullfil a criterion (no dup, lost or gains at this levels)
         pass
 
-class MultiGenomeAnalyser(Analyser):
-
-    """MultiGenomeAnalyser class for analysis of a multiple ancestral genome (inherit from Analyser).
-
-    Attributes:
-        genomes    set of Genome object
-    """
-
-    def __init__(self, ancestral_genomes):
-        super(MultiGenomeAnalyser, self).__init__()
-        self.ancestral_genomes = ancestral_genomes
-
-
-    def get_hogMap(self):
-        ## get the mapping between all hogs
+    def get_genes_history_from_ancestor(self):
+        '''
+        get which genes came from duplication from parent or have been gains, etc..
+        :return:
+        '''
         pass
+
 

@@ -30,7 +30,7 @@ class Taxonomy(object):
 
     def get_path_up(self, lowest_node, ancestor_node):
 
-        intermediate_level = []
+        intermediate_level = [] # from most recent to oldest
 
         for tax in lowest_node.iter_ancestors():
             if tax == ancestor_node:

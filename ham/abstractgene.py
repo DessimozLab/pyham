@@ -11,14 +11,32 @@ class AbstractGene(metaclass=ABCMeta):
         genome      Genome containing this AbstractGene.
 
     """
-    def __init__(self):
+    def __init__(self, arose_by_duplication=False, **kwargs):
         self.parent = None
         self.genome = None
+        self.arose_by_duplication = arose_by_duplication
 
     @abstractmethod
     def set_genome(self, genome):
         """Set the genome attribute using the """
         pass
+
+    def search_ancestor_hog_in_ancestral_genome(self, ancestral_genome):
+        """
+
+        :param ancestral_genome:
+        :return:
+        """
+        found = None
+        current_hog = self
+        paralog = current_hog.arose_by_duplication
+        while current_hog.parent is not None and found is None:
+            current_hog = current_hog.parent
+            if current_hog.genome == ancestral_genome:
+                return current_hog, paralog
+            if current_hog.arose_by_duplication:
+                paralog = True
+        return found, paralog
 
 
 class HOG(AbstractGene):
@@ -30,13 +48,10 @@ class HOG(AbstractGene):
 
     """
 
-    def __init__(self, id=None, is_paralog=False, **kwargs):
-        super(HOG, self).__init__()
+    def __init__(self, id=None, **kwargs):
+        super(HOG, self).__init__(**kwargs)
         self.hog_id = id
         self.children = []
-        self.is_paralog = is_paralog  ## TODO make it global to the class
-
-
 
     # add a AbstractGene to the hog children
     def add_child(self, elem):
@@ -94,6 +109,7 @@ class HOG(AbstractGene):
             if self.genome is not None and genome != self.genome:
                 raise EvolutionaryConceptError("HOG can only be mapped to one ancestral genome")
             self.genome = genome
+
     def visit(self, elem, function_leaf=None, function_postfix=None, function_prefix=None):
 
         if function_prefix != None:
@@ -123,13 +139,12 @@ class Gene(AbstractGene):
         transcript_id    id used to mapped to external ids.
 
     """
-    def __init__(self, id, geneId=None, protId=None, transcriptId=None, is_paralog = False, **kwargs):
-        super(Gene, self).__init__()
+    def __init__(self, id, geneId=None, protId=None, transcriptId=None, **kwargs):
+        super(Gene, self).__init__(**kwargs)
         self.unique_id = id
         self.gene_id = geneId
         self.prot_id = protId
         self.transcript_id = transcriptId
-        self.is_paralog = is_paralog
 
     def set_genome(self, genome):
         if not isinstance(genome, ExtantGenome):

@@ -2,6 +2,7 @@ from xml.etree.ElementTree import XMLParser
 from . import taxonomy as tax
 from . import genome
 from ham import parsers
+from ham import mapper
 import logging
 import sys
 from . import abstractgene
@@ -38,6 +39,7 @@ class HAM(object):
         self.hog_file_type = type
         self.toplevel_hogs = None
         self.extant_gene_map = None
+        self.HOGMaps = {} # In order to not recompute two time a hog map between two level we are storing them globally
 
         self.taxonomy = tax.Taxonomy(self.newick_str)
         logger.info('Build taxonomy: completed.'.format(self.newick_str))
@@ -59,6 +61,20 @@ class HAM(object):
             'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),
                                                                                               len(
                                                                                                   self.taxonomy.leaves)))
+
+    def get_HOGMap(self, genome_pair_set):
+        """
+        if not already computed, do the hog mapping between a pair of levels.
+        :param genome_pair_set:
+        :return:
+        """
+        f = frozenset(genome_pair_set)
+        if f in self.HOGMaps.keys():
+            return self.HOGMaps[f]
+        else:
+            m = mapper.HOGsMap(self, genome_pair_set)
+            self.HOGMaps[f] = m
+            return m
 
     def get_all_top_level_hogs(self):
         return self.toplevel_hogs
@@ -135,12 +151,16 @@ class HAM(object):
         for e in genome_set:
             children_nodes.add(e.taxon)
 
-        source = children_nodes.pop()
-        common = source.get_common_ancestor(children_nodes)
+        common = self.taxonomy.tree.get_common_ancestor(children_nodes)
 
         return self.get_ancestral_genome(common)
 
     def _get_mrca_ancestral_genome_using_hog_children(self, hog):
+        """
+        collect all the genomes insides the hog children and them look for their mrca
+        :param hog:
+        :return:
+        """
 
         children_genomes = set()
 
@@ -149,25 +169,103 @@ class HAM(object):
 
         return self._get_mrca_ancestral_genome_from_genome_set(children_genomes)
 
-    def _add_missing_taxon(self, source_hog , target_hog, missing_taxons):
+    def _add_missing_taxon(self, child_hog , oldest_hog, missing_taxons):
         """
 
-        :param source_hog: hog
-        :param target_hog: hog
-        :param missing_taxons: array
+        :param child_hog: youngest hog
+        :param oldest_hog: oldest hog
+        :param missing_taxons: array of intermediate taxon sorted from most r4cent to oldest
         :return:
         """
+        if not isinstance(child_hog, abstractgene.AbstractGene):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(abstractgene.AbstractGene.__name__,
+                                    type(child_hog).__name__))
 
-        target_hog.remove_child(source_hog)
+        if not isinstance(oldest_hog, abstractgene.AbstractGene):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(abstractgene.AbstractGene.__name__,
+                                    type(oldest_hog).__name__))
 
-        current_child = source_hog
+        if oldest_hog == child_hog:
+            raise TypeError("Cannot add missing level between an HOG and it self.")
 
+        # the youngest hog is removed from the oldest hog
+        oldest_hog.remove_child(child_hog)
+
+        # Then for each intermediate level in between the two hog
+        current_child = child_hog
         for tax in missing_taxons:
+            # we get the related ancestral genome of this level
             ancestral_genome = self.get_ancestral_genome(tax)
+
+            # we create the related hog and add it to the ancestral genome
             hog = abstractgene.HOG()
             hog.set_genome(ancestral_genome)
             ancestral_genome.add_gene(hog)
+
+            if ancestral_genome.taxon is not current_child.genome.taxon.up:
+                raise TypeError("HOG taxon {} is different than child parent taxon {}".format(ancestral_genome.taxon, current_child.genome.taxon.up))
+
+            # we add the child
             hog.add_child(current_child)
             current_child = hog
 
-        target_hog.add_child(current_child)
+        oldest_hog.add_child(current_child)
+
+    def _get_oldest_from_genome_pair(self, g1, g2):
+        """
+        get the oldest genomes from a pair of genomes... I know Adrian, I know!
+        :param g1:
+        :param g2:
+        :return:
+        """
+
+        mrca1 = g1.get_common_ancestor(g2)
+        if g2 == mrca1:
+            return g2
+
+        mrca2 = g2.get_common_ancestor(g1)
+        if g1 == mrca2:
+            return g1
+
+        return None
+
+    def _get_ancestor_and_descendant(self, genome_set):
+        """
+        Get from a set of genomes the oldest genomes (or their mrca if oldest not in genomes set) and return the list of descendant (present in the genomes set only)
+        :param genome_set:
+        :return:
+        """
+        ancestor = self._get_mrca_ancestral_genome_from_genome_set(genome_set)
+        genome_set.discard(ancestor)
+        descendants = genome_set.pop()
+        return ancestor, descendants
+
+    def compare_genomes(self, genomes_set, analysis=None):
+        """
+        function for level comparaison || Work in progress
+        :param genomes_set:
+        :param analysis:
+        :return:
+        """
+
+        if analysis == "vertical":
+            if len(genomes_set) != 2:
+                raise TypeError("{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
+            vertical_map = mapper.MapVertical(self)
+            vertical_map.add_map(self.get_HOGMap(genomes_set))
+            return vertical_map
+
+        elif analysis == "lateral":
+            pass
+            #return MapLateral(genomes_set)
+
+        else:
+            raise TypeError("Invalid type of genomes comparison")
+
+    def analyze_hog(self):
+        pass
+
+    def analyze_ancestral_genomes(self):
+        pass

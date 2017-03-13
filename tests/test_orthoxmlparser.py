@@ -5,7 +5,6 @@ from ham import utils
 
 
 class OrthoXMLParserTest(unittest.TestCase):
-
     def _get_identifier(self, item):
         if isinstance(item, ham.abstractgene.Gene):
             return item.unique_id
@@ -13,17 +12,17 @@ class OrthoXMLParserTest(unittest.TestCase):
             return item.genome.taxon.name
         else:
             raise TypeError("expect subclass obj of '{}', got {}"
-                        .format(ham.abstractgene.AbstractGene.__name__,
-                                type(item).__name__))
+                            .format(ham.abstractgene.AbstractGene.__name__,
+                                    type(item).__name__))
 
     def _get_child_by_identifier(self, item, query):
-            founded_children = []
-            for child in item.children:
-                if self._get_identifier(child) == query:
-                    founded_children.append(child)
-            if len(founded_children) == 1:
-                return founded_children[0]
-            return founded_children
+        founded_children = []
+        for child in item.children:
+            if self._get_identifier(child) == query:
+                founded_children.append(child)
+        if len(founded_children) == 1:
+            return founded_children[0]
+        return founded_children
 
     def _check_children_consistency(self, hog, expected_members):
         expected_members = sorted(list(expected_members))
@@ -40,7 +39,7 @@ class OrthoXMLParserTest(unittest.TestCase):
 
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=4, PANTR=4, MOUSE=4, RATNO=2,
-                            CANFA=3, XENTR=2)
+                             CANFA=3, XENTR=2)
         observed_cnts = collections.defaultdict(int)
         for g in self.genes.values():
             observed_cnts[g.genome.name] += 1
@@ -48,7 +47,7 @@ class OrthoXMLParserTest(unittest.TestCase):
 
     def test_number_hog_per_ancestral_genome(self):
         ags = self.ham_analysis.get_ancestral_genomes()
-        expected_numbers = {'Vertebrata': 2, 'Mammalia': 3, 'Euarchontoglires': 4, 'Rodents': 4, 'Primates': 4 }
+        expected_numbers = {'Vertebrata': 2, 'Mammalia': 3, 'Euarchontoglires': 4, 'Rodents': 4, 'Primates': 4}
         observed_numbers = {'Vertebrata': 0, 'Mammalia': 0, 'Euarchontoglires': 0, 'Rodents': 0, 'Primates': 0}
         for ag in ags:
             observed_numbers[ag.taxon.name] += len(ag.genes)
@@ -101,7 +100,7 @@ class OrthoXMLParserTest(unittest.TestCase):
 
         # Rodents
         rodents = self._get_child_by_identifier(euarchontoglires, "Rodents")
-        self._check_children_consistency(rodents,  ["41", "31"])
+        self._check_children_consistency(rodents, ["41", "31"])
 
         # Primates
         primates = self._get_child_by_identifier(euarchontoglires, "Primates")
@@ -113,19 +112,19 @@ class OrthoXMLParserTest(unittest.TestCase):
 
         # Mammalia
         self.assertEqual("Mammalia", hog2.genome.taxon.name)
-        self._check_children_consistency(hog2,["22", "Euarchontoglires"])
+        self._check_children_consistency(hog2, ["22", "Euarchontoglires"])
 
         # Euarchontoglires
         euarchontoglires = self._get_child_by_identifier(hog2, "Euarchontoglires")
-        self._check_children_consistency(euarchontoglires,["Rodents", "Primates"])
+        self._check_children_consistency(euarchontoglires, ["Rodents", "Primates"])
 
         # Primates
         primates = self._get_child_by_identifier(euarchontoglires, "Primates")
-        self._check_children_consistency(primates,["2", "12"])
+        self._check_children_consistency(primates, ["2", "12"])
 
         # Rodents
         rodents = self._get_child_by_identifier(euarchontoglires, "Rodents")
-        self._check_children_consistency(rodents,  {"32"})
+        self._check_children_consistency(rodents, {"32"})
 
     def test_hog_with_duplication(self):
 
@@ -133,33 +132,33 @@ class OrthoXMLParserTest(unittest.TestCase):
 
         # Vertebrata
         self.assertEqual("Vertebrata", hog3.genome.taxon.name)
-        self._check_children_consistency(hog3,["53", "Mammalia"])
-        self.assertFalse(hog3.is_paralog)
+        self._check_children_consistency(hog3, ["53", "Mammalia"])
+        self.assertFalse(hog3.arose_by_duplication)
 
 
         # Mammalia
         mammalia = self._get_child_by_identifier(hog3, "Mammalia")
-        self._check_children_consistency(mammalia,["23", "Euarchontoglires","Euarchontoglires"])
-        self.assertFalse(mammalia.is_paralog)
+        self._check_children_consistency(mammalia, ["23", "Euarchontoglires", "Euarchontoglires"])
+        self.assertFalse(mammalia.arose_by_duplication)
 
         # Euarchontoglires
         euarchontoglires = self._get_child_by_identifier(mammalia, "Euarchontoglires")
         for euarchontoglire in euarchontoglires:
-            self.assertTrue(euarchontoglire.is_paralog)
-            self._check_children_consistency(euarchontoglire,["Primates","Rodents"])
+            self.assertTrue(euarchontoglire.arose_by_duplication)
+            self._check_children_consistency(euarchontoglire, ["Primates", "Rodents"])
 
             # Primates and Rodents
             primates = self._get_child_by_identifier(euarchontoglire, "Primates")
-            self.assertFalse(primates.is_paralog)
+            self.assertFalse(primates.arose_by_duplication)
             rodents = self._get_child_by_identifier(euarchontoglire, "Rodents")
-            self.assertFalse(rodents.is_paralog)
+            self.assertFalse(rodents.arose_by_duplication)
 
             if len(primates.children) == 2:
-                self._check_children_consistency(rodents,["33"])
-                self._check_children_consistency(primates,["3","13"])
+                self._check_children_consistency(rodents, ["33"])
+                self._check_children_consistency(primates, ["3", "13"])
             else:
-                self._check_children_consistency(rodents,["34"])
-                self._check_children_consistency(primates,["14"])
+                self._check_children_consistency(rodents, ["34"])
+                self._check_children_consistency(primates, ["14"])
 
 
 if __name__ == "__main__":

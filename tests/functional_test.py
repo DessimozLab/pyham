@@ -1,16 +1,38 @@
 import unittest
-
+from unittest import skip
 from ham import ham
 from ham import utils
 import logging
 
+def _str_array(array):
+    array_converted = []
+    for e in array:
+        array_converted.append(str(e))
+    return set(array_converted)
 
-class SetUpHamAnalysis(unittest.TestCase):
+def _str_dict_one_value(dict):
+    for kk in dict.keys():
+        dict[str(kk)] = dict.pop(kk)
+    for k, v in dict.items():
+        dict[k] = str(v)
+    return dict
+
+def _str_dict_array_value(dict):
+    for kk in dict.keys():
+        dict[str(kk)] = dict.pop(kk)
+    for k, vs in dict.items():
+        array = []
+        for v in vs:
+            array.append(str(v))
+        dict[k] = set(array)
+    return dict
+
+class HamAnalysis(unittest.TestCase):
 
     def test_load_taxonomy_from_nwk_file_and_all_hogs_from_orthoxml_file_no_filter(self):
 
         # load the logger
-        logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
 
         # Clement select a nwk file as a taxonomy reference
         nwk_path = './tests/simpleEx.nwk'
@@ -41,7 +63,7 @@ class SetUpHamAnalysis(unittest.TestCase):
         self.assertEqual(len(ham_analysis.taxonomy.leaves), 6)
         self.assertEqual(len(ham_analysis.taxonomy.internal_nodes), 5)
 
-        # Clement is happy the parsing went well he celebrates...
+        # Clement is happy the parsing went well, now he celebrates...
 
     def test_single_hog_analysis(self):
         pass
@@ -49,8 +71,66 @@ class SetUpHamAnalysis(unittest.TestCase):
     def test_ancestral_genome_analysis(self):
         pass
 
-    def test_comparative_analysis(self):
-        pass
+    def test_lineage_comparative_analysis(self):
+
+        # Clement initialise the ham analyzer objet as it's explained in the documentation
+        logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+        nwk_path = './tests/simpleEx.nwk'
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
+        orthoxml_path = './tests/simpleEx.orthoxml'
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+
+        # Then clement is interest to investigate on what happened between the ancestral genomes of vertebrates
+        # and the extent genomes of the mouse.
+
+        # First he select the related genomes objectt via their name or mrca.
+        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
+        frog = ham_analysis._get_extant_genome_by_name(name="XENTR")
+        vertebrates = ham_analysis._get_mrca_ancestral_genome_from_genome_set({mouse, frog})
+
+        # Then, he compare the two genomes of interest
+        vertical_map_mouse_vs_vert = ham_analysis.compare_genomes({mouse, vertebrates}, analysis='vertical')
+
+        # Now he is interest by the HOG that have stay single copy between these two levels
+        self.assertDictEqual({'<HOG(1)>': 'Gene(31)'}, _str_dict_one_value(vertical_map_mouse_vs_vert.get_single()))
+
+        # ... and at the duplicated genes
+        self.assertDictEqual({'<HOG(3)>': {'Gene(34)', 'Gene(33)'}}, _str_dict_array_value(vertical_map_mouse_vs_vert.get_duplicated()))
+
+        # Clement is curious and want to look if there is gene that have been lost
+        self.assertSetEqual({}, _str_array(vertical_map_mouse_vs_vert.get_lost()))
+
+    @skip
+    def test_multi_genome_comparative_analysis(self):
+
+        # Clement initialise the ham analyzer objet as it's explained in the documentation
+        logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+        nwk_path = './tests/simpleEx.nwk'
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
+        orthoxml_path = './tests/simpleEx.orthoxml'
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+
+        # Then clement is interest to investigate on the difference/similarities that exists between the primates and the rodents.
+
+        # First he select the related genomes object via their name and mrca.
+        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
+        rat = ham_analysis._get_extant_genome_by_name(name="RATNO")
+        human = ham_analysis._get_extant_genome_by_name(name="HUMAN")
+        chimp = ham_analysis._get_extant_genome_by_name(name="PANTR")
+        rodents = ham_analysis._get_mrca_ancestral_genome_from_genome_set({mouse, rat})
+        primates = ham_analysis._get_mrca_ancestral_genome_from_genome_set({human, chimp})
+
+        # Then, he compare the two genomes of interest through their mrca (Euarchontoglires)
+        lateral_map_rodents_vs_primates = ham_analysis.compare_genomes({rodents, primates}, analysis='lateral')
+
+        # Now he is interest by the HOG that have stay single in the both taxon
+        self.assertDictEqual({'<HOG(1.M.E)>': 'Gene(31)'}, _str_dict_one_value(lateral_map_rodents_vs_primates.get_single(only_in="both")))
+
+        # ... and at the duplicated genes
+        #self.assertDictEqual({'<HOG(3)>': {'Gene(34)', 'Gene(33)'}}, _str_dict_array_value(vertical_map_mouse_vs_vert.get_duplicated()))
+
+        # Clement is curious and want to look if there is gene that have been lost
+        #self.assertListEqual([], _str_array(vertical_map_mouse_vs_vert.get_lost()))
 
 
 if __name__ == "__main__":

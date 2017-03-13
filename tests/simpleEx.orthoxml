@@ -67,21 +67,21 @@ Example Notes without meaning
    <score id="consistency" value="1.0"/>
    <property name="TaxRange" value="Vertebrata"/>
    <geneRef id="51"/>
-   <orthologGroup >
+   <orthologGroup id="1.M" >
     <score id="coverage" value="0.84"/>
     <score id="consistency" value="0.932"/>
     <property name="TaxRange" value="Mammalia"/>
     <geneRef id="21"/>
-    <orthologGroup >
+    <orthologGroup id="1.M.E" >
      <score id="consistency" value="1.0"/>
      <property name="TaxRange" value="Euarchontoglires" />
-     <orthologGroup >
+     <orthologGroup id="1.M.E.P" >
       <score id="coverage" value="1.0"/>
       <property name="TaxRange" value="Primates"/>
       <geneRef id="1" />
       <geneRef id="11" />
      </orthologGroup>
-     <orthologGroup >
+     <orthologGroup id="1.M.E.R" >
       <property name="TaxRange" value="Rodents"/>
       <geneRef id="31" />
       <geneRef id="41" />
@@ -93,9 +93,9 @@ Example Notes without meaning
   <orthologGroup id="2">
    <property name="TaxRange" value="Mammalia"/>
    <geneRef id="22"/>
-   <orthologGroup >
+   <orthologGroup id="2.E">
     <property name="TaxRange" value="Euarchontoglires" />
-    <orthologGroup >
+    <orthologGroup id="2.E.P">
      <property name="TaxRange" value="Primates"/>
      <geneRef id="2" />
      <geneRef id="12" />
@@ -107,20 +107,20 @@ Example Notes without meaning
   <orthologGroup id="3">
    <property name="TaxRange" value="Vertebrata"/>
    <geneRef id="53"/>
-   <orthologGroup >
+   <orthologGroup id="3.M">
     <property name="TaxRange" value="Mammalia"/>
     <geneRef id="23"/>
     <paralogGroup>
-     <orthologGroup >
+     <orthologGroup id="3.E.1">
       <property name="TaxRange" value="Euarchontoglires" />
       <geneRef id="33"/>
-      <orthologGroup>
+      <orthologGroup id="3.E.1.P">
        <property name="TaxRange" value="Primates"/>
        <geneRef id="3"/>
        <geneRef id="13"/>
       </orthologGroup>
      </orthologGroup>
-     <orthologGroup >
+     <orthologGroup id="3.E.2" >
       <score id="coverage" value="0.3"/>
       <property name="TaxRange" value="Euarchontoglires" />
       <geneRef id="34" />
