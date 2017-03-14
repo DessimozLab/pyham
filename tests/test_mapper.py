@@ -308,122 +308,88 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         with self.assertRaises(TypeError):
             lateral_map = MapLateral()
 
-    @skip
     def test_get_lost(self):
-        vertical_map = MapVertical(self.ham_analysis)
-        map = HOGsMap(self.ham_analysis, {self.human, self.euarchontoglires})
-        vertical_map.add_map(map)
+        lateral_map = MapLateral(self.ham_analysis)
 
-        loss = vertical_map.get_lost()
-        self.assertEqual(["<HOG(3.E.2)>"], _str_array(loss))
+        map_human_euarc = HOGsMap(self.ham_analysis, {self.human, self.euarchontoglires})
+        lateral_map.add_map(map_human_euarc)
 
-        vertical_map2 = MapVertical(self.ham_analysis)
-        map2 = HOGsMap(self.ham_analysis, {self.rat, self.euarchontoglires})
-        vertical_map2.add_map(map2)
+        map_rat_euarc = HOGsMap(self.ham_analysis, {self.rat, self.euarchontoglires})
+        lateral_map.add_map(map_rat_euarc)
 
-        loss2 = vertical_map2.get_lost()
-        self.assertEqual({"<HOG(2.E)>", "<HOG(3.E.2)>", "<HOG(3.E.1)>"}, set(_str_array(loss2)))
-    @skip
+        loss = lateral_map.get_lost()
+
+        for hog in loss.keys():
+            if str(hog) == "<HOG(3.E.2)>":
+                H3_E_2 = hog
+            elif str(hog) == "<HOG(3.E.1)>":
+                H3_E_1 = hog
+            elif str(hog) == "<HOG(2.E)>":
+                H2_E = hog
+
+        self.assertEqual({self.rat}, set(loss[H2_E]))
+        self.assertEqual({self.rat}, set(loss[H3_E_1]))
+        self.assertEqual({self.rat, self.human}, set(loss[H3_E_2]))
+
+        # trying if lazy property work
+        loss2 = lateral_map.get_lost()
+        self.assertEqual({self.rat}, set(loss2[H2_E]))
+        self.assertEqual({self.rat}, set(loss2[H3_E_1]))
+        self.assertEqual({self.rat, self.human}, set(loss2[H3_E_2]))
+
     def test_get_gained(self):
-        vertical_map = MapVertical(self.ham_analysis)
-        map = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
-        vertical_map.add_map(map)
 
-        gain = vertical_map.get_gained()
-        self.assertEqual({"Gene(2)"}, set(_str_array(gain)))
-    @skip
+        lateral_map = MapLateral(self.ham_analysis)
+
+        map_frog_vertebrate = HOGsMap(self.ham_analysis, {self.frog, self.vertebrates})
+        lateral_map.add_map(map_frog_vertebrate)
+
+        map_human_euarc = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
+        lateral_map.add_map(map_human_euarc)
+
+        gain = lateral_map.get_gained()
+        self.assertEqual(set(), set(_str_array(gain[self.frog])))
+        self.assertEqual({"Gene(2)"}, set(_str_array(gain[self.human])))
+
     def test_get_single(self):
-        vertical_map = MapVertical(self.ham_analysis)
-        map = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
-        vertical_map.add_map(map)
+        lateral_map = MapLateral(self.ham_analysis)
 
-        single = vertical_map.get_single()
-        self.assertDictEqual({'<HOG(1)>': 'Gene(1)'}, _str_dict_one_value(single))
-    @skip
+        map_human_euarc = HOGsMap(self.ham_analysis, {self.human, self.euarchontoglires})
+        lateral_map.add_map(map_human_euarc)
+
+        map_rat_euarc = HOGsMap(self.ham_analysis, {self.rat, self.euarchontoglires})
+        lateral_map.add_map(map_rat_euarc)
+
+        single = lateral_map.get_single()
+
+        for hog in single.keys():
+            if str(hog) == "<HOG(3.E.1)>":
+                H3_E_1 = hog
+            elif str(hog) == "<HOG(1.M.E)>":
+                H1_M_E = hog
+            elif str(hog) == "<HOG(2.E)>":
+                H2_E = hog
+
+        self.assertDictEqual({str(self.human): "Gene(3)"},_str_dict_one_value(single[H3_E_1]))
+        self.assertDictEqual({str(self.human): "Gene(1)", str(self.rat): "Gene(41)"},_str_dict_one_value(single[H1_M_E]))
+        self.assertDictEqual({str(self.human): "Gene(2)"},_str_dict_one_value(single[H2_E]))
+
     def test_get_duplicated(self):
-        vertical_map = MapVertical(self.ham_analysis)
-        map = HOGsMap(self.ham_analysis, {self.mouse, self.vertebrates})
-        vertical_map.add_map(map)
+        lateral_map = MapLateral(self.ham_analysis)
 
-        duplicate = vertical_map.get_duplicated()
-        self.assertDictEqual({'<HOG(3)>': {'Gene(33)', 'Gene(34)'}}, _str_dict_array_value(duplicate))
+        map_human_vert = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
+        lateral_map.add_map(map_human_vert)
+
+        map_mouse_vert = HOGsMap(self.ham_analysis, {self.mouse, self.vertebrates})
+        lateral_map.add_map(map_mouse_vert)
+
+        duplicate = lateral_map.get_duplicated()
+
+        for hog in duplicate.keys():
+            if str(hog) == "<HOG(3)>":
+                H = hog
+
+        self.assertDictEqual({str(self.human): {"Gene(3)"}, str(self.mouse):{ 'Gene(33)', 'Gene(34)'}}, _str_dict_array_value(duplicate[H]))
 
 if __name__ == "__main__":
     unittest.main()
-
-"""
-    def test_buildEventClusters(self):
-
-        def convert_LOSS(LOSS):
-            cLOSS = {}
-            for hog_ancestor, descendants in LOSS.items():
-                cLOSS[str(hog_ancestor)] = descendants
-            return cLOSS
-
-        def convert_GAIN(GAIN):
-            cGAIN = {}
-            for genome, list_genes in GAIN.items():
-                clist = []
-                for g in list_genes:
-                    clist.append(str(g))
-                cGAIN[genome]=clist
-            return cGAIN
-
-        def convert_SINGLE(SINGLE):
-            cSINGLE = set()
-            for hog_ancestor, descendant in SINGLE.items():
-                x = []
-                for genome, gene in descendant.items():
-                    x = x + [str(hog_ancestor), genome, str(gene)]
-
-                cSINGLE.add(frozenset(x))
-            return cSINGLE
-
-        def convert_DUPLICATE(DUPLICATE):
-            cDUPLICATE = set()
-            for hog_ancestor, descendant in DUPLICATE.items():
-                x = []
-                for genome, genes in descendant.items():
-                    x = x + [str(hog_ancestor), genome]
-                    for g in genes:
-                        x.append(str(g))
-                cDUPLICATE.add(frozenset(x))
-            return cDUPLICATE
-
-        # an extant genome (human) and its ancestor (Vertebrates)
-        map = HOGsMap(self.ham_analysis, {self.human, self.vertebrates})
-
-        expected_LOSS = {}
-        self.assertDictEqual(expected_LOSS, convert_LOSS(map.LOSS))
-
-        expected_GAIN = {self.human: ["Gene(2)"]}
-        self.assertDictEqual(expected_GAIN, convert_GAIN(map.GAIN))
-
-        expected_SINGLE = set()
-        expected_SINGLE.add(frozenset(["<HOG(1)>",self.human,"Gene(1)"]))
-        self.assertSetEqual(expected_SINGLE, convert_SINGLE(map.SINGLE))
-
-        expected_DUPLICATE = set()
-        expected_DUPLICATE.add(frozenset(["<HOG(3)>",self.human,"Gene(3)"]))
-        self.assertSetEqual(expected_DUPLICATE, convert_DUPLICATE(map.DUPLICATE))
-
-        # two extant genomes(human,mouse) and their MRCA(Euarchontoglires)
-        map = HOGsMap(self.ham_analysis, {self.human, self.mouse})
-
-        expected_LOSS = {"<HOG()>": [self.human]}
-        self.assertDictEqual(expected_LOSS, convert_LOSS(map.LOSS))
-
-        expected_GAIN = {self.human:[], self.mouse:[]}
-        self.assertDictEqual(expected_GAIN, convert_GAIN(map.GAIN))
-
-        expected_SINGLE = set()
-        expected_SINGLE.add(frozenset(["<HOG()>", self.human,"Gene(1)",self.mouse,"Gene(31)"]))
-        expected_SINGLE.add(frozenset(["<HOG()>",self.human,"Gene(2)", self.mouse,"Gene(32)"]))
-        expected_SINGLE.add(frozenset(["<HOG()>",self.human,"Gene(3)", self.mouse,"Gene(33)"]))
-        expected_SINGLE.add(frozenset(["<HOG()>", self.mouse,"Gene(34)"]))
-        self.assertSetEqual(expected_SINGLE, convert_SINGLE(map.SINGLE))
-
-        expected_DUPLICATE = set()
-        self.assertSetEqual(expected_DUPLICATE, convert_DUPLICATE(map.DUPLICATE))
-
-"""

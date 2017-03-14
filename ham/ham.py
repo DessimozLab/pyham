@@ -6,7 +6,7 @@ from ham import mapper
 import logging
 import sys
 from . import abstractgene
-
+import copy
 logger = logging.getLogger(__name__)
 
 
@@ -239,14 +239,14 @@ class HAM(object):
         """
         ancestor = self._get_mrca_ancestral_genome_from_genome_set(genome_set)
         genome_set.discard(ancestor)
-        descendants = genome_set.pop()
-        return ancestor, descendants
+        #descendants = genome_set.pop()
+        return ancestor, genome_set
 
     def compare_genomes(self, genomes_set, analysis=None):
         """
         function for level comparaison || Work in progress
         :param genomes_set:
-        :param analysis:
+        :param analysis: ADRIAN -> This is not smart
         :return:
         """
 
@@ -258,8 +258,12 @@ class HAM(object):
             return vertical_map
 
         elif analysis == "lateral":
-            pass
-            #return MapLateral(genomes_set)
+            lateral_map = mapper.MapLateral(self)
+            anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
+            for g in desc:
+                hogmap = mapper.HOGsMap(self, {g, anc})
+                lateral_map.add_map(hogmap)
+            return lateral_map
 
         else:
             raise TypeError("Invalid type of genomes comparison")

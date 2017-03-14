@@ -98,9 +98,8 @@ class HamAnalysis(unittest.TestCase):
         self.assertDictEqual({'<HOG(3)>': {'Gene(34)', 'Gene(33)'}}, _str_dict_array_value(vertical_map_mouse_vs_vert.get_duplicated()))
 
         # Clement is curious and want to look if there is gene that have been lost
-        self.assertSetEqual({}, _str_array(vertical_map_mouse_vs_vert.get_lost()))
+        self.assertSetEqual(set(), _str_array(vertical_map_mouse_vs_vert.get_lost()))
 
-    @skip
     def test_multi_genome_comparative_analysis(self):
 
         # Clement initialise the ham analyzer objet as it's explained in the documentation
@@ -117,20 +116,27 @@ class HamAnalysis(unittest.TestCase):
         rat = ham_analysis._get_extant_genome_by_name(name="RATNO")
         human = ham_analysis._get_extant_genome_by_name(name="HUMAN")
         chimp = ham_analysis._get_extant_genome_by_name(name="PANTR")
+
         rodents = ham_analysis._get_mrca_ancestral_genome_from_genome_set({mouse, rat})
         primates = ham_analysis._get_mrca_ancestral_genome_from_genome_set({human, chimp})
 
         # Then, he compare the two genomes of interest through their mrca (Euarchontoglires)
         lateral_map_rodents_vs_primates = ham_analysis.compare_genomes({rodents, primates}, analysis='lateral')
 
+        # ... UNDER CONSTRUCTION ... #
+
         # Now he is interest by the HOG that have stay single in the both taxon
-        self.assertDictEqual({'<HOG(1.M.E)>': 'Gene(31)'}, _str_dict_one_value(lateral_map_rodents_vs_primates.get_single(only_in="both")))
+        s = lateral_map_rodents_vs_primates.get_single()
+        print(lateral_map_rodents_vs_primates.ancestor.taxon)
+        for h in s:
+            print(h)
+            print("\t {} ".format(s[h]))
+
+         # ... UNDER CONSTRUCTION ... #
 
         # ... and at the duplicated genes
-        #self.assertDictEqual({'<HOG(3)>': {'Gene(34)', 'Gene(33)'}}, _str_dict_array_value(vertical_map_mouse_vs_vert.get_duplicated()))
 
         # Clement is curious and want to look if there is gene that have been lost
-        #self.assertListEqual([], _str_array(vertical_map_mouse_vs_vert.get_lost()))
 
 
 if __name__ == "__main__":

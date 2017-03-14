@@ -179,7 +179,7 @@ class MapLateral(MapResults):
     The MapLateral provides the following methods to compare HOG across genomes:
         - get_loss(): return a dictionary of all Hi that are lost in Gj. {Hi -> [Gx]}
         - get_gain(): return a dictionary of all Gx and their novels HOG Hx with no correspondence in Gi. {Gx -> [Hx]}
-        - get_duplicate(): return a dictionary with all Hi map to their descendant Hx clustered by Gx. {Hx -> {Gx -> [Hx]}}
+        - get_duplicate(): return a dictionary with all Hi map to their descendant Hj clustered by Gj. {Hi -> {Gj -> [Hj]}}
         - get_single():  return a dictionary with all Hi map to its descendant Hx clustered by Gx. {Hx -> {Gx -> Hx}}
     '''
 
@@ -187,7 +187,11 @@ class MapLateral(MapResults):
     def __init__(self, HAM):
         super(MapLateral, self).__init__(HAM)
         self.descendants = [] # [Gx]
-        self.map = {} # {Gx -> HOGMap(Gi,Gx)}
+        self.maps = {} # {Gx -> HOGMap(Gi,Gx)}
+        self.LOSS = None  # {Hi -> [Gx]}
+        self.GAIN = None # {Gj -> [Hj]}
+        self.SINGLE = None # {Hi -> {Gj -> Hj}}
+        self.DUPLICATE = None # {Hi -> {Gj -> [Hj]}}
 
     def add_map(self, HogMap):
         """Add a map to the MapResults object"""
@@ -195,23 +199,58 @@ class MapLateral(MapResults):
             raise TypeError("expect subclass obj of '{}', got {}"
                             .format(HOGsMap.__name__,
                                     type(HogMap).__name__))
-        if self.map == {}:
+        if self.maps == {}:
             self.ancestor = HogMap.ancestor
         else:
             if self.ancestor != HogMap.ancestor:
                 raise TypeError("You can only add map to MapLateral object that have the same ancestor. The current ancestor is {} and the map ancestor you try to add is {}.".format(self.ancestor, HogMap.ancestor ))
-        self.map[HogMap.descendant] = HogMap
+        self.maps[HogMap.descendant] = HogMap
         self.descendants.append(HogMap.descendant)
 
 
-    def get_lost(self): # Todo only_in=x where x can be descendant genome or "all"
-        return self.map.LOSS
+    def get_lost(self): # Todo only_in=x where x can be descendant genome or "all" ?
+        """
+        :return:  a dictionary all HOGs Hi and their list of Genome Gj where they are lost.
+        """
+        if self.LOSS is None:
+            loss = {}
+            for genome, hmap in self.maps.items():
+                for lost_gene in hmap.LOSS:
+                    loss.setdefault(lost_gene,[]).append(genome)
+            self.LOSS = loss
+        return self.LOSS
 
     def get_gained(self):
-        return self.map.GAIN
+        """
+        :return: a dictionary of Genome Gj wither their novels genes Hj.
+        """
+        if self.GAIN is None:
+            gain = {}
+            for genome, hmap in self.maps.items():
+                gain[genome] = hmap.GAIN
+            self.GAIN = gain
+        return self.GAIN
 
     def get_single(self): # TODO return_list_only=False to return list of gene directly ?
-        return self.map.SINGLE
+        """
+        :return: a dictionary of HOG Hi with their single Hj clustered by Genome Gj.
+        """
+        if self.SINGLE is None:
+            single = {}
+            for genome, hmap in self.maps.items():
+                for hi,hj in hmap.SINGLE.items():
+                    single.setdefault(hi,{})[genome] = hj
+            self.SINGLE = single
+        return self.SINGLE
 
     def get_duplicated(self):
-        return self.map.DUPLICATE
+        """
+        :return: a dictionary of HOG Hi with their list of single Hj clustered by Genome Gj.
+        """
+        if self.DUPLICATE is None:
+            duplicate = {}
+            for genome, hmap in self.maps.items():
+                for hi,list_hj in hmap.DUPLICATE.items():
+                    duplicate.setdefault(hi,{})[genome] = list_hj
+            self.DUPLICATE = duplicate
+        return self.DUPLICATE
