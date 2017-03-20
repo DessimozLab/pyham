@@ -44,7 +44,7 @@ class HOGsMap(object):
            raise TypeError("The genomes are not in the same lineage: {}".format(genome_set))
 
     def set_ancestor_and_descendant(self, genome_set):
-        ancestor = self.HAM._get_mrca_ancestral_genome_from_genome_set(genome_set)
+        ancestor = self.HAM.get_mrca_ancestral_genome_from_genome_set(genome_set)
         genome_set.discard(ancestor)
         descendant = genome_set.pop()
         return ancestor, descendant
@@ -84,7 +84,6 @@ class HOGsMap(object):
                 hog_target, paralog = hog_source.search_ancestor_hog_in_ancestral_genome(self.ancestor)
                 upMap[hog_source] = [hog_target, paralog]
         return upMap
-
 
 class MapResults(metaclass=ABCMeta):
     '''

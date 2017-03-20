@@ -62,6 +62,36 @@ class HAM(object):
                                                                                               len(
                                                                                                   self.taxonomy.leaves)))
 
+    def compare_genomes(self, genomes_set, analysis):
+        """
+        function for level comparaison || Work in progress
+        :param genomes_set:
+        :param analysis: ADRIAN -> This is not smart
+        :return:
+        """
+
+        if analysis == "vertical":
+            if len(genomes_set) != 2:
+                raise TypeError("{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
+            vertical_map = mapper.MapVertical(self)
+            vertical_map.add_map(self.get_HOGMap(genomes_set))
+            return vertical_map
+
+        elif analysis == "lateral":
+            if len(genomes_set) < 2:
+                raise TypeError("{} genomes given for lateral HOG mapping, at least 2 should be given".format(len(genomes_set)))
+            lateral_map = mapper.MapLateral(self)
+            anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
+            for g in desc:
+                hogmap = mapper.HOGsMap(self, {g, anc})
+                lateral_map.add_map(hogmap)
+            return lateral_map
+
+        else:
+            raise TypeError("Invalid type of genomes comparison")
+
+    # ... QUERY METHODS ... #
+
     def get_HOGMap(self, genome_pair_set):
         """
         if not already computed, do the hog mapping between a pair of levels.
@@ -79,32 +109,24 @@ class HAM(object):
     def get_all_top_level_hogs(self):
         return self.toplevel_hogs
 
-    def get_all_genes_of_hog(self, hog):
-
-        def append_child(current, child, list):
-            list.append(child)
-            return list
-
-        return hog.visit([], function_leaf=append_child)
-
     def get_all_extant_genes_dict(self):
         return self.extant_gene_map
 
-    def get_extant_genomes(self):
+    def get_all_extant_genomes(self):
         """
         return all Genome.ExtantGenome
         :return: set of Genome.ExtantGenome
         """
         return set(leaf.genome for leaf in self.taxonomy.leaves)
 
-    def get_ancestral_genomes(self):
+    def get_all_ancestral_genomes(self):
         """
         return all Genome.AncestralGenome
         :return: set of Genome.AncestralGenome
         """
         return set(internal_node.genome for internal_node in self.taxonomy.internal_nodes)
 
-    def get_ancestral_genome(self, tax_node):
+    def get_ancestral_genome_by_taxon(self, tax_node):
 
         if "genome" in tax_node.features:
                 return tax_node.genome
@@ -115,7 +137,11 @@ class HAM(object):
 
             return ancestral_genome
 
-    def _get_extant_genome_by_name(self,**kwargs):
+    def get_extant_genome_by_name(self,**kwargs): # todo: I'm not really happy with this
+        """
+        :param kwargs: use the name tag to browser a genomes
+        :return:
+        """
 
         nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
 
@@ -130,7 +156,7 @@ class HAM(object):
         else:
             raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
 
-    def _get_mrca_ancestral_genome_from_genome_set(self, genome_set):
+    def get_mrca_ancestral_genome_from_genome_set(self, genome_set):
         """
         return the MRCA of all the genomes present in genome_set.
         :param genome_set: set of ancestral genomes.
@@ -153,9 +179,9 @@ class HAM(object):
 
         common = self.taxonomy.tree.get_common_ancestor(children_nodes)
 
-        return self.get_ancestral_genome(common)
+        return self.get_ancestral_genome_by_taxon(common)
 
-    def _get_mrca_ancestral_genome_using_hog_children(self, hog):
+    def get_mrca_ancestral_genome_using_hog_children(self, hog):
         """
         collect all the genomes insides the hog children and them look for their mrca
         :param hog:
@@ -167,7 +193,9 @@ class HAM(object):
         for child in hog.children:
             children_genomes.add(child.genome)
 
-        return self._get_mrca_ancestral_genome_from_genome_set(children_genomes)
+        return self.get_mrca_ancestral_genome_from_genome_set(children_genomes)
+
+    # ... PRIVATE METHODS ... #
 
     def _add_missing_taxon(self, child_hog , oldest_hog, missing_taxons):
         """
@@ -196,8 +224,9 @@ class HAM(object):
         # Then for each intermediate level in between the two hog
         current_child = child_hog
         for tax in missing_taxons:
+
             # we get the related ancestral genome of this level
-            ancestral_genome = self.get_ancestral_genome(tax)
+            ancestral_genome = self.get_ancestral_genome_by_taxon(tax)
 
             # we create the related hog and add it to the ancestral genome
             hog = abstractgene.HOG()
@@ -237,39 +266,10 @@ class HAM(object):
         :param genome_set:
         :return:
         """
-        ancestor = self._get_mrca_ancestral_genome_from_genome_set(genome_set)
+        ancestor = self.get_mrca_ancestral_genome_from_genome_set(genome_set)
         genome_set.discard(ancestor)
-        #descendants = genome_set.pop()
         return ancestor, genome_set
 
-    def compare_genomes(self, genomes_set, analysis=None):
-        """
-        function for level comparaison || Work in progress
-        :param genomes_set:
-        :param analysis: ADRIAN -> This is not smart
-        :return:
-        """
 
-        if analysis == "vertical":
-            if len(genomes_set) != 2:
-                raise TypeError("{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
-            vertical_map = mapper.MapVertical(self)
-            vertical_map.add_map(self.get_HOGMap(genomes_set))
-            return vertical_map
 
-        elif analysis == "lateral":
-            lateral_map = mapper.MapLateral(self)
-            anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
-            for g in desc:
-                hogmap = mapper.HOGsMap(self, {g, anc})
-                lateral_map.add_map(hogmap)
-            return lateral_map
 
-        else:
-            raise TypeError("Invalid type of genomes comparison")
-
-    def analyze_hog(self):
-        pass
-
-    def analyze_ancestral_genomes(self):
-        pass

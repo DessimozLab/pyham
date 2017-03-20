@@ -11,7 +11,7 @@ class OrthoXMLParser(object):
     """
 
     def __init__(self, ham_object, hog_filter=None):
-        self.extant_gene_map = {}
+        self.extant_gene_map = {} # {unique_id -> [mapped_id]}
         self.current_species = None  # target the species currently parse
         self.hog_stack = []
         self.toplevel_hogs = {}
@@ -28,7 +28,7 @@ class OrthoXMLParser(object):
             self.in_paralogGroup = len(self.hog_stack)
 
         if tag == "{http://orthoXML.org/2011/}species":
-            self.current_species = self.ham_object._get_extant_genome_by_name(**attrib)
+            self.current_species = self.ham_object.get_extant_genome_by_name(**attrib)
 
         elif tag == "{http://orthoXML.org/2011/}gene":
             gene = abstractgene.Gene(**attrib)
@@ -77,7 +77,7 @@ class OrthoXMLParser(object):
             hog = self.hog_stack.pop()
 
             # get the ancestral genome related to this hog based on it's children
-            ancestral_genome = self.ham_object._get_mrca_ancestral_genome_using_hog_children(hog)
+            ancestral_genome = self.ham_object.get_mrca_ancestral_genome_using_hog_children(hog)
             hog.set_genome(ancestral_genome)
             ancestral_genome.taxon.genome.add_gene(hog)
 

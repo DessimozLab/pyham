@@ -20,11 +20,11 @@ class QueryTest(unittest.TestCase):
         self.assertEqual(len(self.ham_analysis.get_all_extant_genes_dict()), 19)
 
     def test_get_ancestral_genomes(self):
-        self.assertEqual(len(self.ham_analysis.get_ancestral_genomes()), 5)
+        self.assertEqual(len(self.ham_analysis.get_all_ancestral_genomes()), 5)
 
     def test_get_extant_genome_by_name(self):
         query_name = "HUMAN"
-        a = self.ham_analysis._get_extant_genome_by_name(name=query_name)
+        a = self.ham_analysis.get_extant_genome_by_name(name=query_name)
         self.assertIsInstance(a, ExtantGenome)
         self.assertEqual(query_name, a.name)
 
@@ -33,19 +33,19 @@ class QueryTest(unittest.TestCase):
         pass
 
     def test_get_mrca_ancestral_genome_from_genome_set(self):
-        human = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")
-        mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
+        human = self.ham_analysis.get_extant_genome_by_name(name="HUMAN")
+        mouse = self.ham_analysis.get_extant_genome_by_name(name="MOUSE")
 
         with self.assertRaises(ValueError):
-            self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([mouse]))
+            self.ham_analysis.get_mrca_ancestral_genome_from_genome_set(set([mouse]))
 
         with self.assertRaises(TypeError):
-            self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([mouse, "human"]))
+            self.ham_analysis.get_mrca_ancestral_genome_from_genome_set(set([mouse, "human"]))
 
-        mrca_euch = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([human,mouse]))
+        mrca_euch = self.ham_analysis.get_mrca_ancestral_genome_from_genome_set(set([human,mouse]))
         self.assertEqual("Euarchontoglires", mrca_euch.taxon.name)
 
-        mrca_euch2 = self.ham_analysis._get_mrca_ancestral_genome_from_genome_set(set([mrca_euch,mouse]))
+        mrca_euch2 = self.ham_analysis.get_mrca_ancestral_genome_from_genome_set(set([mrca_euch,mouse]))
         self.assertEqual("Euarchontoglires", mrca_euch2.taxon.name)
 
 

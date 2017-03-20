@@ -46,7 +46,7 @@ class OrthoXMLParserTest(unittest.TestCase):
         self.assertDictEqual(observed_cnts, expected_cnts)
 
     def test_number_hog_per_ancestral_genome(self):
-        ags = self.ham_analysis.get_ancestral_genomes()
+        ags = self.ham_analysis.get_all_ancestral_genomes()
         expected_numbers = {'Vertebrata': 2, 'Mammalia': 3, 'Euarchontoglires': 4, 'Rodents': 4, 'Primates': 4}
         observed_numbers = {'Vertebrata': 0, 'Mammalia': 0, 'Euarchontoglires': 0, 'Rodents': 0, 'Primates': 0}
         for ag in ags:
@@ -70,9 +70,9 @@ class OrthoXMLParserTest(unittest.TestCase):
         expectedMembers_2 = {'22', '32', '2', '12'}
         expectedMembers_3 = {'3', '13', '23', '33', '53', '14', '34'}
 
-        hog1_genes = self.ham_analysis.get_all_genes_of_hog(hog1)
-        hog2_genes = self.ham_analysis.get_all_genes_of_hog(hog2)
-        hog3_genes = self.ham_analysis.get_all_genes_of_hog(hog3)
+        hog1_genes = hog1.get_all_descendant_genes()
+        hog2_genes = hog2.get_all_descendant_genes()
+        hog3_genes = hog3.get_all_descendant_genes()
 
         members_1 = set(x.unique_id for x in hog1_genes)
         members_2 = set(x.unique_id for x in hog2_genes)

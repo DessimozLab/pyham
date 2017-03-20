@@ -125,6 +125,17 @@ class HOG(AbstractGene):
                     elem = function_postfix(self, child, elem)
         return elem
 
+    def get_all_descendant_genes(self):
+        """
+        :return: list of all the extent genes found in all the child hog
+        """
+
+        def append_child(current, child, list):
+            list.append(child)
+            return list
+
+        return self.visit([], function_leaf=append_child)
+
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
 

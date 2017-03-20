@@ -55,7 +55,8 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(len(ham_analysis.extant_gene_map), 19)
 
         # Clement is curious to look at the species present within this taxonomy
-        extant_genomes = ham_analysis.get_extant_genomes()
+        extant_genomes = ham_analysis.get_all_extant_genomes()
+
 
         # then look if its 6 species are present
         extant_genomes_name = set(ext_genome.name for ext_genome in extant_genomes)
@@ -84,9 +85,9 @@ class HamAnalysis(unittest.TestCase):
         # and the extent genomes of the mouse.
 
         # First he select the related genomes objectt via their name or mrca.
-        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
-        frog = ham_analysis._get_extant_genome_by_name(name="XENTR")
-        vertebrates = ham_analysis._get_mrca_ancestral_genome_from_genome_set({mouse, frog})
+        mouse = ham_analysis.get_extant_genome_by_name(name="MOUSE")
+        frog = ham_analysis.get_extant_genome_by_name(name="XENTR")
+        vertebrates = ham_analysis.get_mrca_ancestral_genome_from_genome_set({mouse, frog})
 
         # Then, he compare the two genomes of interest
         vertical_map_mouse_vs_vert = ham_analysis.compare_genomes({mouse, vertebrates}, analysis='vertical')
@@ -109,21 +110,22 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/simpleEx.orthoxml'
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
 
+        '''
+        # ... UNDER CONSTRUCTION ... #
+
         # Then clement is interest to investigate on the difference/similarities that exists between the primates and the rodents.
 
         # First he select the related genomes object via their name and mrca.
-        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
-        rat = ham_analysis._get_extant_genome_by_name(name="RATNO")
-        human = ham_analysis._get_extant_genome_by_name(name="HUMAN")
-        chimp = ham_analysis._get_extant_genome_by_name(name="PANTR")
+        mouse = ham_analysis.get_extant_genome_by_name(name="MOUSE")
+        rat = ham_analysis.get_extant_genome_by_name(name="RATNO")
+        human = ham_analysis.get_extant_genome_by_name(name="HUMAN")
+        chimp = ham_analysis.get_extant_genome_by_name(name="PANTR")
 
-        rodents = ham_analysis._get_mrca_ancestral_genome_from_genome_set({mouse, rat})
-        primates = ham_analysis._get_mrca_ancestral_genome_from_genome_set({human, chimp})
+        rodents = ham_analysis.get_mrca_ancestral_genome_from_genome_set({mouse, rat})
+        primates = ham_analysis.get_mrca_ancestral_genome_from_genome_set({human, chimp})
 
         # Then, he compare the two genomes of interest through their mrca (Euarchontoglires)
         lateral_map_rodents_vs_primates = ham_analysis.compare_genomes({rodents, primates}, analysis='lateral')
-
-        # ... UNDER CONSTRUCTION ... #
 
         # Now he is interest by the HOG that have stay single in the both taxon
         s = lateral_map_rodents_vs_primates.get_single()
@@ -132,11 +134,13 @@ class HamAnalysis(unittest.TestCase):
             print(h)
             print("\t {} ".format(s[h]))
 
-         # ... UNDER CONSTRUCTION ... #
-
         # ... and at the duplicated genes
 
         # Clement is curious and want to look if there is gene that have been lost
+
+        # ... UNDER CONSTRUCTION ... #
+
+        '''
 
 
 if __name__ == "__main__":
