@@ -1,7 +1,9 @@
 from abc import ABCMeta, abstractmethod
+import json
 import numbers
+import collections
 from ham.genome import ExtantGenome, AncestralGenome
-
+from ham.hogvis import Hogvis
 
 class AbstractGene(metaclass=ABCMeta):
     """AbstractGene class for gene entities.
@@ -11,6 +13,7 @@ class AbstractGene(metaclass=ABCMeta):
         genome      Genome containing this AbstractGene.
 
     """
+
     def __init__(self, arose_by_duplication=False, **kwargs):
         self.parent = None
         self.genome = None
@@ -52,6 +55,7 @@ class HOG(AbstractGene):
         super(HOG, self).__init__(**kwargs)
         self.hog_id = id
         self.children = []
+        self.hogvisHTML = None
 
     # add a AbstractGene to the hog children
     def add_child(self, elem):
@@ -120,10 +124,13 @@ class HOG(AbstractGene):
                 if function_leaf != None:
                     elem = function_leaf(self, child, elem)
             else:
-                child.visit(elem, function_leaf=function_leaf, function_postfix=function_postfix, function_prefix=function_prefix)
+                child.visit(elem, function_leaf=function_leaf, function_postfix=function_postfix,
+                            function_prefix=function_prefix)
                 if function_postfix != None:
                     elem = function_postfix(self, child, elem)
         return elem
+
+    # todo: the following method are returning also the "root node" we need to proper ut and fix this
 
     def get_all_descendant_genes(self):
         """
@@ -135,6 +142,46 @@ class HOG(AbstractGene):
             return list
 
         return self.visit([], function_leaf=append_child)
+
+    def get_all_descendant_genes_clustered_by_species(self):
+        """
+        :return: dict of all the extent genes found in all the child hog grouped by their species appartenance
+        """
+
+        def append_child(current, child, dict):
+            dict.setdefault(child.genome, []).append(child)
+            return dict
+
+        return self.visit({}, function_leaf=append_child)
+
+    def get_all_descendant_hogs(self):
+        """
+        :return: list of all the hog and its sub hogs
+        """
+
+        def append_child(current, list):
+            list.append(current)
+            return list
+
+        return  self.visit([], function_prefix=append_child)
+
+    def get_all_descendant_hog_levels(self):
+        """
+        :return: list of all the hog and sub hogs levels
+        """
+
+        def append_child(current,list):
+            list.append(current.genome)
+            return list
+
+        return self.visit([], function_prefix=append_child)
+
+    def hogvis(self, ham):
+
+        if self.hogvisHTML is None:
+            self.hogvisHTML = Hogvis(ham, self).renderHTML
+
+        return self.hogvisHTML
 
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
@@ -150,6 +197,7 @@ class Gene(AbstractGene):
         transcript_id    id used to mapped to external ids.
 
     """
+
     def __init__(self, id, geneId=None, protId=None, transcriptId=None, **kwargs):
         super(Gene, self).__init__(**kwargs)
         self.unique_id = id
@@ -166,6 +214,19 @@ class Gene(AbstractGene):
             if self.genome is not None and genome != self.genome:
                 raise EvolutionaryConceptError("Gene can only belong to one genome")
             self.genome = genome
+
+    def get_dict_xref(self):  # todo: make adrian check this
+
+        xref = {}
+        if self.gene_id is not None:
+            xref["id"] = self.unique_id
+        if self.gene_id is not None:
+            xref["geneId"] = self.gene_id
+        if self.prot_id is not None:
+            xref["protId"] = self.prot_id
+        if self.transcript_id is not None:
+            xref["transcriptId"] = self.transcript_id
+        return xref
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)

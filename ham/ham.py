@@ -90,6 +90,20 @@ class HAM(object):
         else:
             raise TypeError("Invalid type of genomes comparison")
 
+    def hogvis(self, hog, outfile=None): # since i need the taxonomy, etc it's easier to wrap everything here
+        """
+        :param hog:  HOG object to visualise
+        :param outfile: If specify create hogvis html file
+        :return: the hogvis html string
+        """
+        vishtml = hog.hogvis(self)
+
+        if outfile is not None:
+            with open(outfile, 'w') as fh:
+                fh.write(vishtml)
+
+        return vishtml
+
     # ... QUERY METHODS ... #
 
     def get_HOGMap(self, genome_pair_set):

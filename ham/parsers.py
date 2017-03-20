@@ -11,10 +11,10 @@ class OrthoXMLParser(object):
     """
 
     def __init__(self, ham_object, hog_filter=None):
-        self.extant_gene_map = {} # {unique_id -> [mapped_id]}
+        self.extant_gene_map = {} # {unique_id -> gene object}
         self.current_species = None  # target the species currently parse
         self.hog_stack = []
-        self.toplevel_hogs = {}
+        self.toplevel_hogs = {} # {hog_id -> hog object}
         if hog_filter is None:
             hog_filter = lambda x: x
         self.filter = hog_filter
