@@ -46,7 +46,7 @@ class Taxonomy(object):
         return intermediate_level
 
 
-    def get_newick_from_tree(self):
-        return self.tree.write(format=8)
+    def get_newick_from_tree(self, node):
+        return node.write(format=8, format_root_node=True)
 
 
