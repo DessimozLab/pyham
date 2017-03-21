@@ -15,6 +15,7 @@ class Genome(metaclass=ABCMeta):
     def __init__(self):
         self.genes = []
         self.taxon = None
+        self.name = None
 
 
     def add_gene(self, gene):
@@ -47,8 +48,21 @@ class AncestralGenome(Genome):
 
     def __init__(self):
         super(AncestralGenome, self).__init__()
-        pass
+        self.name = None
 
+    def get_name(self):
+        if self.name is None:
+            if self.taxon.name is not "":
+                self.name = self.taxon.name
+            else:
+                level_name = ""
+                for leaf in self.taxon:
+                    level_name += str(leaf.name)
+                    level_name += "/"
+                self.name = level_name[:-1]
+                self.taxon.name = self.name
+
+        return self.name
 
 class ExtantGenome(Genome):
 

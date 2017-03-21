@@ -93,10 +93,10 @@ class HAM(object):
     def hogvis(self, hog, outfile=None): # since i need the taxonomy, etc it's easier to wrap everything here
         """
         :param hog:  HOG object to visualise
-        :param outfile: If specify create hogvis html file
-        :return: the hogvis html string
+        :param outfile: If specify create get_hogvis html file
+        :return: the get_hogvis html string
         """
-        vishtml = hog.hogvis(self)
+        vishtml = hog.get_hogvis(self)
 
         if outfile is not None:
             with open(outfile, 'w') as fh:

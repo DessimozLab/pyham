@@ -21,6 +21,12 @@ class Taxonomy(object):
     def add_ancestral_genome_to_node(self, node, genome):
         node.add_feature("genome", genome)
         genome.set_taxon(node)
+
+        if node.name is not "":
+            genome.name = node.name
+        else:
+            genome.get_name()
+
         self.internal_nodes.add(node)
 
     def add_extant_genome_to_node(self, node, genome):
@@ -38,5 +44,9 @@ class Taxonomy(object):
             intermediate_level.append(tax)
 
         return intermediate_level
+
+
+    def get_newick_from_tree(self):
+        return self.tree.write(format=8)
 
 
