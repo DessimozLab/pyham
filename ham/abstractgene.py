@@ -41,6 +41,19 @@ class AbstractGene(metaclass=ABCMeta):
                 paralog = True
         return found, paralog
 
+    def get_topLevelHog(self): # TODO deal with singletons
+        """
+        get the related topLevelHog
+        :return: HOG object
+        """
+
+        current_hog = self
+
+        while current_hog.parent is not None:
+            current_hog = current_hog.parent
+
+        return current_hog
+
 
 class HOG(AbstractGene):
     """HOG class for HOGs (inherit from AbstractGene).

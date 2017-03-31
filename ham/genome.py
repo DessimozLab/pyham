@@ -49,6 +49,7 @@ class AncestralGenome(Genome):
     def __init__(self):
         super(AncestralGenome, self).__init__()
         self.name = None
+        self.ancestral_clustering = None # {hog -> [extant genes]}
 
     def get_name(self):
         if self.name is None:
@@ -63,6 +64,14 @@ class AncestralGenome(Genome):
                 self.taxon.name = self.name
 
         return self.name
+
+
+    def get_ancestral_clustering(self):
+        if self.ancestral_clustering is None:
+            self.ancestral_clustering = {}
+            for hog in self.genes:
+                self.ancestral_clustering[hog] = hog.get_all_descendant_genes()
+        return self.ancestral_clustering
 
 class ExtantGenome(Genome):
 

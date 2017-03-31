@@ -41,7 +41,7 @@ class MapperTestCases:
             nwk_path = './tests/simpleEx.nwk'
             tree_str = utils.get_newick_string(nwk_path, type="nwk")
             orthoxml_path = './tests/simpleEx.orthoxml'
-            self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+            self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
             self.human = self.ham_analysis.get_extant_genome_by_name(name="HUMAN")
             self.frog = self.ham_analysis.get_extant_genome_by_name(name="XENTR")

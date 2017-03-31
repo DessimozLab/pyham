@@ -10,7 +10,7 @@ class QueryTest(unittest.TestCase):
         nwk_path = './tests/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/simpleEx.orthoxml'
-        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
     def test_get_all_top_level_hogs(self):
         toplevel_hogs = self.ham_analysis.get_all_top_level_hogs()

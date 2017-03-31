@@ -43,7 +43,7 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/simpleEx.orthoxml'
 
         # Clement create the HAM object that will be the kernel of all analysis
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # And verifying if all tree elements are created
         self.assertEqual(ham_analysis.taxonomy.newick_str,
@@ -79,7 +79,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = './tests/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Then clement is interest to investigate on what happened between the ancestral genomes of vertebrates
         # and the extent genomes of the mouse.
@@ -108,7 +108,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = './tests/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type='orthoxml')
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         '''
         # ... UNDER CONSTRUCTION ... #

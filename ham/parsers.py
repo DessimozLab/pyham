@@ -12,6 +12,7 @@ class OrthoXMLParser(object):
 
     def __init__(self, ham_object, hog_filter=None):
         self.extant_gene_map = {} # {unique_id -> gene object}
+        self.external_id_mapper = {} # {external_id -> [unique_id]} TODO unittest + more than one id may have the same ext id
         self.current_species = None  # target the species currently parse
         self.hog_stack = []
         self.toplevel_hogs = {} # {hog_id -> hog object}
@@ -35,7 +36,9 @@ class OrthoXMLParser(object):
             gene.set_genome(self.current_species)
             self.current_species.add_gene(gene)
             self.extant_gene_map[gene.unique_id] = gene
-
+            for type, Id in attrib.items():
+                if type is not "id":
+                    self.external_id_mapper.setdefault(Id,[]).append(gene.unique_id)
 
         elif tag == "{http://orthoXML.org/2011/}geneRef":
             gene = self.extant_gene_map[attrib['id']]

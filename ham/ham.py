@@ -7,6 +7,7 @@ import logging
 import sys
 from . import abstractgene
 import copy
+
 logger = logging.getLogger(__name__)
 
 
@@ -24,11 +25,11 @@ def _build_hogs_and_genes(file_object, taxonomy=None):
     for line in file_object:
         parser.feed(line)
 
-    return factory.toplevel_hogs, factory.extant_gene_map
+    return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
 
 class HAM(object):
-    def __init__(self, newick_str=None, hog_file=None, type="orthoxml"):
+    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml"):
 
         if newick_str is None or hog_file is None:
             logger.debug('newick_str: {}, hogs_file: {}'.format(newick_str, hog_file))
@@ -36,31 +37,31 @@ class HAM(object):
 
         self.newick_str = newick_str
         self.hog_file = hog_file
-        self.hog_file_type = type
+        self.hog_file_type = type_hog_file
         self.toplevel_hogs = None
         self.extant_gene_map = None
-        self.HOGMaps = {} # In order to not recompute two time a hog map between two level we are storing them globally
+        self.external_id_mapper = None
+        self.HOGMaps = {}  # In order to not recompute two time a hog map between two level we are storing them globally
 
         self.taxonomy = tax.Taxonomy(self.newick_str)
         logger.info('Build taxonomy: completed.'.format(self.newick_str))
 
-        if type == "orthoxml":
+        if self.hog_file_type == "orthoxml":
             with open(self.hog_file, 'r') as orthoxml_file:
-                self.toplevel_hogs, self.extant_gene_map = _build_hogs_and_genes(orthoxml_file, self)
+                self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self)
             logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.toplevel_hogs),
                                                                                                 len(
                                                                                                     self.extant_gene_map)))
 
-        elif type == "hdf5":
+        elif self.hog_file_type == "hdf5":
             # Looping through all orthoXML within the hdf5
             #   for each run self.build_...
             #       update self.toplevel_hogs and self.extant_gene_map for each
             pass
 
         logger.info(
-            'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),
-                                                                                              len(
-                                                                                                  self.taxonomy.leaves)))
+            'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),len(self.taxonomy.leaves)))
+
 
     def compare_genomes(self, genomes_set, analysis):
         """
@@ -72,14 +73,16 @@ class HAM(object):
 
         if analysis == "vertical":
             if len(genomes_set) != 2:
-                raise TypeError("{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
+                raise TypeError(
+                    "{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
             vertical_map = mapper.MapVertical(self)
             vertical_map.add_map(self.get_HOGMap(genomes_set))
             return vertical_map
 
         elif analysis == "lateral":
             if len(genomes_set) < 2:
-                raise TypeError("{} genomes given for lateral HOG mapping, at least 2 should be given".format(len(genomes_set)))
+                raise TypeError(
+                    "{} genomes given for lateral HOG mapping, at least 2 should be given".format(len(genomes_set)))
             lateral_map = mapper.MapLateral(self)
             anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
             for g in desc:
@@ -90,19 +93,23 @@ class HAM(object):
         else:
             raise TypeError("Invalid type of genomes comparison")
 
-    def hogvis(self, hog, outfile=None): # since i need the taxonomy, etc it's easier to wrap everything here
+    def hogvis(self, hog, outfile=None):  # since i need the taxonomy, etc it's easier to wrap everything here
         """
         :param hog:  HOG object to visualise
         :param outfile: If specify create get_hogvis html file
-        :return: the get_hogvis html string
+        :return: the get_hogvis html string but nothing if outfile is specified
         """
         vishtml = hog.get_hogvis(self)
 
         if outfile is not None:
             with open(outfile, 'w') as fh:
                 fh.write(vishtml)
+                return
 
         return vishtml
+
+    def show_taxonomy(self):
+        print(self.taxonomy.tree.get_ascii())
 
     # ... QUERY METHODS ... #
 
@@ -120,11 +127,63 @@ class HAM(object):
             self.HOGMaps[f] = m
             return m
 
+    # ___ gene ___ #
+
+    def get_hog_by_id(self, hog_id):
+        """
+        return a single HOG object based on a hog_id query
+        :param hog_id:
+        :return: an HOG object or None if wrong hog_id given
+        """
+        if hog_id in self.toplevel_hogs.keys():
+            return self.toplevel_hogs[hog_id]
+        else:
+            return None
+
+    def get_hog_by_geneId(self, gene_id):
+        """
+        get a single HOG object that contained the query gene
+        :param gene_id: gene unique id
+        :return: an HOG object that matched the query or None
+        """
+        qgene = self.get_gene_by_id(gene_id)
+        if qgene is not None:
+            return qgene.get_topLevelHog()
+        else:
+            return None
+
+    def get_genes_by_external_id(self, external_gene_id): # TODO unittest
+        """
+        return a list because external id are not unique
+        :param external_gene_id:
+        :return:
+        """
+        if external_gene_id in self.external_id_mapper.keys():
+            return [self.extant_gene_map[qgene_id] for qgene_id in self.external_id_mapper[external_gene_id]]
+        else:
+            logger.warning('No extant genes have the external Id {}.'.format(external_gene_id))
+            return None
+
+    def get_gene_by_id(self, gene_unique_id):
+        """
+        get the Gene object that match the query unique id
+        :param gene_id:
+        :return:
+        """
+        gene_unique_id = str(gene_unique_id)
+        if gene_unique_id in self.extant_gene_map.keys():
+            return self.extant_gene_map[gene_unique_id]
+        else:
+            logger.warning('No extant genes have the unique Id {}.'.format(gene_unique_id))
+            return None
+
     def get_all_top_level_hogs(self):
         return self.toplevel_hogs
 
     def get_all_extant_genes_dict(self):
         return self.extant_gene_map
+
+    # ___ genome ___ #
 
     def get_all_extant_genomes(self):
         """
@@ -143,7 +202,7 @@ class HAM(object):
     def get_ancestral_genome_by_taxon(self, tax_node):
 
         if "genome" in tax_node.features:
-                return tax_node.genome
+            return tax_node.genome
 
         else:
             ancestral_genome = genome.AncestralGenome()
@@ -151,7 +210,20 @@ class HAM(object):
 
             return ancestral_genome
 
-    def get_extant_genome_by_name(self,**kwargs): # todo: I'm not really happy with this
+    def get_ancestral_genome_by_name(self, name):
+        """
+        :param name: str
+        :return:
+        """
+        nodes_founded = self.taxonomy.tree.search_nodes(name=name)
+
+        if len(nodes_founded) == 1:
+            if "genome" in nodes_founded[0].features:
+                return nodes_founded[0].genome
+        else:
+            raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), name))
+
+    def get_extant_genome_by_name(self, **kwargs):  # todo: I'm not really happy with this
         """
         :param kwargs: use the name tag to browser a genomes
         :return:
@@ -211,7 +283,7 @@ class HAM(object):
 
     # ... PRIVATE METHODS ... #
 
-    def _add_missing_taxon(self, child_hog , oldest_hog, missing_taxons):
+    def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons):
         """
 
         :param child_hog: youngest hog
@@ -248,7 +320,8 @@ class HAM(object):
             ancestral_genome.add_gene(hog)
 
             if ancestral_genome.taxon is not current_child.genome.taxon.up:
-                raise TypeError("HOG taxon {} is different than child parent taxon {}".format(ancestral_genome.taxon, current_child.genome.taxon.up))
+                raise TypeError("HOG taxon {} is different than child parent taxon {}".format(ancestral_genome.taxon,
+                                                                                              current_child.genome.taxon.up))
 
             # we add the child
             hog.add_child(current_child)
@@ -283,7 +356,3 @@ class HAM(object):
         ancestor = self.get_mrca_ancestral_genome_from_genome_set(genome_set)
         genome_set.discard(ancestor)
         return ancestor, genome_set
-
-
-
-
