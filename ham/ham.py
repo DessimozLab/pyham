@@ -27,7 +27,6 @@ def _build_hogs_and_genes(file_object, taxonomy=None):
 
     return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
-
 class HAM(object):
     def __init__(self, newick_str, hog_file, type_hog_file="orthoxml"):
 
@@ -61,7 +60,6 @@ class HAM(object):
 
         logger.info(
             'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),len(self.taxonomy.leaves)))
-
 
     def compare_genomes(self, genomes_set, analysis):
         """

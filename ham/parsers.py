@@ -5,7 +5,6 @@ logger = logging.getLogger(__name__)
 
 class OrthoXMLParser(object):
     """
-
     OrthoXML parser use to read the orthoxml file containing the hogs.
     It creates on the fly the gene mapping and the abstractGene.
     """

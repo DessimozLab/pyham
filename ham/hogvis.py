@@ -19,6 +19,7 @@ class Hogvis(object):
                                                              'species_tree': ham.taxonomy.get_newick_from_tree(hog.genome.taxon),
                                                              'xrefs': json.dumps(self.xrefs),
                                                              'per_species': json.dumps(self.per_species)})
+
     def _get_html_template(self):
             return Template("""<!DOCTYPE html>
                     <html>

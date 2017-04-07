@@ -189,7 +189,7 @@ class HOG(AbstractGene):
 
         return self.visit([], function_prefix=append_child)
 
-    def get_hogvis(self, ham):
+    def get_hogvis(self, ham): # todo clean that shit
 
         if self.hogvisHTML is None:
             self.hogvisHTML = Hogvis(ham, self).renderHTML
