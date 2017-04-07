@@ -9,7 +9,7 @@ class OrthoXMLParser(object):
     It creates on the fly the gene mapping and the abstractGene.
     """
 
-    def __init__(self, ham_object, hog_filter=None):
+    def __init__(self, ham_object, hog_filter=None, filter=None):
         self.extant_gene_map = {} # {unique_id -> gene object}
         self.external_id_mapper = {} # {external_id -> [unique_id]} TODO unittest + more than one id may have the same ext id
         self.current_species = None  # target the species currently parse
@@ -105,6 +105,96 @@ class OrthoXMLParser(object):
                 self.cpt += 1
                 if self.cpt % 500 == 0:
                     logger.info("{} HOGs parsed. ".format(self.cpt))
+
+    def data(self, data):
+        # Ignore data inside nodes
+        pass
+
+    def close(self):
+        # Nothing special to do here
+        return
+
+
+
+
+class FilterOrthoXMLParser(object):
+    """
+    Custom OrthoXML parser use to read the orthoxml file and get required information base on specific query set. It use
+    the ParserFilter object as input to do the selection.
+
+
+
+    self.HOGId_filter = []
+    self.GeneExtId_filter = []
+    self.GeneIntId_filter = []
+    self.taxonomicRange = None # you also need this for the HAM instantiation
+
+    # Information created during buildFilter call that is required for the HOG construction during HAM instantiation.
+    self.species = None  # { species -> [geneUniqueId] | "all"}
+    self.hogs = None  # [hogId]
+
+    """
+
+    def __init__(self, filter):
+
+        self.filterObj = filter
+
+        self.geneUniqueId = []  # [geneUniqueId]
+        self.hogsId = []  # [hogId]
+
+        # reset on toplevel end
+        self.current_hog = None
+        self.hog_stack = []
+        self.hog_generef = []
+        self.add_this_hog = False
+
+
+    def start(self, tag, attrib):
+
+        if tag == "{http://orthoXML.org/2011/}gene":
+            if self.filterObj.GeneIntId_filter is not []:
+                if attrib['id'] in self.filterObj.GeneIntId_filter:
+                    self.geneUniqueId.append(attrib['id'])
+
+            if self.filterObj.GeneExtId_filter is not []:
+                for xtid in attrib.values():
+                    if xtid in self.filterObj.GeneExtId_filter:
+                        self.geneUniqueId.append(attrib['id'])
+
+
+        elif tag == "{http://orthoXML.org/2011/}geneRef":
+            self.hog_generef.append(attrib['id'])
+            if attrib['id'] in self.geneUniqueId:
+                self.add_this_hog = True
+
+        elif tag == "{http://orthoXML.org/2011/}orthologGroup":
+            if len(self.hog_stack) == 0:
+                self.current_hog = attrib["id"]
+            if attrib["id"] in self.filterObj.HOGId_filter:
+                self.add_this_hog = True
+
+            self.hog_stack.append(1)
+
+
+
+    def end(self, tag):
+
+
+        if tag == "{http://orthoXML.org/2011/}orthologGroup":
+
+            # get the latest hog
+            hog = self.hog_stack.pop()
+
+            if len(self.hog_stack) == 0:
+
+                if self.add_this_hog:
+                    self.geneUniqueId = self.geneUniqueId + self.hog_generef
+                    self.hogsId.append(self.current_hog)
+
+                self.current_hog = None
+                self.hog_generef = []
+                self.add_this_hog = False
+
 
     def data(self, data):
         # Ignore data inside nodes

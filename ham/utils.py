@@ -1,5 +1,5 @@
+from . import taxonomy as tax
 
-__author__ = 'admin'
 
 def get_newick_string(source_path, type="nwk"):
     '''
@@ -18,6 +18,22 @@ def get_newick_string(source_path, type="nwk"):
 
     elif type == 'orthoXML':
         pass
+
+
+def previsualize_taxonomy(newick_str):
+    """
+    This function help to previsualyse before running HAM what the topology will looked like and what will be the
+    internal node naming.
+    :param newick_str:
+    :return:
+    """
+
+    t = tax.Taxonomy(newick_str)
+
+    for node in t.tree.traverse("postorder"):
+        t.setTaxonName(node)
+
+    return t.tree.get_ascii()
 
 
 

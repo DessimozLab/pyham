@@ -11,7 +11,7 @@ import copy
 logger = logging.getLogger(__name__)
 
 
-def _build_hogs_and_genes(file_object, taxonomy=None):
+def _build_hogs_and_genes(file_object, taxonomy=None, filter=None):
     """
     build AbstractGene.HOG and AbstractGene.Gene using a given orthoXML file object
     :param file_object: orthoXML file object
@@ -19,7 +19,7 @@ def _build_hogs_and_genes(file_object, taxonomy=None):
     :return: a set of AbstractGene.HOG and a set of  AbstractGene.Gene
     """
 
-    factory = parsers.OrthoXMLParser(taxonomy)
+    factory = parsers.OrthoXMLParser(taxonomy, filter=filter)
     parser = XMLParser(target=factory)
 
     for line in file_object:
@@ -27,12 +27,71 @@ def _build_hogs_and_genes(file_object, taxonomy=None):
 
     return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
+
+'''
+The filter should be abstract from the type of input data (hdf5 or full orthoxml). It should only give a list
+of internal/external genes ids, list of toplevel hog ids and a taxonomic range level of interest to slice the HOGS
+and/or load everything contained in this level if only things specified is level.
+
+Then in the __init__ of HAM you choose the related applyFilter based on the self.hog_file_type.
+'''
+class ParserFilter(object): # todo fix problem with str/int query
+
+    def __init__(self):
+        """
+        ParserFilter Object pre-parse the orthoxml file with a list of queries of interest (TR, hogs, genes) and
+        store the minimal information that will be required during the HAM parsing to work on the subdataset of interest.
+
+
+        """
+
+        # Information provides to select a subdataset of interest during the applyFilter call.
+        self.HOGId_filter = []
+        self.GeneExtId_filter = []
+        self.GeneIntId_filter = []
+        self.taxonomicRange = None # you also need this for the HAM instantiation
+
+        # Information created during buildFilter call that is required for the HOG construction during HAM instantiation.
+        self.geneUniqueId = None  # [geneUniqueId]
+        self.hogsId = None  # [hogId]
+
+
+    def add_hogs_via_hogId(self, list_id):
+        self.HOGId_filter = self.HOGId_filter + list_id
+
+    def add_hogs_via_GeneExtId(self, list_id):
+        self.GeneExtId_filter = self.GeneExtId_filter + list_id
+
+    def add_hogs_via_GeneIntId(self, list_id):
+        self.GeneIntId_filter = self.GeneIntId_filter + list_id
+
+    def set_taxonomicRange(self, tr):
+        self.taxonomicRange = tr
+
+    def _buildFilter(self, orthoxml_file,  type_hog_file="orthoxml"):
+        if type_hog_file =="orthoxml":
+            factory_filter = parsers.FilterOrthoXMLParser(self)
+            parser_filter = XMLParser(target=factory_filter)
+
+            for line in orthoxml_file:
+                 parser_filter.feed(line)
+
+            self.geneUniqueId = factory_filter.geneUniqueId
+            self.hogsId = factory_filter.hogsId
+
+        elif type_hog_file == "hdf5":
+            pass
+
+        else:
+            raise TypeError("Invalid type of hog file.")
+
+
 class HAM(object):
-    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml"):
+    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filterObject=None):
 
         if newick_str is None or hog_file is None:
             logger.debug('newick_str: {}, hogs_file: {}'.format(newick_str, hog_file))
-            sys.exit('Both newick string or hogs file are required to create HAM object')
+            raise TypeError('Both newick string or hogs file are required to create HAM object')
 
         self.newick_str = newick_str
         self.hog_file = hog_file
@@ -41,13 +100,18 @@ class HAM(object):
         self.extant_gene_map = None
         self.external_id_mapper = None
         self.HOGMaps = {}  # In order to not recompute two time a hog map between two level we are storing them globally
+        self.filterObj = filterObject # this can be used in APi query to say if you want something outsite of the loaded information
 
         self.taxonomy = tax.Taxonomy(self.newick_str)
-        logger.info('Build taxonomy: completed.'.format(self.newick_str))
+        logger.info('Build taxonomy: completed.')
 
         if self.hog_file_type == "orthoxml":
+
             with open(self.hog_file, 'r') as orthoxml_file:
-                self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self)
+                if self.filterObj is not None:
+                    self.filterObj._buildFilter(orthoxml_file, self.hog_file_type)
+
+                self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self, filter=self.filterObj)
             logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.toplevel_hogs),
                                                                                                 len(
                                                                                                     self.extant_gene_map)))
@@ -57,6 +121,8 @@ class HAM(object):
             #   for each run self.build_...
             #       update self.toplevel_hogs and self.extant_gene_map for each
             pass
+        else:
+            raise TypeError("Invalid type of hog file")
 
         logger.info(
             'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),len(self.taxonomy.leaves)))

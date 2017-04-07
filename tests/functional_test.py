@@ -142,6 +142,72 @@ class HamAnalysis(unittest.TestCase):
 
         '''
 
+    def test_load_taxonomy_from_nwk_file_and_from_orthoxml_file_with_filter_hog2(self):
+
+        # load the logger
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+
+        # Clement select a nwk file as a taxonomy reference
+        nwk_path = './tests/simpleEx.nwk'
+        # And extract the newick tree as a string
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
+
+        # Clement will now setup the filter object
+        f = ham.ParserFilter()
+        f.add_hogs_via_hogId(["2"])
+        f.set_taxonomicRange("Mammalia")
+
+        # Clement check that the filter contained all information
+        self.assertEqual(f.taxonomicRange, "Mammalia")
+        self.assertEqual(set(f.HOGId_filter), set(["2"]))
+        self.assertEqual(set(f.GeneExtId_filter), set())
+        self.assertEqual(set(f.GeneIntId_filter), set())
+
+        # then clement select his favorite orthoXML file
+        orthoxml_path = './tests/simpleEx.orthoxml'
+
+        # Clement create the HAM object that will be the kernel of all analysis
+        ham_analysis = ham.HAM(tree_str, orthoxml_path, filterObject=f)
+        self.assertEqual(f, ham_analysis.filterObj)
+
+        # Clement check that what the filter understood was good
+        self.assertSetEqual(set(ham_analysis.filterObj.geneUniqueId), {'2', '32', '22', '12'})
+        self.assertSetEqual(set(ham_analysis.filterObj.hogsId), {'2'})
+
+        # todo check afterward once filter apply on big parser
+
+    def test_load_taxonomy_from_nwk_file_and_from_orthoxml_file_with_filter_gene2(self): # todo remove this because should be in UT of parser
+
+        # load the logger
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+
+        # Clement select a nwk file as a taxonomy reference
+        nwk_path = './tests/simpleEx.nwk'
+        # And extract the newick tree as a string
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
+
+        # Clement will now setup the filter object
+        f = ham.ParserFilter()
+        f.add_hogs_via_GeneExtId(["HUMANg1"])
+
+        # Clement check that the filter contained all information
+        self.assertEqual(f.taxonomicRange, None)
+        self.assertEqual(set(f.HOGId_filter), set())
+        self.assertEqual(set(f.GeneExtId_filter), set(["HUMANg1"]))
+        self.assertEqual(set(f.GeneIntId_filter), set())
+
+        # then clement select his favorite orthoXML file
+        orthoxml_path = './tests/simpleEx.orthoxml'
+
+        # Clement create the HAM object that will be the kernel of all analysis
+        ham_analysis = ham.HAM(tree_str, orthoxml_path, filterObject=f)
+        self.assertEqual(f, ham_analysis.filterObj)
+
+        # Clement check that what the filter understood was good
+        self.assertSetEqual(set(ham_analysis.filterObj.geneUniqueId), {'1', '11', '21', '31','41', '51'})
+        self.assertSetEqual(set(ham_analysis.filterObj.hogsId), {'1'})
+
+
 
 if __name__ == "__main__":
     unittest.main()

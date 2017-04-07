@@ -22,10 +22,8 @@ class Taxonomy(object):
         node.add_feature("genome", genome)
         genome.set_taxon(node)
 
-        if node.name is not "":
-            genome.name = node.name
-        else:
-            genome.get_name()
+        self.setTaxonName(node)
+        genome.name = node.name
 
         self.internal_nodes.add(node)
 
@@ -47,5 +45,15 @@ class Taxonomy(object):
 
     def get_newick_from_tree(self, node):
         return node.write(format=8, format_root_node=True)
+
+    def setTaxonName(self, node):
+        if node.name is "":
+            level_name = ""
+            for leaf in node:
+                level_name += str(leaf.name)
+                level_name += "/"
+            node.name = level_name[:-1]
+        else:
+            pass
 
 

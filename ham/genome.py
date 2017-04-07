@@ -52,17 +52,6 @@ class AncestralGenome(Genome):
         self.ancestral_clustering = None # {hog -> [extant genes]}
 
     def get_name(self):
-        if self.name is None:
-            if self.taxon.name is not "":
-                self.name = self.taxon.name
-            else:
-                level_name = ""
-                for leaf in self.taxon:
-                    level_name += str(leaf.name)
-                    level_name += "/"
-                self.name = level_name[:-1]
-                self.taxon.name = self.name
-
         return self.name
 
 
