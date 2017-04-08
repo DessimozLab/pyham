@@ -1,10 +1,10 @@
 from xml.etree.ElementTree import XMLParser
 from . import taxonomy as tax
 from . import genome
+from .TreeProfile import TreeProfile
 from ham import parsers
 from ham import mapper
 import logging
-import sys
 from . import abstractgene
 import copy
 
@@ -29,7 +29,6 @@ def _build_hogs_and_genes(file_object, taxonomy=None, filterObject=None):
         parser.feed(line)
 
     return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
-
 
 '''
 The filter should be abstract from the type of input data (hdf5 or full orthoxml). It should only give a list
@@ -68,6 +67,11 @@ class ParserFilter(object): # todo fix problem with str/int query
         self.GeneIntId_filter = self.GeneIntId_filter + list_id
 
     def _buildFilter(self, orthoxml_file,  type_hog_file="orthoxml"):
+
+        self.HOGId_filter = set(self.HOGId_filter)
+        self.GeneExtId_filter = set(self.GeneExtId_filter)
+        self.GeneIntId_filter = set(self.GeneIntId_filter)
+
         if type_hog_file =="orthoxml":
             factory_filter = parsers.FilterOrthoXMLParser(self)
             parser_filter = XMLParser(target=factory_filter)
@@ -75,8 +79,8 @@ class ParserFilter(object): # todo fix problem with str/int query
             for line in orthoxml_file:
                  parser_filter.feed(line)
 
-            self.geneUniqueId = factory_filter.geneUniqueId
-            self.hogsId = factory_filter.hogsId
+            self.geneUniqueId = set(factory_filter.geneUniqueId)
+            self.hogsId = set(factory_filter.hogsId)
 
         elif type_hog_file == "hdf5":
             pass
@@ -100,6 +104,7 @@ class HAM(object):
         self.external_id_mapper = None
         self.HOGMaps = {}  # In order to not recompute two time a hog map between two level we are storing them globally
         self.filterObj = filterObject # this can be used in APi query to say if you want something outsite of the loaded information
+        self.wholeTreeProfile = None
 
         self.taxonomy = tax.Taxonomy(self.newick_str)
         logger.info('Build taxonomy: completed.')
@@ -109,6 +114,8 @@ class HAM(object):
             if self.filterObj is not None: # spend half a day before getting that two parser using the same IOBuffer of with is not working..
                 with open(self.hog_file, 'r') as orthoxml_file:
                     self.filterObj._buildFilter(orthoxml_file, self.hog_file_type)
+                    logger.info('Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(len(self.filterObj.hogsId),
+                                                                                                len(self.filterObj.geneUniqueId)))
 
             with open(self.hog_file, 'r') as orthoxml_file:
                 self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self, filterObject=self.filterObj)
@@ -172,6 +179,19 @@ class HAM(object):
                 return
 
         return vishtml
+
+    def treeProfile(self, hog=None, outfile=None):
+        if hog:
+            tp = TreeProfile(self, hog=hog)
+        else:
+            if self.wholeTreeProfile is None:
+                self.wholeTreeProfile = TreeProfile(self)
+            tp = self.wholeTreeProfile
+
+        if outfile:
+            tp.write(outfile)
+
+        return tp
 
     def show_taxonomy(self):
         print(self.taxonomy.tree.get_ascii())

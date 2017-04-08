@@ -176,6 +176,22 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(len(ham_analysis.toplevel_hogs), 1)
         self.assertEqual(len(ham_analysis.extant_gene_map), 4)
 
+    def test_treeProfile_on_hog3(self):
+
+        logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+        nwk_path = './tests/simpleEx.nwk'
+        tree_str = utils.get_newick_string(nwk_path, type="nwk")
+        orthoxml_path = './tests/simpleEx.orthoxml'
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+
+        # Clement get the hog2 of interest
+        hog3 = ham_analysis.get_hog_by_id("3")
+        self.assertEqual(str(hog3), "<HOG(3)>")
+
+        # and run the treeProfile on it
+        tp_hog3 = ham_analysis.treeProfile(hog3)
+        print(tp_hog3.treemap)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -189,11 +189,11 @@ class FilterOrthoXMLParser(object):
     def start(self, tag, attrib):
 
         if tag == "{http://orthoXML.org/2011/}gene":
-            if self.filterObj.GeneIntId_filter is not []:
+            if self.filterObj.GeneIntId_filter:
                 if attrib['id'] in self.filterObj.GeneIntId_filter:
                     self.geneUniqueId.append(attrib['id'])
 
-            if self.filterObj.GeneExtId_filter is not []:
+            if self.filterObj.GeneExtId_filter:
                 for xtid in attrib.values():
                     if xtid in self.filterObj.GeneExtId_filter:
                         self.geneUniqueId.append(attrib['id'])
@@ -207,10 +207,11 @@ class FilterOrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             if len(self.hog_stack) == 0:
                 self.current_hog = attrib["id"]
-            if attrib["id"] in self.filterObj.HOGId_filter:
-                self.add_this_hog = True
+                if self.current_hog in self.filterObj.HOGId_filter:
+                    self.add_this_hog = True
 
             self.hog_stack.append(1)
+
 
     def end(self, tag):
 
