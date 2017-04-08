@@ -14,11 +14,6 @@ class OrthoXMLParser(object):
         self.ham_object = ham_object
         self.filterObj = filterObject
 
-        self.uhi = []
-
-        if filterObject:
-            self.uhi = copy.deepcopy(filterObject.geneUniqueId)
-
         # usefull information
         self.extant_gene_map = {}  # {unique_id -> gene object}
         self.external_id_mapper = {}  # {external_id -> [unique_id]} TODO unittest + more than one id may have the same ext id
@@ -32,23 +27,40 @@ class OrthoXMLParser(object):
         self.in_paralogGroup = None
         self.skip_this_hog = False
 
+    def _build_gene(self, attrib):
+        gene = abstractgene.Gene(**attrib)
+        gene.set_genome(self.current_species)
+        self.current_species.add_gene(gene)
+        self.extant_gene_map[gene.unique_id] = gene
+        for type, Id in attrib.items():
+            if type is not "id":
+                self.external_id_mapper.setdefault(Id,[]).append(gene.unique_id)
+
+    def _build_hog(self, attrib):
+        if self.in_paralogGroup == len(self.hog_stack):
+            hog = abstractgene.HOG(arose_by_duplication=True,**attrib)
+        else:
+            hog = abstractgene.HOG(arose_by_duplication=False,**attrib)
+
+        if len(self.hog_stack) > 0:
+            self.hog_stack[-1].add_child(hog)
+
+        self.hog_stack.append(hog)
 
     def start(self, tag, attrib):
-
-        if tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
-            self.in_paralogGroup = len(self.hog_stack)
 
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = self.ham_object.get_extant_genome_by_name(**attrib)
 
-        elif tag == "{http://orthoXML.org/2011/}gene":
-            gene = abstractgene.Gene(**attrib)
-            gene.set_genome(self.current_species)
-            self.current_species.add_gene(gene)
-            self.extant_gene_map[gene.unique_id] = gene
-            for type, Id in attrib.items():
-                if type is not "id":
-                    self.external_id_mapper.setdefault(Id,[]).append(gene.unique_id)
+        elif tag == "{http://orthoXML.org/2011/}gene" and self.filterObj is None:
+            self._build_gene(attrib)
+
+        elif tag == "{http://orthoXML.org/2011/}gene" and self.filterObj is not None:
+            if attrib["id"] in self.filterObj.geneUniqueId:
+                self._build_gene(attrib)
+
+        elif tag == "{http://orthoXML.org/2011/}paralogGroup":
+            self.in_paralogGroup = len(self.hog_stack)
 
         elif tag == "{http://orthoXML.org/2011/}geneRef" and self.skip_this_hog is False:
 
@@ -61,26 +73,24 @@ class OrthoXMLParser(object):
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is False:
 
+            # look if its at top and that you need to decide if skip or not
 
-            # in case we add a filter we have to check if this top level hog if usefull
-            if len(self.hog_stack) == 0:
-                if self.filterObj is not None:
+            if len(self.hog_stack) == 0 and self.filterObj is not None:
 
-                    if attrib["id"] in self.filterObj.hogsId:
-                        self.skip_this_hog = False
-                    else:
-                        self.skip_this_hog = True
-
-            if self.skip_this_hog is False:
-                if self.in_paralogGroup == len(self.hog_stack):
-                    hog = abstractgene.HOG(arose_by_duplication=True,**attrib)
+                if str(attrib["id"]) in self.filterObj.hogsId:
+                    self.skip_this_hog = False
+                    self._build_hog(attrib)
                 else:
-                    hog = abstractgene.HOG(arose_by_duplication=False,**attrib)
+                    self.skip_this_hog = True
+                    self.hog_stack.append(0)
 
-                if len(self.hog_stack) > 0:
-                    self.hog_stack[-1].add_child(hog)
+            else:
+                self._build_hog(attrib)
 
-                self.hog_stack.append(hog)
+
+
+        elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
+            self.hog_stack.append(0)
 
         elif tag == "{http://orthoXML.org/2011/}property" and attrib['name'] == "TaxRange":
             #self.hog_stack[-1].set_genome(attrib["value"])
@@ -94,42 +104,44 @@ class OrthoXMLParser(object):
             logger.info("Species {} created. ".format(self.current_species.name))
             self.current_species = None
 
-        if tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
+        elif tag == "{http://orthoXML.org/2011/}paralogGroup":
             self.in_paralogGroup = None
 
-        elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is False:
+        elif tag == "{http://orthoXML.org/2011/}orthologGroup":
 
             # get the latest hog
             hog = self.hog_stack.pop()
 
-            # get the ancestral genome related to this hog based on it's children
-            ancestral_genome = self.ham_object.get_mrca_ancestral_genome_using_hog_children(hog)
-            hog.set_genome(ancestral_genome)
-            ancestral_genome.taxon.genome.add_gene(hog)
+            if self.skip_this_hog == True:
+                if len(self.hog_stack) == 0:
+                    self.skip_this_hog = False
 
-            hog_genome = hog.genome
-            change = {} # {child -> [intermediate level]}
+            else:
+                # get the ancestral genome related to this hog based on it's children
+                ancestral_genome = self.ham_object.get_mrca_ancestral_genome_using_hog_children(hog)
+                hog.set_genome(ancestral_genome)
+                ancestral_genome.taxon.genome.add_gene(hog)
 
-            # for all children of this hog
-            for child in hog.children:
-                child_genome = child.genome
-                if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
-                    change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
+                hog_genome = hog.genome
+                change = {} # {child -> [intermediate level]}
 
-            for hog_child, missing in change.items():
-                self.ham_object._add_missing_taxon(hog_child,hog,missing)
+                # for all children of this hog
+                for child in hog.children:
+                    child_genome = child.genome
+                    if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
+                        change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
-            if len(self.hog_stack) == 0:
+                for hog_child, missing in change.items():
+                    self.ham_object._add_missing_taxon(hog_child,hog,missing)
 
-                self.toplevel_hogs[hog.hog_id] = hog
+                if len(self.hog_stack) == 0:
 
-                self.cpt += 1
-                if self.cpt % 500 == 0:
-                    logger.info("{} HOGs parsed. ".format(self.cpt))
+                    self.toplevel_hogs[hog.hog_id] = hog
 
-        elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
-            if len(self.hog_stack) == 0:
-                self.skip_this_hog = False
+                    self.cpt += 1
+                    if self.cpt % 500 == 0:
+                        logger.info("{} HOGs parsed. ".format(self.cpt))
+
 
     def data(self, data):
         # Ignore data inside nodes
@@ -200,10 +212,7 @@ class FilterOrthoXMLParser(object):
 
             self.hog_stack.append(1)
 
-
-
     def end(self, tag):
-
 
         if tag == "{http://orthoXML.org/2011/}orthologGroup":
 

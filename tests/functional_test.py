@@ -165,7 +165,6 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/simpleEx.orthoxml'
 
         # Clement create the HAM object that will be the kernel of all analysis
-        print("ut")
         ham_analysis = ham.HAM(tree_str, orthoxml_path, filterObject=f)
         self.assertEqual(f, ham_analysis.filterObj)
 
@@ -175,7 +174,7 @@ class HamAnalysis(unittest.TestCase):
 
         # Clement check that the parsed informatio is correct
         self.assertEqual(len(ham_analysis.toplevel_hogs), 1)
-        self.assertEqual(len(ham_analysis.toplevel_hogs), 2)
+        self.assertEqual(len(ham_analysis.extant_gene_map), 4)
 
 
 if __name__ == "__main__":

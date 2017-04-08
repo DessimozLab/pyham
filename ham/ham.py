@@ -106,11 +106,13 @@ class HAM(object):
 
         if self.hog_file_type == "orthoxml":
 
-            with open(self.hog_file, 'r') as orthoxml_file:
-                if self.filterObj is not None:
+            if self.filterObj is not None: # spend half a day before getting that two parser using the same IOBuffer of with is not working..
+                with open(self.hog_file, 'r') as orthoxml_file:
                     self.filterObj._buildFilter(orthoxml_file, self.hog_file_type)
 
+            with open(self.hog_file, 'r') as orthoxml_file:
                 self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self, filterObject=self.filterObj)
+
             logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.toplevel_hogs),
                                                                                                 len(
                                                                                                     self.extant_gene_map)))
