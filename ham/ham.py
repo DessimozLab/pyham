@@ -11,7 +11,7 @@ import copy
 logger = logging.getLogger(__name__)
 
 
-def _build_hogs_and_genes(file_object, taxonomy=None, filter=None):
+def _build_hogs_and_genes(file_object, taxonomy=None, filterObject=None):
     """
     build AbstractGene.HOG and AbstractGene.Gene using a given orthoXML file object
     :param file_object: orthoXML file object
@@ -19,10 +19,13 @@ def _build_hogs_and_genes(file_object, taxonomy=None, filter=None):
     :return: a set of AbstractGene.HOG and a set of  AbstractGene.Gene
     """
 
-    factory = parsers.OrthoXMLParser(taxonomy, filter=filter)
+
+    factory = parsers.OrthoXMLParser(taxonomy, filterObject=filterObject)
     parser = XMLParser(target=factory)
 
+
     for line in file_object:
+
         parser.feed(line)
 
     return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
@@ -49,7 +52,6 @@ class ParserFilter(object): # todo fix problem with str/int query
         self.HOGId_filter = []
         self.GeneExtId_filter = []
         self.GeneIntId_filter = []
-        self.taxonomicRange = None # you also need this for the HAM instantiation
 
         # Information created during buildFilter call that is required for the HOG construction during HAM instantiation.
         self.geneUniqueId = None  # [geneUniqueId]
@@ -64,9 +66,6 @@ class ParserFilter(object): # todo fix problem with str/int query
 
     def add_hogs_via_GeneIntId(self, list_id):
         self.GeneIntId_filter = self.GeneIntId_filter + list_id
-
-    def set_taxonomicRange(self, tr):
-        self.taxonomicRange = tr
 
     def _buildFilter(self, orthoxml_file,  type_hog_file="orthoxml"):
         if type_hog_file =="orthoxml":
@@ -111,7 +110,7 @@ class HAM(object):
                 if self.filterObj is not None:
                     self.filterObj._buildFilter(orthoxml_file, self.hog_file_type)
 
-                self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self, filter=self.filterObj)
+                self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self, filterObject=self.filterObj)
             logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.toplevel_hogs),
                                                                                                 len(
                                                                                                     self.extant_gene_map)))
