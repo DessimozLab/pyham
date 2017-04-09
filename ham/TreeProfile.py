@@ -66,3 +66,6 @@ class TreeProfile(object):
     def write(self, output):
 
         pass
+
+    def dirty_display(self): # todo to be removed only for dev purposed
+        return self.treemap.get_ascii(show_internal=True, compact=False, attributes=["nbr_genes","name"])

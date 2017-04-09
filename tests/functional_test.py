@@ -190,7 +190,7 @@ class HamAnalysis(unittest.TestCase):
 
         # and run the treeProfile on it
         tp_hog3 = ham_analysis.treeProfile(hog3)
-        print(tp_hog3.treemap)
+        print(tp_hog3.dirty_display())
 
 
 if __name__ == "__main__":
