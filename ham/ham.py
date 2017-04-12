@@ -180,7 +180,7 @@ class HAM(object):
 
         return vishtml
 
-    def treeProfile(self, hog=None, outfile=None):
+    def treeProfile(self, hog=None, outfile=None, export_with_histogram=True):
         if hog:
             tp = TreeProfile(self, hog=hog)
         else:
@@ -189,7 +189,7 @@ class HAM(object):
             tp = self.wholeTreeProfile
 
         if outfile:
-            tp.export(outfile)
+            tp.export(outfile, display_internal_histogram=export_with_histogram)
 
         return tp
 

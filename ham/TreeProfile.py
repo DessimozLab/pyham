@@ -94,10 +94,15 @@ class TreeProfile(object):
 
         return treeMap
 
+    def export(self, output, layout_function=None, display_internal_histogram=False):
 
-    def export(self, output, layout_function=None):
+        # maximum number of genes per node in this treeMap
+        max_genes = max([d for d in self.treemap.traverse()], key=lambda x:x.nbr_genes).nbr_genes
 
         def _layout(node):
+
+            _color_scheme = ["#41c1c2","#bdc3c7","#f39c12","#27ae60","#e74c3c"]
+            _label = ["Genes","Identicals","Duplicated","Novel","Lost"]
 
             def _add_face(name_feature, value_feature, cnum=1, pos="branch-right"):
                 node.add_face(TextFace("{}: {}".format(name_feature, value_feature)), column=cnum, position=pos)
@@ -118,17 +123,17 @@ class TreeProfile(object):
                 if node.lost is not None:
                     _add_face("#Lost", node.lost, cnum=cAttr, pos=posAtt)
 
-            r = lambda: int((random.randint(0,255) + 255) /2)
-            #node.set_style(NodeStyle())
-            #node.img_style["bgcolor"] = '#%02X%02X%02X' % (r(),r(),r())
-
             if node.is_leaf():
-                #_add_faces()
-                node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=100, height=50, colors=None, labels=["Genes","Single","Duplicated","gained","lost"], min_value=0, max_value=None, label_fsize=6, scale_fsize=6),column=0, position = "branch-top")
-            else:
-                #_add_faces(cNbr=0, posNbr="branch-top", cAttr=0, posAtt="branch-bottom")
-                node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=100, height=50, colors=None, labels=["Genes","Single","Duplicated","gained","lost"], min_value=0, max_value=None, label_fsize=6, scale_fsize=6),column=0, position = "branch-top")
+                if display_internal_histogram:
+                    node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=50, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
+                else:
+                    _add_faces()
 
+            else:
+                if display_internal_histogram:
+                    node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=50, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
+                else:
+                    _add_faces(cNbr=0, posNbr="branch-top", cAttr=0, posAtt="branch-bottom")
 
         ts = TreeStyle()
 
@@ -139,7 +144,6 @@ class TreeProfile(object):
 
         self.treemap.render(output,tree_style=ts)
 
-
     def dirty_display(self): # todo to be removed only for dev purposed
         if self.hog:
             att = ["name", "nbr_genes"]
@@ -147,9 +151,6 @@ class TreeProfile(object):
             att = ["name", "nbr_genes","single", "dupl", "lost", "gain"]
         print(att)
         self.treemap.show()
-
-
-
 
         #f = open('data_new.txt', 'w')
         #f.write(self.treemap.get_ascii(show_internal=True, compact=True, attributes=att))

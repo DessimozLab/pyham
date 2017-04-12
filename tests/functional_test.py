@@ -211,7 +211,7 @@ class HamAnalysis(unittest.TestCase):
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Clement run the treeProfile for the whole genomic setup
-        tp = ham_analysis.treeProfile(outfile="./tp.png")
+        tp = ham_analysis.treeProfile(outfile="./tp.png", export_with_histogram=True)
         #tp.dirty_display()
 
 
