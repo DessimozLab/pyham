@@ -123,11 +123,11 @@ class TreeProfile(object):
             #node.img_style["bgcolor"] = '#%02X%02X%02X' % (r(),r(),r())
 
             if node.is_leaf():
-                _add_faces()
-                #node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=200, height=100, colors=None, labels=None, min_value=0, max_value=None, label_fsize=6, scale_fsize=6),column=0, position = "branch-top")
+                #_add_faces()
+                node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=100, height=50, colors=None, labels=["Genes","Single","Duplicated","gained","lost"], min_value=0, max_value=None, label_fsize=6, scale_fsize=6),column=0, position = "branch-top")
             else:
-                _add_faces(cNbr=0, posNbr="branch-top", cAttr=0, posAtt="branch-bottom")
-                #node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=200, height=100, colors=None, labels=None, min_value=0, max_value=None, label_fsize=6, scale_fsize=6),column=0, position = "branch-top")
+                #_add_faces(cNbr=0, posNbr="branch-top", cAttr=0, posAtt="branch-bottom")
+                node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=100, height=50, colors=None, labels=["Genes","Single","Duplicated","gained","lost"], min_value=0, max_value=None, label_fsize=6, scale_fsize=6),column=0, position = "branch-top")
 
 
         ts = TreeStyle()
