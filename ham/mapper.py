@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import copy
+from .abstractgene import HOG
 import logging
 
 logger = logging.getLogger(__name__)
@@ -29,25 +30,16 @@ class HOGsMap(object):
     '''
 
     def __init__(self, ham_object, genome_set):
-        self.HAM = ham_object
-        self.verify_genome_set(copy.copy(genome_set))
-        self.ancestor, self.descendant = self.set_ancestor_and_descendant(genome_set)
-        self.upMap = self.build_UpMap()
-        self.LOSS, self.GAIN, self.SINGLE, self.DUPLICATE = self.buildEventClusters()
 
-    def verify_genome_set(self, genome_set):
         if len(genome_set) != 2:
             raise TypeError("Building the HOGMaps required two and only two genomes, invalid genome set: {}".format(genome_set))
-        anc, desc = self.HAM._get_ancestor_and_descendant(copy.copy(genome_set))
-        x = self.HAM._get_oldest_from_genome_pair(list(genome_set)[0].taxon, list(genome_set)[1].taxon)
-        if x is None:
-           raise TypeError("The genomes are not in the same lineage: {}".format(genome_set))
 
-    def set_ancestor_and_descendant(self, genome_set):
-        ancestor = self.HAM.get_mrca_ancestral_genome_from_genome_set(genome_set)
-        genome_set.discard(ancestor)
-        descendant = genome_set.pop()
-        return ancestor, descendant
+        self.HAM = ham_object
+        anc, desc = self.HAM._get_oldest_from_genome_pair(list(genome_set)[0].taxon, list(genome_set)[1].taxon)
+        self.ancestor = anc.genome
+        self.descendant = desc.genome
+        self.upMap = self.build_UpMap()
+        self.LOSS, self.GAIN, self.SINGLE, self.DUPLICATE = self.buildEventClusters()
 
     def buildEventClusters(self):
         LOSS = []  # [Hi]
@@ -80,7 +72,7 @@ class HOGsMap(object):
     def build_UpMap(self):
         upMap = {}  # value|{key|HOGj -> value|[HOGi or "None", paralog{True|False}]
         for hog_source in self.descendant.genes:
-            if hog_source.parent is not None:  # avoid singletons TODO check for if taxon = gain...
+            if hog_source.is_singleton() is False:  # avoid singletons TODO check for if taxon = gain...
                 hog_target, paralog = hog_source.search_ancestor_hog_in_ancestral_genome(self.ancestor)
                 upMap[hog_source] = [hog_target, paralog]
         return upMap

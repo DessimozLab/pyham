@@ -189,7 +189,7 @@ class HAM(object):
             tp = self.wholeTreeProfile
 
         if outfile:
-            tp.write(outfile)
+            tp.export(outfile)
 
         return tp
 
@@ -424,13 +424,13 @@ class HAM(object):
 
         mrca1 = g1.get_common_ancestor(g2)
         if g2 == mrca1:
-            return g2
+            return g2, g1
 
         mrca2 = g2.get_common_ancestor(g1)
         if g1 == mrca2:
-            return g1
+            return g1, g2
 
-        return None
+        raise TypeError("The genomes are not in the same lineage: {}".format({g1,g2}))
 
     def _get_ancestor_and_descendant(self, genome_set):
         """

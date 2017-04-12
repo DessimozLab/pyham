@@ -196,6 +196,9 @@ class HOG(AbstractGene):
 
         return self.hogvisHTML
 
+    def is_singleton(self):
+        return False
+
     def __repr__(self):
         return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
 
@@ -240,6 +243,12 @@ class Gene(AbstractGene):
         if self.transcript_id is not None:
             xref["transcriptId"] = self.transcript_id
         return xref
+
+    def is_singleton(self):
+        if self.parent is None:
+            return True
+        else:
+            return False
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)

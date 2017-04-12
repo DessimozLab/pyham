@@ -36,6 +36,7 @@ class Genome(metaclass=ABCMeta):
         self.taxon = taxon
 
 
+
 class AncestralGenome(Genome):
 
     """AncestralGenome class for ancestral genomes (inherit from Genome).
@@ -62,6 +63,9 @@ class AncestralGenome(Genome):
                 self.ancestral_clustering[hog] = hog.get_all_descendant_genes()
         return self.ancestral_clustering
 
+    def get_number_genes(self):
+        return len(self.genes)
+
 class ExtantGenome(Genome):
 
     """ExtantGenome class for extant genomes (inherit from Genome).
@@ -76,6 +80,16 @@ class ExtantGenome(Genome):
         super(ExtantGenome, self).__init__()
         self.name = name
         self.taxid = NCBITaxId
+
+    def get_number_genes(self, singleton=True):
+        if singleton:
+            return len(self.genes)
+        else:
+            nbr = 0
+            for g in self.genes:
+                if g.parent is not None:
+                    nbr += 1
+            return nbr
 
 
 class EvolutionaryConceptError(Exception):
