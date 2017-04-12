@@ -99,10 +99,25 @@ class TreeProfile(object):
         # maximum number of genes per node in this treeMap
         max_genes = max([d for d in self.treemap.traverse()], key=lambda x:x.nbr_genes).nbr_genes
 
+        if self.hog is None:
+            _color_scheme = ["#41c1c2","#bdc3c7","#f39c12","#27ae60","#e74c3c"]
+            _label_legend = ["Genes","Identicals","Duplicated","Novel","Lost"]
+            _values_legend = [max_genes,max_genes,max_genes,max_genes,max_genes]
+            w_legend = 50 # todo calculate base on len(_values)
+        else:
+            _color_scheme = ["#41c1c2"]
+            _label_legend = ["Genes"]
+            _values_legend = [max_genes]
+            w_legend = 10
+
+
+
         def _layout(node):
 
-            _color_scheme = ["#41c1c2","#bdc3c7","#f39c12","#27ae60","#e74c3c"]
-            _label = ["Genes","Identicals","Duplicated","Novel","Lost"]
+            if self.hog is None:
+                 _label = [str(node.nbr_genes),str(node.single),str(node.dupl),str(node.gain),str(node.lost)]
+            else:
+                 _label = [str(node.nbr_genes)]
 
             def _add_face(name_feature, value_feature, cnum=1, pos="branch-right"):
                 node.add_face(TextFace("{}: {}".format(name_feature, value_feature)), column=cnum, position=pos)
@@ -125,15 +140,35 @@ class TreeProfile(object):
 
             if node.is_leaf():
                 if display_internal_histogram:
-                    node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=50, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
+                    if self.hog is None:
+                        values = [node.nbr_genes,node.single,node.dupl,node.gain,node.lost]
+                        w_plot = 50
+                    else:
+                        values = [node.nbr_genes]
+                        w_plot = int(10)
+                    node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
                 else:
                     _add_faces()
 
             else:
+
                 if display_internal_histogram:
-                    node.add_face(BarChartFace([node.nbr_genes,node.single,node.dupl,node.gain,node.lost], deviations=None, width=50, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
+                    if node.is_root():
+                        node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=["Genes"], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
+                    else:
+                        if self.hog is None:
+                            values = [node.nbr_genes,node.single,node.dupl,node.gain,node.lost]
+                            w_plot = 50
+                        else:
+                            values = [node.nbr_genes]
+                            w_plot = 10
+                        node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
+
+
+
                 else:
                     _add_faces(cNbr=0, posNbr="branch-top", cAttr=0, posAtt="branch-bottom")
+
 
         ts = TreeStyle()
 
@@ -141,7 +176,8 @@ class TreeProfile(object):
             ts.layout_fn = layout_function
         else:
             ts.layout_fn = _layout
-
+            ts.legend.add_face(BarChartFace(_values_legend, deviations=None, width=w_legend, height=25, colors=_color_scheme, labels=_label_legend, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0)
+            ts.legend_position = 3
         self.treemap.render(output,tree_style=ts)
 
     def dirty_display(self): # todo to be removed only for dev purposed

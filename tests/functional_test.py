@@ -190,7 +190,7 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(str(hog3), "<HOG(3)>")
 
         # and run the treeProfile on it
-        tp_hog3 = ham_analysis.treeProfile(hog3)
+        tp_hog3 = ham_analysis.treeProfile(hog3, outfile="./tp3.png", export_with_histogram=True)
         #print(tp_hog3.dirty_display())
 
 
