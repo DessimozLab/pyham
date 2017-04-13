@@ -51,7 +51,7 @@ class HamAnalysis(unittest.TestCase):
                          "CANFA)Mammalia)Vertebrata;")
 
         # After he get all the top level hogs
-        self.assertEqual(len(ham_analysis.toplevel_hogs), 3)
+        self.assertEqual(len(ham_analysis.top_level_hogs), 3)
         self.assertEqual(len(ham_analysis.extant_gene_map), 19)
 
         # Clement is curious to look at the species present within this taxonomy
@@ -154,10 +154,10 @@ class HamAnalysis(unittest.TestCase):
 
         # Clement will now setup the filter object
         f = ham.ParserFilter()
-        f.add_hogs_via_hogId(["2"])
+        f.add_hogs_via_hogId([2])
 
         # Clement check that the filter contained all information
-        self.assertEqual(set(f.HOGId_filter), {"2"})
+        self.assertEqual(set(f.HOGId_filter), {'2'})
         self.assertEqual(set(f.GeneExtId_filter), set())
         self.assertEqual(set(f.GeneIntId_filter), set())
 
@@ -165,15 +165,15 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/simpleEx.orthoxml'
 
         # Clement create the HAM object that will be the kernel of all analysis
-        ham_analysis = ham.HAM(tree_str, orthoxml_path, filterObject=f)
-        self.assertEqual(f, ham_analysis.filterObj)
+        ham_analysis = ham.HAM(tree_str, orthoxml_path, filter_object=f)
+        self.assertEqual(f, ham_analysis.filter_obj)
 
         # Clement check that what the filter understood was good
-        self.assertSetEqual(set(ham_analysis.filterObj.geneUniqueId), {'2', '32', '22', '12'})
-        self.assertSetEqual(set(ham_analysis.filterObj.hogsId), {'2'})
+        self.assertSetEqual(set(ham_analysis.filter_obj.geneUniqueId), {'2', '32', '22', '12'})
+        self.assertSetEqual(set(ham_analysis.filter_obj.hogsId), {'2'})
 
         # Clement check that the parsed informatio is correct
-        self.assertEqual(len(ham_analysis.toplevel_hogs), 1)
+        self.assertEqual(len(ham_analysis.top_level_hogs), 1)
         self.assertEqual(len(ham_analysis.extant_gene_map), 4)
 
     def test_treeProfile_on_hog3(self):

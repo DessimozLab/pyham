@@ -11,77 +11,104 @@ import copy
 logger = logging.getLogger(__name__)
 
 
-def _build_hogs_and_genes(file_object, taxonomy=None, filterObject=None):
-    """
-    build AbstractGene.HOG and AbstractGene.Gene using a given orthoXML file object
-    :param file_object: orthoXML file object
-    :param taxonomy: Taxonomy object used to map taxon with ete3 node
-    :return: a set of AbstractGene.HOG and a set of  AbstractGene.Gene
+def _build_hogs_and_genes(file_object, ham=None, filter_object=None):
+
+    """ This function build from an orthoxml file all data that is required to build HAM object.
+
+        Args:
+            file_object (:obj:`FileObject`): File Object of the orthoxml to parse.
+            ham (:obj:`str`): :obj:`HAM` used by OrthoXMLParser.
+            filter_object (:obj:`ParserFilter`): :obj:`ParserFilter` use by OrthoXMLParser.
+
+        Returns:
+            :obj:`set` of top level :obj:`HOG` , :obj:`dict` of unique id with their :obj:`Gene`, :obj:`dict` of
+            external id with their :obj:`Gene`.
+
     """
 
-
-    factory = parsers.OrthoXMLParser(taxonomy, filterObject=filterObject)
+    factory = parsers.OrthoXMLParser(ham, filterObject=filter_object)
     parser = XMLParser(target=factory)
 
-
     for line in file_object:
-
         parser.feed(line)
 
     return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
-'''
-The filter should be abstract from the type of input data (hdf5 or full orthoxml). It should only give a list
-of internal/external genes ids, list of toplevel hog ids and a taxonomic range level of interest to slice the HOGS
-and/or load everything contained in this level if only things specified is level.
 
-Then in the __init__ of HAM you choose the related applyFilter based on the self.hog_file_type.
-'''
-class ParserFilter(object): # todo fix problem with str/int query
+def _filter_hogs_and_genes(file_object, filter):
+
+    """ This function collect from an orthoxml file all data that is required to build HAM object based a query set.
+
+        Args:
+            file_object (:obj:`FileObject`): File Object of the orthoxml to parse.
+            filter (:obj:`str`): :obj:`ParserFilter` used by FilterOrthoXMLParser.
+
+        Returns:
+            :obj:`set` of gene unique ids, :obj:`set` of top level hog id.
+
+    """
+
+
+    factory_filter = parsers.FilterOrthoXMLParser(filter)
+    parser_filter = XMLParser(target=factory_filter)
+
+    for line in file_object:
+        parser_filter.feed(line)
+
+    return set(factory_filter.geneUniqueId), set(factory_filter.hogsId)
+
+
+class ParserFilter(object):
+    """
+    Object containing a list of queries (hogs/genes ids) that will be used by the FilterOrthoXMLParser to collect
+    in the orthoxml file the required information for the OrthoXMLParser to only parse data related to this sub-dataset
+    of interest.
+
+    The ParserFilter first collect top level HOG ids, unique or external genes ids that are related to the hogs of
+    interest (FilterOrthoXMLParser queries) then run the FilterOrthoXMLParser to built the list of all genes and hogs
+    (OrthoXMLParser queries) required to be able to work on this subset.
+
+    Attributes:
+        HOGId_filter (:obj:`set`): :obj:`set` of HOG ids used by the FilterOrthoXMLParser.
+        GeneExtId_filter (:obj:`set`): :obj:`set` of external genes ids used by the FilterOrthoXMLParser.
+        GeneIntId_filter (:obj:`set`): :obj:`set` of unique genes ids used by the FilterOrthoXMLParser.
+
+        geneUniqueId (:obj:`set`): :obj:`set` of all required unique gene ids build by the FilterOrthoXMLParser.
+        hogsId (:obj:`set`): :obj:`set` of all required top level hog ids build by the FilterOrthoXMLParser.
+    """
 
     def __init__(self):
-        """
-        ParserFilter Object pre-parse the orthoxml file with a list of queries of interest (TR, hogs, genes) and
-        store the minimal information that will be required during the HAM parsing to work on the subdataset of interest.
 
+        # Information used to select a subdataset of interest during the applyFilter call.
+        self.HOGId_filter = set()
+        self.GeneExtId_filter = set()
+        self.GeneIntId_filter = set()
 
-        """
-
-        # Information provides to select a subdataset of interest during the applyFilter call.
-        self.HOGId_filter = []
-        self.GeneExtId_filter = []
-        self.GeneIntId_filter = []
-
-        # Information created during buildFilter call that is required for the HOG construction during HAM instantiation.
-        self.geneUniqueId = None  # [geneUniqueId]
-        self.hogsId = None  # [hogId]
-
+        # Information created during buildFilter call that is required by the main OrthoXMLParser for the HOGs
+        # construction during HAM instantiation.
+        self.geneUniqueId = None  # [geneUniqueIds]
+        self.hogsId = None  # [hogIds]
 
     def add_hogs_via_hogId(self, list_id):
-        self.HOGId_filter = self.HOGId_filter + list_id
+        self.HOGId_filter = self.HOGId_filter | set(map(lambda x:str(x),list_id))
 
     def add_hogs_via_GeneExtId(self, list_id):
-        self.GeneExtId_filter = self.GeneExtId_filter + list_id
+        self.GeneExtId_filter = self.GeneExtId_filter | set(map(lambda x:str(x),list_id))
 
     def add_hogs_via_GeneIntId(self, list_id):
-        self.GeneIntId_filter = self.GeneIntId_filter + list_id
+        self.GeneIntId_filter = self.GeneIntId_filter | set(map(lambda x:str(x),list_id))
 
-    def _buildFilter(self, orthoxml_file,  type_hog_file="orthoxml"):
+    def buildFilter(self, file_object, type_hog_file="orthoxml"):
+        """ This function will use the FilterOrthoXMLParser with the *_filter queries to build geneUniqueId and
+        hogsId.
 
-        self.HOGId_filter = set(self.HOGId_filter)
-        self.GeneExtId_filter = set(self.GeneExtId_filter)
-        self.GeneIntId_filter = set(self.GeneIntId_filter)
+        Args:
+            hog_file (:obj:`str`): Path to the file that contained the HOGs information.
+            type_hog_file (:obj:`str`):  File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
+        """
 
-        if type_hog_file =="orthoxml":
-            factory_filter = parsers.FilterOrthoXMLParser(self)
-            parser_filter = XMLParser(target=factory_filter)
-
-            for line in orthoxml_file:
-                 parser_filter.feed(line)
-
-            self.geneUniqueId = set(factory_filter.geneUniqueId)
-            self.hogsId = set(factory_filter.hogsId)
-
+        if type_hog_file == "orthoxml":
+            self.geneUniqueId, self.hogsId = _filter_hogs_and_genes(file_object, self)
         elif type_hog_file == "hdf5":
             pass
 
@@ -90,50 +117,80 @@ class ParserFilter(object): # todo fix problem with str/int query
 
 
 class HAM(object):
-    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filterObject=None):
+    """
+    Attributes:
+        hog_file (:obj:`str`): Path to the file that contained the HOGs information.
+        hog_file_type (:obj:`str`): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
+        top_level_hogs (:obj:`dict`): Dictionary that map hog unique id with its list of related :obj:`HOG`.
+        extant_gene_map (:obj:`dict`): Dictionary that map gene unique id with its list of related :obj:`Gene`.
+        external_id_mapper (:obj:`dict`): Dictionary that map a gene external id with its list of related :obj:`HOG` or :obj:`Gene`.
+        HOGMaps (:obj:`dict`): Dictionary that map a :obj:`frozenset` of a pair of genomes to its :obj:`HOGsMap`.
+        filter_obj (:obj:`ParserFilter`): :obj:`ParserFilter` used during the instanciation of HAM. Defaults to None.
+        taxonomy: (:obj:`Taxonomy`): :obj:`Taxonomy` build and used by :obj:`HAM` instance.
 
-        if newick_str is None or hog_file is None:
-            logger.debug('newick_str: {}, hogs_file: {}'.format(newick_str, hog_file))
-            raise TypeError('Both newick string or hogs file are required to create HAM object')
+    """
+    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None):
+        """
 
-        self.newick_str = newick_str
+        Args:
+            newick_str (:obj:`str`): Newick str used to build the taxonomy.
+            hog_file (:obj:`str`): Path to the file that contained the HOGs information.
+            type_hog_file (:obj:`str`, optional): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults
+            to "orthoxml".
+            filter_object (:obj:`ParserFilter`, optional): :obj:`ParserFilter` used during the instantiation of HAM.
+            Defaults to None.
+        """
+
+        # HOGs file
         self.hog_file = hog_file
         self.hog_file_type = type_hog_file
-        self.toplevel_hogs = None
-        self.extant_gene_map = None
-        self.external_id_mapper = None
-        self.HOGMaps = {}  # In order to not recompute two time a hog map between two level we are storing them globally
-        self.filterObj = filterObject # this can be used in APi query to say if you want something outsite of the loaded information
-        self.wholeTreeProfile = None
 
-        self.taxonomy = tax.Taxonomy(self.newick_str)
+        # Filtering
+        self.filter_obj = filter_object
+
+        # Taxonomy
+        self.taxonomy = tax.Taxonomy(newick_str)
         logger.info('Build taxonomy: completed.')
 
+        # Misc. information
+        self.top_level_hogs = None
+        self.extant_gene_map = None
+        self.external_id_mapper = None
+        self.HOGMaps = {}
+
+        # Parsing of data
         if self.hog_file_type == "orthoxml":
 
-            if self.filterObj is not None: # spend half a day before getting that two parser using the same IOBuffer of with is not working..
+            #  If filter_object specified, ham parse a first time to collect required information
+            if self.filter_obj is not None:
                 with open(self.hog_file, 'r') as orthoxml_file:
-                    self.filterObj._buildFilter(orthoxml_file, self.hog_file_type)
-                    logger.info('Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(len(self.filterObj.hogsId),
-                                                                                                len(self.filterObj.geneUniqueId)))
+                    self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
+                    logger.info(
+                        'Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(
+                            len(self.filter_obj.hogsId),
+                            len(self.filter_obj.geneUniqueId)))
 
+            #  This is the actual parser to build HOG/Gene and related Genomes.
             with open(self.hog_file, 'r') as orthoxml_file:
-                self.toplevel_hogs, self.extant_gene_map, self.external_id_mapper = _build_hogs_and_genes(orthoxml_file, self, filterObject=self.filterObj)
+                self.top_level_hogs, self.extant_gene_map, self.external_id_mapper =\
+                    _build_hogs_and_genes(orthoxml_file, self, filter_object=self.filter_obj)
 
-            logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.toplevel_hogs),
+            logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),
                                                                                                 len(
                                                                                                     self.extant_gene_map)))
 
         elif self.hog_file_type == "hdf5":
             # Looping through all orthoXML within the hdf5
             #   for each run self.build_...
-            #       update self.toplevel_hogs and self.extant_gene_map for each
+            #       update self.top_level_hogs and self.extant_gene_map for each
             pass
+
         else:
             raise TypeError("Invalid type of hog file")
 
         logger.info(
-            'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(len(self.toplevel_hogs),len(self.taxonomy.leaves)))
+            'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(
+                len(self.top_level_hogs),len(self.taxonomy.leaves)))
 
     def compare_genomes(self, genomes_set, analysis):
         """
@@ -181,12 +238,8 @@ class HAM(object):
         return vishtml
 
     def treeProfile(self, hog=None, outfile=None, export_with_histogram=True):
-        if hog:
-            tp = TreeProfile(self, hog=hog)
-        else:
-            if self.wholeTreeProfile is None:
-                self.wholeTreeProfile = TreeProfile(self)
-            tp = self.wholeTreeProfile
+
+        tp = TreeProfile(self, hog=hog)
 
         if outfile:
             tp.export(outfile, display_internal_histogram=export_with_histogram)
@@ -220,8 +273,8 @@ class HAM(object):
         :param hog_id:
         :return: an HOG object or None if wrong hog_id given
         """
-        if hog_id in self.toplevel_hogs.keys():
-            return self.toplevel_hogs[hog_id]
+        if hog_id in self.top_level_hogs.keys():
+            return self.top_level_hogs[hog_id]
         else:
             return None
 
@@ -237,7 +290,7 @@ class HAM(object):
         else:
             return None
 
-    def get_genes_by_external_id(self, external_gene_id): # TODO unittest
+    def get_genes_by_external_id(self, external_gene_id):  # TODO unittest
         """
         return a list because external id are not unique
         :param external_gene_id:
@@ -263,7 +316,7 @@ class HAM(object):
             return None
 
     def get_all_top_level_hogs(self):
-        return self.toplevel_hogs
+        return self.top_level_hogs
 
     def get_all_extant_genes_dict(self):
         return self.extant_gene_map
@@ -430,7 +483,7 @@ class HAM(object):
         if g1 == mrca2:
             return g1, g2
 
-        raise TypeError("The genomes are not in the same lineage: {}".format({g1,g2}))
+        raise TypeError("The genomes are not in the same lineage: {}".format({g1, g2}))
 
     def _get_ancestor_and_descendant(self, genome_set):
         """
