@@ -5,6 +5,8 @@ import collections
 from ham.genome import ExtantGenome, AncestralGenome
 from ham.hogvis import Hogvis
 
+
+
 class AbstractGene(metaclass=ABCMeta):
     """AbstractGene class for gene entities.
 
@@ -41,7 +43,7 @@ class AbstractGene(metaclass=ABCMeta):
                 paralog = True
         return found, paralog
 
-    def get_topLevelHog(self): # TODO deal with singletons
+    def get_topLevelHog(self): # TODO deal with singletons +ut  raise
         """
         get the related topLevelHog
         :return: HOG object

@@ -11,53 +11,6 @@ import copy
 logger = logging.getLogger(__name__)
 
 
-def _build_hogs_and_genes(file_object, ham=None, filter_object=None):
-
-    """ This function build from an orthoxml file all data that is required to build HAM object.
-
-        Args:
-            file_object (:obj:`FileObject`): File Object of the orthoxml to parse.
-            ham (:obj:`str`): :obj:`HAM` used by OrthoXMLParser.
-            filter_object (:obj:`ParserFilter`): :obj:`ParserFilter` use by OrthoXMLParser.
-
-        Returns:
-            :obj:`set` of top level :obj:`HOG` , :obj:`dict` of unique id with their :obj:`Gene`, :obj:`dict` of
-            external id with their :obj:`Gene`.
-
-    """
-
-    factory = parsers.OrthoXMLParser(ham, filterObject=filter_object)
-    parser = XMLParser(target=factory)
-
-    for line in file_object:
-        parser.feed(line)
-
-    return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
-
-
-def _filter_hogs_and_genes(file_object, filter):
-
-    """ This function collect from an orthoxml file all data that is required to build HAM object based a query set.
-
-        Args:
-            file_object (:obj:`FileObject`): File Object of the orthoxml to parse.
-            filter (:obj:`str`): :obj:`ParserFilter` used by FilterOrthoXMLParser.
-
-        Returns:
-            :obj:`set` of gene unique ids, :obj:`set` of top level hog id.
-
-    """
-
-
-    factory_filter = parsers.FilterOrthoXMLParser(filter)
-    parser_filter = XMLParser(target=factory_filter)
-
-    for line in file_object:
-        parser_filter.feed(line)
-
-    return set(factory_filter.geneUniqueId), set(factory_filter.hogsId)
-
-
 class ParserFilter(object):
     """
     Object containing a list of queries (hogs/genes ids) that will be used by the FilterOrthoXMLParser to collect
@@ -90,13 +43,13 @@ class ParserFilter(object):
         self.hogsId = None  # [hogIds]
 
     def add_hogs_via_hogId(self, list_id):
-        self.HOGId_filter = self.HOGId_filter | set(map(lambda x:str(x),list_id))
+        self.HOGId_filter = self.HOGId_filter | set(map(lambda x: str(x), list_id))
 
     def add_hogs_via_GeneExtId(self, list_id):
-        self.GeneExtId_filter = self.GeneExtId_filter | set(map(lambda x:str(x),list_id))
+        self.GeneExtId_filter = self.GeneExtId_filter | set(map(lambda x: str(x), list_id))
 
     def add_hogs_via_GeneIntId(self, list_id):
-        self.GeneIntId_filter = self.GeneIntId_filter | set(map(lambda x:str(x),list_id))
+        self.GeneIntId_filter = self.GeneIntId_filter | set(map(lambda x: str(x), list_id))
 
     def buildFilter(self, file_object, type_hog_file="orthoxml"):
         """ This function will use the FilterOrthoXMLParser with the *_filter queries to build geneUniqueId and
@@ -108,12 +61,33 @@ class ParserFilter(object):
         """
 
         if type_hog_file == "orthoxml":
-            self.geneUniqueId, self.hogsId = _filter_hogs_and_genes(file_object, self)
+            self.geneUniqueId, self.hogsId = self._filter_hogs_and_genes(file_object)
         elif type_hog_file == "hdf5":
             pass
 
         else:
             raise TypeError("Invalid type of hog file.")
+
+    def _filter_hogs_and_genes(self, file_object):
+
+        """ This function collect from an orthoxml file all data that is required to build HAM object based this filter
+            object.
+
+            Args:
+                file_object (:obj:`FileObject`): File Object of the orthoxml to parse.
+
+            Returns:
+                :obj:`set` of gene unique ids, :obj:`set` of top level hog id.
+
+        """
+
+        factory_filter = parsers.FilterOrthoXMLParser(self)
+        parser_filter = XMLParser(target=factory_filter)
+
+        for line in file_object:
+            parser_filter.feed(line)
+
+        return set(factory_filter.geneUniqueId), set(factory_filter.hogsId)
 
 
 class HAM(object):
@@ -129,6 +103,7 @@ class HAM(object):
         taxonomy: (:obj:`Taxonomy`): :obj:`Taxonomy` build and used by :obj:`HAM` instance.
 
     """
+
     def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None):
         """
 
@@ -170,14 +145,15 @@ class HAM(object):
                             len(self.filter_obj.hogsId),
                             len(self.filter_obj.geneUniqueId)))
 
-            #  This is the actual parser to build HOG/Gene and related Genomes.
+            # This is the actual parser to build HOG/Gene and related Genomes.
             with open(self.hog_file, 'r') as orthoxml_file:
-                self.top_level_hogs, self.extant_gene_map, self.external_id_mapper =\
-                    _build_hogs_and_genes(orthoxml_file, self, filter_object=self.filter_obj)
+                self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = \
+                    self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
 
-            logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),
-                                                                                                len(
-                                                                                                    self.extant_gene_map)))
+            logger.info(
+                'Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),
+                                                                                        len(
+                                                                                            self.extant_gene_map)))
 
         elif self.hog_file_type == "hdf5":
             # Looping through all orthoXML within the hdf5
@@ -190,7 +166,9 @@ class HAM(object):
 
         logger.info(
             'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(
-                len(self.top_level_hogs),len(self.taxonomy.leaves)))
+                len(self.top_level_hogs), len(self.taxonomy.leaves)))
+
+    # ... TOOLS ... #
 
     def compare_genomes(self, genomes_set, analysis):
         """
@@ -205,7 +183,7 @@ class HAM(object):
                 raise TypeError(
                     "{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
             vertical_map = mapper.MapVertical(self)
-            vertical_map.add_map(self.get_HOGMap(genomes_set))
+            vertical_map.add_map(self._get_HOGMap(genomes_set))
             return vertical_map
 
         elif analysis == "lateral":
@@ -251,141 +229,232 @@ class HAM(object):
 
     # ... QUERY METHODS ... #
 
-    def get_HOGMap(self, genome_pair_set):
-        """
-        if not already computed, do the hog mapping between a pair of levels.
-        :param genome_pair_set:
-        :return:
-        """
-        f = frozenset(genome_pair_set)
-        if f in self.HOGMaps.keys():
-            return self.HOGMaps[f]
-        else:
-            m = mapper.HOGsMap(self, genome_pair_set)
-            self.HOGMaps[f] = m
-            return m
-
-    # ___ gene ___ #
-
-    def get_hog_by_id(self, hog_id):
-        """
-        return a single HOG object based on a hog_id query
-        :param hog_id:
-        :return: an HOG object or None if wrong hog_id given
-        """
-        if hog_id in self.top_level_hogs.keys():
-            return self.top_level_hogs[hog_id]
-        else:
-            return None
-
-    def get_hog_by_geneId(self, gene_id):
-        """
-        get a single HOG object that contained the query gene
-        :param gene_id: gene unique id
-        :return: an HOG object that matched the query or None
-        """
-        qgene = self.get_gene_by_id(gene_id)
-        if qgene is not None:
-            return qgene.get_topLevelHog()
-        else:
-            return None
-
-    def get_genes_by_external_id(self, external_gene_id):  # TODO unittest
-        """
-        return a list because external id are not unique
-        :param external_gene_id:
-        :return:
-        """
-        if external_gene_id in self.external_id_mapper.keys():
-            return [self.extant_gene_map[qgene_id] for qgene_id in self.external_id_mapper[external_gene_id]]
-        else:
-            logger.warning('No extant genes have the external Id {}.'.format(external_gene_id))
-            return None
+    # ___ Gene ___ #
 
     def get_gene_by_id(self, gene_unique_id):
-        """
-        get the Gene object that match the query unique id
-        :param gene_id:
-        :return:
+
+        """  Get the :obj:`Gene` that match the query unique gene Id.
+
+            Args:
+                gene_unique_id (:obj:`str` or :obj:`int`): Unique gene Id.
+
+            Returns:
+                :obj:`Gene` or raise TypeError
+
         """
         gene_unique_id = str(gene_unique_id)
+
         if gene_unique_id in self.extant_gene_map.keys():
             return self.extant_gene_map[gene_unique_id]
-        else:
-            logger.warning('No extant genes have the unique Id {}.'.format(gene_unique_id))
-            return None
 
-    def get_all_top_level_hogs(self):
-        return self.top_level_hogs
+        raise TypeError('Id {} cannot match any Gene unique Id.'.format(gene_unique_id))
 
-    def get_all_extant_genes_dict(self):
+    def get_genes_by_external_id(self, external_gene_id):
+
+        """  Get the list of :obj:`Gene` that match the query external gene Id.
+
+            Args:
+                external_gene_id (:obj:`str` or :obj:`int`): External gene Id.
+
+            Returns:
+                a list of :obj:`Gene` or raise TypeError
+
+        """
+
+        external_gene_id = str(external_gene_id)
+
+        if external_gene_id in self.external_id_mapper.keys():
+            return [self.extant_gene_map[qgene_id] for qgene_id in self.external_id_mapper[external_gene_id]]
+
+        raise TypeError('Id {} cannot match any Gene external Id.'.format(external_gene_id))
+
+    def get_list_extant_genes(self):
+
+        """  Get the list of all :obj:`Gene`.
+
+            Returns:
+                a list of :obj:`Gene`.
+
+        """
+
+        return list(self.extant_gene_map.values())
+
+    def get_dict_extant_genes(self):
+
+        """  Get a dictionary that map all unique gene id with their related :obj:`Gene`.
+
+            Returns:
+                a dictionary mapping unique gene Id (:obj:`str`) with :obj:`Gene`.
+
+        """
+
         return self.extant_gene_map
 
-    # ___ genome ___ #
+    # ___ HOG ___ #
 
-    def get_all_extant_genomes(self):
+    def get_hog_by_id(self, hog_id):
+
+        """ Get the top level :obj:`HOG` that match the hog id query.
+
+            Args:
+                hog_id (:obj:`str` or :obj:`int`): Top level HOG id.
+
+            Returns:
+                :obj:`HOG` or raise TypeError
+
         """
-        return all Genome.ExtantGenome
-        :return: set of Genome.ExtantGenome
+
+        hog_id = str(hog_id)
+
+        if hog_id in self.top_level_hogs.keys():
+            return self.top_level_hogs[hog_id]
+
+        raise TypeError(' Id {} cannot match any HOG Id.'.format(hog_id))
+
+    def get_hog_by_gene(self, gene):
+
+        """  Get the top level :obj:`HOG` that contain the query :obj:`Gene`. If the :obj:`Gene` is a singleton it will 
+        return itself.
+
+            Args:
+                gene (:obj:`Gene`): :obj:`Gene` object.
+
+            Returns:
+                :obj:`HOG` or raise TypeError
+
         """
-        return set(leaf.genome for leaf in self.taxonomy.leaves)
 
-    def get_all_ancestral_genomes(self):
+        if isinstance(gene, abstractgene.Gene):
+            return gene.get_topLevelHog()
+
+        raise TypeError("expect a '{}' as query, got {}".format(abstractgene.Gene, type(gene).__name__))
+
+    def get_list_top_level_hogs(self):
+
+        """  Get the list of all the top level :obj:`HOG`.
+
+            Returns:
+                a list of :obj:`HOG`.
+
         """
-        return all Genome.AncestralGenome
-        :return: set of Genome.AncestralGenome
+
+        return list(self.top_level_hogs.values())
+
+    def get_dict_top_level_hogs(self):
+
+        """  Get a dictionary that map all top level hog id with their related :obj:`HOG`.
+
+            Returns:
+                a dictionary mapping hog Id (:obj:`str`) with :obj:`HOG`.
+
         """
-        return set(internal_node.genome for internal_node in self.taxonomy.internal_nodes)
 
-    def get_ancestral_genome_by_taxon(self, tax_node):
+        return self.top_level_hogs
 
-        if "genome" in tax_node.features:
-            return tax_node.genome
+    # ___ ExtantGenome ___ #
 
-        else:
-            ancestral_genome = genome.AncestralGenome()
-            self.taxonomy.add_ancestral_genome_to_node(tax_node, ancestral_genome)
+    def get_list_extant_genomes(self):
 
-            return ancestral_genome
+        """  
+        Get the list of all :obj:`ExtantGenome` created during the parsing.
 
-    def get_ancestral_genome_by_name(self, name):
+            Returns:
+                a list of :obj:`ExtantGenome`.
+
         """
-        :param name: str
-        :return:
+
+        return [leaf.genome for leaf in self.taxonomy.leaves]
+
+    def get_extant_genome_by_name(self, name):
+
+        """  
+        Get the :obj:`ExtantGenome` that match the query name.
+
+            Args:
+                name (:obj:`str`): Name of the :obj:`ExtantGenome`.
+
+            Returns:
+                :obj:`ExtantGenome` or raise KeyError
+
         """
+
         nodes_founded = self.taxonomy.tree.search_nodes(name=name)
 
-        if len(nodes_founded) == 1:
-            if "genome" in nodes_founded[0].features:
-                return nodes_founded[0].genome
-        else:
-            raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), name))
-
-    def get_extant_genome_by_name(self, **kwargs):  # todo: I'm not really happy with this
-        """
-        :param kwargs: use the name tag to browser a genomes
-        :return:
-        """
-
-        nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
-
-        if len(nodes_founded) == 1:
-            if "genome" in nodes_founded[0].features:
-                return nodes_founded[0].genome
-
+        if not nodes_founded:
+            raise KeyError('0 node founded for the species name: {}'.format(name))
+        elif len(nodes_founded) == 1:
+            node = nodes_founded[0]
+            if "genome" in node.features:
+                return node.genome
             else:
-                extant_genome = genome.ExtantGenome(**kwargs)
-                self.taxonomy.add_extant_genome_to_node(nodes_founded[0], extant_genome)
-                return extant_genome
+                raise KeyError("Name {} match to one node but no genome is attached to it.".format(name))
         else:
-            raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
+            raise KeyError('{} nodes founded for the species name: {}'.format(len(nodes_founded), name))
 
-    def get_mrca_ancestral_genome_from_genome_set(self, genome_set):
+    # ___ AncestralGenome ___ #
+
+    def get_list_ancestral_genomes(self):
+
+        """  
+            Get the list of all :obj:`AncestralGenome` created during the parsing.
+
+            Returns:
+                a list of :obj:`AncestralGenome`.
+
         """
-        return the MRCA of all the genomes present in genome_set.
-        :param genome_set: set of ancestral genomes.
-        :return: ancestral genome
+        return [internal_node.genome for internal_node in self.taxonomy.internal_nodes]
+
+    def get_ancestral_genome_by_taxon(self, taxon):
+
+        """  
+        Get the :obj:`AncestralGenome` corresponding of the query taxon.
+
+            Args:
+                taxon (:obj:`str`): treeNode object of the :obj:`Taxonomy`.tree object.
+
+            Returns:
+                :obj:`AncestralGenome` or raise KeyError
+
         """
+
+        if taxon in self.taxonomy.internal_nodes and "genome" in taxon.features:
+                return taxon.genome
+
+        raise KeyError("Taxon {} doesn't have a genome attached to it.".format(taxon))
+
+    def get_ancestral_genome_by_name(self, name):
+
+        """  
+        Get the :obj:`AncestralGenome` corresponding of the query name.
+
+            Args:
+                name (:obj:`str`): Name of the :obj:`AncestralGenome`.
+
+            Returns:
+                :obj:`AncestralGenome` or raise KeyError
+
+        """
+
+        for taxon in self.taxonomy.internal_nodes:
+            if taxon.name == name:
+                if "genome" in taxon.features:
+                    return taxon.genome
+
+        raise ValueError('No ancestral genomes match the query name: {}'.format(name))
+
+    def get_ancestral_genome_by_mrca_of_genome_set(self, genome_set):
+
+        """  
+        Get the :obj:`AncestralGenome` corresponding to the MRCA of query genomes.
+
+            Args:
+                genome_set (:obj:`set`): Set of :obj:`AncestralGenome`.
+
+            Returns:
+                :obj:`AncestralGenome` or raise KeyError
+
+        """
+
         if len(genome_set) < 2:
             raise ValueError('Only one genome is not enough to computed MRCA: {}'.format(genome_set))
         pass
@@ -403,21 +472,11 @@ class HAM(object):
 
         common = self.taxonomy.tree.get_common_ancestor(children_nodes)
 
-        return self.get_ancestral_genome_by_taxon(common)
+        return self._get_ancestral_genome_by_taxon(common)
 
-    def get_mrca_ancestral_genome_using_hog_children(self, hog):
-        """
-        collect all the genomes insides the hog children and them look for their mrca
-        :param hog:
-        :return:
-        """
 
-        children_genomes = set()
+    # Taxon
 
-        for child in hog.children:
-            children_genomes.add(child.genome)
-
-        return self.get_mrca_ancestral_genome_from_genome_set(children_genomes)
 
     # ... PRIVATE METHODS ... #
 
@@ -450,7 +509,7 @@ class HAM(object):
         for tax in missing_taxons:
 
             # we get the related ancestral genome of this level
-            ancestral_genome = self.get_ancestral_genome_by_taxon(tax)
+            ancestral_genome = self._get_ancestral_genome_by_taxon(tax)
 
             # we create the related hog and add it to the ancestral genome
             hog = abstractgene.HOG()
@@ -491,6 +550,88 @@ class HAM(object):
         :param genome_set:
         :return:
         """
-        ancestor = self.get_mrca_ancestral_genome_from_genome_set(genome_set)
+        ancestor = self.get_ancestral_genome_by_mrca_of_genome_set(genome_set)
         genome_set.discard(ancestor)
         return ancestor, genome_set
+
+    def _get_HOGMap(self, genome_pair_set):
+        """
+        if not already computed, do the hog mapping between a pair of levels.
+        :param genome_pair_set:
+        :return:
+        """
+        f = frozenset(genome_pair_set)
+        if f in self.HOGMaps.keys():
+            return self.HOGMaps[f]
+        else:
+            m = mapper.HOGsMap(self, genome_pair_set)
+            self.HOGMaps[f] = m
+            return m
+
+    def _build_hogs_and_genes(self, file_object, filter_object):
+
+        """ This function build from an orthoxml file all data that is required to build this HAM object (using the HAM
+        filter object).
+
+            Args:
+                file_object (:obj:`FileObject`): File Object of the orthoxml to parse.
+                filter_object (:obj:`ParserFilter`): :obj:`ParserFilter` use by OrthoXMLParser.
+
+            Returns:
+                :obj:`set` of top level :obj:`HOG` , :obj:`dict` of unique id with their :obj:`Gene`, :obj:`dict` of
+                external id with their :obj:`Gene`.
+
+        """
+
+        factory = parsers.OrthoXMLParser(self, filterObject=filter_object)
+        parser = XMLParser(target=factory)
+
+        for line in file_object:
+            parser.feed(line)
+
+        return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
+
+    def _get_extant_genome_by_name(self, **kwargs):  # todo: I'm not really happy with this
+        """
+        :param kwargs: use the name tag to browser a genomes
+        :return:
+        """
+
+        nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
+
+        if len(nodes_founded) == 1:
+            if "genome" in nodes_founded[0].features:
+                return nodes_founded[0].genome
+
+            else:
+                extant_genome = genome.ExtantGenome(**kwargs)
+                self.taxonomy.add_extant_genome_to_node(nodes_founded[0], extant_genome)
+                return extant_genome
+        else:
+            raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
+
+    def _get_ancestral_genome_by_taxon(self, tax_node):
+
+        if "genome" in tax_node.features:
+            return tax_node.genome
+
+        else:
+            ancestral_genome = genome.AncestralGenome()
+            self.taxonomy.add_ancestral_genome_to_node(tax_node, ancestral_genome)
+
+            return ancestral_genome
+
+    def _get_ancestral_genome_by_mrca_of_hog_children_genomes(self, hog):
+        """
+        collect all the genomes insides the hog children and them look for their mrca
+        :param hog:
+        :return:
+        """
+
+        children_genomes = set()
+
+        for child in hog.children:
+            children_genomes.add(child.genome)
+
+        return self.get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
+

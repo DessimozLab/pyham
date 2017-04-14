@@ -34,8 +34,8 @@ class OrthoXMLParserTest(unittest.TestCase):
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/simpleEx.orthoxml'
         self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
-        self.hogs = self.ham_analysis.get_all_top_level_hogs()
-        self.genes = self.ham_analysis.get_all_extant_genes_dict()
+        self.hogs = self.ham_analysis.get_dict_top_level_hogs()
+        self.genes = self.ham_analysis.get_dict_extant_genes()
 
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=4, PANTR=4, MOUSE=4, RATNO=2,
@@ -46,7 +46,7 @@ class OrthoXMLParserTest(unittest.TestCase):
         self.assertDictEqual(observed_cnts, expected_cnts)
 
     def test_number_hog_per_ancestral_genome(self):
-        ags = self.ham_analysis.get_all_ancestral_genomes()
+        ags = self.ham_analysis.get_list_ancestral_genomes()
         expected_numbers = {'Vertebrata': 2, 'Mammalia': 3, 'Euarchontoglires': 4, 'Rodents': 4, 'Primates': 4}
         observed_numbers = {'Vertebrata': 0, 'Mammalia': 0, 'Euarchontoglires': 0, 'Rodents': 0, 'Primates': 0}
         for ag in ags:

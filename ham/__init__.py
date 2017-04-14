@@ -5,6 +5,5 @@ from .taxonomy import *
 from .genome import *
 from .utils import *
 from .mapper import *
-from .analyser import *
 
 __version__ = "0.1.0"

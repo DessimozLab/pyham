@@ -50,7 +50,7 @@ class OrthoXMLParser(object):
     def start(self, tag, attrib):
 
         if tag == "{http://orthoXML.org/2011/}species":
-            self.current_species = self.ham_object.get_extant_genome_by_name(**attrib)
+            self.current_species = self.ham_object._get_extant_genome_by_name(**attrib)
 
         elif tag == "{http://orthoXML.org/2011/}gene" and self.filterObj is None:
             self._build_gene(attrib)
@@ -118,7 +118,7 @@ class OrthoXMLParser(object):
 
             else:
                 # get the ancestral genome related to this hog based on it's children
-                ancestral_genome = self.ham_object.get_mrca_ancestral_genome_using_hog_children(hog)
+                ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
                 hog.set_genome(ancestral_genome)
                 ancestral_genome.taxon.genome.add_gene(hog)
 

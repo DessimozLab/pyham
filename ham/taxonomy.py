@@ -15,6 +15,8 @@ class Taxonomy(object):
         self.newick_str = newick_str  # the original newick string used to build the Ete3 Tree
         self.tree = ete3.Tree(self.newick_str, format=1)  # Ete3 Tree object
         _add_depth(self.tree.get_tree_root(), depth=0) # Add depth to ete3 node
+
+        # Those two vars make sure that we keep somewhere which genome ar nuild !
         self.internal_nodes = set()  # set of internal node within the self.tree
         self.leaves = set()  # set of leaves within the self.tree
 

@@ -35,6 +35,9 @@ class Genome(metaclass=ABCMeta):
             raise EvolutionaryConceptError("only one taxon can refers to one genome")
         self.taxon = taxon
 
+    def __str__(self):
+        return self.name
+
 
 
 class AncestralGenome(Genome):

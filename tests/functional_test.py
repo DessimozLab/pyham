@@ -55,7 +55,7 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(len(ham_analysis.extant_gene_map), 19)
 
         # Clement is curious to look at the species present within this taxonomy
-        extant_genomes = ham_analysis.get_all_extant_genomes()
+        extant_genomes = ham_analysis.get_list_extant_genomes()
 
 
         # then look if its 6 species are present
@@ -85,9 +85,9 @@ class HamAnalysis(unittest.TestCase):
         # and the extent genomes of the mouse.
 
         # First he select the related genomes objectt via their name or mrca.
-        mouse = ham_analysis.get_extant_genome_by_name(name="MOUSE")
-        frog = ham_analysis.get_extant_genome_by_name(name="XENTR")
-        vertebrates = ham_analysis.get_mrca_ancestral_genome_from_genome_set({mouse, frog})
+        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
+        frog = ham_analysis._get_extant_genome_by_name(name="XENTR")
+        vertebrates = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({mouse, frog})
 
         # Then, he compare the two genomes of interest
         vertical_map_mouse_vs_vert = ham_analysis.compare_genomes({mouse, vertebrates}, analysis='vertical')
@@ -116,13 +116,13 @@ class HamAnalysis(unittest.TestCase):
         # Then clement is interest to investigate on the difference/similarities that exists between the primates and the rodents.
 
         # First he select the related genomes object via their name and mrca.
-        mouse = ham_analysis.get_extant_genome_by_name(name="MOUSE")
-        rat = ham_analysis.get_extant_genome_by_name(name="RATNO")
-        human = ham_analysis.get_extant_genome_by_name(name="HUMAN")
-        chimp = ham_analysis.get_extant_genome_by_name(name="PANTR")
+        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
+        rat = ham_analysis._get_extant_genome_by_name(name="RATNO")
+        human = ham_analysis._get_extant_genome_by_name(name="HUMAN")
+        chimp = ham_analysis._get_extant_genome_by_name(name="PANTR")
 
-        rodents = ham_analysis.get_mrca_ancestral_genome_from_genome_set({mouse, rat})
-        primates = ham_analysis.get_mrca_ancestral_genome_from_genome_set({human, chimp})
+        rodents = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({mouse, rat})
+        primates = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({human, chimp})
 
         # Then, he compare the two genomes of interest through their mrca (Euarchontoglires)
         lateral_map_rodents_vs_primates = ham_analysis.compare_genomes({rodents, primates}, analysis='lateral')
@@ -195,7 +195,7 @@ class HamAnalysis(unittest.TestCase):
 
 
         '''
-        for hog in ham_analysis.get_all_top_level_hogs().values():
+        for hog in ham_analysis.get_dict_top_level_hogs().values():
             tp_hog = ham_analysis.treeProfile(hog)
             print(hog)
             print(tp_hog.dirty_display())
