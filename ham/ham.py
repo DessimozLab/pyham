@@ -493,16 +493,22 @@ class HAM(object):
         else:
             raise KeyError('{} nodes founded for the species name: {}'.format(len(nodes_founded), name))
 
-    # ... PRIVATE METHODS ... #                                                                 # <-- Here
+    # ... PRIVATE METHODS ... #
 
     def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons):
+
+        """  
+        Add intermediate :obj:`HOG` in between two :obj:`HOG` if their taxon are not direct parent and child in the 
+        taxonomy. E.g. if a rodent HOG is connected with a vertebrate HOG it will add an mammal hog in between.
+
+            Args:
+                child_hog (:obj:`HOG`): child :obj:`HOG`.
+                oldest_hog (:obj:`HOG`): parent :obj:`HOG`.
+                missing_taxons (:obj:`HOG`): list of intermediate taxNode between child_hog and oldest_hog sorted 
+                from youngest to oldest.
+
         """
 
-        :param child_hog: youngest hog
-        :param oldest_hog: oldest hog
-        :param missing_taxons: array of intermediate taxon sorted from most r4cent to oldest
-        :return:
-        """
         if not isinstance(child_hog, abstractgene.AbstractGene):
             raise TypeError("expect subclass obj of '{}', got {}"
                             .format(abstractgene.AbstractGene.__name__,
@@ -516,72 +522,94 @@ class HAM(object):
         if oldest_hog == child_hog:
             raise TypeError("Cannot add missing level between an HOG and it self.")
 
-        # the youngest hog is removed from the oldest hog
+        # the youngest hog is removed from the oldest hog children.
         oldest_hog.remove_child(child_hog)
 
-        # Then for each intermediate level in between the two hog
+        # Then for each intermediate level in between the two hogs...
         current_child = child_hog
         for tax in missing_taxons:
 
-            # we get the related ancestral genome of this level
+            # ... we get the related ancestral genome of this level...
             ancestral_genome = self._get_ancestral_genome_by_taxon(tax)
 
-            # we create the related hog and add it to the ancestral genome
+            # ... we create the related hog and add it to the ancestral genome...
             hog = abstractgene.HOG()
             hog.set_genome(ancestral_genome)
             ancestral_genome.add_gene(hog)
 
+            # ... we check if taxon correspond to child parent taxon ...
             if ancestral_genome.taxon is not current_child.genome.taxon.up:
                 raise TypeError("HOG taxon {} is different than child parent taxon {}".format(ancestral_genome.taxon,
                                                                                               current_child.genome.taxon.up))
 
-            # we add the child
+            # ... we add the child if everything is fine.
             hog.add_child(current_child)
             current_child = hog
 
         oldest_hog.add_child(current_child)
 
     def _get_oldest_from_genome_pair(self, g1, g2):
-        """
-        get the oldest genomes from a pair of genomes... I know Adrian, I know!
-        :param g1:
-        :param g2:
-        :return:
+
+        """  
+        Get the oldest :obj:`Genome` for a pair of :obj:`Genome`.
+
+            Args:
+                g1 (:obj:`Genome`): First :obj:`Genome`.
+                g2 (:obj:`Genome`): Second :obj:`Genome`.
+
+            Returns:
+                :obj:`Genome`
+
         """
 
-        mrca1 = g1.get_common_ancestor(g2)
-        if g2 == mrca1:
-            return g2, g1
+        mrca = self.taxonomy.tree.get_common_ancestor({g1,g2})
 
-        mrca2 = g2.get_common_ancestor(g1)
-        if g1 == mrca2:
+        if g1 == mrca:
             return g1, g2
-
-        raise TypeError("The genomes are not in the same lineage: {}".format({g1, g2}))
+        elif g2 == mrca:
+            return g2, g1
+        else:
+            raise TypeError("The genomes are not in the same lineage: {}".format({g1, g2}))
 
     def _get_ancestor_and_descendant(self, genome_set):
+
+        """  
+        This method fetch from a set of :obj:`Genome`:
+            - the oldest :obj:`Genome` from the set (if oldest genome not in set we get their mrca ).
+            - the rest of the :obj:`Genome` present in the set.
+
+            Args:
+                genome_set (:obj:`set`): A set of :obj:`Genome`.
+
+            Returns:
+                :obj:`Genome`, a set of :obj:`Genome`.
+
         """
-        Get from a set of genomes the oldest genomes (or their mrca if oldest not in genomes set) and return the list of descendant (present in the genomes set only)
-        :param genome_set:
-        :return:
-        """
+
         ancestor = self._get_ancestral_genome_by_mrca_of_genome_set(genome_set)
         genome_set.discard(ancestor)
         return ancestor, genome_set
 
     def _get_HOGMap(self, genome_pair_set):
+
+        """ 
+        Get the :obj:`HOGMap` between two genomes.
+        
+            Args:
+                genome_pair_set (:obj:`set`): A set of 2 :obj:`Genome`.
+
+            Returns:
+                :obj:`HOGMap`
+
         """
-        if not already computed, do the hog mapping between a pair of levels.
-        :param genome_pair_set:
-        :return:
-        """
+
         f = frozenset(genome_pair_set)
+
         if f in self.HOGMaps.keys():
             return self.HOGMaps[f]
         else:
-            m = mapper.HOGsMap(self, genome_pair_set)
-            self.HOGMaps[f] = m
-            return m
+            self.HOGMaps[f] = mapper.HOGsMap(self, genome_pair_set)
+            return self.HOGMaps[f]
 
     def _build_hogs_and_genes(self, file_object, filter_object):
 
@@ -606,26 +634,48 @@ class HAM(object):
 
         return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
-    def _get_extant_genome_by_name(self, **kwargs):  # todo: I'm not really happy with this
-        """
-        :param kwargs: use the name tag to browser a genomes
-        :return:
+    def _get_extant_genome_by_name(self, **kwargs):
+
+        """ 
+        Get the :obj:`ExtantGenome` by name, if not founded in the taxonomy.tree.node.genome then created it.
+
+            Args:
+                **kwargs: dictionary of attribute and value required to create the :obj:`ExtantGenome`.
+
+            Returns:
+                :obj:`ExtantGenome`
+
         """
 
         nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
 
         if len(nodes_founded) == 1:
-            if "genome" in nodes_founded[0].features:
-                return nodes_founded[0].genome
+
+            node = nodes_founded[0]
+
+            if "genome" in node.features:
+                return node.genome
 
             else:
                 extant_genome = genome.ExtantGenome(**kwargs)
-                self.taxonomy.add_extant_genome_to_node(nodes_founded[0], extant_genome)
+                self.taxonomy.add_extant_genome_to_node(node, extant_genome)
                 return extant_genome
         else:
-            raise ValueError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
+            raise KeyError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
 
     def _get_ancestral_genome_by_taxon(self, tax_node):
+
+        """  
+        Get the :obj:`AncestralGenome` corresponding of the query taxon if not founded in the taxonomy.tree
+        then created it.
+
+            Args:
+                tax_node : treeNode object of the :obj:`Taxonomy`.tree object.
+
+            Returns:
+                :obj:`AncestralGenome`
+
+        """
 
         if "genome" in tax_node.features:
             return tax_node.genome
@@ -637,16 +687,19 @@ class HAM(object):
             return ancestral_genome
 
     def _get_ancestral_genome_by_mrca_of_hog_children_genomes(self, hog):
-        """
-        collect all the genomes insides the hog children and them look for their mrca
-        :param hog:
-        :return:
+
+        """  
+        Get MRCA :obj:`AncestralGenome` of the list of children :obj:`Genome` of the query :obj:`HOG`.
+        
+            Args:
+                hog (:obj:`HOG`): query HOG.
+        
+            Returns:
+                :obj:`AncestralGenome`
+        
         """
 
-        children_genomes = set()
-
-        for child in hog.children:
-            children_genomes.add(child.genome)
+        children_genomes = set([child.genome for child in hog.children ])
 
         return self._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
 
