@@ -71,7 +71,7 @@ class HOGVisTestNoName(unittest.TestCase):
     def test_og_id_equality(self):
         HUMAN = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")
         RATNO = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
-        primates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({HUMAN, RATNO})
+        primates = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({HUMAN, RATNO})
         primates_hogs = primates.genes
         primate_hogs_from_map = self.map.levels['HUMAN/PANTR']
         glires = self.map.levels['HUMAN/PANTR/MOUSE/RATNO']

@@ -37,15 +37,15 @@ class QueryTest(unittest.TestCase):
         mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
 
         with self.assertRaises(ValueError):
-            self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set(set([mouse]))
+            self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set(set([mouse]))
 
         with self.assertRaises(TypeError):
-            self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set(set([mouse, "human"]))
+            self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set(set([mouse, "human"]))
 
-        mrca_euch = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set(set([human, mouse]))
+        mrca_euch = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set(set([human, mouse]))
         self.assertEqual("Euarchontoglires", mrca_euch.taxon.name)
 
-        mrca_euch2 = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set(set([mrca_euch, mouse]))
+        mrca_euch2 = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set(set([mrca_euch, mouse]))
         self.assertEqual("Euarchontoglires", mrca_euch2.taxon.name)
 
 

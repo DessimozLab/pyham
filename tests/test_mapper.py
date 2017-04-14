@@ -48,10 +48,10 @@ class MapperTestCases:
             self.mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
             self.rat = self.ham_analysis._get_extant_genome_by_name(name="RATNO")
             self.chimp = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
-            self.vertebrates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.human, self.frog})
-            self.rodents = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.mouse, self.rat})
-            self.primates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.human, self.chimp})
-            self.euarchontoglires = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set(
+            self.vertebrates = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({self.human, self.frog})
+            self.rodents = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({self.mouse, self.rat})
+            self.primates = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({self.human, self.chimp})
+            self.euarchontoglires = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set(
                 {self.human, self.mouse})
 
 

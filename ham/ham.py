@@ -121,7 +121,12 @@ class HAM(object):
         self.hog_file_type = type_hog_file
 
         # Filtering
-        self.filter_obj = filter_object
+        if isinstance(filter_object, ParserFilter) or filter_object is None:
+            self.filter_obj = filter_object
+        else:
+            raise TypeError("filter_obj should be '{}', got {}"
+                            .format(ParserFilter.__name__,
+                                    type(filter_object).__name__))
 
         # Taxonomy
         self.taxonomy = tax.Taxonomy(newick_str)
@@ -239,7 +244,7 @@ class HAM(object):
                 gene_unique_id (:obj:`str` or :obj:`int`): Unique gene Id.
 
             Returns:
-                :obj:`Gene` or raise TypeError
+                :obj:`Gene` or raise KeyError
 
         """
         gene_unique_id = str(gene_unique_id)
@@ -247,7 +252,7 @@ class HAM(object):
         if gene_unique_id in self.extant_gene_map.keys():
             return self.extant_gene_map[gene_unique_id]
 
-        raise TypeError('Id {} cannot match any Gene unique Id.'.format(gene_unique_id))
+        raise KeyError('Id {} cannot match any Gene unique Id.'.format(gene_unique_id))
 
     def get_genes_by_external_id(self, external_gene_id):
 
@@ -257,7 +262,7 @@ class HAM(object):
                 external_gene_id (:obj:`str` or :obj:`int`): External gene Id.
 
             Returns:
-                a list of :obj:`Gene` or raise TypeError
+                a list of :obj:`Gene` or raise KeyError
 
         """
 
@@ -266,7 +271,7 @@ class HAM(object):
         if external_gene_id in self.external_id_mapper.keys():
             return [self.extant_gene_map[qgene_id] for qgene_id in self.external_id_mapper[external_gene_id]]
 
-        raise TypeError('Id {} cannot match any Gene external Id.'.format(external_gene_id))
+        raise KeyError('Id {} cannot match any Gene external Id.'.format(external_gene_id))
 
     def get_list_extant_genes(self):
 
@@ -300,7 +305,7 @@ class HAM(object):
                 hog_id (:obj:`str` or :obj:`int`): Top level HOG id.
 
             Returns:
-                :obj:`HOG` or raise TypeError
+                :obj:`HOG` or raise KeyError
 
         """
 
@@ -309,7 +314,7 @@ class HAM(object):
         if hog_id in self.top_level_hogs.keys():
             return self.top_level_hogs[hog_id]
 
-        raise TypeError(' Id {} cannot match any HOG Id.'.format(hog_id))
+        raise KeyError(' Id {} cannot match any HOG Id.'.format(hog_id))
 
     def get_hog_by_gene(self, gene):
 
@@ -320,14 +325,14 @@ class HAM(object):
                 gene (:obj:`Gene`): :obj:`Gene` object.
 
             Returns:
-                :obj:`HOG` or raise TypeError
+                :obj:`HOG` or raise KeyError
 
         """
 
         if isinstance(gene, abstractgene.Gene):
             return gene.get_topLevelHog()
 
-        raise TypeError("expect a '{}' as query, got {}".format(abstractgene.Gene, type(gene).__name__))
+        raise KeyError("expect a '{}' as query, got {}".format(abstractgene.Gene, type(gene).__name__))
 
     def get_list_top_level_hogs(self):
 
@@ -378,18 +383,12 @@ class HAM(object):
 
         """
 
-        nodes_founded = self.taxonomy.tree.search_nodes(name=name)
+        for taxon in self.taxonomy.leaves:
+            if taxon.name == name:
+                if "genome" in taxon.features:
+                    return taxon.genome
 
-        if not nodes_founded:
-            raise KeyError('0 node founded for the species name: {}'.format(name))
-        elif len(nodes_founded) == 1:
-            node = nodes_founded[0]
-            if "genome" in node.features:
-                return node.genome
-            else:
-                raise KeyError("Name {} match to one node but no genome is attached to it.".format(name))
-        else:
-            raise KeyError('{} nodes founded for the species name: {}'.format(len(nodes_founded), name))
+        raise KeyError('No extant genomes match the query name: {}'.format(name))
 
     # ___ AncestralGenome ___ #
 
@@ -440,7 +439,7 @@ class HAM(object):
                 if "genome" in taxon.features:
                     return taxon.genome
 
-        raise ValueError('No ancestral genomes match the query name: {}'.format(name))
+        raise KeyError('No ancestral genomes match the query name: {}'.format(name))
 
     def get_ancestral_genome_by_mrca_of_genome_set(self, genome_set):
 
@@ -456,8 +455,7 @@ class HAM(object):
         """
 
         if len(genome_set) < 2:
-            raise ValueError('Only one genome is not enough to computed MRCA: {}'.format(genome_set))
-        pass
+            raise ValueError('Minimum 2 genomes are required, only {} provided.'.format(len(genome_set)))
 
         for g in genome_set:
             if not isinstance(g, genome.Genome):
@@ -465,20 +463,37 @@ class HAM(object):
                                 .format(genome.Genome.__name__,
                                         type(g).__name__))
 
-        children_nodes = set()
+        genome_nodes = set([genome.taxon for genome in genome_set])
 
-        for e in genome_set:
-            children_nodes.add(e.taxon)
+        mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
 
-        common = self.taxonomy.tree.get_common_ancestor(children_nodes)
-
-        return self._get_ancestral_genome_by_taxon(common)
-
+        return self.get_ancestral_genome_by_taxon(mrca_node)
 
     # Taxon
 
+    def get_taxon_by_name(self, name):
 
-    # ... PRIVATE METHODS ... #
+        """  
+        Get the treeNode object of the :obj:`Taxonomy`.tree corresponding of the query name.
+
+            Args:
+                name (:obj:`str`): Name of the treeNode.
+
+            Returns:
+                treeNode or raise KeyError
+
+        """
+
+        nodes_founded = self.taxonomy.tree.search_nodes(name=name)
+
+        if not nodes_founded:
+            raise KeyError('No node founded for the species name: {}'.format(name))
+        elif len(nodes_founded) == 1:
+            return nodes_founded[0]
+        else:
+            raise KeyError('{} nodes founded for the species name: {}'.format(len(nodes_founded), name))
+
+    # ... PRIVATE METHODS ... #                                                                 # <-- Here
 
     def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons):
         """
@@ -550,7 +565,7 @@ class HAM(object):
         :param genome_set:
         :return:
         """
-        ancestor = self.get_ancestral_genome_by_mrca_of_genome_set(genome_set)
+        ancestor = self._get_ancestral_genome_by_mrca_of_genome_set(genome_set)
         genome_set.discard(ancestor)
         return ancestor, genome_set
 
@@ -633,5 +648,32 @@ class HAM(object):
         for child in hog.children:
             children_genomes.add(child.genome)
 
-        return self.get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
+        return self._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
 
+    def _get_ancestral_genome_by_mrca_of_genome_set(self, genome_set):
+
+        """  
+        Get the :obj:`AncestralGenome` corresponding to the MRCA of query genomes.
+
+            Args:
+                genome_set (:obj:`set`): Set of :obj:`AncestralGenome`.
+
+            Returns:
+                :obj:`AncestralGenome` or raise KeyError
+
+        """
+
+        if len(genome_set) < 2:
+            raise ValueError('Minimum 2 genomes are required, only {} provided.'.format(len(genome_set)))
+
+        for g in genome_set:
+            if not isinstance(g, genome.Genome):
+                raise TypeError("expect subclass obj of '{}', got {}"
+                                .format(genome.Genome.__name__,
+                                        type(g).__name__))
+
+        genome_nodes = set([genome.taxon for genome in genome_set])
+
+        mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
+
+        return self._get_ancestral_genome_by_taxon(mrca_node)

@@ -121,8 +121,8 @@ class HamAnalysis(unittest.TestCase):
         human = ham_analysis._get_extant_genome_by_name(name="HUMAN")
         chimp = ham_analysis._get_extant_genome_by_name(name="PANTR")
 
-        rodents = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({mouse, rat})
-        primates = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({human, chimp})
+        rodents = ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({mouse, rat})
+        primates = ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({human, chimp})
 
         # Then, he compare the two genomes of interest through their mrca (Euarchontoglires)
         lateral_map_rodents_vs_primates = ham_analysis.compare_genomes({rodents, primates}, analysis='lateral')
