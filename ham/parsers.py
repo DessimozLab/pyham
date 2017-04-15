@@ -112,7 +112,7 @@ class OrthoXMLParser(object):
             # get the latest hog
             hog = self.hog_stack.pop()
 
-            if self.skip_this_hog == True:
+            if self.skip_this_hog:
                 if len(self.hog_stack) == 0:
                     self.skip_this_hog = False
 

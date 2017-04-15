@@ -22,8 +22,8 @@ class HAMTestSetUp(unittest.TestCase):
     def setUp(self):
         self.nwk_str_empty = ""
         self.nwk_str_wrong = "(A,B)x0.4"
-        self.nwk_str = utils.get_newick_string('./tests/simpleEx.nwk', type="nwk")
-        self.orthoxml_path = './tests/simpleEx.orthoxml'
+        self.nwk_str = utils.get_newick_string('./tests/data/simpleEx.nwk', type="nwk")
+        self.orthoxml_path = './tests/data/simpleEx.orthoxml'
 
     def test_wrong_newick_str(self):
 
@@ -52,9 +52,9 @@ class HAMTestSetUp(unittest.TestCase):
 class HAMTest(unittest.TestCase):
 
     def setUp(self):
-        nwk_path = './tests/simpleEx.nwk'
+        nwk_path = './tests/data/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/simpleEx.orthoxml'
+        orthoxml_path = './tests/data/simpleEx.orthoxml'
         self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
@@ -89,13 +89,13 @@ class HAMTestQuery(unittest.TestCase):
 
     def setUp(self):
 
-        nwk_path = './tests/simpleEx.nwk'
+        nwk_path = './tests/data/simpleEx.nwk'
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
 
-        nwk_path_no_name = './tests/simpleExNoName.nwk'
+        nwk_path_no_name = './tests/data/simpleExNoName.nwk'
         nwk_str_no_name = utils.get_newick_string(nwk_path_no_name, type="nwk")
 
-        orthoxml_path = './tests/simpleEx.orthoxml'
+        orthoxml_path = './tests/data/simpleEx.orthoxml'
 
         # using newick with name on both internal nodes and leaves
         self.h = ham.HAM(nwk_str, orthoxml_path)
@@ -408,13 +408,13 @@ class HAMTestPrivate(unittest.TestCase):
 
     def setUp(self):
 
-        nwk_path = './tests/simpleEx.nwk'
+        nwk_path = './tests/data/simpleEx.nwk'
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
 
-        nwk_path_no_name = './tests/simpleExNoName.nwk'
+        nwk_path_no_name = './tests/data/simpleExNoName.nwk'
         nwk_str_no_name = utils.get_newick_string(nwk_path_no_name, type="nwk")
 
-        orthoxml_path = './tests/simpleEx.orthoxml'
+        orthoxml_path = './tests/data/simpleEx.orthoxml'
 
         # using newick with name on both internal nodes and leaves
         self.h = ham.HAM(nwk_str, orthoxml_path)

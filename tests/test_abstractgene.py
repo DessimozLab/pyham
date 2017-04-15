@@ -1,7 +1,7 @@
 import unittest
-from ham import Gene, HOG, AbstractGene, AncestralGenome, ExtantGenome
-
+from ham import Gene, HOG, AbstractGene, AncestralGenome, ExtantGenome, utils, ham
 from ham.abstractgene import EvolutionaryConceptError as ECE
+
 
 class GeneTest(unittest.TestCase):
     def test_id_required(self):
@@ -9,18 +9,27 @@ class GeneTest(unittest.TestCase):
             Gene()
         self.assertIsInstance(Gene('324'), AbstractGene)
 
-    def test_cannot_add_multiple_taxon_ranges(self):
+    def test_cannot_add_multiple_more_than_one_extant_genome(self):
         g = Gene(id="423")
+
         # invalid genome
         with self.assertRaises(TypeError):
             g.set_genome("wrong")
+
+        # invalid ancestral genome
+        with self.assertRaises(TypeError):
+            a = AncestralGenome()
+            g.set_genome(a)
+
         # valid
         b = ExtantGenome(name="HUMAN", NCBITaxId="9601")
         g.set_genome(b)
+
         # cannot reassign a genome is already set
         c = ExtantGenome(name="MONDO", NCBITaxId="96")
         with self.assertRaises(ECE):
             g.set_genome(c)
+
         # but same twice should be ok
         g.set_genome(b)
 
@@ -42,18 +51,41 @@ class HogTest(unittest.TestCase):
         with self.assertRaises(ECE):
             a.add_child(a)
 
+    def test_remove_child(self):
+        a = HOG(id="a")
+        b = HOG(id="b")
+        c = HOG(id="b")
+
+        self.assertListEqual(a.children, [])
+
+        a.add_child(b)
+        a.add_child(c)
+        self.assertListEqual(a.children, [b,c])
+
+        a.remove_child(b)
+        self.assertListEqual(a.children, [c])
+
     def test_only_one_genome_possible(self):
         h = HOG()
+
         # invalid genome
         with self.assertRaises(TypeError):
             h.set_genome("wrong")
-        # valid
+
+        # valid ancestral genome
         a = AncestralGenome()
         h.set_genome(a)
+
+        # invalid extant genome
+        hum = ExtantGenome("HUMAN", "1")
+        with self.assertRaises(TypeError):
+            h.set_genome(hum)
+
         # cannot reassign a genome is already set
         b = AncestralGenome()
         with self.assertRaises(ECE):
             h.set_genome(b)
+
         # but same twice should be ok
         h.set_genome(a)
 
@@ -71,6 +103,67 @@ class HogTest(unittest.TestCase):
         with self.assertRaises(KeyError):
             a.score('testscore')
 
+
+class AbstractGeneTest(unittest.TestCase):
+
+    def setUp(self):
+        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_str = utils.get_newick_string(nwk_path, type="nwk")
+        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        self.h = ham.HAM(nwk_str, orthoxml_path)
+
+    def test_search_ancestor_hog_in_ancestral_genome(self):
+
+        # there is an ancestor founded
+        gene2 = self.h.get_gene_by_id("2")
+        hog2 = self.h.get_hog_by_id("2")
+
+        ancestor, is_dup = gene2.search_ancestor_hog_in_ancestral_genome(hog2.genome)
+        self.assertEqual(ancestor, hog2)
+        self.assertEqual(is_dup, False)
+
+        # there is no ancestor founded
+        hog1 = self.h.get_hog_by_id(1)
+
+        ancestor, is_dup = gene2.search_ancestor_hog_in_ancestral_genome(hog1.genome)
+        self.assertEqual(ancestor, None)
+        self.assertEqual(is_dup, False)
+
+        # there is a duplication
+        gene3 = self.h.get_gene_by_id("3")
+        hog3 = self.h.get_hog_by_id(3)
+
+        ancestor, is_dup = gene3.search_ancestor_hog_in_ancestral_genome(hog3.genome)
+        self.assertEqual(ancestor, hog3)
+        self.assertEqual(is_dup, True)
+
+        # level given is the same as hog
+        hog3 = self.h.get_hog_by_id(3)
+
+        ancestor, is_dup = hog3.search_ancestor_hog_in_ancestral_genome(hog3.genome)
+        self.assertEqual(ancestor, None)
+        self.assertEqual(is_dup, False)
+
+    def test_get_top_level_hog(self):
+
+        # there is an top level hog founded
+        gene2 = self.h.get_gene_by_id("2")
+        hog2 = self.h.get_hog_by_id("2")
+
+        ancestor = gene2.get_top_level_hog()
+        self.assertEqual(ancestor, hog2)
+
+        # hog is already top level
+        hog2 = self.h.get_hog_by_id("2")
+
+        ancestor = hog2.get_top_level_hog()
+        self.assertEqual(ancestor, hog2)
+
+        # gene is singleton
+        singleton = self.h.get_gene_by_id("5")
+
+        ancestor = singleton.get_top_level_hog()
+        self.assertEqual(ancestor, singleton)
 
 if __name__ == "__main__":
     unittest.main()

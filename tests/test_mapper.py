@@ -38,9 +38,9 @@ def _str_dict_array_value(dict):
 class MapperTestCases:
     class MapperTest(unittest.TestCase):
         def setUp(self):
-            nwk_path = './tests/simpleEx.nwk'
+            nwk_path = './tests/data/simpleEx.nwk'
             tree_str = utils.get_newick_string(nwk_path, type="nwk")
-            orthoxml_path = './tests/simpleEx.orthoxml'
+            orthoxml_path = './tests/data/simpleEx.orthoxml'
             self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
             self.human = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")

@@ -7,16 +7,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Hogvis(object):
-    def __init__(self, ham, hog):
+    def __init__(self, newick_str, hog):
         self.hog = hog
-        self.ham = ham
+        self.newick_str = newick_str
         self.ogs_mapper = self._get_groups_to_level_mapper()
         self.per_species = self._get_per_species_structure()
         self.html_template = self._get_html_template()
         self.xrefs = {gene.unique_id: gene.get_dict_xref() for gene in hog.get_all_descendant_genes()}
 
         self.renderHTML = self.html_template.safe_substitute({'name': hog.hog_id,
-                                                             'species_tree': ham.taxonomy.get_newick_from_tree(hog.genome.taxon),
+                                                             'species_tree': self.newick_str,
                                                              'xrefs': json.dumps(self.xrefs),
                                                              'per_species': json.dumps(self.per_species)})
 

@@ -92,6 +92,8 @@ class ParserFilter(object):
 
 class HAM(object):
     """
+    [Add here description of HAM]
+    
     Attributes:
         hog_file (:obj:`str`): Path to the file that contained the HOGs information.
         hog_file_type (:obj:`str`): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
@@ -173,7 +175,7 @@ class HAM(object):
             'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(
                 len(self.top_level_hogs), len(self.taxonomy.leaves)))
 
-    # ... TOOLS ... #
+    # ... TOOLS ... #                       <-- TODO
 
     def compare_genomes(self, genomes_set, analysis):
         """
@@ -208,10 +210,11 @@ class HAM(object):
     def hogvis(self, hog, outfile=None):  # since i need the taxonomy, etc it's easier to wrap everything here
         """
         :param hog:  HOG object to visualise
-        :param outfile: If specify create get_hogvis html file
-        :return: the get_hogvis html string but nothing if outfile is specified
+        :param outfile: If specify create get_hog_vis_html html file
+        :return: the get_hog_vis_html html string but nothing if outfile is specified
         """
-        vishtml = hog.get_hogvis(self)
+        newick_tree = newick_str =self.taxonomy.get_newick_from_tree(hog.genome.taxon)
+        vishtml = hog.get_hog_vis_html(newick_tree)
 
         if outfile is not None:
             with open(outfile, 'w') as fh:
@@ -330,7 +333,7 @@ class HAM(object):
         """
 
         if isinstance(gene, abstractgene.Gene):
-            return gene.get_topLevelHog()
+            return gene.get_top_level_hog()
 
         raise KeyError("expect a '{}' as query, got {}".format(abstractgene.Gene, type(gene).__name__))
 

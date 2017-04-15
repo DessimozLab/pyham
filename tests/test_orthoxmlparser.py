@@ -30,9 +30,9 @@ class OrthoXMLParserTest(unittest.TestCase):
         self.assertEqual(expected_members, observed_members)
 
     def setUp(self):
-        nwk_path = './tests/simpleEx.nwk'
+        nwk_path = './tests/data/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/simpleEx.orthoxml'
+        orthoxml_path = './tests/data/simpleEx.orthoxml'
         self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
