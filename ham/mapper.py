@@ -5,6 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class HOGsMap(object):
     '''
     Given a set of 2 genomes where Gi denote the ancestor of Gj, the HOGsMap object identify the relations that exist between all Hi
@@ -77,6 +78,7 @@ class HOGsMap(object):
                 upMap[hog_source] = [hog_target, paralog]
         return upMap
 
+
 class MapResults(metaclass=ABCMeta):
     '''
     The MapResult class manages the HOG mapping between several {extant|ancestral} genomes. There is two type of
@@ -120,6 +122,7 @@ class MapResults(metaclass=ABCMeta):
         """Return genes that duplicate"""
         pass
 
+
 class MapVertical(MapResults):
     '''
     The MapVertical class manages the HOG mapping between two genomes on the same lineages (an ancestral genome Gi
@@ -160,6 +163,7 @@ class MapVertical(MapResults):
 
     def get_duplicated(self):
         return self.map.DUPLICATE
+
 
 class MapLateral(MapResults):
 

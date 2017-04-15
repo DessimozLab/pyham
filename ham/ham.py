@@ -175,55 +175,103 @@ class HAM(object):
             'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(
                 len(self.top_level_hogs), len(self.taxonomy.leaves)))
 
-    # ... TOOLS ... #                       <-- TODO
+    # ... TOOLS ... #
 
-    def compare_genomes(self, genomes_set, analysis):
+    def compare_genomes_vertical(self, genomes_set):
+
         """
-        function for level comparaison || Work in progress
-        :param genomes_set:
-        :param analysis: ADRIAN -> This is not smart
-        :return:
+        Function to compute a :obj:`MapVertical` based on the 2 given genomes.
+
+        Attributes:
+            genomes_set (:obj:`set`): set of 2 :obj:`Genome`.
+
+        Returns:
+            :obj:`MapVertical`.
+        
+        Raises:
+            TypeError: if there is not two genomes.
         """
 
-        if analysis == "vertical":
-            if len(genomes_set) != 2:
-                raise TypeError(
-                    "{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
-            vertical_map = mapper.MapVertical(self)
-            vertical_map.add_map(self._get_HOGMap(genomes_set))
-            return vertical_map
+        if len(genomes_set) != 2:
+            raise TypeError(
+                "{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
 
-        elif analysis == "lateral":
-            if len(genomes_set) < 2:
-                raise TypeError(
-                    "{} genomes given for lateral HOG mapping, at least 2 should be given".format(len(genomes_set)))
-            lateral_map = mapper.MapLateral(self)
-            anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
-            for g in desc:
-                hogmap = mapper.HOGsMap(self, {g, anc})
-                lateral_map.add_map(hogmap)
-            return lateral_map
+        vertical_map = mapper.MapVertical(self)
+        vertical_map.add_map(self._get_HOGMap(genomes_set))
 
-        else:
-            raise TypeError("Invalid type of genomes comparison")
+        return vertical_map
 
-    def hogvis(self, hog, outfile=None):  # since i need the taxonomy, etc it's easier to wrap everything here
+    def compare_genomes_lateral(self, genomes_set):
+
         """
-        :param hog:  HOG object to visualise
-        :param outfile: If specify create get_hog_vis_html html file
-        :return: the get_hog_vis_html html string but nothing if outfile is specified
+        Function to compute a :obj:`MapLateral` based on given genomes set.
+
+        Attributes:
+            genomes_set (:obj:`set`): set of :obj:`Genome`.
+
+        Returns:
+            :obj:`MapLateral`.
+
+        Raises:
+            TypeError: if there is less than 2 genomes.
         """
-        newick_tree = newick_str =self.taxonomy.get_newick_from_tree(hog.genome.taxon)
-        vishtml = hog.get_hog_vis_html(newick_tree)
+
+        if len(genomes_set) < 2:
+            raise TypeError(
+                "{} genomes given for lateral HOG mapping, at least 2 should be given".format(len(genomes_set)))
+
+        lateral_map = mapper.MapLateral(self)
+        anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
+        for g in desc:
+            hogmap = mapper.HOGsMap(self, {g, anc})
+            lateral_map.add_map(hogmap)
+
+        return lateral_map
+
+    def hogvis(self, hog, outfile=None):
+
+        """
+        Function to compute a :obj:`Hogvis`.
+
+        If an outfile is specified, export the :obj:`Hogvis` as html file.
+
+        Attributes:
+            hog (:obj:`HOG`): HOG use as template for the :obj:`Hogvis`.
+            outfile (:obj:`str`, optional): Path to the Hogvis html file.
+
+        Returns:
+            :obj:`Hogvis` 
+        """
+
+        newick_tree =self.taxonomy.get_newick_from_tree(hog.genome.taxon)
+
+        vis = hog.get_hog_vis(newick_tree)
 
         if outfile is not None:
             with open(outfile, 'w') as fh:
-                fh.write(vishtml)
-                return
+                fh.write(vis.renderHTML)
 
-        return vishtml
+        return vis
 
-    def treeProfile(self, hog=None, outfile=None, export_with_histogram=True):
+    def tree_profile(self, hog=None, outfile=None, export_with_histogram=True):
+
+        """
+        Function to compute a :obj:`TreeProfile`.
+        
+        If no hog are given the tree profile will be created for the whole HAM setup (all internal nodes with all HOGs).
+        Otherwise, the tree profile is build for the specific hog given.
+        
+        If an outfile is specified, export the tree_profile as image into file.
+
+        Attributes:
+            hog (:obj:`HOG`, optional): HOG use as template for the tree_profile.
+            outfile (:obj:`str`, optional): Path to the tree_profile output image file. valid extensions are .SVG, .PDF, .PNG.  
+            export_with_histogram (:obj:`Bool`, optional): If True, export image with histogram at each internal node otherwise 
+            display internal node information as text.
+
+        Returns:
+            :obj:`TreeProfile` 
+        """
 
         tp = TreeProfile(self, hog=hog)
 
@@ -232,8 +280,8 @@ class HAM(object):
 
         return tp
 
-    def show_taxonomy(self):
-        print(self.taxonomy.tree.get_ascii())
+    def get_ascii_taxonomy(self):
+        return self.taxonomy.tree.get_ascii()
 
     # ... QUERY METHODS ... #
 

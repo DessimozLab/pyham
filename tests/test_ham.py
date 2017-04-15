@@ -66,23 +66,25 @@ class HAMTest(unittest.TestCase):
         self.chimp = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
         self.vertebrates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.human, self.frog})
 
-    def test_compare_level_correct_input(self):
-
-        # launch wrong analysis
-        with self.assertRaises(TypeError):
-            self.ham_analysis.compare_genomes({self.human,self.chimp}, "xxx")
+    def test_compare_level_correct_input_vertical(self):
 
         # launch vertical analysis with more than 2 genomes
         with self.assertRaises(TypeError):
-            self.ham_analysis.compare_genomes({self.human,self.chimp, self.rat}, "vertical")
+            self.ham_analysis.compare_genomes_vertical({self.human, self.chimp, self.rat})
+
+            # launch vertical analysis with 0 genomes
+            with self.assertRaises(TypeError):
+                self.ham_analysis.compare_genomes_vertical({})
+
+    def test_compare_level_correct_input_lateral(self):
 
         # launch lateral analysis with 1 genomes
         with self.assertRaises(TypeError):
-            self.ham_analysis.compare_genomes({self.human}, "lateral")
+            self.ham_analysis.compare_genomes_lateral({self.human})
 
         # launch lateral analysis with 0 genomes
         with self.assertRaises(TypeError):
-            self.ham_analysis.compare_genomes(set(), "lateral")
+            self.ham_analysis.compare_genomes_lateral(set())
 
 
 class HAMTestQuery(unittest.TestCase):

@@ -97,7 +97,7 @@ class HOG(AbstractGene):
     Attributes:
         hog_id (:obj:`str`): hog id. Defaults is None.
         children (:obj:`list` of :obj:`AbstractGene`): A list of direct descendants AbstractGene.
-        hogvisHTML (:obj:`str`): string containing the required html to set up an HogVis html page.
+        hogvis (:obj:`Hogvis`): :obj:`Hogvis` object of this HOG.
 
     """
 
@@ -105,7 +105,7 @@ class HOG(AbstractGene):
         super(HOG, self).__init__(**kwargs)
         self.hog_id = id
         self.children = []
-        self.hogvisHTML = None
+        self.hogvis = None
 
     def add_child(self, child_to_add):
 
@@ -239,6 +239,8 @@ class HOG(AbstractGene):
                     elem = function_postfix(self, child, elem)
         return elem
 
+    #  TODO: UT
+
     def get_all_descendant_genes(self):
 
         """ 
@@ -302,22 +304,24 @@ class HOG(AbstractGene):
 
         return self.visit([], function_prefix=append_current_genome)
 
-    def get_hog_vis_html(self, newick_str):
+    def get_hog_vis(self, newick_str):
 
-        """ Get the top level :obj:`HOG` that match the hog id query.
+        """ Lazy getter of the :obj:`HOG` Hogvis.
 
             Args:
                 newick_str (:obj:`str`): newick species tree used by the hogvis.
 
             Returns:
-                :obj:`str` of the html hogvis page.
+                :obj:`Hogvis` of this HOG.
 
         """
 
-        if self.hogvisHTML is None:
-            self.hogvisHTML = Hogvis(newick_str, self).renderHTML
+        if self.hogvis is None:
+            self.hogvis = Hogvis(newick_str, self)
 
-        return self.hogvisHTML
+        return self.hogvis
+
+    #  TODO: end UT
 
     def is_singleton(self):
         return False
@@ -367,7 +371,7 @@ class Gene(AbstractGene):
 
         self.genome = genome
 
-    def get_dict_xref(self):
+    def get_dict_xref(self): #              <-- TODO: UT
 
         """ Get the dictionary of cross references.
 
