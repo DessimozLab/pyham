@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orthoXML xmlns="http://orthoXML.org/2011/" version="0.3" origin="Family Analyzer Testcase" originVersion="0.2">
+ <notes>
+Example Notes without meaning
+ </notes>
+ <species name="HUMAN" NCBITaxId="9601">
+  <database name="HUMANfake" version="0.1">
+   <genes>
+    <gene id="1" protId="HUMAN1" geneId="HUMANg1" />
+    <gene id="2" protId="HUMAN2" geneId="HUMANg2" />
+    <gene id="3" protId="HUMAN3" geneId="HUMANg3" />
+    <gene id="5" protId="HUMAN5" geneId="HUMANg5" />
+   </genes>
+  </database>
+ </species>
+ <species name="PANTR" NCBITaxId="9483">
+  <database name="PANTRfake" version="0.1">
+   <genes>
+    <gene id="11" protId="PANTR1" geneId="PANTRg1" />
+    <gene id="12" protId="PANTR2" geneId="PANTRg2" />
+    <gene id="13" protId="PANTR3" geneId="PANTRg3" />
+    <gene id="14" protId="PANTR4" geneId="PANTRg4" />
+   </genes>
+  </database>
+ </species>
+ <species name="CANFA" NCBITaxId="9615">
+  <database name="CANFAfake" version="0.1">
+   <genes>
+    <gene id="21" protId="CANFA1" geneId="CANFAg1" />
+    <gene id="22" protId="CANFA2" geneId="CANFAg2" />
+    <gene id="23" protId="CANFA3" geneId="CANFAg3" />
+   </genes>
+  </database>
+ </species>
+ <species name="MOUSE" NCBITaxId="10090">
+  <database name="MOUSEfake" version="0.1">
+   <genes>
+    <gene id="31" protId="MOUSE1" geneId="MOUSEg1" />
+    <gene id="32" protId="MOUSE2" geneId="MOUSEg2" />
+    <gene id="33" protId="MOUSE3" geneId="MOUSEg3" />
+    <gene id="34" protId="MOUSE4" geneId="MOUSEg4" />
+   </genes>
+  </database>
+ </species>
+ <species name="RATNO" NCBITaxId="10116">
+  <database name="RATNOfake" version="0.1">
+   <genes>
+    <gene id="41" protId="RATNO1" geneId="RATNOg1" />
+    <gene id="43" protId="RATNO3" geneId="RATNOg3" />
+   </genes>
+  </database>
+ </species>
+ <species name="XENTR" NCBITaxId="1">
+  <database name="XENTRfake" version="0.1">
+   <genes>
+    <gene id="51" protId="XENTR1" geneId="XENTRg1" />
+    <gene id="53" protId="XENTR3" geneId="XENTRg3" />
+   </genes>
+  </database>
+ </species>
+ <scores>
+  <scoreDef id="consistency" desc="A consistency based score, just an example"/>
+  <scoreDef id="coverage" desc="yet another example score"/>
+ </scores>
+ <groups>
+  <orthologGroup id="1">
+   <score id="consistency" value="1.0"/>
+   <property name="TaxRange" value="Vertebrata"/>
+   <geneRef id="51"/>
+   <orthologGroup id="1.M" >
+    <score id="coverage" value="0.84"/>
+    <score id="consistency" value="0.932"/>
+    <property name="TaxRange" value="Mammalia"/>
+    <geneRef id="21"/>
+    <orthologGroup id="1.M.E" >
+     <score id="consistency" value="1.0"/>
+     <property name="TaxRange" value="Euarchontoglires" />
+     <orthologGroup id="1.M.E.P" >
+      <score id="coverage" value="1.0"/>
+      <property name="TaxRange" value="Primates"/>
+      <geneRef id="1" />
+      <geneRef id="11" />
+     </orthologGroup>
+     <orthologGroup id="1.M.E.R" >
+      <property name="TaxRange" value="Rodents"/>
+      <geneRef id="31" />
+      <geneRef id="41" />
+     </orthologGroup>
+    </orthologGroup>
+   </orthologGroup>
+  </orthologGroup>
+
+  <orthologGroup id="2">
+   <property name="TaxRange" value="Mammalia"/>
+   <geneRef id="22"/>
+   <orthologGroup id="2.E">
+    <property name="TaxRange" value="Euarchontoglires" />
+    <orthologGroup id="2.E.P">
+     <property name="TaxRange" value="Primates"/>
+     <geneRef id="2" />
+     <geneRef id="12" />
+    </orthologGroup>
+    <geneRef id="32" />
+   </orthologGroup>
+  </orthologGroup>
+
+  <orthologGroup id="3">
+   <property name="TaxRange" value="Vertebrata"/>
+   <geneRef id="53"/>
+   <orthologGroup id="3.M">
+    <property name="TaxRange" value="Mammalia"/>
+    <geneRef id="23"/>
+    <paralogGroup>
+     <orthologGroup id="3.E.1">
+      <property name="TaxRange" value="Euarchontoglires" />
+      <geneRef id="33"/>
+      <orthologGroup id="3.E.1.P">
+       <property name="TaxRange" value="Primates"/>
+       <geneRef id="3"/>
+       <geneRef id="13"/>
+      </orthologGroup>
+     </orthologGroup>
+     <orthologGroup id="3.E.2" >
+      <score id="coverage" value="0.3"/>
+      <property name="TaxRange" value="Euarchontoglires" />
+      <geneRef id="34" />
+      <geneRef id="14" />
+     </orthologGroup>
+    </paralogGroup>
+   </orthologGroup>
+  </orthologGroup>
+ </groups>
+</orthoXML>
