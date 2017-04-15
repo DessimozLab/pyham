@@ -6,7 +6,6 @@ from ham.genome import ExtantGenome, AncestralGenome
 from ham.hogvis import Hogvis
 
 
-
 class AbstractGene(metaclass=ABCMeta):
     """  
     AbstractGene is an abstract class representing extant or ancestral genes. An AbstractGene is defined by an unique

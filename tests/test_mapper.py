@@ -6,7 +6,7 @@ from ham import HOGsMap, MapLateral, MapResults, MapVertical
 
 
 ##########################################################################################
-####  ATTENTION THIS I QUICK AND DIRTY UNIT TEST TO DEBUG NEED TO BE REDO        #########
+####  ATTENTION THIS IS QUICK AND DIRTY UNIT TEST TO DEBUG NEED TO BE REDONE     #########
 ##########################################################################################
 
 def _str_array(array):
@@ -79,29 +79,10 @@ class HOGMapperTest(MapperTestCases.MapperTest):
 
     def test_set_ancestor_and_descendant(self):
 
-        '''
-        # genomes (two extant genomes) not on the same lineage
-        map = HOGsMap(self.ham_analysis, {self.human, self.mouse})
-        self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
-        self.assertEqual({self.human:self.human, self.mouse:self.mouse}, map.descendants)
-        '''
-
         # two genomes on the same lineage
         map = HOGsMap(self.ham_analysis, {self.human, self.euarchontoglires})
         self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
         self.assertEqual(self.human, map.descendant)
-
-        '''
-        # genomes (one extant genomes and one ancestral genome) not on the same lineage
-        map = HOGsMap(self.ham_analysis, {self.human, self.rodents})
-        self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
-        self.assertEqual({self.human:self.human, self.rodents:self.rodents}, map.descendants)
-
-        # genomes (two ancestral genome) not on the same lineage
-        map = HOGsMap(self.ham_analysis, {self.rodents, self.primates})
-        self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
-        self.assertEqual({self.primates:self.primates, self.rodents:self.rodents}, map.descendants)
-        '''
 
     def test_add_genome_not_on_lineage(self):
         with self.assertRaises(TypeError):
@@ -123,35 +104,6 @@ class HOGMapperTest(MapperTestCases.MapperTest):
         expected_map = {'1': '1', '2': None, '3': '3'}
         observed_map = _convert_map(map.upMap)
         self.assertDictEqual(expected_map, observed_map)
-
-        '''
-         # two extant genomes(human,mouse) and their MRCA(Euarchontoglires)
-        map = HOGsMap(self.ham_analysis, {self.human, self.mouse})
-
-        expected_map_human = {'1': 'Euarchontoglires', '2': 'Euarchontoglires', '3': 'Euarchontoglires'}
-        observed_map_human = _convert_map(map.upMaps[self.human])
-        self.assertDictEqual(expected_map_human, observed_map_human)
-
-        expected_map_mouse = {'31': 'Euarchontoglires', '32': 'Euarchontoglires', '33': 'Euarchontoglires', '34': 'Euarchontoglires'}
-        observed_map_mouse = _convert_map(map.upMaps[self.mouse])
-        self.assertDictEqual(expected_map_mouse, observed_map_mouse)
-
-        # an extant genomes, an ancestral genome and their MRCA
-        map = HOGsMap(self.ham_analysis, {self.human, self.rodents})
-
-        expected_map_human = {'1': 'Euarchontoglires', '2': 'Euarchontoglires', '3': 'Euarchontoglires'}
-        observed_map_human = _convert_map(map.upMaps[self.human])
-        self.assertDictEqual(expected_map_human, observed_map_human)
-
-        expected_map_rodents = {72: '1', 32: '2', 34: "3", 33: '3'}
-        observed_map_rodents = {}
-        for hog_rodents, hog_euarch in map.upMaps[self.rodents].items(): #dirty but it's work (the trick if to sum up the children id..)
-            sum_child = 0
-            for child in hog_rodents.children:
-                sum_child += int(child.unique_id)
-            observed_map_rodents[sum_child]= self._get_topLevel_id(hog_euarch[0])
-        self.assertDictEqual(expected_map_rodents, observed_map_rodents)
-        '''
 
     def test_buildEventClusters(self):
 
@@ -228,7 +180,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
 
     def test_can_only_create_vertical_map_with_ham_object(self):
         with self.assertRaises(TypeError):
-            vertical_map = MapVertical()
+            MapVertical()
 
     def test_get_lost(self):
         vertical_map = MapVertical(self.ham_analysis)

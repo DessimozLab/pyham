@@ -6,19 +6,26 @@ from unittest import skip
 import ham.genome as g
 import ete3
 
+
 class ExtantGenomeTest(unittest.TestCase):
+
     def test_name_and_NCBITaxId_required(self):
+
         # missing input should raises error
         with self.assertRaises(TypeError):
             a = g.ExtantGenome()
+
         # missing NCBITaxId should raises error
         with self.assertRaises(TypeError):
             b = g.ExtantGenome(name="HUMAN")
+
         # missing name should raises error
         with self.assertRaises(TypeError):
             c = g.ExtantGenome(NCBITaxId="9601")
+
         # valid
         self.assertIsInstance(g.ExtantGenome(name="HUMAN", NCBITaxId="9601"), g.ExtantGenome)
+
 
 class GenomeTest(unittest.TestCase):
 

@@ -74,7 +74,7 @@ class Hogvis(object):
                     cur_map[org][pos].append(int(gene.unique_id))
                     parent = gene.parent
                     while parent != self.hog.parent:
-                        lev = parent.genome.get_name()
+                        lev = parent.genome.name
                         lev_repr = lev
                         if re_non_char.search(lev):
                             lev_repr = '{}'.format(lev)
@@ -97,7 +97,7 @@ class _OGLevelMapper(object):
         self.levels = collections.defaultdict(list)
         self.id2pos = {}
         for og in ogs:
-            lev = og.genome.get_name()
+            lev = og.genome.name
             self.levels[lev].append(og)
             pos = len(self.levels[lev]) - 1
             try:
