@@ -5,7 +5,6 @@ import collections
 import sys
 from ham.abstractgene import HOG
 import logging
-from ete3 import TreeStyle, TextFace, NodeStyle, BarChartFace
 import random
 logger = logging.getLogger(__name__)
 
@@ -95,6 +94,8 @@ class TreeProfile(object):
         return treeMap
 
     def export(self, output, layout_function=None, display_internal_histogram=False):
+
+        from ete3 import TreeStyle, TextFace, NodeStyle, BarChartFace
 
         # maximum number of genes per node in this treeMap
         max_genes = max([d for d in self.treemap.traverse()], key=lambda x:x.nbr_genes).nbr_genes
