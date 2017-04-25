@@ -1,8 +1,6 @@
 from abc import ABCMeta, abstractmethod
-import json
 import numbers
-import collections
-from ham.genome import ExtantGenome, AncestralGenome
+from ham.genome import ExtantGenome, AncestralGenome, Genome
 from ham.hogvis import Hogvis
 
 
@@ -85,6 +83,51 @@ class AbstractGene(metaclass=ABCMeta):
             current_hog = current_hog.parent
 
         return current_hog
+
+    def get_at_level(self, genome):
+
+        """ 
+            Get for the query HOG, the ancestor or children AbstractGene in the genome of interest
+            
+            Args:
+                genome (:obj:`Genome`): Genome of interest.
+                
+            Returns:
+                list of  :obj:`AbstractGene`.
+                
+            Raises:
+                TypeError: if genome is not a Genome.
+                KeyError: If no HOG matches the query genome or it return itself. 
+        """
+
+
+        if not isinstance(genome, Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(Genome.__name__,
+                                    type(genome).__name__))
+
+        tl = self.get_top_level_hog()
+
+        def pre(node, elem):
+            if node.genome == genome:
+                elem.append(node)
+            return elem
+
+        def leaf(node, leaf, elem):
+            if leaf.genome == genome:
+                elem.append(leaf)
+            return elem
+
+        rlist = tl.visit([], function_extant_gene=leaf, function_prefix=pre)
+
+        if not rlist:
+            raise KeyError("Level {} not found within this HOG".format(genome))
+
+        for e in rlist:
+            if e == self:
+                raise KeyError("get level cannot return itself".format())
+
+        return rlist
 
 
 class HOG(AbstractGene):

@@ -110,7 +110,7 @@ class AbstractGeneTest(unittest.TestCase):
         nwk_path = './tests/data/simpleEx.nwk'
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/data/simpleEx.orthoxml'
-        self.h = ham.HAM(nwk_str, orthoxml_path)
+        self.h = ham.HAM(nwk_str, orthoxml_path, use_internal_name=True)
 
     def test_search_ancestor_hog_in_ancestral_genome(self):
 
@@ -164,6 +164,35 @@ class AbstractGeneTest(unittest.TestCase):
 
         ancestor = singleton.get_top_level_hog()
         self.assertEqual(ancestor, singleton)
+
+    def test_get_at_level(self):
+        gene1 = self.h.get_gene_by_id("1")
+
+        hog3 = self.h.get_hog_by_id("3")
+        hog2 = self.h.get_hog_by_id("2")
+
+        vert = self.h.get_ancestral_genome_by_name("Vertebrata")
+        rodents = self.h.get_ancestral_genome_by_name("Rodents")
+        euarch = self.h.get_ancestral_genome_by_name("Euarchontoglires")
+
+        # Level is itself genomes
+        with self.assertRaises(KeyError):
+            gene1.get_at_level(gene1.genome)
+        with self.assertRaises(KeyError):
+            hog3.get_at_level(hog3.genome)
+
+        # Wrong input Type or not in this family
+        with self.assertRaises(TypeError):
+            gene1.get_at_level("")
+        with self.assertRaises(KeyError):
+            hog2.get_at_level(vert)
+
+        gal_1 = gene1.get_at_level(rodents)[0]
+        self.assertEqual(gal_1.genome, rodents)
+
+        gal_2 = hog3.get_at_level(euarch)
+        self.assertEqual(len(gal_2), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
