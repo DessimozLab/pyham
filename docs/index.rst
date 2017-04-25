@@ -11,6 +11,10 @@ Welcome to HAM's documentation!
    :caption: Contents:
 
 
+   basics
+   api
+
+
 
 Indices and tables
 ==================

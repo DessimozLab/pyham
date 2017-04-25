@@ -13,6 +13,9 @@ def get_newick_string(source_path, type="nwk"):
         with open(source_path, 'r') as nwk_file:
             return nwk_file.read()
 
+    elif type == "phylip":
+        pass
+
     elif type == "h5":
         pass
 
@@ -31,7 +34,7 @@ def previsualize_taxonomy(newick_str):
     t = tax.Taxonomy(newick_str)
 
     for node in t.tree.traverse("postorder"):
-        t.setTaxonName(node)
+        t.get_taxon_name(node)
 
     return t.tree.get_ascii()
 

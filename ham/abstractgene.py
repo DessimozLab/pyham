@@ -207,8 +207,8 @@ class HOG(AbstractGene):
         calls. 
         
         There is tree recursive state functions:
-            - function_extant_gene: Function called at each ExtantGene child. Its take as argument the child ExtantGene and 
-            the "elem" and return processed "elem".
+            - function_extant_gene: Function called at each ExtantGene child. Its take as argument the child ExtantGene
+             and the "elem" and return processed "elem".
             - function_postfix: Function called after each HOG child visit(). Its take as argument the child HOG and 
             the "elem" and return processed "elem".
             - function_prefix: First function called that take as argument the current HOG and the "elem" and return
@@ -221,7 +221,7 @@ class HOG(AbstractGene):
             function_prefix (callback function): Callback function for current HOG.
         
         Returns:
-                return arbitrary
+            return arbitrary
         """
 
         if function_prefix is not None:
@@ -308,7 +308,7 @@ class HOG(AbstractGene):
         """ Lazy getter of the :obj:`HOG` Hogvis.
 
             Args:
-                newick_str (:obj:`str`): newick species tree used by the hogvis.
+                newick_str (:obj:`str`): newick species tree used by the create_hog_visualisation.
 
             Returns:
                 :obj:`Hogvis` of this HOG.

@@ -70,11 +70,11 @@ class HAMTest(unittest.TestCase):
 
         # launch vertical analysis with more than 2 genomes
         with self.assertRaises(TypeError):
-            self.ham_analysis.compare_genomes_vertical({self.human, self.chimp, self.rat})
+            self.ham_analysis.compare_genomes_vertically({self.human, self.chimp, self.rat})
 
             # launch vertical analysis with 0 genomes
             with self.assertRaises(TypeError):
-                self.ham_analysis.compare_genomes_vertical({})
+                self.ham_analysis.compare_genomes_vertically({})
 
     def test_compare_level_correct_input_lateral(self):
 

@@ -106,7 +106,7 @@ class HAM(object):
 
     """
 
-    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None):
+    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=True):
         """
 
         Args:
@@ -116,6 +116,8 @@ class HAM(object):
             to "orthoxml".
             filter_object (:obj:`ParserFilter`, optional): :obj:`ParserFilter` used during the instantiation of HAM.
             Defaults to None.
+            use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given 
+            newick string. This should be set to False when support values are provided in the newick. Defaults to True.
         """
 
         # HOGs file
@@ -131,7 +133,7 @@ class HAM(object):
                                     type(filter_object).__name__))
 
         # Taxonomy
-        self.taxonomy = tax.Taxonomy(newick_str)
+        self.taxonomy = tax.Taxonomy(newick_str, use_internal_name=use_internal_name)
         logger.info('Build taxonomy: completed.')
 
         # Misc. information
@@ -177,7 +179,7 @@ class HAM(object):
 
     # ... TOOLS ... #
 
-    def compare_genomes_vertical(self, genomes_set):
+    def compare_genomes_vertically(self, genomes_set):
 
         """
         Function to compute a :obj:`MapVertical` based on the 2 given genomes.
@@ -228,7 +230,7 @@ class HAM(object):
 
         return lateral_map
 
-    def hogvis(self, hog, outfile=None):
+    def create_hog_visualisation(self, hog, outfile=None):
 
         """
         Function to compute a :obj:`Hogvis`.
@@ -253,7 +255,7 @@ class HAM(object):
 
         return vis
 
-    def tree_profile(self, hog=None, outfile=None, export_with_histogram=True):
+    def create_tree_profile(self, hog=None, outfile=None, export_with_histogram=True):
 
         """
         Function to compute a :obj:`TreeProfile`.
@@ -261,11 +263,11 @@ class HAM(object):
         If no hog are given the tree profile will be created for the whole HAM setup (all internal nodes with all HOGs).
         Otherwise, the tree profile is build for the specific hog given.
         
-        If an outfile is specified, export the tree_profile as image into file.
+        If an outfile is specified, export the create_tree_profile as image into file.
 
         Attributes:
-            hog (:obj:`HOG`, optional): HOG use as template for the tree_profile.
-            outfile (:obj:`str`, optional): Path to the tree_profile output image file. valid extensions are .SVG, .PDF, .PNG.  
+            hog (:obj:`HOG`, optional): HOG use as template for the create_tree_profile.
+            outfile (:obj:`str`, optional): Path to the create_tree_profile output image file. valid extensions are .SVG, .PDF, .PNG.  
             export_with_histogram (:obj:`Bool`, optional): If True, export image with histogram at each internal node otherwise 
             display internal node information as text.
 

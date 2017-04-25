@@ -90,7 +90,7 @@ class HamAnalysis(unittest.TestCase):
         vertebrates = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({mouse, frog})
 
         # Then, he compare the two genomes of interest
-        vertical_map_mouse_vs_vert = ham_analysis.compare_genomes_vertical({mouse, vertebrates})
+        vertical_map_mouse_vs_vert = ham_analysis.compare_genomes_vertically({mouse, vertebrates})
 
         # Now he is interest by the HOG that have stay single copy between these two levels
         self.assertDictEqual({'<HOG(1)>': 'Gene(31)'}, _str_dict_one_value(vertical_map_mouse_vs_vert.get_single()))
@@ -189,14 +189,14 @@ class HamAnalysis(unittest.TestCase):
         hog3 = ham_analysis.get_hog_by_id("3")
         self.assertEqual(str(hog3), "<HOG(3)>")
 
-        # and run the tree_profile on it
-        tp_hog3 = ham_analysis.tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
+        # and run the create_tree_profile on it
+        tp_hog3 = ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
         #print(tp_hog3.dirty_display())
 
 
         '''
         for hog in ham_analysis.get_dict_top_level_hogs().values():
-            tp_hog = ham_analysis.tree_profile(hog)
+            tp_hog = ham_analysis.create_tree_profile(hog)
             print(hog)
             print(tp_hog.dirty_display())
 
@@ -210,8 +210,8 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/data/simpleEx.orthoxml'
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
-        # Clement run the tree_profile for the whole genomic setup
-        tp = ham_analysis.tree_profile(outfile="./tp.png", export_with_histogram=True)
+        # Clement run the create_tree_profile for the whole genomic setup
+        tp = ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
         #tp.dirty_display()
 
 
