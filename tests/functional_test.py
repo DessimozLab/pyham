@@ -79,7 +79,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = './tests/data/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/data/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         # Then clement is interest to investigate on what happened between the ancestral genomes of vertebrates
         # and the extent genomes of the mouse.
@@ -108,7 +108,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = './tests/data/simpleEx.nwk'
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = './tests/data/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         '''
         # ... UNDER CONSTRUCTION ... #
@@ -165,7 +165,7 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = './tests/data/simpleEx.orthoxml'
 
         # Clement create the HAM object that will be the kernel of all analysis
-        ham_analysis = ham.HAM(tree_str, orthoxml_path, filter_object=f)
+        ham_analysis = ham.HAM(tree_str, orthoxml_path, filter_object=f, use_internal_name=True)
         self.assertEqual(f, ham_analysis.filter_obj)
 
         # Clement check that what the filter understood was good

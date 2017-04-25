@@ -4,26 +4,55 @@ import copy
 import logging
 logger = logging.getLogger(__name__)
 
+
 class OrthoXMLParser(object):
+
     """
-    OrthoXML parser use to read the orthoxml file containing the hogs.
-    It creates on the fly the gene mapping and the abstractGene.
+    Custom parser for OrthoXML containing HOGs. It can take a FilterParser object to restrict the information to parse.
+     
+    The parse goes through the whole XML and create on the fly the required HAM objects:
+        - In the Xref/header, the parser creates the ExtantGenome and Gene objects.
+        - In the Groups section, it creates the HOGs with their hierarchy (parent/children links) and their related
+        AncestralGenomes.
+    
+
+    Attributes:
+        ham_object (:obj:`HAM`): HAM object to feed with created objects.
+        filterObj (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information. Defaults
+        to None.
+        
+        extant_gene_map (:obj:`dict`): dictionary of gene unique id mapped to their related :obj:`Gene`.
+        external_id_mapper (:obj:`dict`): dictionary of xref id mapped to their list of possible unique ids.
+        toplevel_hogs (:obj:`dict`): dictionary of top level hog id mapped to their related :obj:`HOG`.
+        
+        cpt (:obj:`int`): Counter of parsed hogs.
+        hog_stack (:obj:`list`): Stack of hogs currently parsed. Reset at each top level hog change.
+        current_species (:obj:`ExtantGenome`): Pointer to the current species parsed during xref first step.
+        in_paralogGroup (:obj:`int`): last position in the stack where a duplication  occured.
+        skip_this_hog (:obj:`Boolean`): Boolean to skip the current hog or not (used when filtering option is set).     
     """
 
     def __init__(self, ham_object, filterObject=None):
+
+        """
+        Args:
+            ham_object (:obj:`HAM`): HAM object to feed with created objects.
+            filterObject (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information.
+            Defaults to None.
+        """
+
         self.ham_object = ham_object
         self.filterObj = filterObject
 
         # usefull information
-        self.extant_gene_map = {}  # {unique_id -> gene object}
-        self.external_id_mapper = {}  # {external_id -> [unique_id]} TODO unittest + more than one id may have the same ext id
-        self.toplevel_hogs = {}  # {hog_id -> hog object}
-
+        self.extant_gene_map = {}
+        self.external_id_mapper = {}
+        self.toplevel_hogs = {}
 
         # On the fly variable
         self.cpt = 0
         self.hog_stack = []
-        self.current_species = None  # target the species currently parse
+        self.current_species = None
         self.in_paralogGroup = None
         self.skip_this_hog = False
 
@@ -69,12 +98,9 @@ class OrthoXMLParser(object):
 
             # if the gene is contained within a paralogousGroup need to update its .arose_by_duplication flag. TODO unittest
             if self.in_paralogGroup == len(self.hog_stack):
-                gene.arose_by_duplication=True
+                gene.arose_by_duplication = True
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is False:
-
-            # look if its at top and that you need to decide if skip or not
-
             if len(self.hog_stack) == 0 and self.filterObj is not None:
 
                 if str(attrib["id"]) in self.filterObj.hogsId:
@@ -86,8 +112,6 @@ class OrthoXMLParser(object):
 
             else:
                 self._build_hog(attrib)
-
-
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
             self.hog_stack.append(0)
@@ -142,7 +166,6 @@ class OrthoXMLParser(object):
                     if self.cpt % 500 == 0:
                         logger.info("{} HOGs parsed. ".format(self.cpt))
 
-
     def data(self, data):
         # Ignore data inside nodes
         pass
@@ -152,39 +175,40 @@ class OrthoXMLParser(object):
         return
 
 
-
-
 class FilterOrthoXMLParser(object):
     """
     Custom OrthoXML parser use to read the orthoxml file and get required information base on specific query set. It use
     the ParserFilter object as input to do the selection.
 
+    The parse goes through the whole XML and create on the fly the required HAM objects:
+        - In the Xref/header, the parser creates the ExtantGenome and Gene objects.
+        - In the Groups section, it creates the HOGs with their hierarchy (parent/children links) and their related
+        AncestralGenomes.
 
 
-    self.HOGId_filter = []
-    self.GeneExtId_filter = []
-    self.GeneIntId_filter = []
-    self.taxonomicRange = None # you also need this for the HAM instantiation
+    Attributes:
+        filterObj (:obj:`FilterParser`): Filter object with all the filtering information.
 
-    # Information created during buildFilter call that is required for the HOG construction during HAM instantiation.
-    self.species = None  # { species -> [geneUniqueId] | "all"}
-    self.hogs = None  # [hogId]
+        geneUniqueId (:obj:`list`): list of unique gene ids to store for the OrthoXMLParser.
+        hogsId (:obj:`list`): list of hogs ids to store for the OrthoXMLParser.
 
+        current_hog (:obj:`int`): Current hog id.
+        hog_stack (:obj:`list`): Stack of hogs currently parsed. Reset at each top level hog change.
+        hog_generef (:obj:`list`): list of unique gene ids contained into the current parsed hog.
+        add_this_hog (:obj:`Boolean`): Boolean to know if we keep the current hog for the OrthoXMLParser.
     """
 
     def __init__(self, filterO):
 
         self.filterObj = filterO
 
-        self.geneUniqueId = []  # [geneUniqueId]
-        self.hogsId = []  # [hogId]
+        self.geneUniqueId = []
+        self.hogsId = []
 
-        # reset on toplevel end
         self.current_hog = None
         self.hog_stack = []
         self.hog_generef = []
         self.add_this_hog = False
-
 
     def start(self, tag, attrib):
 
@@ -197,7 +221,6 @@ class FilterOrthoXMLParser(object):
                 for xtid in attrib.values():
                     if xtid in self.filterObj.GeneExtId_filter:
                         self.geneUniqueId.append(attrib['id'])
-
 
         elif tag == "{http://orthoXML.org/2011/}geneRef":
             self.hog_generef.append(attrib['id'])
@@ -212,12 +235,10 @@ class FilterOrthoXMLParser(object):
 
             self.hog_stack.append(1)
 
-
     def end(self, tag):
 
         if tag == "{http://orthoXML.org/2011/}orthologGroup":
 
-            # get the latest hog
             hog = self.hog_stack.pop()
 
             if len(self.hog_stack) == 0:
@@ -229,7 +250,6 @@ class FilterOrthoXMLParser(object):
                 self.current_hog = None
                 self.hog_generef = []
                 self.add_this_hog = False
-
 
     def data(self, data):
         # Ignore data inside nodes

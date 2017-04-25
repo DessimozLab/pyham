@@ -100,7 +100,7 @@ class HAMTestQuery(unittest.TestCase):
         orthoxml_path = './tests/data/simpleEx.orthoxml'
 
         # using newick with name on both internal nodes and leaves
-        self.h = ham.HAM(nwk_str, orthoxml_path)
+        self.h = ham.HAM(nwk_str, orthoxml_path, use_internal_name=True)
 
         # using newick with name only at leaves
         self.hn = ham.HAM(nwk_str_no_name, orthoxml_path)
@@ -118,7 +118,7 @@ class HAMTestQuery(unittest.TestCase):
         self.no_filter_hogs = {'1','3'}
         f = ham.ParserFilter()
         f.add_hogs_via_hogId([2])
-        self.hf = ham.HAM(nwk_str, orthoxml_path, filter_object=f)
+        self.hf = ham.HAM(nwk_str, orthoxml_path, filter_object=f,  use_internal_name=True)
 
     # HOG
 

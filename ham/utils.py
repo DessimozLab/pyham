@@ -34,7 +34,7 @@ def previsualize_taxonomy(newick_str):
     t = tax.Taxonomy(newick_str)
 
     for node in t.tree.traverse("postorder"):
-        t.get_taxon_name(node)
+        t.set_taxon_name(node)
 
     return t.tree.get_ascii()
 

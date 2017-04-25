@@ -1,50 +1,84 @@
 import ete3
 import logging
+from ham.genome import ExtantGenome, AncestralGenome, Genome
+
 
 logger = logging.getLogger(__name__)
 
 
-def _add_depth(node, depth=0):
-    node.add_feature("depth", depth)
-    for n in node.get_children():
-        _add_depth(n, depth + 1)
-
-
 class Taxonomy(object):
-    def __init__(self, newick_str, use_internal_name=True):
-        self.newick_str = newick_str  # the original newick string used to build the Ete3 Tree
-        self.tree = ete3.Tree(self.newick_str, format=1)  # Ete3 Tree object
+    """
+    Taxonomy is a class to wrap the ete3 Etree used as reference species tree by HAM.
+    
+    Attributes:
+        newick_str (:obj:`str`): newick tree string used to build the ete3 Etree object.
+        tree (:obj:`ete3 Etree`): species ete3 Etree tree.
+        internal_nodes (:obj:`set`): Set of Etree node that contained a AncestralGenome.
+        leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
 
+    """
+    def __init__(self, newick_str, use_internal_name=False):
+        """
+        Args:
+            newick_str (:obj:`str`): Newick str used to build ete3 Etree object.
+            use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the 
+            concatenatation of the children name. Defaults to False.
+        """
+
+        self.newick_str = newick_str
+        self.tree = ete3.Tree(self.newick_str, format=1)
+
+        # create internal node name if required
         if use_internal_name is False:
-            for node in self.tree.traverse():
+            for node in self.tree.traverse("postorder"):
                 if node.is_leaf() is False:
-                    node.name = ""
+                    self.set_taxon_name(node)
 
-        self._check_consistency_names(use_internal_name)
+        # check unicity of leaves name.
+        self._check_consistency_names()
 
-        _add_depth(self.tree.get_tree_root(), depth=0) # Add depth to ete3 node
+        # add depth to each node of the tree.
+        self._add_depth(self.tree.get_tree_root(), depth=0)
 
-        # Those two vars make sure that we keep somewhere which genome ar nuild !
-        self.internal_nodes = set()  # set of internal node within the self.tree
-        self.leaves = set()  # set of leaves within the self.tree
+        # tracker for Genome created.
+        self.internal_nodes = set()
+        self.leaves = set()
 
-    def add_ancestral_genome_to_node(self, node, genome):
+    def add_genome_to_node(self, node, genome):
+        """  add the given genome to the node attribute "genome".
+
+            Args:
+                node (:obj:`node`): receptor node.
+                genome (:obj:`Genome`): :obj:`Genome` to attach.
+
+        """
+
         node.add_feature("genome", genome)
         genome.set_taxon(node)
 
-        self.get_taxon_name(node)
-        genome.name = node.name
+        if isinstance(genome, ExtantGenome):
+            self.leaves.add(node)
 
-        self.internal_nodes.add(node)
+        elif isinstance(genome, AncestralGenome):
+            genome.name = node.name
 
-    def add_extant_genome_to_node(self, node, genome):
-        node.add_feature("genome", genome)
-        genome.set_taxon(node)
-        self.leaves.add(node)
+            self.internal_nodes.add(node)
+        else:
+            raise TypeError("expect class obj of '{}', got {}".format(type(Genome).__name__,type(genome).__name__))
 
     def get_path_up(self, lowest_node, ancestor_node):
+        """  return the internal node in between two nodes sorted by recentness.
 
-        intermediate_level = [] # from most recent to oldest
+            Args:
+                lowest_node (:obj:`node`): Youngest node.
+                ancestor_node (:obj:`node`): Oldest node.
+                
+            Returns:
+                list of node sorted from most recent to oldest.
+
+        """
+
+        intermediate_level = []
 
         for tax in lowest_node.iter_ancestors():
             if tax == ancestor_node:
@@ -54,20 +88,37 @@ class Taxonomy(object):
         return intermediate_level
 
     def get_newick_from_tree(self, node):
+        """  return the newick tree string (format 8: all names) rooted at the given node.
+
+             Args:
+                 node (:obj:`node`): root node.
+
+             Returns:
+                 :obj:`str` of the subtree.
+         """
+
         return node.write(format=8, format_root_node=True)
 
-    def get_taxon_name(self, node):
-        if node.name is "":
-            level_name = ""
-            for leaf in node:
-                level_name += str(leaf.name)
-                level_name += "/"
-            node.name = level_name[:-1]
-            return node.name
-        else:
-            return node.name
+    def set_taxon_name(self, node):
+        """  set the node name by concatenation of children name.
 
-    def _check_consistency_names(self, use_internal_name):
+             Args:
+                 node (:obj:`node`): root node.
+        """
+
+        level_name = ""
+        for leaf in node:
+            level_name += str(leaf.name)
+            level_name += "/"
+
+        node.name = str(level_name[:-1])
+
+    def _check_consistency_names(self):
+
+        """  
+        Check if leaves names and internal node names are uniques.
+        
+        """
 
         leaf_names = []
         int_names = []
@@ -84,7 +135,13 @@ class Taxonomy(object):
             raise KeyError("Leaves names are not unique ! Leaves founded: {}".format(int_names))
 
         # Check for internal names
-        if use_internal_name is False:
-            if len(set(int_names)) != 1:
-                raise KeyError("Internal Name Error with use_internal_name=False please report the bug to us.".format(int_names))
+        if len(set(int_names)) != len(set(int_names)):
+            raise KeyError("Internal Names are not unique. Internal names founded: {}. If you specify use_internal_name=False, please report the bug to us.".format(int_names))
 
+    def _add_depth(self, node, depth=0):
+        """  
+        Recursive function to add depth to each node of a Etree.
+        """
+        node.add_feature("depth", depth)
+        for n in node.get_children():
+            self._add_depth(n, depth + 1)

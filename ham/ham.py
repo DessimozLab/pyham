@@ -106,7 +106,7 @@ class HAM(object):
 
     """
 
-    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=True):
+    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False):
         """
 
         Args:
@@ -117,7 +117,7 @@ class HAM(object):
             filter_object (:obj:`ParserFilter`, optional): :obj:`ParserFilter` used during the instantiation of HAM.
             Defaults to None.
             use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given 
-            newick string. This should be set to False when support values are provided in the newick. Defaults to True.
+            newick string. This should be set to False when support values are provided in the newick. Defaults to False.
         """
 
         # HOGs file
@@ -711,7 +711,7 @@ class HAM(object):
 
             else:
                 extant_genome = genome.ExtantGenome(**kwargs)
-                self.taxonomy.add_extant_genome_to_node(node, extant_genome)
+                self.taxonomy.add_genome_to_node(node, extant_genome)
                 return extant_genome
         else:
             raise KeyError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
@@ -735,7 +735,7 @@ class HAM(object):
 
         else:
             ancestral_genome = genome.AncestralGenome()
-            self.taxonomy.add_ancestral_genome_to_node(tax_node, ancestral_genome)
+            self.taxonomy.add_genome_to_node(tax_node, ancestral_genome)
 
             return ancestral_genome
 
