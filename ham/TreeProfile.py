@@ -89,7 +89,7 @@ class TreeProfile(object):
                     node_genome = self.ham.get_ancestral_genome_by_name(node.name)
                     nbr = node_genome.get_number_genes()
                 hogmap = self.ham._get_HOGMap({node_genome, node_genome_up})
-                _add_annot(node, nbr, len(hogmap.DUPLICATE.keys()), len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.SINGLE.keys()))
+                _add_annot(node, nbr, len(hogmap.DUPLICATE.keys()), len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.IDENTICAL.keys()))
 
         return treeMap
 

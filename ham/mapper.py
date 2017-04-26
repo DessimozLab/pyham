@@ -1,81 +1,110 @@
 from abc import ABCMeta, abstractmethod
-import copy
-from .abstractgene import HOG
+from ham.genome import Genome
 import logging
 
 logger = logging.getLogger(__name__)
 
 
 class HOGsMap(object):
-    '''
-    Given a set of 2 genomes where Gi denote the ancestor of Gj, the HOGsMap object identify the relations that exist between all Hi
-    and Hj respectively the HOGs from Gi and Gj.
-
+    """
+    Class to compare HOG evolutionary relations (duplication, loss, gain and identical) across 2 genomes that are on
+    the same lineage.
+    
+    Let's consider Go the oldest genome and Gy the youngest genomes with their respected HOGs Ho and Hy.
+    
     Those relations are classified into the following categories:
-        - SINGLE: if Hi will correspond to a single Hj
-        - DUPLICATE: If a duplication occurred in the path between Hi and Hj
-        - LOSS: If Hi is not bound to any Hj
-        //- DUPLICATED_BUT_LOST: --> TODO NOt ure about this
-        - GAIN: if Hj have no corresponding Hi
+        - IDENTICAL: if Ho will correspond to a single Hy.
+        - DUPLICATE: If a duplication occurred in Ho in between Go ang Gy.
+        - LOSS: If Ho have no representative Hy in Gy.
+        - GAIN: if Hy have no ancestor Ho in Go.
+        
+    First, a "UpMap" is build to find for each Hy its potential ancestor Ho. If during the traversal from Hy to Ho a
+    duplication occurred, a flag "paralog" is added in the UpMap[Hy]. Hy with no corresponding Ho are considered as 
+    gained meanwhile Ho without corresponding Hy are considered as lost. Ho with only one corresponding Hy (and no
+    duplication tag) are clustered as identical otherwhise as duplicated.
 
-    First, a "UpMap" is build to find the ancestor Hi of each Hj.
-    If during the traversal from Hj to Hi a duplication occurred, a flag "paralog" is added in the UpMap[Hi|Hj].
-    All Hj in Gj that have no corresponding ancestor Hi in Gi are considered as GAIN.
 
-    Then we built the Event Clusters:
-        - .LOSS: [Hi]
-        - .GAIN: [Hj]
-        - .SINGLE: {Hi -> Hj}
-        - .DUPLICATE: {Hi -> [Hj]}
+    Attributes:
+        HAM (:obj:`HAM`): HAM object.
+        ancestor (:obj:`Genome`): :obj:`Genome` of Go.
+        descendant (:obj:`Genome`): :obj:`Genome` of Gy.
+        upMap (:obj:`dict`):  a dictionary that map each Ho with its related Hy (or None if no HOG founded) associated
+        a boolean if a duplication occurs or not in between them.
+        IDENTICAL (:obj:`dict`): Dictionary that map a Ho with its descendant Hy.
+        DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
+        LOSS (:obj:`list`): a list of Ho with no matching in Gy.
+        GAIN: (:obj:`list`): a list of Hy with no ancestor in Go.
+    
+    
+    """
 
-    '''
+    def __init__(self, ham_object, genome1, genome2):
+        """
+        Args:
+            genome1 (:obj:`Genome`): First :obj:`Genome` to compare.
+            genome2 (:obj:`Genome`): Second :obj:`Genome` to compare.
+            
+        """
 
-    def __init__(self, ham_object, genome_set):
+        if not isinstance(genome1, Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(Genome.__name__,
+                                    type(genome1).__name__))
 
-        if len(genome_set) != 2:
-            raise TypeError("Building the HOGMaps required two and only two genomes, invalid genome set: {}".format(genome_set))
+        if not isinstance(genome2, Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(Genome.__name__,
+                                    type(genome2).__name__))
 
         self.HAM = ham_object
-        anc, desc = self.HAM._get_oldest_from_genome_pair(list(genome_set)[0].taxon, list(genome_set)[1].taxon)
-        self.ancestor = anc.genome
-        self.descendant = desc.genome
-        self.upMap = self.build_UpMap()
-        self.LOSS, self.GAIN, self.SINGLE, self.DUPLICATE = self.buildEventClusters()
+        self.ancestor, self.descendant = self.HAM._get_oldest_from_genome_pair(genome1, genome2)
+        self.upMap = self._build_UpMap()
+        self.LOSS, self.GAIN, self.IDENTICAL, self.DUPLICATE = self.build_event_clusters()
 
-    def buildEventClusters(self):
-        LOSS = []  # [Hi]
-        GAIN = []  # [Hj]
-        SINGLE = {}  # {Hi -> Hj}
-        DUPLICATE = {}  # {Hi -> [Hj]}
+    def build_event_clusters(self):
+        """  
+        This method builds all the event clusters based on the UpMap.
 
+        Returns:
+            list of loss, list of gain, dict of identical and dict of duplicated.
+
+        """
+        GAIN = []  # [Hy]
+        IDENTICAL = {}  # {Ho -> Hy}
+        DUPLICATE = {}  # {Ho -> [Hy]}
         ancestral_hogs_computed = set()
 
-        # feed the MAPS
-        for hog_descendant, hog_target in self.upMap.items():
-            if hog_target[0] is None: # If gained
-                GAIN.append(hog_descendant)
-            else:  # If not gained
-                if hog_target[1] is True:  # is duplicated
-                    DUPLICATE.setdefault(hog_target[0],[]).append(hog_descendant)
-                    ancestral_hogs_computed.add(hog_target[0])
-                else:  # if single
-                    SINGLE[hog_target[0]] = hog_descendant
-                    ancestral_hogs_computed.add(hog_target[0])
+        for Hy, Ho in self.upMap.items():
+            if Ho[0] is None:  # GAIN
+                GAIN.append(Hy)
+            else:
+                if Ho[1]:  # DUPLICATE
+                    DUPLICATE.setdefault(Ho[0], []).append(Hy)
+                else:  # SINGLE
+                    IDENTICAL[Ho[0]] = Hy
+                ancestral_hogs_computed.add(Ho[0])
 
-        # For loss
-        lost = set(self.ancestor.genes) - ancestral_hogs_computed
+        # LOSS
+        LOSS = set(self.ancestor.genes) - ancestral_hogs_computed
 
-        for lost_hog in lost:
-            LOSS.append(lost_hog)
+        return LOSS, GAIN, IDENTICAL, DUPLICATE
 
-        return LOSS, GAIN, SINGLE, DUPLICATE
+    def _build_UpMap(self):
+        """  
+        This method construct the UpMap between Ho and Hy.
 
-    def build_UpMap(self):
-        upMap = {}  # value|{key|HOGj -> value|[HOGi or "None", paralog{True|False}]
-        for hog_source in self.descendant.genes:
-            if hog_source.is_singleton() is False:  # avoid singletons TODO check for if taxon = gain...
-                hog_target, paralog = hog_source.search_ancestor_hog_in_ancestral_genome(self.ancestor)
-                upMap[hog_source] = [hog_target, paralog]
+        Returns:
+            A dictionary that map each Ho with its related Hy (or None if no HOG founded) associated a boolean if a
+            duplication occurs or not in between them.
+        """
+
+        upMap = {}  # {Hy -> [Ho|None, True|False]}
+
+        for Hy in self.descendant.genes:
+            if Hy.is_singleton() is False:
+                Ho, paralog = Hy.search_ancestor_hog_in_ancestral_genome(self.ancestor)
+                upMap[Hy] = [Ho, paralog]
+
         return upMap
 
 
@@ -159,7 +188,7 @@ class MapVertical(MapResults):
         return self.map.GAIN
 
     def get_single(self): # TODO return_list_only=False to return list of gene directly ?
-        return self.map.SINGLE
+        return self.map.IDENTICAL
 
     def get_duplicated(self):
         return self.map.DUPLICATE
@@ -185,7 +214,7 @@ class MapLateral(MapResults):
         self.maps = {} # {Gx -> HOGMap(Gi,Gx)}
         self.LOSS = None  # {Hi -> [Gx]}
         self.GAIN = None # {Gj -> [Hj]}
-        self.SINGLE = None # {Hi -> {Gj -> Hj}}
+        self.IDENTICAL = None # {Hi -> {Gj -> Hj}}
         self.DUPLICATE = None # {Hi -> {Gj -> [Hj]}}
 
     def add_map(self, HogMap):
@@ -230,13 +259,13 @@ class MapLateral(MapResults):
         """
         :return: a dictionary of HOG Hi with their single Hj clustered by Genome Gj.
         """
-        if self.SINGLE is None:
+        if self.IDENTICAL is None:
             single = {}
             for genome, hmap in self.maps.items():
-                for hi,hj in hmap.SINGLE.items():
+                for hi,hj in hmap.IDENTICAL.items():
                     single.setdefault(hi,{})[genome] = hj
-            self.SINGLE = single
-        return self.SINGLE
+            self.IDENTICAL = single
+        return self.IDENTICAL
 
     def get_duplicated(self):
         """

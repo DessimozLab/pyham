@@ -239,7 +239,7 @@ class HAM(object):
         lateral_map = mapper.MapLateral(self)
         anc, desc = self._get_ancestor_and_descendant(copy.copy({genome1, genome2}))
         for g in desc:
-            hogmap = mapper.HOGsMap(self, {g, anc})
+            hogmap = mapper.HOGsMap(self, g, anc)
             lateral_map.add_map(hogmap)
 
         return lateral_map
@@ -629,11 +629,11 @@ class HAM(object):
 
         """
 
-        mrca = self.taxonomy.tree.get_common_ancestor({g1,g2})
+        mrca = self.taxonomy.tree.get_common_ancestor({g1.taxon,g2.taxon})
 
-        if g1 == mrca:
+        if g1.taxon == mrca:
             return g1, g2
-        elif g2 == mrca:
+        elif g2.taxon == mrca:
             return g2, g1
         else:
             raise TypeError("The genomes are not in the same lineage: {}".format({g1, g2}))
@@ -675,7 +675,7 @@ class HAM(object):
         if f in self.HOGMaps.keys():
             return self.HOGMaps[f]
         else:
-            self.HOGMaps[f] = mapper.HOGsMap(self, genome_pair_set)
+            self.HOGMaps[f] = mapper.HOGsMap(self, list(genome_pair_set)[0], list(genome_pair_set)[1])
             return self.HOGMaps[f]
 
     def _build_hogs_and_genes(self, file_object, filter_object):
