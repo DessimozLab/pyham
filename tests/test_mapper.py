@@ -210,7 +210,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         map = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
         vertical_map.add_map(map)
 
-        single = vertical_map.get_single()
+        single = vertical_map.get_identical()
         self.assertDictEqual({'<HOG(1)>': 'Gene(1)'}, _str_dict_one_value(single))
 
     def test_get_duplicated(self):
@@ -312,7 +312,7 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         map_rat_euarc = HOGsMap(self.ham_analysis, self.rat, self.euarchontoglires)
         lateral_map.add_map(map_rat_euarc)
 
-        single = lateral_map.get_single()
+        single = lateral_map.get_identical()
 
         for hog in single.keys():
             if str(hog) == "<HOG(3.E.1)>":

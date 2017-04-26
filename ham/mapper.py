@@ -7,10 +7,10 @@ logger = logging.getLogger(__name__)
 
 class HOGsMap(object):
     """
-    Class to compare HOG evolutionary relations (duplication, loss, gain and identical) across 2 genomes that are on
-    the same lineage.
+    Class to compare HOG evolutionary relations (duplication, loss, gain and identical) between an ancestor genome and
+    its descendant genome.
     
-    Let's consider Go the oldest genome and Gy the youngest genomes with their respected HOGs Ho and Hy.
+    Let's consider Go the oldest genome and Gy the youngest genome with their respected HOGs Ho and Hy.
     
     Those relations are classified into the following categories:
         - IDENTICAL: if Ho will correspond to a single Hy.
@@ -109,18 +109,32 @@ class HOGsMap(object):
 
 
 class MapResults(metaclass=ABCMeta):
-    '''
-    The MapResult class manages the HOG mapping between several {extant|ancestral} genomes. There is two type of
-    map result:
-        - Lineage: for 2 genomes on a same lineages
-        - Lateral: for genomes not on the same lineage that are all descendant from the same ancestral genomes.
+    """
+    Class to map HOGs across multiple genomes through their most recent common ancestral genome. The HOGs are all
+    clustered based on their relation with the mrca genome HOGs (duplicated, lost, gained and identical).
 
-    The MapResult provides the following methods to compare HOG across genomes:
+    Let's consider Go the mrca genome and Gn the youngest genomes with their respected HOGs Ho and Hn.
+
+    The HOG relations between Ho and Hn are classified into the following categories:
+        - IDENTICAL: if Ho will correspond to a single Hn in Gn.
+        - DUPLICATE: If a duplication occurred in Ho in between Go ang Gn.
+        - LOSS: If Ho have no representative Hn in Gn.
+        - GAIN: if Hn have no ancestor Ho in Go.
+
+    There is two type of possible mapping:
+        - vertical: compare a genome with its ancestor (that act as "mrca").
+        - lateral: compare genomes with their mrca.
+    
+    The MapResults provides methods to compare HOGs across genomes:
         - get_loss()
         - get_gain()
         - get_duplicate()
-        - get_single()
-    '''
+        - get_identical()
+
+    Attributes:
+        HAM (:obj:`HAM`): HAM object.
+        ancestor (:obj:`Genome`): :obj:`Genome` of Go.
+    """
 
     def __init__(self, HAM):
         self.HAM = HAM
@@ -142,7 +156,7 @@ class MapResults(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def get_single(self):
+    def get_identical(self):
         """Return genes that stay single copy"""
         pass
 
@@ -153,72 +167,118 @@ class MapResults(metaclass=ABCMeta):
 
 
 class MapVertical(MapResults):
-    '''
-    The MapVertical class manages the HOG mapping between two genomes on the same lineages (an ancestral genome Gi
-    (with HOG Hi) and its descendant Gj (with HOG Hj)).
+    """
+    Class to map HOGs between a genome and its ancestor. 
 
-    The MapVertical provides the following methods to compare HOG across genomes:
-        - get_loss(): return a list of all Hi that are lost in Gj.
-        - get_gain(): return a list of all Hj that are novels in Gj and not found in Gi.
-        - get_duplicate(): return a dictionary with all Hi map to their descendant Hj.
-        - get_single():  return a dictionary with all Hi map to its descendant Hj.
-    '''
+    Let's consider Go the oldest genome and Gn the youngest genome with their respected HOGs Ho and Hn.
+    
+    Attributes:
+        descendant (:obj:`Genome`): :obj:`Genome` of Gn.
+        map (:obj:`HOGsMap`): :obj:`Genome` of Go.
+    """
 
-    def __init__(self, HAM):
-        super(MapVertical, self).__init__(HAM)
+    def __init__(self, ham):
+        super(MapVertical, self).__init__(ham)
         self.descendant = None
         self.map = None
 
     def add_map(self, HogMap):
-        """Add a map to the MapResults object"""
+        """  
+        Method to set the HOGsMap.
+
+            Args:
+                HogMap (:obj:`HOGsMap`): HOGsMap to add.
+
+            Raises:
+                TypeError: if HogMap is not :obj:`HOGsMap` or if a :obj:`HOGsMap` is already set.
+
+        """
         if not isinstance(HogMap, HOGsMap):
             raise TypeError("expect subclass obj of '{}', got {}"
                             .format(HOGsMap.__name__,
                                     type(HogMap).__name__))
-        if self.map != None:
+        if self.map is not None:
             raise TypeError("MapVertical can only contains one HOGMap object.")
         self.ancestor = HogMap.ancestor
         self.descendant = HogMap.descendant
         self.map = HogMap
 
     def get_lost(self):
+        """
+        Getter for lost genes.
+        
+        Returns:
+            List of Ho.
+        """
+
         return self.map.LOSS
 
     def get_gained(self):
+        """
+        Getter for gained genes.
+
+        Returns:
+            List of Hn.
+
+        """
         return self.map.GAIN
 
-    def get_single(self): # TODO return_list_only=False to return list of gene directly ?
+    def get_identical(self):
+        """
+         Getter for identical genes.
+
+         Returns:
+             Dictionary of Ho mapped to their descendant Hy.
+         """
+
         return self.map.IDENTICAL
 
     def get_duplicated(self):
+        """
+        Getter for duplicated genes.
+
+        Returns:
+            Dictionary of Ho mapped to their list of descendants Hy.
+        """
+
         return self.map.DUPLICATE
 
 
 class MapLateral(MapResults):
+    """
+    Class to map HOGs between genomes through their ancestor. 
 
-    '''
-    The MapLateral class manages the HOG mapping between genomes Gx (with HOG Hx) that are not on the same lineage but share an ancestral genome Gi
-    (with HOG Hi).
+    Let's consider Go the oldest genome and Gn the youngest genomes with their respected HOGs Ho and Hn.
 
-    The MapLateral provides the following methods to compare HOG across genomes:
-        - get_loss(): return a dictionary of all Hi that are lost in Gj. {Hi -> [Gx]}
-        - get_gain(): return a dictionary of all Gx and their novels HOG Hx with no correspondence in Gi. {Gx -> [Hx]}
-        - get_duplicate(): return a dictionary with all Hi map to their descendant Hj clustered by Gj. {Hi -> {Gj -> [Hj]}}
-        - get_single():  return a dictionary with all Hi map to its descendant Hx clustered by Gx. {Hx -> {Gx -> Hx}}
-    '''
-
+    Attributes:
+        descendant (:obj:`list`): list of Gn.
+        map (:obj:`dict`): dictionary of Gn mapped to a HOGMap(Go,Gn).
+        LOSS (:obj:`dict`): dictionary of Ho mapped to the list of Gn where this HOG is lost.
+        GAIN (:obj:`dict`): dictionary of Gn mapped to their list of gained Hn.
+        IDENTICAL (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a Hn.
+        DUPLICATE (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a list of Hn.
+    """
 
     def __init__(self, HAM):
         super(MapLateral, self).__init__(HAM)
-        self.descendants = [] # [Gx]
-        self.maps = {} # {Gx -> HOGMap(Gi,Gx)}
-        self.LOSS = None  # {Hi -> [Gx]}
-        self.GAIN = None # {Gj -> [Hj]}
-        self.IDENTICAL = None # {Hi -> {Gj -> Hj}}
-        self.DUPLICATE = None # {Hi -> {Gj -> [Hj]}}
+        self.descendants = []
+        self.maps = {}
+        self.LOSS = None
+        self.GAIN = None
+        self.IDENTICAL = None
+        self.DUPLICATE = None
 
     def add_map(self, HogMap):
-        """Add a map to the MapResults object"""
+        """  
+        Method to add the HOGsMap.
+
+            Args:
+                HogMap (:obj:`HOGsMap`): HOGsMap to add.
+
+            Raises:
+                TypeError: if HogMap is not :obj:`HOGsMap` or if HOGMap ancestor doesn't match the MapLateral one.
+        """
+
         if not isinstance(HogMap, HOGsMap):
             raise TypeError("expect subclass obj of '{}', got {}"
                             .format(HOGsMap.__name__,
@@ -231,22 +291,29 @@ class MapLateral(MapResults):
         self.maps[HogMap.descendant] = HogMap
         self.descendants.append(HogMap.descendant)
 
+    def get_lost(self):
+        """
+        Lazy getter for lost genes.
+        
+        Returns:
+            dictionary of Ho -> [Gn].
+        """
 
-    def get_lost(self): # Todo only_in=x where x can be descendant genome or "all" ?
-        """
-        :return:  a dictionary all HOGs Hi and their list of Genome Gj where they are lost.
-        """
         if self.LOSS is None:
             loss = {}
             for genome, hmap in self.maps.items():
                 for lost_gene in hmap.LOSS:
-                    loss.setdefault(lost_gene,[]).append(genome)
+                    loss.setdefault(lost_gene, []).append(genome)
             self.LOSS = loss
+
         return self.LOSS
 
     def get_gained(self):
         """
-        :return: a dictionary of Genome Gj wither their novels genes Hj.
+        Lazy getter for gained genes.
+
+        Returns:
+            dictionary of Gn -> [Hn].
         """
         if self.GAIN is None:
             gain = {}
@@ -255,21 +322,29 @@ class MapLateral(MapResults):
             self.GAIN = gain
         return self.GAIN
 
-    def get_single(self): # TODO return_list_only=False to return list of gene directly ?
+    def get_identical(self):
         """
-        :return: a dictionary of HOG Hi with their single Hj clustered by Genome Gj.
+        Lazy getter for identical genes.
+
+        Returns:
+            dictionary of Hi -> dict of Gn -> Hn.
         """
+
         if self.IDENTICAL is None:
             single = {}
             for genome, hmap in self.maps.items():
                 for hi,hj in hmap.IDENTICAL.items():
                     single.setdefault(hi,{})[genome] = hj
             self.IDENTICAL = single
+
         return self.IDENTICAL
 
     def get_duplicated(self):
         """
-        :return: a dictionary of HOG Hi with their list of single Hj clustered by Genome Gj.
+        Lazy getter for duplicated genes.
+
+        Returns:
+            dictionary of Hi -> dict of Gn -> list of Hn.
         """
         if self.DUPLICATE is None:
             duplicate = {}
@@ -277,4 +352,5 @@ class MapLateral(MapResults):
                 for hi,list_hj in hmap.DUPLICATE.items():
                     duplicate.setdefault(hi,{})[genome] = list_hj
             self.DUPLICATE = duplicate
+
         return self.DUPLICATE
