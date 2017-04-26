@@ -179,51 +179,65 @@ class HAM(object):
 
     # ... TOOLS ... #
 
-    def compare_genomes_vertically(self, genomes_set):
+    def compare_genomes_vertically(self, genome1, genome2):
 
         """
-        Function to compute a :obj:`MapVertical` based on the 2 given genomes.
+        Function to compute a :obj:`MapVertical` based on the 2 given genomes. The genome order doesn't matter.
 
         Attributes:
-            genomes_set (:obj:`set`): set of 2 :obj:`Genome`.
+            genome1 (:obj:`Genome`): First :obj:`Genome` to compare.
+            genome2 (:obj:`Genome`): Second :obj:`Genome` to compare.
 
         Returns:
             :obj:`MapVertical`.
         
         Raises:
-            TypeError: if there is not two genomes.
+            TypeError: if genome1 and genome2 are not :obj:`Genome`.
         """
 
-        if len(genomes_set) != 2:
-            raise TypeError(
-                "{} genomes given for vertical HOG mapping, only 2 should be given".format(len(genomes_set)))
+        if not isinstance(genome1, genome.Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(genome.Genome.__name__,
+                                    type(genome1).__name__))
+
+        if not isinstance(genome2, genome.Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(genome.Genome.__name__,
+                                    type(genome2).__name__))
 
         vertical_map = mapper.MapVertical(self)
-        vertical_map.add_map(self._get_HOGMap(genomes_set))
+        vertical_map.add_map(self._get_HOGMap({genome1, genome2}))
 
         return vertical_map
 
-    def compare_genomes_lateral(self, genomes_set):
+    def compare_genomes_lateral(self, genome1, genome2):
 
         """
-        Function to compute a :obj:`MapLateral` based on given genomes set.
+        Function to compute a :obj:`MapLateral` based on the 2 given genomes. The genome order doesn't matter.
 
         Attributes:
-            genomes_set (:obj:`set`): set of :obj:`Genome`.
+            genome1 (:obj:`Genome`): First :obj:`Genome` to compare.
+            genome2 (:obj:`Genome`): Second :obj:`Genome` to compare.
 
         Returns:
             :obj:`MapLateral`.
 
         Raises:
-            TypeError: if there is less than 2 genomes.
+            TypeError: if genome1 and genome2 are not :obj:`Genome`.
         """
 
-        if len(genomes_set) < 2:
-            raise TypeError(
-                "{} genomes given for lateral HOG mapping, at least 2 should be given".format(len(genomes_set)))
+        if not isinstance(genome1, genome.Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(genome.Genome.__name__,
+                                    type(genome1).__name__))
+
+        if not isinstance(genome2, genome.Genome):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(genome.Genome.__name__,
+                                    type(genome2).__name__))
 
         lateral_map = mapper.MapLateral(self)
-        anc, desc = self._get_ancestor_and_descendant(copy.copy(genomes_set))
+        anc, desc = self._get_ancestor_and_descendant(copy.copy({genome1, genome2}))
         for g in desc:
             hogmap = mapper.HOGsMap(self, {g, anc})
             lateral_map.add_map(hogmap)

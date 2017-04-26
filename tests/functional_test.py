@@ -4,11 +4,13 @@ from ham import ham
 from ham import utils
 import logging
 
+
 def _str_array(array):
     array_converted = []
     for e in array:
         array_converted.append(str(e))
     return set(array_converted)
+
 
 def _str_dict_one_value(dict):
     for kk in dict.keys():
@@ -16,6 +18,7 @@ def _str_dict_one_value(dict):
     for k, v in dict.items():
         dict[k] = str(v)
     return dict
+
 
 def _str_dict_array_value(dict):
     for kk in dict.keys():
@@ -26,6 +29,7 @@ def _str_dict_array_value(dict):
             array.append(str(v))
         dict[k] = set(array)
     return dict
+
 
 class HamAnalysis(unittest.TestCase):
 
@@ -90,7 +94,7 @@ class HamAnalysis(unittest.TestCase):
         vertebrates = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({mouse, frog})
 
         # Then, he compare the two genomes of interest
-        vertical_map_mouse_vs_vert = ham_analysis.compare_genomes_vertically({mouse, vertebrates})
+        vertical_map_mouse_vs_vert = ham_analysis.compare_genomes_vertically(mouse, vertebrates)
 
         # Now he is interest by the HOG that have stay single copy between these two levels
         self.assertDictEqual({'<HOG(1)>': 'Gene(31)'}, _str_dict_one_value(vertical_map_mouse_vs_vert.get_single()))
