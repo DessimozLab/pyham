@@ -101,9 +101,8 @@ class HOGsMap(object):
         upMap = {}  # {Hy -> [Ho|None, True|False]}
 
         for Hy in self.descendant.genes:
-            if Hy.is_singleton() is False:
-                Ho, paralog = Hy.search_ancestor_hog_in_ancestral_genome(self.ancestor)
-                upMap[Hy] = [Ho, paralog]
+            Ho, paralog = Hy.search_ancestor_hog_in_ancestral_genome(self.ancestor)
+            upMap[Hy] = [Ho, paralog]
 
         return upMap
 

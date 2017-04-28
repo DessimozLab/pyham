@@ -194,17 +194,8 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(str(hog3), "<HOG(3)>")
 
         # and run the create_tree_profile on it
-        tp_hog3 = ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
-        #print(tp_hog3.dirty_display())
-
-
-        '''
-        for hog in ham_analysis.get_dict_top_level_hogs().values():
-            tp_hog = ham_analysis.create_tree_profile(hog)
-            print(hog)
-            print(tp_hog.dirty_display())
-
-        '''
+        ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
+        ham_analysis.create_tree_profile(hog3, outfile="./tp32.png", export_with_histogram=True)
 
     def test_treeProfile_on_full_setup(self):
 
@@ -215,7 +206,9 @@ class HamAnalysis(unittest.TestCase):
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Clement run the create_tree_profile for the whole genomic setup
-        tp = ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
+        ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
+        ham_analysis.create_tree_profile(outfile="./tp2.png", export_with_histogram=True)
+
         #tp.dirty_display()
 
 

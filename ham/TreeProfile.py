@@ -1,41 +1,47 @@
-import json
-import re
-from string import Template
-import collections
-import sys
 from ham.abstractgene import HOG
 import logging
-import random
+
 logger = logging.getLogger(__name__)
+
 
 class TreeProfile(object):
     """
-    Object that map on a given taxonomy related evolutionary event at each nodes (numbers of ancestral genes,
-    duplications, lost, etc...). This can be applied on a single gene family (hog) to represent the evolutionary history
-    of those genes or can be used to represent the ancestral states of a multiple genome setup.
+    Object that map on each node of the HAM species tree the related evolutionary information such as the number of 
+    genes the related genome contains or the number of evolutionary events (duplications, genes loss or gain of genes)
+    that occurs between the parent node and itself. This can be either applied to the full HAM comparative genomic setup
+    or for a specific HOG.
 
-    self.ham:  HAM object with related taxonomy object
-    self.treemap: ETE3 Tree with required taxonomy and related information at each internal node
-
-     if the TreeProfile is instanciate with only the "ham" argument it will compute the tree profile for the
-     whole genomic setup. If the "hog" argument is provided the TreeProfile will be compute for a single hog.
+    Attributes:
+        ham (:obj:`HAM`): :obj:`set` of HOG ids used by the FilterOrthoXMLParser.
+        hog (:obj:`HOG`, optional): If specified, compute TreeProfile on a single HOGs. Defaults is None.
+        treemap (:obj:`Etree`): Ete3 Etree object containing the taxonomy of interest with annotated node.
     """
+
     def __init__(self, ham, hog=None):
+
         self.ham = ham
+        self.hog = hog
 
         if hog is None:
-            self.hog = None
-            self.treemap = self.computeTP_whole()
+            self.treemap = self.compute_tree_profile_full()
 
         elif isinstance(hog, HOG):
-            self.hog = hog
             self.treemap = self.computeTP_hog(hog)
         else:
             raise KeyError("Invalid argument {} for HOG".format(hog))
 
     def computeTP_hog(self, hog):
-        # deepcopy the required taxonomy using query hog as root level
-        treeMap = self.ham.taxonomy.tree.copy(method="newick")
+        """  
+        Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
+        each nodes (representing an AbstractGene):
+            - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
+
+        Returns:
+            TreeMap
+        """
+
+        # copy the required taxonomy using query hog as root level
+        treeMap = hog.genome.taxon.copy(method="newick")
 
         # create a dictionary that map node with related hogs/genes
         levelGroups = {}
@@ -58,18 +64,33 @@ class TreeProfile(object):
             lvl.add_feature("dupl", None)
             lvl.add_feature("lost", None)
             lvl.add_feature("gain", None)
-            lvl.add_feature("single", None)
+            lvl.add_feature("identical", None)
 
         return treeMap
 
-    def computeTP_whole(self):
+    def compute_tree_profile_full(self):
+        """  
+        Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
+        each nodes (the root node contains only nbr_genes):
+            - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
+            - dupl: numbers of HOGs that have duplicated in between this node and its parent.
+            - lost: numbers of HOGs that have been lost in between this node and its parent.
+            - gain: numbers of HOGs that have "emerged" at this node.
+            - identical: numbers of HOGs that have stay identical (in term of copy numbers) in between this node and
+            its parent.
+            
+        In order to get all those node informations, the HOGMap between each node and its parent is computed.
+            
+        Returns:
+            TreeMap
+        """
 
-        def _add_annot(node, nbr, dupl, lost, gain, single):
+        def _add_annot(node, nbr, dupl, lost, gain, identical):
             node.add_feature("nbr_genes", nbr)
             node.add_feature("dupl", dupl)
             node.add_feature("lost", lost)
             node.add_feature("gain", gain)
-            node.add_feature("single", single)
+            node.add_feature("identical", identical)
 
         treeMap = self.ham.taxonomy.tree.copy(method="newick")
 
@@ -83,7 +104,7 @@ class TreeProfile(object):
 
                 if node.is_leaf():
                     node_genome = self.ham._get_extant_genome_by_name(name=node.name)
-                    nbr = node_genome.get_number_genes(singleton=False)
+                    nbr = node_genome.get_number_genes(singleton=True)
 
                 else:
                     node_genome = self.ham.get_ancestral_genome_by_name(node.name)
@@ -93,7 +114,20 @@ class TreeProfile(object):
 
         return treeMap
 
-    def export(self, output, layout_function=None, display_internal_histogram=False):
+    def export(self, output, layout_function=None, display_internal_histogram=True):
+
+        """  
+        Method to export the tree profile object as figure (available format .SVG, .PDF, .PNG).
+        
+        -- Some magic going there --
+        
+        Args:
+            output (:obj:`str`): output file name. The extension of output will set the format of the figure (SVG, .PDF,
+            .PNG)
+            layout_function (:obj:`function`, optional): custom layout_fn for ete3 TreeStyle.
+            display_internal_histogram (:obj:`Boolean`, optional): Display internal node as histogram or raw text with
+            numbers. Defaults to True.
+        """
 
         from ete3 import TreeStyle, TextFace, NodeStyle, BarChartFace
 
@@ -111,12 +145,10 @@ class TreeProfile(object):
             _values_legend = [max_genes]
             w_legend = 10
 
-
-
         def _layout(node):
 
             if self.hog is None:
-                 _label = [str(node.nbr_genes),str(node.single),str(node.dupl),str(node.gain),str(node.lost)]
+                 _label = [str(node.nbr_genes),str(node.identical),str(node.dupl),str(node.gain),str(node.lost)]
             else:
                  _label = [str(node.nbr_genes)]
 
@@ -127,8 +159,8 @@ class TreeProfile(object):
 
                 _add_face("#genes", node.nbr_genes, cnum=cNbr, pos=posNbr)
 
-                if node.single is not None:
-                    _add_face("#Identical", node.single, cnum=cAttr, pos=posAtt)
+                if node.identical is not None:
+                    _add_face("#Identical", node.identical, cnum=cAttr, pos=posAtt)
 
                 if node.dupl is not None:
                     _add_face("#Duplicated", node.dupl, cnum=cAttr, pos=posAtt)
@@ -142,7 +174,7 @@ class TreeProfile(object):
             if node.is_leaf():
                 if display_internal_histogram:
                     if self.hog is None:
-                        values = [node.nbr_genes,node.single,node.dupl,node.gain,node.lost]
+                        values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
                         w_plot = 50
                     else:
                         values = [node.nbr_genes]
@@ -158,7 +190,7 @@ class TreeProfile(object):
                         node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=["Genes"], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
                     else:
                         if self.hog is None:
-                            values = [node.nbr_genes,node.single,node.dupl,node.gain,node.lost]
+                            values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
                             w_plot = 50
                         else:
                             values = [node.nbr_genes]
@@ -170,7 +202,6 @@ class TreeProfile(object):
                 else:
                     _add_faces(cNbr=0, posNbr="branch-top", cAttr=0, posAtt="branch-bottom")
 
-
         ts = TreeStyle()
 
         if layout_function is not None:
@@ -179,17 +210,5 @@ class TreeProfile(object):
             ts.layout_fn = _layout
             ts.legend.add_face(BarChartFace(_values_legend, deviations=None, width=w_legend, height=25, colors=_color_scheme, labels=_label_legend, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0)
             ts.legend_position = 3
+
         self.treemap.render(output,tree_style=ts)
-
-    def dirty_display(self): # todo to be removed only for dev purposed
-        if self.hog:
-            att = ["name", "nbr_genes"]
-        else:
-            att = ["name", "nbr_genes","single", "dupl", "lost", "gain"]
-        print(att)
-        self.treemap.show()
-
-        #f = open('data_new.txt', 'w')
-        #f.write(self.treemap.get_ascii(show_internal=True, compact=True, attributes=att))
-        #return self.treemap.get_ascii(show_internal=True, compact=True, attributes=att)
-

@@ -101,7 +101,7 @@ class HOGsMapTest(MapperTestCases.MapperTest):
 
         # an extant genome (human) and its ancestor (Vertebrates)
         map = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
-        expected_map = {'1': '1', '2': None, '3': '3'}
+        expected_map = {'1': '1', '2': None, '3': '3', "5":None}
         observed_map = _convert_map(map.upMap)
         self.assertDictEqual(expected_map, observed_map)
 
@@ -137,6 +137,7 @@ class HOGsMapTest(MapperTestCases.MapperTest):
 
         expected_GAIN = set()
         expected_GAIN.add("Gene(2)")
+        expected_GAIN.add("Gene(5)")
         self.assertSetEqual(expected_GAIN, convert_GAIN(map.GAIN))
 
         expected_IDENTICAL = set()
@@ -203,7 +204,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map.add_map(map)
 
         gain = vertical_map.get_gained()
-        self.assertEqual({"Gene(2)"}, set(_str_array(gain)))
+        self.assertEqual({"Gene(2)", "Gene(5)"}, set(_str_array(gain)))
 
     def test_get_single(self):
         vertical_map = MapVertical(self.ham_analysis)
@@ -301,7 +302,7 @@ class LateralMapperTest(MapperTestCases.MapperTest):
 
         gain = lateral_map.get_gained()
         self.assertEqual(set(), set(_str_array(gain[self.frog])))
-        self.assertEqual({"Gene(2)"}, set(_str_array(gain[self.human])))
+        self.assertEqual({"Gene(2)", "Gene(5)" }, set(_str_array(gain[self.human])))
 
     def test_get_single(self):
         lateral_map = MapLateral(self.ham_analysis)

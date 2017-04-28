@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 class Hogvis(object):
     def __init__(self, newick_str, hog):
+        #print("THE HOGVIS IS AT A EXPERIMENTAL STAGE. PLEASE USE IT CAREFULLY.")
         self.hog = hog
         self.newick_str = newick_str
         self.ogs_mapper = self._get_groups_to_level_mapper()
@@ -34,7 +35,7 @@ class Hogvis(object):
                      <!-- TnT -->
                      <link rel="stylesheet" href="http://omabrowser.org/static/css/tnt.css" type="text/css" />
                      <script src="http://omabrowser.org/static/js/tnt.js"></script>
-                     <script src="http://omabrowser.org/static/js/hog.js"></script>
+                     <script src="http://omabrowser.org/static/js/hog.js.05869ae311cc8b8e04271cdb1a904fd4"></script>
 
                       <h1>HOG Viewer for $name</h1>
                       <div id="hog_tree"></div>
