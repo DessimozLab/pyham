@@ -35,6 +35,10 @@ class TreeProfile(object):
         Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
         each nodes (representing an AbstractGene):
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
+            - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
+            - identical: numbers of HOGs that have stay identical (in term of copy numbers) in between this node and
+            its parent.
+            - lost: numbers of HOGs that have been lost in between this node and its parent.
 
         Returns:
             TreeMap
@@ -45,10 +49,12 @@ class TreeProfile(object):
 
         # create a dictionary that map node with related hogs/genes
         levelGroups = {}
+        for lvl in treeMap.traverse():
+            levelGroups[lvl.name]=[]
 
         # add all of subhog to the related level in levelGroups
         for subhog in hog.get_all_descendant_hogs():
-            levelGroups.setdefault(subhog.genome.name, []).append(subhog)
+            levelGroups[subhog.genome.name].append(subhog)
 
         # add empty extant genome to levelGroups
         for extantGenome in treeMap.get_leaves():
@@ -58,13 +64,39 @@ class TreeProfile(object):
         for species, genes in hog.get_all_descendant_genes_clustered_by_species().items():
             levelGroups[species.name] = genes
 
-        # add to each node the number of ancestral|extant genes
         for lvl in treeMap.traverse():
             lvl.add_feature("nbr_genes", len(levelGroups[lvl.name]))
-            lvl.add_feature("dupl", None)
-            lvl.add_feature("lost", None)
             lvl.add_feature("gain", None)
-            lvl.add_feature("identical", None)
+
+            if not lvl.is_root():
+                cpt_dupl = 0
+                cpt_ident = 0
+                for h in levelGroups[lvl.name]:
+                    if h.arose_by_duplication:
+                        cpt_dupl += 1
+                    else:
+                        cpt_ident += 1
+
+                cpt_lost = 0
+                for h_up in levelGroups[lvl.up.name]:
+                    if len(h_up.children) != 0:
+                        found = False
+                        for child in h_up.children:
+                            if child.genome.taxon.name == lvl.name:
+                                found = True
+                        if found is False:
+                            cpt_lost += 1
+                    else:
+                        cpt_lost += 1
+
+            else:
+                cpt_dupl = None
+                cpt_ident = None
+                cpt_lost = None
+
+            lvl.add_feature("dupl", cpt_dupl)
+            lvl.add_feature("lost", cpt_lost)
+            lvl.add_feature("identical", cpt_ident)
 
         return treeMap
 
@@ -74,7 +106,7 @@ class TreeProfile(object):
         each nodes (the root node contains only nbr_genes):
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
             - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
-            - lost: numbers of HOGs that have emerged lost in between this node and its parent.
+            - lost: numbers of HOGs that have been lost in between this node and its parent.
             - gain: numbers of HOGs that have "emerged" at this node.
             - identical: numbers of HOGs that have stay identical (in term of copy numbers) in between this node and
             its parent.
@@ -144,17 +176,17 @@ class TreeProfile(object):
             _values_legend = [max_genes,max_genes,max_genes,max_genes,max_genes]
             w_legend = 50 # todo calculate base on len(_values)
         else:
-            _color_scheme = ["#41c1c2"]
-            _label_legend = ["Genes"]
-            _values_legend = [max_genes]
-            w_legend = 10
+            _color_scheme = ["#41c1c2", "#bdc3c7", "#f39c12", "#e74c3c"]
+            _label_legend = ["Genes", "Identicals", "Duplicated", "Lost"]
+            _values_legend = [max_genes, max_genes, max_genes, max_genes]
+            w_legend = 40  # todo calculate base on len(_values)
 
         def _layout(node):
 
             if self.hog is None:
                  _label = [str(node.nbr_genes),str(node.identical),str(node.dupl),str(node.gain),str(node.lost)]
             else:
-                 _label = [str(node.nbr_genes)]
+                _label = [str(node.nbr_genes), str(node.identical), str(node.dupl), str(node.lost)]
 
             def _add_face(name_feature, value_feature, cnum=1, pos="branch-right"):
                 node.add_face(TextFace("{}: {}".format(name_feature, value_feature)), column=cnum, position=pos)
@@ -181,8 +213,8 @@ class TreeProfile(object):
                         values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
                         w_plot = 50
                     else:
-                        values = [node.nbr_genes]
-                        w_plot = int(10)
+                        values = [node.nbr_genes, node.identical, node.dupl, node.lost]
+                        w_plot = 40
                     node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
                 else:
                     _add_faces()
@@ -197,8 +229,8 @@ class TreeProfile(object):
                             values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
                             w_plot = 50
                         else:
-                            values = [node.nbr_genes]
-                            w_plot = 10
+                            values = [node.nbr_genes,node.identical,node.dupl,node.lost]
+                            w_plot = 40
                         node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-top")
 
 

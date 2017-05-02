@@ -150,13 +150,10 @@ class HamAnalysis(unittest.TestCase):
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
 
-        # Clement get the hog2 of interest
-        hog3 = ham_analysis.get_hog_by_id("3")
-        self.assertEqual(str(hog3), "<HOG(3)>")
 
-        # and run the create_tree_profile on it
-        ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
-        ham_analysis.create_tree_profile(hog3, outfile="./tp32.png", export_with_histogram=True)
+        # Clement get the toplevel hog and build the tree profile on them
+        for hog in ham_analysis.get_list_top_level_hogs():
+            ham_analysis.create_tree_profile(hog, outfile="./hog{}.png".format(hog.hog_id), export_with_histogram=True)
 
     def test_treeProfile_on_full_setup(self):
 
