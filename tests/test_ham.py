@@ -2,6 +2,7 @@ import unittest
 from ham import utils
 from ham import ham
 import ete3
+import os
 
 # This helps to convert elements of list/dictionary to string in order to make easier assertEqual test.
 def _str_dict_one_value(dict):
@@ -22,8 +23,10 @@ class HAMTestSetUp(unittest.TestCase):
     def setUp(self):
         self.nwk_str_empty = ""
         self.nwk_str_wrong = "(A,B)x0.4"
-        self.nwk_str = utils.get_newick_string('./tests/data/simpleEx.nwk', type="nwk")
-        self.orthoxml_path = './tests/data/simpleEx.orthoxml'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
+        self.nwk_str = utils.get_newick_string(nwk_path, type="nwk")
+
+        self.orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
     def test_wrong_newick_str(self):
 
@@ -52,9 +55,11 @@ class HAMTestSetUp(unittest.TestCase):
 class HAMTest(unittest.TestCase):
 
     def setUp(self):
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
+
         self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
@@ -79,18 +84,16 @@ class HAMTest(unittest.TestCase):
             self.ham_analysis.compare_genomes_lateral(None, self.chimp)
 
 
-
 class HAMTestQuery(unittest.TestCase):
 
     def setUp(self):
-
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
 
-        nwk_path_no_name = './tests/data/simpleExNoName.nwk'
+        nwk_path_no_name = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         nwk_str_no_name = utils.get_newick_string(nwk_path_no_name, type="nwk")
 
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # using newick with name on both internal nodes and leaves
         self.h = ham.HAM(nwk_str, orthoxml_path, use_internal_name=True)
@@ -99,7 +102,6 @@ class HAMTestQuery(unittest.TestCase):
         self.hn = ham.HAM(nwk_str_no_name, orthoxml_path)
 
         # using newick with name on both internal nodes and leaves and filter for HOG2
-
         self.filter_genome = {"HUMAN", "MOUSE", "CANFA", "PANTR"}
         self.filter_genes = {'2', '32', '22', '12'}
         self.filter_genes_ext = {'HUMAN2', 'MOUSE2', 'CANFA2', 'PANTR2'}
@@ -403,13 +405,13 @@ class HAMTestPrivate(unittest.TestCase):
 
     def setUp(self):
 
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
 
-        nwk_path_no_name = './tests/data/simpleExNoName.nwk'
+        nwk_path_no_name = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         nwk_str_no_name = utils.get_newick_string(nwk_path_no_name, type="nwk")
 
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # using newick with name on both internal nodes and leaves
         self.h = ham.HAM(nwk_str, orthoxml_path)
@@ -431,7 +433,6 @@ class HAMTestPrivate(unittest.TestCase):
         f = ham.ParserFilter()
         f.add_hogs_via_hogId([2])
         self.hf = ham.HAM(nwk_str, orthoxml_path, filter_object=f)
-
 
 if __name__ == "__main__":
     unittest.main()

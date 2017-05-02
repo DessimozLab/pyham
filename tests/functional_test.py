@@ -3,7 +3,7 @@ from unittest import skip
 from ham import ham
 from ham import utils
 import logging
-
+import os
 
 def _str_array(array):
     array_converted = []
@@ -39,12 +39,12 @@ class HamAnalysis(unittest.TestCase):
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
 
         # Clement select a nwk file as a taxonomy reference
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         # And extract the newick tree as a string
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
 
         # then clement select his favorite orthoXML file
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # Clement create the HAM object that will be the kernel of all analysis
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
@@ -80,9 +80,11 @@ class HamAnalysis(unittest.TestCase):
 
         # Clement initialise the ham analyzer objet as it's explained in the documentation
         logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
-        nwk_path = './tests/data/simpleEx.nwk'
+
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
+
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         # Then clement is interest to investigate on what happened between the ancestral genomes of vertebrates
@@ -105,54 +107,13 @@ class HamAnalysis(unittest.TestCase):
         # Clement is curious and want to look if there is gene that have been lost
         self.assertSetEqual(set(), _str_array(vertical_map_mouse_vs_vert.get_lost()))
 
-    def test_multi_genome_comparative_analysis(self):
-
-        # Clement initialise the ham analyzer objet as it's explained in the documentation
-        logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
-        nwk_path = './tests/data/simpleEx.nwk'
-        tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
-
-        '''
-        # ... UNDER CONSTRUCTION ... #
-
-        # Then clement is interest to investigate on the difference/similarities that exists between the primates and the rodents.
-
-        # First he select the related genomes object via their name and mrca.
-        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
-        rat = ham_analysis._get_extant_genome_by_name(name="RATNO")
-        human = ham_analysis._get_extant_genome_by_name(name="HUMAN")
-        chimp = ham_analysis._get_extant_genome_by_name(name="PANTR")
-
-        rodents = ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({mouse, rat})
-        primates = ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({human, chimp})
-
-        # Then, he compare the two genomes of interest through their mrca (Euarchontoglires)
-        lateral_map_rodents_vs_primates = ham_analysis.compare_genomes_lateral({rodents, primates}, analysis='lateral')
-
-        # Now he is interest by the HOG that have stay single in the both taxon
-        s = lateral_map_rodents_vs_primates.get_identical()
-        print(lateral_map_rodents_vs_primates.ancestor.taxon)
-        for h in s:
-            print(h)
-            print("\t {} ".format(s[h]))
-
-        # ... and at the duplicated genes
-
-        # Clement is curious and want to look if there is gene that have been lost
-
-        # ... UNDER CONSTRUCTION ... #
-
-        '''
-
     def test_load_taxonomy_from_nwk_file_and_from_orthoxml_file_with_filter_hog2(self):
 
         # load the logger
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
 
         # Clement select a nwk file as a taxonomy reference
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         # And extract the newick tree as a string
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
 
@@ -166,7 +127,7 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(set(f.GeneIntId_filter), set())
 
         # then clement select his favorite orthoXML file
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # Clement create the HAM object that will be the kernel of all analysis
         ham_analysis = ham.HAM(tree_str, orthoxml_path, filter_object=f, use_internal_name=True)
@@ -183,9 +144,9 @@ class HamAnalysis(unittest.TestCase):
     def test_treeProfile_on_hog3(self):
 
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
 
@@ -194,20 +155,20 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(str(hog3), "<HOG(3)>")
 
         # and run the create_tree_profile on it
-        ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
-        ham_analysis.create_tree_profile(hog3, outfile="./tp32.png", export_with_histogram=True)
+        #ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
+        #ham_analysis.create_tree_profile(hog3, outfile="./tp32.png", export_with_histogram=True)
 
     def test_treeProfile_on_full_setup(self):
 
         logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
+        #ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Clement run the create_tree_profile for the whole genomic setup
-        ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
-        ham_analysis.create_tree_profile(outfile="./tp2.png", export_with_histogram=True)
+        #ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
+        #ham_analysis.create_tree_profile(outfile="./tp2.png", export_with_histogram=True)
 
         #tp.dirty_display()
 

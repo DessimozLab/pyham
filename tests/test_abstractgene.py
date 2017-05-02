@@ -1,7 +1,7 @@
 import unittest
 from ham import Gene, HOG, AbstractGene, AncestralGenome, ExtantGenome, utils, ham
 from ham.abstractgene import EvolutionaryConceptError as ECE
-
+import os
 
 class GeneTest(unittest.TestCase):
     def test_id_required(self):
@@ -107,9 +107,10 @@ class HogTest(unittest.TestCase):
 class AbstractGeneTest(unittest.TestCase):
 
     def setUp(self):
-        nwk_path = './tests/data/simpleEx.nwk'
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
-        orthoxml_path = './tests/data/simpleEx.orthoxml'
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
+
         self.h = ham.HAM(nwk_str, orthoxml_path, use_internal_name=True)
 
     def test_search_ancestor_hog_in_ancestral_genome(self):
