@@ -73,8 +73,8 @@ class TreeProfile(object):
         Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
         each nodes (the root node contains only nbr_genes):
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
-            - dupl: numbers of HOGs that have duplicated in between this node and its parent.
-            - lost: numbers of HOGs that have been lost in between this node and its parent.
+            - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
+            - lost: numbers of HOGs that have emerged lost in between this node and its parent.
             - gain: numbers of HOGs that have "emerged" at this node.
             - identical: numbers of HOGs that have stay identical (in term of copy numbers) in between this node and
             its parent.
@@ -110,7 +110,11 @@ class TreeProfile(object):
                     node_genome = self.ham.get_ancestral_genome_by_name(node.name)
                     nbr = node_genome.get_number_genes()
                 hogmap = self.ham._get_HOGMap({node_genome, node_genome_up})
-                _add_annot(node, nbr, len(hogmap.DUPLICATE.keys()), len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.IDENTICAL.keys()))
+
+                nbr_duplicate = 0
+                for gs in hogmap.DUPLICATE.values():
+                    nbr_duplicate += len(gs)
+                _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.IDENTICAL.keys()))
 
         return treeMap
 
@@ -187,7 +191,7 @@ class TreeProfile(object):
 
                 if display_internal_histogram:
                     if node.is_root():
-                        node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=["Genes"], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
+                        node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=[str(node.nbr_genes)], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
                     else:
                         if self.hog is None:
                             values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
@@ -195,7 +199,7 @@ class TreeProfile(object):
                         else:
                             values = [node.nbr_genes]
                             w_plot = 10
-                        node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
+                        node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-top")
 
 
 

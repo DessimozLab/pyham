@@ -155,8 +155,8 @@ class HamAnalysis(unittest.TestCase):
         self.assertEqual(str(hog3), "<HOG(3)>")
 
         # and run the create_tree_profile on it
-        #ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
-        #ham_analysis.create_tree_profile(hog3, outfile="./tp32.png", export_with_histogram=True)
+        ham_analysis.create_tree_profile(hog3, outfile="./tp3.png", export_with_histogram=True)
+        ham_analysis.create_tree_profile(hog3, outfile="./tp32.png", export_with_histogram=True)
 
     def test_treeProfile_on_full_setup(self):
 
@@ -164,10 +164,10 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
-        #ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Clement run the create_tree_profile for the whole genomic setup
-        #ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
+        ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
         #ham_analysis.create_tree_profile(outfile="./tp2.png", export_with_histogram=True)
 
         #tp.dirty_display()
