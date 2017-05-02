@@ -31,7 +31,7 @@ class HOGVisTest(unittest.TestCase):
 
     def test_per_species_mapping(self):
         mapping = self.hogvis.hog.get_all_descendant_genes_clustered_by_species()
-        mouse_geneids = [int(z.unique_id) for z in mapping[self.ham_analysis._get_extant_genome_by_name(name="MOUSE")]]
+        mouse_geneids = [int(z.unique_id) for z in mapping[self.ham_analysis.get_extant_genome_by_name(name="MOUSE")]]
         self.assertEqual([33, 34], mouse_geneids)
 
     def test_mapping(self):
@@ -70,9 +70,9 @@ class HOGVisTestNoName(unittest.TestCase):
         self.assertEqual(self.map.nr_subhogs_on_level('LUCA'), 0)
 
     def test_og_id_equality(self):
-        HUMAN = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")
-        RATNO = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
-        primates = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({HUMAN, RATNO})
+        HUMAN = self.ham_analysis.get_extant_genome_by_name(name="HUMAN")
+        RATNO = self.ham_analysis.get_extant_genome_by_name(name="PANTR")
+        primates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({HUMAN, RATNO})
         primates_hogs = primates.genes
         primate_hogs_from_map = self.map.levels['HUMAN/PANTR']
         glires = self.map.levels['HUMAN/PANTR/MOUSE/RATNO']
@@ -81,7 +81,7 @@ class HOGVisTestNoName(unittest.TestCase):
 
     def test_per_species_mapping(self):
         mapping = self.hogvis.hog.get_all_descendant_genes_clustered_by_species()
-        mouse_geneids = [int(z.unique_id) for z in mapping[self.ham_analysis._get_extant_genome_by_name(name="MOUSE")]]
+        mouse_geneids = [int(z.unique_id) for z in mapping[self.ham_analysis.get_extant_genome_by_name(name="MOUSE")]]
         self.assertEqual([33, 34], mouse_geneids)
 
     def test_mapping(self):

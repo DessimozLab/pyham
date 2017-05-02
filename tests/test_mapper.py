@@ -45,15 +45,15 @@ class MapperTestCases:
 
             self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
-            self.human = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")
-            self.frog = self.ham_analysis._get_extant_genome_by_name(name="XENTR")
-            self.mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
-            self.rat = self.ham_analysis._get_extant_genome_by_name(name="RATNO")
-            self.chimp = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
-            self.vertebrates = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({self.human, self.frog})
-            self.rodents = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({self.mouse, self.rat})
-            self.primates = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set({self.human, self.chimp})
-            self.euarchontoglires = self.ham_analysis._get_ancestral_genome_by_mrca_of_genome_set(
+            self.human = self.ham_analysis.get_extant_genome_by_name(name="HUMAN")
+            self.frog = self.ham_analysis.get_extant_genome_by_name(name="XENTR")
+            self.mouse = self.ham_analysis.get_extant_genome_by_name(name="MOUSE")
+            self.rat = self.ham_analysis.get_extant_genome_by_name(name="RATNO")
+            self.chimp = self.ham_analysis.get_extant_genome_by_name(name="PANTR")
+            self.vertebrates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.human, self.frog})
+            self.rodents = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.mouse, self.rat})
+            self.primates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.human, self.chimp})
+            self.euarchontoglires = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set(
                 {self.human, self.mouse})
 
 

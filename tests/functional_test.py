@@ -91,8 +91,8 @@ class HamAnalysis(unittest.TestCase):
         # and the extent genomes of the mouse.
 
         # First he select the related genomes objectt via their name or mrca.
-        mouse = ham_analysis._get_extant_genome_by_name(name="MOUSE")
-        frog = ham_analysis._get_extant_genome_by_name(name="XENTR")
+        mouse = ham_analysis.get_extant_genome_by_name(name="MOUSE")
+        frog = ham_analysis.get_extant_genome_by_name(name="XENTR")
         vertebrates = ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({mouse, frog})
 
         # Then, he compare the two genomes of interest

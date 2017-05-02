@@ -64,11 +64,11 @@ class HAMTest(unittest.TestCase):
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
 
-        self.human = self.ham_analysis._get_extant_genome_by_name(name="HUMAN")
-        self.frog = self.ham_analysis._get_extant_genome_by_name(name="XENTR")
-        self.mouse = self.ham_analysis._get_extant_genome_by_name(name="MOUSE")
-        self.rat = self.ham_analysis._get_extant_genome_by_name(name="RATNO")
-        self.chimp = self.ham_analysis._get_extant_genome_by_name(name="PANTR")
+        self.human = self.ham_analysis.get_extant_genome_by_name(name="HUMAN")
+        self.frog = self.ham_analysis.get_extant_genome_by_name(name="XENTR")
+        self.mouse = self.ham_analysis.get_extant_genome_by_name(name="MOUSE")
+        self.rat = self.ham_analysis.get_extant_genome_by_name(name="RATNO")
+        self.chimp = self.ham_analysis.get_extant_genome_by_name(name="PANTR")
         self.vertebrates = self.ham_analysis.get_ancestral_genome_by_mrca_of_genome_set({self.human, self.frog})
 
     def test_compare_level_correct_input_vertical(self):
