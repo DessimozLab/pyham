@@ -28,7 +28,7 @@ class TreeProfile(object):
         elif isinstance(hog, HOG):
             self.treemap = self.computeTP_hog(hog)
         else:
-            raise KeyError("Invalid argument {} for HOG".format(hog))
+            raise TypeError("Invalid argument {} for HOG".format(hog))
 
     def computeTP_hog(self, hog):
         """  

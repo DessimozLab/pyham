@@ -147,9 +147,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
-
-
+        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         # Clement get the toplevel hog and build the tree profile on them
         for hog in ham_analysis.get_list_top_level_hogs():
