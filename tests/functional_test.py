@@ -150,8 +150,8 @@ class HamAnalysis(unittest.TestCase):
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         # Clement get the toplevel hog and build the tree profile on them
-        for hog in ham_analysis.get_list_top_level_hogs():
-            ham_analysis.create_tree_profile(hog, outfile="./hog{}.png".format(hog.hog_id), export_with_histogram=True)
+        #for hog in ham_analysis.get_list_top_level_hogs():
+            #ham_analysis.create_tree_profile(hog, outfile="./hog{}.png".format(hog.hog_id), export_with_histogram=True)
 
     def test_treeProfile_on_full_setup(self):
 
@@ -162,10 +162,9 @@ class HamAnalysis(unittest.TestCase):
         ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Clement run the create_tree_profile for the whole genomic setup
-        ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
+        #ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)
         #ham_analysis.create_tree_profile(outfile="./tp2.png", export_with_histogram=True)
 
-        #tp.dirty_display()
 
 
 if __name__ == "__main__":

@@ -3,25 +3,31 @@ import os
 
 name = 'HAM'
 
-__version__ = "Undefined"
+__version__ = "0.1.0"
+
 for line in open('{}/__init__.py'.format(name.lower())):
     if line.startswith('__version__'):
         exec(line.strip())
 
+here = os.path.abspath(os.path.dirname(__file__))
 
-def read(fname):
-    with open(os.path.join(os.path.dirname(__file__), fname), 'r') as fd:
-        return fd.read()
-
+# Get the long description from the README file
+with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name=name,
+
     version=__version__,
+
     author='Adrian Altenhoff',
     author_email='adrian.altenhoff@inf.ethz.ch',
+
     description='A tool to analyse Hierarchical Orthologous Groups (HOGs)',
-    long_description=read('README.rst'),
+    long_description=long_description,
+
     license='MIT',
+
     classifiers=[
          'Development Status :: 3 - Alpha',
          'Intended Audience :: Developers',
@@ -35,6 +41,11 @@ setup(
          'Programming Language :: Python :: 3.5',
          'Programming Language :: Python :: 3.6',
          ],
-    packages=find_packages(),
+
+    packages=find_packages(exclude=['docs', 'tests']),
+
     install_requires=['ete3','six','scipy'],
+    extras_require={
+        'test': ['sphinx','sphinx'],
+    }
 )

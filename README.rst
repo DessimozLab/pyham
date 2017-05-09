@@ -11,7 +11,7 @@ Currently, HAM is limited to analyze HOGs that are stored in an orthoXML file.
 More information on the schema of orthoxml and some examples are
 available at `http://orthoxml.org`_.
 
-For extended documenation we refer to the docs folder that contain information
+For extended documentation we refer to the docs folder that contain information
 on common use cases and API documentation of the library.
 
 
@@ -24,5 +24,5 @@ Consider using pip to install the package directly from a checked out git repo
 
 .. code-block:: sh
 
-   pip install -e </path/to/family-analyzer-repo/>
+   pip install -e </path/to/HAM-repo/>
 
