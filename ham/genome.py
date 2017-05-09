@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from . import abstractgene
+from ham import abstractgene
 import ete3
 
 

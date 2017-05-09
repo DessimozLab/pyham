@@ -3,11 +3,7 @@ import os
 
 name = 'HAM'
 
-__version__ = "0.1.0"
-
-for line in open('{}/__init__.py'.format(name.lower())):
-    if line.startswith('__version__'):
-        exec(line.strip())
+__version__ = "0.1.2"
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -33,7 +29,7 @@ setup(
          'Intended Audience :: Developers',
          'Intended Audience :: Science/Research',
          'Topic :: Scientific/Engineering :: Bio-Informatics',
-         'License :: OSI Approved :: MIT licence',
+         'License :: OSI Approved :: MIT License',
          'Programming Language :: Python :: 2',
          'Programming Language :: Python :: 2.7',
          'Programming Language :: Python :: 3',

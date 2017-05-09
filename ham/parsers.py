@@ -1,6 +1,4 @@
-from . import abstractgene
-from . import genome
-import copy
+from ham import abstractgene
 import logging
 logger = logging.getLogger(__name__)
 

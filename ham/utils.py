@@ -1,4 +1,4 @@
-from . import taxonomy as tax
+from ham import taxonomy as tax
 
 
 def get_newick_string(source_path, type="nwk"):
