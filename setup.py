@@ -3,7 +3,8 @@ import os
 
 name = 'HAM'
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
+requirements = ['ete3','six','scipy']
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -38,10 +39,9 @@ setup(
          'Programming Language :: Python :: 3.6',
          ],
 
-    packages=find_packages(exclude=['docs', 'tests']),
-
-    install_requires=['ete3','six','scipy'],
+    packages=find_packages(),
+    install_requires=requirements,
     extras_require={
-        'test': ['sphinx','sphinx'],
+        'test': ['sphinx','noise'],
     }
 )
