@@ -3,15 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to HAM's documentation!
+Welcome to **HAM**'s documentation!
 ===============================
+
+HAM (“HOG Analysis Method”) is a python library to handle orthoXML containings Hierarchical Orthologous Groups (HOGs). The motivation of HAM is to create an easy python interface to investigate on HOGs and evolutionary information that can be induced from them. HAM provide graphical tools to visualize evolution history of single gene family or comparative genomic setup.
+
+--------
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-
-   basics
+   install
+   getStarted
    api
 
 

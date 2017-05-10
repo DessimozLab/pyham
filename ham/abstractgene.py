@@ -10,9 +10,9 @@ class AbstractGene(metaclass=ABCMeta):
     id, the genome it belongs to and  its parent AbstractGene.
     
     Attributes:
-        parent (:obj:`HOG`): Direct parent HOG this gene is descendant to. For and only for top level HOG, parent
+        | parent (:obj:`ham.abstractgene.HOG`): Direct parent HOG this gene is descendant to. For and only for top level HOG, parent
         attribute is set to  None.
-        genome (:obj:`Genome`): Related Genome object.
+        | genome (:obj:`ham.genome.Genome`): Related Genome object.
         arose_by_duplication (:obj:`Bool`): True if this AbstractGene arose by a duplication from its parent.
         
     """
@@ -21,8 +21,8 @@ class AbstractGene(metaclass=ABCMeta):
 
         """
         Attributes:
-            arose_by_duplication (:obj:`Bool`): True if this AbstractGene arose by a duplication from its parent.
-            ** kwargs: dictionary of attribute and value required to create the: obj:`AbstractGene`.
+            | arose_by_duplication (:obj:`Bool`): True if this AbstractGene arose by a duplication from its parent.
+            | ** kwargs: dictionary of attribute and value required to create the: obj:`ham.abstractgene.AbstractGene`.
         """
 
         self.parent = None
@@ -47,10 +47,10 @@ class AbstractGene(metaclass=ABCMeta):
         :obj:`AbstractGene`.
         
             Args:
-                ancestral_genome (:obj:`AncestralGenome`): Ancestral genome of interest.
+                ancestral_genome (:obj:`ham.genome.AncestralGenome`): Ancestral genome of interest.
 
             Returns:
-                return :obj:`HOG` or None and :obj:`bool`
+                return :obj:`ham.abstractgene.HOG` or None and :obj:`bool`
 
         """
 
@@ -70,11 +70,10 @@ class AbstractGene(metaclass=ABCMeta):
     def get_top_level_hog(self):
 
         """ 
-        Get the related top level :obj:`HOG`. If :obj:`HOG` return self, the :obj:`HOG` is already top level. If 
-        :obj:`Gene` return self, the :obj:`Gene` is a singleton.
+        Get the related top level :obj:`ham.abstractgene.HOG`. If :obj:`ham.abstractgene.HOG` return self, the :obj:`ham.abstractgene.HOG` is already top level. If :obj:`ham.abstractgene.Gene` return self, the :obj:`ham.abstractgene.Gene` is a singleton.
 
             Returns:
-                return :obj:`HOG`.
+                return :obj:`ham.abstractgene.HOG`.
         """
 
         current_hog = self
@@ -90,10 +89,10 @@ class AbstractGene(metaclass=ABCMeta):
             Get for the query HOG, the ancestor or children AbstractGene in the genome of interest
             
             Args:
-                genome (:obj:`Genome`): Genome of interest.
+                genome (:obj:`ham.genome.Genome`): Genome of interest.
                 
             Returns:
-                list of  :obj:`AbstractGene`.
+                list of  :obj:`ham.abstractgene.AbstractGene`.
                 
             Raises:
                 TypeError: if genome is not a Genome.
@@ -137,9 +136,9 @@ class HOG(AbstractGene):
     AbstractGene. Only top level HOG doesn't have parent attribute (set to None).
 
     Attributes:
-        hog_id (:obj:`str`): hog id. Defaults is None.
-        children (:obj:`list` of :obj:`AbstractGene`): A list of direct descendants AbstractGene.
-        hogvis (:obj:`Hogvis`): :obj:`Hogvis` object of this HOG.
+        | hog_id (:obj:`str`): hog id. Defaults is None.
+        | children (:obj:`list` of :obj:`ham.abstractgene.AbstractGene`): A list of direct descendants AbstractGene.
+        | hogvis (:obj:`ham.Hogvis`): :obj:`ham.Hogvis` object of this HOG.
 
     """
 
@@ -152,11 +151,10 @@ class HOG(AbstractGene):
     def add_child(self, child_to_add):
 
         """  
-            Add in the children attribute a given :obj:`AbstractGene` and update parent attribute in child 
-            AbstractGene.
+            Add in the children attribute a given :obj:`ham.abstractgene.AbstractGene` and update parent attribute in child AbstractGene.
 
             Attributes:
-                child_to_add (:obj:`AbstractGene`): add_child to add.
+                child_to_add (:obj:`ham.abstractgene.AbstractGene`): add_child to add.
 
         """
 
@@ -224,10 +222,10 @@ class HOG(AbstractGene):
     def set_genome(self, genome):
 
         """  
-        This method set :obj:`AncestralGenome` given as parameter as genome attribute.
+        This method set :obj:`ham.genome.AncestralGenome` given as parameter as genome attribute.
 
         Attributes:
-            genome (:obj:`AncestralGenome`): Ancestral genome to be set as genome.
+            | genome (:obj:`ham.genome.AncestralGenome`): Ancestral genome to be set as genome.
         """
 
         # Check that genome is an :obj:`AncestralGenome`
@@ -258,10 +256,10 @@ class HOG(AbstractGene):
              processed "elem".
 
         Attributes:
-            elem (arbitrary object): object that is pass through visit recursive and recursive state functions calls.
-            function_extant_gene (callback function): Callback function for ExtantGenes (leaves).
-            function_postfix (callback function): Callback function for after child visit current HOG.
-            function_prefix (callback function): Callback function for current HOG.
+            | elem (arbitrary object): object that is pass through visit recursive and recursive state functions calls.
+            | function_extant_gene (callback function): Callback function for ExtantGenes (leaves).
+            | function_postfix (callback function): Callback function for after child visit current HOG.
+            | function_prefix (callback function): Callback function for current HOG.
         
         Returns:
             return arbitrary
@@ -289,7 +287,7 @@ class HOG(AbstractGene):
         Get all :obj:`Gene` present in this HOG.
 
             Returns:
-                list of :obj:`Gene`
+                list of :obj:`ham.abstractgene.Gene`
 
         """
 
@@ -301,10 +299,10 @@ class HOG(AbstractGene):
 
     def get_all_descendant_genes_clustered_by_species(self):
         """ 
-        Get all :obj:`Gene` present in this HOG clustered by species :obj:`ExtantGenome`.
+        Get all :obj:`ham.abstractgene.Gene` present in this HOG clustered by species :obj:`ham.genomeExtantGenome`.
 
             Returns:
-                Dictionary of :obj:`ExtantGenome` map their list of :obj:`Gene`.
+                Dictionary of :obj:`ham.genome.ExtantGenome` map their list of :obj:`ham.abstractgene.Gene`.
 
         """
   
@@ -317,10 +315,10 @@ class HOG(AbstractGene):
     def get_all_descendant_hogs(self): # TODO: self is also returned with it
         
         """ 
-        Get all :obj:`HOG` present in this HOG hierarchy.
+        Get all :obj:`ham.abstractgene.HOG` present in this HOG hierarchy.
 
             Returns:
-                Dictionary of :obj:`ExtantGenome` map their list of :obj:`Gene`.
+                Dictionary of :obj:`ham.genomeExtantGenome` map their list of :obj:`ham.abstractgene.Gene`.
 
         """
 
@@ -333,10 +331,10 @@ class HOG(AbstractGene):
     def get_all_descendant_hog_levels(self): # TODO: self is also returned with it
 
         """ 
-        Get all :obj:`Genome` present in this HOG hierarchy.
+        Get all :obj:`ham.genome.Genome` present in this HOG hierarchy.
 
             Returns:
-                List of :obj:`Genome`.
+                List of :obj:`ham.genome.Genome`.
 
         """
 
@@ -348,13 +346,13 @@ class HOG(AbstractGene):
 
     def get_hog_vis(self, newick_str):
 
-        """ Lazy getter of the :obj:`HOG` Hogvis.
+        """ Lazy getter of the :obj:`ham.abstractgene.HOG` Hogvis.
 
             Args:
                 newick_str (:obj:`str`): newick species tree used by the create_hog_visualisation.
 
             Returns:
-                :obj:`Hogvis` of this HOG.
+                :obj:`ham.Hogvis` of this HOG.
 
         """
 
@@ -376,10 +374,10 @@ class Gene(AbstractGene):
     """Gene class for extant genes (inherit from AbstractGene).
 
     Attributes:
-        unique_id  internal unique id
-        gene_id    id used to mapped to external ids.
-        prot_id    id used to mapped to external ids.
-        transcript_id    id used to mapped to external ids.
+        | unique_id  internal unique id
+        | gene_id    id used to mapped to external ids.
+        | prot_id    id used to mapped to external ids.
+        | transcript_id    id used to mapped to external ids.
 
     """
 
@@ -392,13 +390,13 @@ class Gene(AbstractGene):
 
     def set_genome(self, genome):
         """  
-        This method set :obj:`ExtantGenome` given as parameter as genome attribute.
+        This method set :obj:`ham.genome.ExtantGenome` given as parameter as genome attribute.
 
         Attributes:
-            genome (:obj:`ExtantGenome`): Extant genome to be set as genome.
+            genome (:obj:`ham.genome.ExtantGenome`): Extant genome to be set as genome.
              
         Raises:
-            TypeError: If genome is not :obj:`ExtantGenome`.
+            TypeError: If genome is not :obj:`ham.genome.ExtantGenome`.
             EvolutionaryConceptError: If we try to add more than one genome.
          """
 

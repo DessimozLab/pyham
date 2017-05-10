@@ -10,10 +10,9 @@ class Genome(metaclass=ABCMeta):
     in the Taxonomy.tree.
 
     Attributes:
-        taxon (Taxonomy.tree node): corresponding taxon.
-        name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating
-        all children genome names.
-        genes (:obj:`list`): list of :obj:`AbstractGene` related to this Genome.
+        | taxon (:obj:`ete3.TreeNode` of the :obj:`ham.taxonomy`.tree): corresponding taxon.
+        | name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating all children genome names.
+        | genes (:obj:`list`): list of :obj:`ham.abstractgene.AbstractGene` related to this Genome.
 
     """
 
@@ -28,10 +27,9 @@ class Genome(metaclass=ABCMeta):
         This method add an AbstractGene to the genes attributes and update the AbstractGene.genome attribute. 
 
         Attributes:
-            taxon (Taxonomy.tree node): corresponding taxon.
-            name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating
-            all children genome names.
-            genes (:obj:`list`): list of :obj:`AbstractGene` related to this Genome.
+            | taxon (Taxonomy.tree node): corresponding taxon.
+            | name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating all children genome names.
+            | genes (:obj:`list`): list of :obj:`AbstractGene` related to this Genome.
         
         Raises:
             TypeError: if gene is not an AbstractGene.
@@ -115,8 +113,8 @@ class ExtantGenome(Genome):
     ExtantGenome class representing extant genomes. An ExtantGenome is defined by a unique name and a NCBI taxId.
 
     Attributes:
-        name (:obj:`str`): unique genome name. This is the unique identifier of ExtantGenome.
-        taxid (dict): NCBI taxId.
+        | name (:obj:`str`): unique genome name. This is the unique identifier of ExtantGenome.
+        | taxid (dict): NCBI taxId.
 
     """
 
@@ -130,7 +128,7 @@ class ExtantGenome(Genome):
         """ Get the number of this of this ExtantGenome.
         
             Args:
-                singleton (:obj:`Bool`): boolean to take into account singleton or not.
+                | singleton (:obj:`Bool`): boolean to take into account singleton or not.
 
             Returns:
                 :obj:`int`.

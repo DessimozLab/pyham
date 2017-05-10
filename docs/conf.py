@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'HAM'
-copyright = '2016, Dessimoz Lab'
+copyright = '2017, Dessimoz Lab'
 author = 'Dessimoz Lab'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -187,3 +187,10 @@ epub_exclude_files = ['search.html']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+
+
+# Add sidebar customisation
+html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'searchbox.html'], }
+
+# add __init__ in doc
+autoclass_content = 'both'

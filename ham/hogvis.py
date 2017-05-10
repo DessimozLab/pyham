@@ -7,6 +7,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Hogvis(object):
+
+    """
+    Not documented yet.
+    
+    """
     def __init__(self, newick_str, hog):
         #print("THE HOGVIS IS AT A EXPERIMENTAL STAGE. PLEASE USE IT CAREFULLY.")
         self.hog = hog

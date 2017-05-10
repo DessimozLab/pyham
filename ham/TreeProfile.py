@@ -12,9 +12,9 @@ class TreeProfile(object):
     or for a specific HOG.
 
     Attributes:
-        ham (:obj:`HAM`): :obj:`set` of HOG ids used by the FilterOrthoXMLParser.
-        hog (:obj:`HOG`, optional): If specified, compute TreeProfile on a single HOGs. Defaults is None.
-        treemap (:obj:`Etree`): Ete3 Etree object containing the taxonomy of interest with annotated node.
+        | ham (:obj:`ham.ham.HAM`): :obj:`set` of HOG ids used by the FilterOrthoXMLParser.
+        | hog (:obj:`ham.abstractgene.HOG`, optional): If specified, compute TreeProfile on a single HOGs. Defaults is None.
+        | treemap (:obj:`ete3.Etree`): Ete3 Etree object containing the taxonomy of interest with annotated node.
     """
 
     def __init__(self, ham, hog=None):
@@ -158,11 +158,9 @@ class TreeProfile(object):
         -- Some magic going there --
         
         Args:
-            output (:obj:`str`): output file name. The extension of output will set the format of the figure (SVG, .PDF,
-            .PNG)
-            layout_function (:obj:`function`, optional): custom layout_fn for ete3 TreeStyle.
-            display_internal_histogram (:obj:`Boolean`, optional): Display internal node as histogram or raw text with
-            numbers. Defaults to True.
+            | output (:obj:`str`): output file name. The extension of output will set the format of the figure (SVG, .PDF, .PNG)
+            | layout_function (:obj:`function`, optional): custom layout_fn for ete3 TreeStyle.
+            | display_internal_histogram (:obj:`Boolean`, optional): Display internal node as histogram or raw text with numbers. Defaults to True.
         """
 
         from ete3 import TreeStyle, TextFace, NodeStyle, BarChartFace

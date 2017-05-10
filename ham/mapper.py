@@ -25,15 +25,14 @@ class HOGsMap(object):
 
 
     Attributes:
-        HAM (:obj:`HAM`): HAM object.
-        ancestor (:obj:`Genome`): :obj:`Genome` of Go.
-        descendant (:obj:`Genome`): :obj:`Genome` of Gy.
-        upMap (:obj:`dict`):  a dictionary that map each Ho with its related Hy (or None if no HOG founded) associated
-        a boolean if a duplication occurs or not in between them.
-        IDENTICAL (:obj:`dict`): Dictionary that map a Ho with its descendant Hy.
-        DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
-        LOSS (:obj:`list`): a list of Ho with no matching in Gy.
-        GAIN: (:obj:`list`): a list of Hy with no ancestor in Go.
+        | HAM (:obj:`ham.ham.HAM`): HAM object.
+        | ancestor (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Go.
+        | descendant (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Gy.
+        | upMap (:obj:`dict`):  a dictionary that map each Ho with its related Hy (or None if no HOG founded) associated a boolean if a duplication occurs or not in between them.
+        | IDENTICAL (:obj:`dict`): Dictionary that map a Ho with its descendant Hy.
+        | DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
+        | LOSS (:obj:`list`): a list of Ho with no matching in Gy.
+        | GAIN: (:obj:`list`): a list of Hy with no ancestor in Go.
     
     
     """
@@ -41,8 +40,8 @@ class HOGsMap(object):
     def __init__(self, ham_object, genome1, genome2):
         """
         Args:
-            genome1 (:obj:`Genome`): First :obj:`Genome` to compare.
-            genome2 (:obj:`Genome`): Second :obj:`Genome` to compare.
+            | genome1 (:obj:`ham.genome.Genome`): First :obj:`ham.genome.Genome` to compare.
+            | genome2 (:obj:`ham.genome.Genome`): Second :obj:`ham.genome.Genome` to compare.
             
         """
 
@@ -59,9 +58,9 @@ class HOGsMap(object):
         self.HAM = ham_object
         self.ancestor, self.descendant = self.HAM._get_oldest_from_genome_pair(genome1, genome2)
         self.upMap = self._build_UpMap()
-        self.LOSS, self.GAIN, self.IDENTICAL, self.DUPLICATE = self.build_event_clusters()
+        self.LOSS, self.GAIN, self.IDENTICAL, self.DUPLICATE = self._build_event_clusters()
 
-    def build_event_clusters(self):
+    def _build_event_clusters(self):
         """  
         This method builds all the event clusters based on the UpMap.
 
@@ -109,7 +108,7 @@ class HOGsMap(object):
 
 class MapResults(metaclass=ABCMeta):
     """
-    Class to map HOGs across multiple genomes through their most recent common ancestral genome. The HOGs are all
+    Abstract class to map HOGs across multiple genomes through their most recent common ancestral genome. The HOGs are all
     clustered based on their relation with the mrca genome HOGs (duplicated, lost, gained and identical).
 
     Let's consider Go the mrca genome and Gn the youngest genomes with their respected HOGs Ho and Hn.
@@ -131,8 +130,8 @@ class MapResults(metaclass=ABCMeta):
         - get_identical()
 
     Attributes:
-        HAM (:obj:`HAM`): HAM object.
-        ancestor (:obj:`Genome`): :obj:`Genome` of Go.
+        | HAM (:obj:`ham.ham.HAM`): HAM object.
+        | ancestor (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Go.
     """
 
     def __init__(self, HAM):
@@ -172,8 +171,8 @@ class MapVertical(MapResults):
     Let's consider Go the oldest genome and Gn the youngest genome with their respected HOGs Ho and Hn.
     
     Attributes:
-        descendant (:obj:`Genome`): :obj:`Genome` of Gn.
-        map (:obj:`HOGsMap`): :obj:`Genome` of Go.
+        | descendant (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Gn.
+        | map (:obj:`ham.mapper.HOGsMap`): :obj:`ham.genome.Genome` of Go.
     """
 
     def __init__(self, ham):
@@ -186,10 +185,10 @@ class MapVertical(MapResults):
         Method to set the HOGsMap.
 
             Args:
-                HogMap (:obj:`HOGsMap`): HOGsMap to add.
+                HogMap (:obj:`ham.mapper.HOGsMap`): HOGsMap to add.
 
             Raises:
-                TypeError: if HogMap is not :obj:`HOGsMap` or if a :obj:`HOGsMap` is already set.
+                TypeError: if HogMap is not :obj:`ham.mapper.HOGsMap` or if a :obj:`ham.mapper.HOGsMap` is already set.
 
         """
         if not isinstance(HogMap, HOGsMap):
@@ -245,17 +244,19 @@ class MapVertical(MapResults):
 
 class MapLateral(MapResults):
     """
+    
     Class to map HOGs between genomes through their ancestor. 
 
     Let's consider Go the oldest genome and Gn the youngest genomes with their respected HOGs Ho and Hn.
 
     Attributes:
-        descendant (:obj:`list`): list of Gn.
-        map (:obj:`dict`): dictionary of Gn mapped to a HOGMap(Go,Gn).
-        LOSS (:obj:`dict`): dictionary of Ho mapped to the list of Gn where this HOG is lost.
-        GAIN (:obj:`dict`): dictionary of Gn mapped to their list of gained Hn.
-        IDENTICAL (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a Hn.
-        DUPLICATE (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a list of Hn.
+        | descendant (:obj:`list`): list of Gn.
+        | map (:obj:`dict`): dictionary of Gn mapped to a HOGMap(Go,Gn).
+        | LOSS (:obj:`dict`): dictionary of Ho mapped to the list of Gn where this HOG is lost.
+        | GAIN (:obj:`dict`): dictionary of Gn mapped to their list of gained Hn.
+        | IDENTICAL (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a Hn.
+        | DUPLICATE (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a list of Hn.
+    
     """
 
     def __init__(self, HAM):
@@ -272,10 +273,10 @@ class MapLateral(MapResults):
         Method to add the HOGsMap.
 
             Args:
-                HogMap (:obj:`HOGsMap`): HOGsMap to add.
+                HogMap (:obj:`ham.mapper.HOGsMap`): HOGsMap to add.
 
             Raises:
-                TypeError: if HogMap is not :obj:`HOGsMap` or if HOGMap ancestor doesn't match the MapLateral one.
+                TypeError: if HogMap is not :obj:`ham.mapper.HOGsMap` or if HOGMap ancestor doesn't match the MapLateral one.
         """
 
         if not isinstance(HogMap, HOGsMap):
