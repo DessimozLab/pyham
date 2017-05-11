@@ -57,7 +57,7 @@ Then the seconds step is the orthoXML parsing using the :obj:`ham.parser.OrthoXM
 **Glossary**:
     - **Top level HOG**:  root HOG that have no parent and is direct child of the groups element. This HOG have an unique top level id that act as unique identifier.
     - **Gene Unique id** (protId, geneId, transcriptId): The unique id is orthoXML id founded in the "id" tag in the header part. The others ids are for cross references and are not meant to be unique.
-
+    - **Singleton**: Gene that is present in the orthoxml (in the header part) but belong to any HOGs.
 -----------
 
 What are the visualisation tool provide by HAM ?
