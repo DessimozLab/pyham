@@ -11,18 +11,18 @@ class Taxonomy(object):
     Taxonomy is a class to wrap the ete3 Etree used as reference species tree by HAM.
     
     Attributes:
-        newick_str (:obj:`str`): newick tree string used to build the ete3 Etree object.
-        tree (:obj:`ete3 Etree`): species ete3 Etree tree.
-        internal_nodes (:obj:`set`): Set of Etree node that contained a AncestralGenome.
-        leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
+        | newick_str (:obj:`str`): newick tree string used to build the ete3 Etree object.
+        | tree (:obj:`ete3 Etree`): species ete3 Etree tree.
+        | internal_nodes (:obj:`set`): Set of Etree node that contained a AncestralGenome.
+        | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
 
     """
     def __init__(self, newick_str, use_internal_name=False):
         """
         Args:
-            newick_str (:obj:`str`): Newick str used to build ete3 Etree object.
-            use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the 
-            concatenatation of the children name. Defaults to False.
+            | newick_str (:obj:`str`): Newick str used to build ete3 Etree object.
+            | use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the 
+            | concatenatation of the children name. Defaults to False.
         """
 
         self.newick_str = newick_str
@@ -48,8 +48,8 @@ class Taxonomy(object):
         """  add the given genome to the node attribute "genome".
 
             Args:
-                node (:obj:`node`): receptor node.
-                genome (:obj:`Genome`): :obj:`Genome` to attach.
+                | node (:obj:`node`): receptor node.
+                | genome (:obj:`Genome`): :obj:`Genome` to attach.
 
         """
 
@@ -70,8 +70,8 @@ class Taxonomy(object):
         """  return the internal node in between two nodes sorted by recentness.
 
             Args:
-                lowest_node (:obj:`node`): Youngest node.
-                ancestor_node (:obj:`node`): Oldest node.
+                | lowest_node (:obj:`node`): Youngest node.
+                | ancestor_node (:obj:`node`): Oldest node.
                 
             Returns:
                 list of node sorted from most recent to oldest.

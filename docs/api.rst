@@ -9,6 +9,7 @@ Here is the documentation for the HAM objects.
 
    ham
    filter
+   taxonomy
    genome
    gene
    mapper

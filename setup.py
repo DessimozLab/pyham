@@ -3,7 +3,11 @@ import os
 
 name = 'HAM'
 
-__version__ = "0.1.3"
+__version__ = "Undefined"
+for line in open('{}/__init__.py'.format(name.lower())):
+    if line.startswith('__version__'):
+        exec(line.strip())
+
 requirements = ['ete3','six','scipy']
 
 here = os.path.abspath(os.path.dirname(__file__))

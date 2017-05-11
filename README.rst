@@ -18,11 +18,12 @@ on common use cases and API documentation of the library.
 Installation
 ------------
 HAM is written in python3, with little external dependencies, i.e.
-currently only the lxml library. The setup script should resolve these 
+currently ete3, scipy, six. The setup script should resolve these
 dependencies automatically. 
 Consider using pip to install the package directly from a checked out git repo
 
 .. code-block:: sh
 
+   python -m pip install --upgrade pip
    pip install -e </path/to/HAM-repo/>
 
