@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 import os
 
 name = 'HAM'
+requirements = ['ete3', 'six', 'scipy']
+
 
 __version__ = "Undefined"
 for line in open('{}/__init__.py'.format(name.lower())):
     if line.startswith('__version__'):
         exec(line.strip())
-
-requirements = ['ete3','six','scipy']
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -21,11 +21,12 @@ setup(
 
     version=__version__,
 
-    author='Adrian Altenhoff',
+    author='Dessimoz Lab - Laboratory of Computational Evolutionary Biology and Genomics',
     author_email='adrian.altenhoff@inf.ethz.ch',
 
     description='A tool to analyse Hierarchical Orthologous Groups (HOGs)',
     long_description=long_description,
+    keywords=['orthology, HOGs, orthoxml'],
 
     license='MIT',
 
@@ -43,9 +44,10 @@ setup(
          'Programming Language :: Python :: 3.6',
          ],
 
-    packages=find_packages(),
+    packages=find_packages(exclude=[]),
     install_requires=requirements,
     extras_require={
-        'test': ['sphinx','noise'],
+        'test': ['noise'],
+        'dev': ['noise', 'sphinx', 'wheel', 'twine'],
     }
 )
