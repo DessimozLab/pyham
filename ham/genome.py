@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from . import abstractgene
 import ete3
 
 
@@ -34,10 +33,10 @@ class Genome(metaclass=ABCMeta):
         Raises:
             TypeError: if gene is not an AbstractGene.
         """
-
-        if not isinstance(gene, abstractgene.AbstractGene):
+        from .abstractgene import AbstractGene
+        if not isinstance(gene, AbstractGene):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(abstractgene.AbstractGene.__name__,
+                            .format(AbstractGene.__name__,
                                     type(gene).__name__))
 
         self.genes.append(gene)
