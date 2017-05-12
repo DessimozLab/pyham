@@ -1,11 +1,11 @@
 from xml.etree.ElementTree import XMLParser
-from ham import taxonomy as tax
-from ham import genome
-from ham.TreeProfile import TreeProfile
-from ham import parsers
-from ham import mapper
+from . import taxonomy as tax
+from . import genome
+from . import parsers
+from . import mapper
+from . import abstractgene
+from .TreeProfile import TreeProfile
 import logging
-from ham import abstractgene
 import copy
 
 logger = logging.getLogger(__name__)

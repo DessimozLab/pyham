@@ -1,4 +1,4 @@
-from ham.abstractgene import HOG
+from .abstractgene import HOG
 import logging
 
 logger = logging.getLogger(__name__)

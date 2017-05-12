@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from ham.genome import Genome
+from .genome import Genome
 import logging
 
 logger = logging.getLogger(__name__)

@@ -1,6 +1,6 @@
 import ete3
 import logging
-from ham.genome import ExtantGenome, AncestralGenome, Genome
+from .genome import ExtantGenome, AncestralGenome, Genome
 
 
 logger = logging.getLogger(__name__)

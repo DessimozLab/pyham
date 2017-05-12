@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 import numbers
-from ham.genome import ExtantGenome, AncestralGenome, Genome
-from ham.hogvis import Hogvis
+from .genome import ExtantGenome, AncestralGenome, Genome
+from .hogvis import Hogvis
 
 
 class AbstractGene(metaclass=ABCMeta):
