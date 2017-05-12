@@ -27,11 +27,13 @@ setup(
     description='A tool to analyse Hierarchical Orthologous Groups (HOGs)',
     long_description=long_description,
     keywords=['orthology, HOGs, orthoxml'],
+    url='http://lab.dessimoz.org/ham',
 
     license='MIT',
 
     classifiers=[
          'Development Status :: 3 - Alpha',
+         'Environment :: Console',
          'Intended Audience :: Developers',
          'Intended Audience :: Science/Research',
          'Topic :: Scientific/Engineering :: Bio-Informatics',
