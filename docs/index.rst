@@ -9,7 +9,7 @@ Welcome to **HAM**'s documentation !
 .. note:: Documentation for HAM version |release|.
 
 
-HAM (“HOG Analysis Method”) is a python library to handle orthoXML containings Hierarchical Orthologous Groups (HOGs). The motivation of HAM is to create an easy python interface to investigate on HOGs and evolutionary information that can be induced from them. HAM provide graphical tools to visualize evolution history of single gene family or comparative genomic setup.
+HAM (“HOG Analysis Method”) is a python3 library to handle orthoXML containings Hierarchical Orthologous Groups (HOGs). The motivation of HAM is to create an easy python interface to investigate on HOGs and evolutionary information that can be induced from them. HAM provide graphical tools to visualize evolution history of single gene family or comparative genomic setup.
 
 **We highly recommend to read the** :ref:`Basics of HAM <basics>` **before starting using HAM !!**
 

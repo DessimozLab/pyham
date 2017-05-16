@@ -25,9 +25,9 @@ What is the orthoXML format ?
 The orthoXML format is a XML based format design for phylogenetic purposes. The benefit of orthoXML is to have uniform manner to store orthology related information.
 
 The orthoXML format is composed of two main parts:
-    -   **Header**: This part contains information about the species/genes related to the genomic setup. Each species is defined by a (unique) name tag that serves as identifier by HAM to select extant genomes. Each species contain gene elements that are described by an orthoxml unique id tag that serves as identifier by HAM to select extant genes, and other possible id tags (protId, geneId,transcriptId) for cross referencing.
+    -   **Header**: This part contains information about the species/genes related to this genomic setup. Each species is defined by a (unique) name tag that serves as identifier by HAM to select extant genomes. Each species contain gene elements that are described by an unique orthoxml id tag that serves as identifier by HAM to select extant genes, and other possible id tags (protId, geneId,transcriptId) for cross referencing.
     -   **Groups**: This part contains nested groups representing the HOGs.
-        Those nested groups can be divided into orthologGroup and paralogGroup depending on how the children elements of those groups had emerged, respectively here by speciation and duplication.
+        Those nested groups can be divided into orthologGroup and paralogGroup depending on how the children elements of those groups had emerged, respectively here by speciation and duplication events.
         Both groups elements can contained geneRef elements (with orthoXML unique id tag mapping to gene in the header part) or others nested groups.
         The top level groups (corresponding to the root element of an HOG) are defined by an unique id tag.
 
@@ -43,7 +43,9 @@ How ham worked underthehood ?
 HAM require as minimal input an orthoxml that contains HOGs and a newick species tree.
 **The leaves name in the newick tree should correspond 1:1 with the species name tag use in the header part of the orthoXML.**
 
-The first step is to instantiate a :obj:`ham.taxonomy.Taxonomy` object by constructing a ete3.Etree object based on the inputted newick tree and assign to each Etree node the related :obj:`ham.genome.Genome`. :obj:`ham.genome.ExtantGenome` are named according to the newick leaves name while :obj:`ham.genome.AncestralGenome` are either name using the internal node name from the newick tree or the the concatenation of the genome children name.
+The first step is to instantiate a :obj:`ham.taxonomy.Taxonomy` object by constructing a ete3.Etree object based on the inputted newick tree and assign to each Etree node the related :obj:`ham.genome.Genome`.
+
+:obj:`ham.genome.ExtantGenome` are named according to the newick leaves name while :obj:`ham.genome.AncestralGenome` are either name using the internal node name from the newick tree or the the concatenation of the genome children name.
 
 Then the seconds step is the orthoXML parsing using the :obj:`ham.parser.OrthoXMLParser` that can be split in 2 steps:
     -   First the header part with the cross reference is parse. For each gene element within species elements, the related :obj:`ham.abstractgene.ExtantGene` is build using the xref id (id, geneId,protId,transcriptId). **The "id" tag will be the unique identifier of the related genes accross the ham analysis.**
@@ -65,9 +67,11 @@ What are the visualisation tool provide by HAM ?
 
 HAM provide two different phylogeny based visualisation tools called: Hogvis and Tree Profile. The goal of those visualisation tool is to synthesise concisely phylogenetic information using different perspective.
 
-Hogvis : Species tree based visualisation for HOG genes ancestral clustering.
+Hogvis : tool to visualise how the HOG members genes are clustering based on their ancestral genes membership.
 
-TreeProfile: Species tree annotated with evolutionarry information at each node.
+TreeProfile: TreeProfile is a tool to visualise how the genes have evolved in terms of evolutionnary events alonge a phylogenetic tree (duplication, lost, gained).
+
+**If you want to discover more about those visualisation tools, the HAM ipython notebook tutorial provides interactive explanations.**
 
 
 -----------
