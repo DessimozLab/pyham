@@ -18,18 +18,18 @@ HAM can be install via pip using the following command:
 
         .. code-block:: bash
 
-                pip install ham
+                pip install pyham
 
         in case you don't have root access (and/or permissions for writing in system directories) you can use the --user flag to install in the local user package  :
 
         .. code-block:: bash
 
-                pip install --user ham.
+                pip install --user pyham.
 
 Source code
 ###########
 
-The source code of HAM version |release| can be download here: **www.lab.dessimoz/ham/foo**.
+The source code of HAM version |release| can be download here: **www.lab.dessimoz/ham/latest.tar.gz**.
 
 
 Install PyQt4 on Mac (only required for treeProfile)
