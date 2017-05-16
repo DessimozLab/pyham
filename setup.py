@@ -50,6 +50,6 @@ setup(
     install_requires=requirements,
     extras_require={
         'test': ['noise'],
-        'dev': ['noise', 'sphinx', 'wheel', 'twine', 'fabric'],
+        'dev': ['noise', 'sphinx', 'wheel', 'twine', 'fabric', 'fabric3'],
     }
 )
