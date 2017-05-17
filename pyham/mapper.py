@@ -25,9 +25,9 @@ class HOGsMap(object):
 
 
     Attributes:
-        | HAM (:obj:`ham.ham.HAM`): HAM object.
-        | ancestor (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Go.
-        | descendant (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Gy.
+        | Ham (:obj:`pyham.pyham.Ham`): Ham object.
+        | ancestor (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Go.
+        | descendant (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Gy.
         | upMap (:obj:`dict`):  a dictionary that map each Ho with its related Hy (or None if no HOG founded) associated a boolean if a duplication occurs or not in between them.
         | IDENTICAL (:obj:`dict`): Dictionary that map a Ho with its descendant Hy.
         | DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
@@ -40,8 +40,8 @@ class HOGsMap(object):
     def __init__(self, ham_object, genome1, genome2):
         """
         Args:
-            | genome1 (:obj:`ham.genome.Genome`): First :obj:`ham.genome.Genome` to compare.
-            | genome2 (:obj:`ham.genome.Genome`): Second :obj:`ham.genome.Genome` to compare.
+            | genome1 (:obj:`pyham.genome.Genome`): First :obj:`pyham.genome.Genome` to compare.
+            | genome2 (:obj:`pyham.genome.Genome`): Second :obj:`pyham.genome.Genome` to compare.
             
         """
 
@@ -130,8 +130,8 @@ class MapResults(metaclass=ABCMeta):
         - get_identical()
 
     Attributes:
-        | HAM (:obj:`ham.ham.HAM`): HAM object.
-        | ancestor (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Go.
+        | Ham (:obj:`pyham.pyham.Ham`): Ham object.
+        | ancestor (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Go.
     """
 
     def __init__(self, HAM):
@@ -171,8 +171,8 @@ class MapVertical(MapResults):
     Let's consider Go the oldest genome and Gn the youngest genome with their respected HOGs Ho and Hn.
     
     Attributes:
-        | descendant (:obj:`ham.genome.Genome`): :obj:`ham.genome.Genome` of Gn.
-        | map (:obj:`ham.mapper.HOGsMap`): :obj:`ham.genome.Genome` of Go.
+        | descendant (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Gn.
+        | map (:obj:`pyham.mapper.HOGsMap`): :obj:`pyham.genome.Genome` of Go.
     """
 
     def __init__(self, ham):
@@ -185,10 +185,10 @@ class MapVertical(MapResults):
         Method to set the HOGsMap.
 
             Args:
-                HogMap (:obj:`ham.mapper.HOGsMap`): HOGsMap to add.
+                HogMap (:obj:`pyham.mapper.HOGsMap`): HOGsMap to add.
 
             Raises:
-                TypeError: if HogMap is not :obj:`ham.mapper.HOGsMap` or if a :obj:`ham.mapper.HOGsMap` is already set.
+                TypeError: if HogMap is not :obj:`pyham.mapper.HOGsMap` or if a :obj:`pyham.mapper.HOGsMap` is already set.
 
         """
         if not isinstance(HogMap, HOGsMap):
@@ -273,10 +273,10 @@ class MapLateral(MapResults):
         Method to add the HOGsMap.
 
             Args:
-                HogMap (:obj:`ham.mapper.HOGsMap`): HOGsMap to add.
+                HogMap (:obj:`pyham.mapper.HOGsMap`): HOGsMap to add.
 
             Raises:
-                TypeError: if HogMap is not :obj:`ham.mapper.HOGsMap` or if HOGMap ancestor doesn't match the MapLateral one.
+                TypeError: if HogMap is not :obj:`pyham.mapper.HOGsMap` or if HOGMap ancestor doesn't match the MapLateral one.
         """
 
         if not isinstance(HogMap, HOGsMap):

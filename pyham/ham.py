@@ -38,7 +38,7 @@ class ParserFilter(object):
         self.GeneIntId_filter = set()
 
         # Information created during buildFilter call that is required by the main OrthoXMLParser for the HOGs
-        # construction during HAM instantiation.
+        # construction during Ham instantiation.
         self.geneUniqueId = None  # [geneUniqueIds]
         self.hogsId = None  # [hogIds]
 
@@ -79,7 +79,7 @@ class ParserFilter(object):
 
     def _filter_hogs_and_genes(self, file_object):
 
-        """ This function collect from an orthoxml file all data that is required to build HAM object based this filter
+        """ This function collect from an orthoxml file all data that is required to build Ham object based this filter
             object.
 
             Args:
@@ -99,18 +99,18 @@ class ParserFilter(object):
         return set(factory_filter.geneUniqueId), set(factory_filter.hogsId)
 
 
-class HAM(object):
+class Ham(object):
     """
     
     Attributes:
         | hog_file (:obj:`str`): Path to the file that contained the HOGs information.
         | hog_file_type (:obj:`str`): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
-        | top_level_hogs (:obj:`dict`): Dictionary that map hog unique id with its list of related :obj:`ham.abstractgene.HOG`.
-        | extant_gene_map (:obj:`dict`): Dictionary that map gene unique id with its list of related :obj:`ham.abstractgene.Gene`.
-        | external_id_mapper (:obj:`dict`): Dictionary that map a gene external id with its list of related :obj:`ham.abstractgene.HOG` or :obj:`ham.abstractGene.gene`.
-        | HOGMaps (:obj:`dict`): Dictionary that map a :obj:`frozenset` of a pair of genomes to its :obj:`ham.mapper.HOGsMap`.
-        | filter_obj (:obj:`ham.ham.ParserFilter`): :obj:`ParserFilter` used during the instanciation of HAM. Defaults to None.
-        | taxonomy: (:obj:`ham.mapper.Taxonomy`): :obj:`ham.ham.Taxonomy` build and used by :obj:`ham.ham.HAM` instance.
+        | top_level_hogs (:obj:`dict`): Dictionary that map hog unique id with its list of related :obj:`pyham.abstractgene.HOG`.
+        | extant_gene_map (:obj:`dict`): Dictionary that map gene unique id with its list of related :obj:`pyham.abstractgene.Gene`.
+        | external_id_mapper (:obj:`dict`): Dictionary that map a gene external id with its list of related :obj:`pyham.abstractgene.HOG` or :obj:`pyham.abstractGene.gene`.
+        | HOGMaps (:obj:`dict`): Dictionary that map a :obj:`frozenset` of a pair of genomes to its :obj:`pyham.mapper.HOGsMap`.
+        | filter_obj (:obj:`pyham.pyham.ParserFilter`): :obj:`ParserFilter` used during the instanciation of Ham. Defaults to None.
+        | taxonomy: (:obj:`pyham.mapper.Taxonomy`): :obj:`pyham.pyham.Taxonomy` build and used by :obj:`pyham.pyham.Ham` instance.
 
     """
 
@@ -121,7 +121,7 @@ class HAM(object):
             | newick_str (:obj:`str`): Newick str used to build the taxonomy.
             | hog_file (:obj:`str`): Path to the file that contained the HOGs information.
             | type_hog_file (:obj:`str`, optional): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
-            | filter_object (:obj:`ham.ham.ParserFilter`, optional): :obj:`ham.ham.ParserFilter` used during the instantiation of ham.ham.HAM. Defaults to None.
+            | filter_object (:obj:`pyham.pyham.ParserFilter`, optional): :obj:`pyham.pyham.ParserFilter` used during the instantiation of pyham.pyham.Ham. Defaults to None.
             | use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given newick string. This should be set to False when support values are provided in the newick. Defaults to False.
         """
 
@@ -150,7 +150,7 @@ class HAM(object):
         # Parsing of data
         if self.hog_file_type == "orthoxml":
 
-            #  If filter_object specified, ham parse a first time to collect required information
+            #  If filter_object specified, pyham parse a first time to collect required information
             if self.filter_obj is not None:
                 with open(self.hog_file, 'r') as orthoxml_file:
                     self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
@@ -179,7 +179,7 @@ class HAM(object):
             raise TypeError("Invalid type of hog file")
 
         logger.info(
-            'Set up HAM analysis: ready to go with {} hogs founded within {} species.'.format(
+            'Set up Ham analysis: ready to go with {} hogs founded within {} species.'.format(
                 len(self.top_level_hogs), len(self.taxonomy.leaves)))
 
     # ... TOOLS ... #
@@ -190,14 +190,14 @@ class HAM(object):
         Function to compute a :obj:`MapVertical` based on the 2 given genomes. The genome order doesn't matter.
 
         Attributes:
-            | genome1 (:obj:`ham.genome.Genome`): First :obj:`ham.genome.Genome` to compare.
-            | genome2 (:obj:`ham.genome.Genome`): Second :obj:`ham.genome.Genome` to compare.
+            | genome1 (:obj:`pyham.genome.Genome`): First :obj:`pyham.genome.Genome` to compare.
+            | genome2 (:obj:`pyham.genome.Genome`): Second :obj:`pyham.genome.Genome` to compare.
 
         Returns:
-            | :obj:`ham.mapper.MapVertical`.
+            | :obj:`pyham.mapper.MapVertical`.
         
         Raises:
-            | TypeError: if genome1 and genome2 are not :obj:`ham.genome.Genome`.
+            | TypeError: if genome1 and genome2 are not :obj:`pyham.genome.Genome`.
         """
 
         if not isinstance(genome1, genome.Genome):
@@ -218,17 +218,17 @@ class HAM(object):
     def compare_genomes_lateral(self, genome1, genome2):
 
         """
-        Function to compute a :obj:`ham.mapper.MapLateral` based on the 2 given genomes. The genome order doesn't matter.
+        Function to compute a :obj:`pyham.mapper.MapLateral` based on the 2 given genomes. The genome order doesn't matter.
 
         Attributes:
-            | genome1 (:obj:`ham.genome.Genome`): First :obj:`ham.genome.Genome` to compare.
-            | genome2 (:obj:`ham.genome.Genome`): Second :obj:`ham.genome.Genome` to compare.
+            | genome1 (:obj:`pyham.genome.Genome`): First :obj:`pyham.genome.Genome` to compare.
+            | genome2 (:obj:`pyham.genome.Genome`): Second :obj:`pyham.genome.Genome` to compare.
 
         Returns:
-            | :obj:`ham.mapper.MapLateral`.
+            | :obj:`pyham.mapper.MapLateral`.
 
         Raises:
-            | TypeError: if genome1 and genome2 are not :obj:`ham.genome.Genome`.
+            | TypeError: if genome1 and genome2 are not :obj:`pyham.genome.Genome`.
         """
 
         if not isinstance(genome1, genome.Genome):
@@ -252,16 +252,16 @@ class HAM(object):
     def create_hog_visualisation(self, hog, outfile=None):
 
         """
-        Function to compute a :obj:`ham.Hogvis`.
+        Function to compute a :obj:`pyham.Hogvis`.
 
-        If an outfile is specified, export the :obj:`ham.Hogvis` as html file.
+        If an outfile is specified, export the :obj:`pyham.Hogvis` as html file.
 
         Attributes:
-            | hog (:obj:`ham.abstractgene.HOG`): HOG use as template for the :obj:`ham.Hogvis`.
+            | hog (:obj:`pyham.abstractgene.HOG`): HOG use as template for the :obj:`pyham.Hogvis`.
             | outfile (:obj:`str`, optional): Path to the Hogvis html file.
 
         Returns:
-            | :obj:`ham.Hogvis` 
+            | :obj:`pyham.Hogvis` 
         """
 
         newick_tree =self.taxonomy.get_newick_from_tree(hog.genome.taxon)
@@ -277,21 +277,21 @@ class HAM(object):
     def create_tree_profile(self, hog=None, outfile=None, export_with_histogram=True):
 
         """
-        Function to compute a :obj:`ham.TreeProfile`.
+        Function to compute a :obj:`pyham.TreeProfile`.
         
-        If no hog are given the tree profile will be created for the whole HAM setup (all internal nodes with all HOGs).
+        If no hog are given the tree profile will be created for the whole Ham setup (all internal nodes with all HOGs).
         Otherwise, the tree profile is build for the specific hog given.
         
         If an outfile is specified, export the create_tree_profile as image into file.
 
         Attributes:
-            | hog (:obj:`ham.abstractgene.HOG`, optional): HOG use as template for the create_tree_profile.
+            | hog (:obj:`pyham.abstractgene.HOG`, optional): HOG use as template for the create_tree_profile.
             | outfile (:obj:`str`, optional): Path to the create_tree_profile output image file. valid extensions are .SVG, .PDF, .PNG.  
             | export_with_histogram (:obj:`Bool`, optional): If True, export image with histogram at each internal node otherwise 
             | display internal node information as text.
 
         Returns:
-            | :obj:`ham.TreeProfile` 
+            | :obj:`pyham.TreeProfile` 
         """
 
         tp = TreeProfile(self, hog=hog)
@@ -310,16 +310,16 @@ class HAM(object):
 
     def get_gene_by_id(self, gene_unique_id):
 
-        """  Get the :obj:`ham.abstractgene.Gene` that match the query unique gene Id.
+        """  Get the :obj:`pyham.abstractgene.Gene` that match the query unique gene Id.
 
             Args:
                 | gene_unique_id (:obj:`str` or :obj:`int`): Unique gene Id.
 
             Returns:
-                :obj:`ham.abstractgene.Gene`
+                :obj:`pyham.abstractgene.Gene`
             
             Raises: 
-                KeyError is not `ham.abstractgene.Gene` match the id.
+                KeyError is not `pyham.abstractgene.Gene` match the id.
 
         """
         gene_unique_id = str(gene_unique_id)
@@ -331,16 +331,16 @@ class HAM(object):
 
     def get_genes_by_external_id(self, external_gene_id):
 
-        """  Get the list of :obj:`ham.abstractgene.Gene` that match the query external gene Id.
+        """  Get the list of :obj:`pyham.abstractgene.Gene` that match the query external gene Id.
 
             Args:
                 external_gene_id (:obj:`str` or :obj:`int`): External gene Id.
 
             Returns:
-                a list of :obj:`ham.abstractgene.Gene`
+                a list of :obj:`pyham.abstractgene.Gene`
             
             Raises:
-                 KeyError if no `ham.abstractgene.Gene` match id.
+                 KeyError if no `pyham.abstractgene.Gene` match id.
 
         """
 
@@ -353,10 +353,10 @@ class HAM(object):
 
     def get_list_extant_genes(self):
 
-        """  Get the list of all :obj:`ham.abstractgene.Gene`.
+        """  Get the list of all :obj:`pyham.abstractgene.Gene`.
 
             Returns:
-                a list of :obj:`ham.abstractgene.Gene`.
+                a list of :obj:`pyham.abstractgene.Gene`.
 
         """
 
@@ -364,10 +364,10 @@ class HAM(object):
 
     def get_dict_extant_genes(self):
 
-        """  Get a dictionary that map all unique gene id with their related :obj:`ham.abstractgene.Gene`.
+        """  Get a dictionary that map all unique gene id with their related :obj:`pyham.abstractgene.Gene`.
 
             Returns:
-                a dictionary mapping unique gene Id (:obj:`str`) with :obj:`ham.abstractgene.Gene`.
+                a dictionary mapping unique gene Id (:obj:`str`) with :obj:`pyham.abstractgene.Gene`.
 
         """
 
@@ -383,10 +383,10 @@ class HAM(object):
                 hog_id (:obj:`str` or :obj:`int`): Top level HOG id.
 
             Returns:
-                :obj:`ham.abstractgene.HOG`
+                :obj:`pyham.abstractgene.HOG`
             
             Raises:
-                 KeyError if id match no `ham.abstractgene.HOG`.
+                 KeyError if id match no `pyham.abstractgene.HOG`.
 
         """
 
@@ -399,17 +399,17 @@ class HAM(object):
 
     def get_hog_by_gene(self, gene):
 
-        """  Get the top level :obj:`HOG` that contain the query :obj:`ham.abstractgene.Gene`. If the :obj:`ham.abstractgene.Gene` is a singleton it will 
+        """  Get the top level :obj:`HOG` that contain the query :obj:`pyham.abstractgene.Gene`. If the :obj:`pyham.abstractgene.Gene` is a singleton it will 
         return itself.
 
             Args:
-                gene (:obj:`ham.abstractgene.Gene`): :obj:`ham.abstractgene.Gene` object.
+                gene (:obj:`pyham.abstractgene.Gene`): :obj:`pyham.abstractgene.Gene` object.
 
             Returns:
-                :obj:`ham.abstractgene.HOG`
+                :obj:`pyham.abstractgene.HOG`
             
             Raises:
-                 KeyError is gene is not a :obj:`ham.abstractgene.Gene`.
+                 KeyError is gene is not a :obj:`pyham.abstractgene.Gene`.
 
         """
 
@@ -420,10 +420,10 @@ class HAM(object):
 
     def get_list_top_level_hogs(self):
 
-        """  Get the list of all the top level :obj:`ham.abstractgene.HOG`.
+        """  Get the list of all the top level :obj:`pyham.abstractgene.HOG`.
 
             Returns:
-                a list of :obj:`ham.abstractgene.HOG`.
+                a list of :obj:`pyham.abstractgene.HOG`.
 
         """
 
@@ -431,10 +431,10 @@ class HAM(object):
 
     def get_dict_top_level_hogs(self):
 
-        """  Get a dictionary that map all top level hog id with their related :obj:`ham.abstractgene.HOG`.
+        """  Get a dictionary that map all top level hog id with their related :obj:`pyham.abstractgene.HOG`.
 
             Returns:
-                a dictionary mapping hog Id (:obj:`str`) with :obj:`ham.abstractgene.HOG`.
+                a dictionary mapping hog Id (:obj:`str`) with :obj:`pyham.abstractgene.HOG`.
 
         """
 
@@ -445,10 +445,10 @@ class HAM(object):
     def get_list_extant_genomes(self):
 
         """  
-        Get the list of all :obj:`ham.genome.ExtantGenome` created during the parsing.
+        Get the list of all :obj:`pyham.genome.ExtantGenome` created during the parsing.
 
             Returns:
-                a list of :obj:`ham.genome.ExtantGenome`.
+                a list of :obj:`pyham.genome.ExtantGenome`.
 
         """
 
@@ -457,13 +457,13 @@ class HAM(object):
     def get_extant_genome_by_name(self, name):
 
         """  
-        Get the :obj:`ham.genome.ExtantGenome` that match the query name.
+        Get the :obj:`pyham.genome.ExtantGenome` that match the query name.
 
             Args:
-                name (:obj:`str`): Name of the :obj:`ham.genome.ExtantGenome`.
+                name (:obj:`str`): Name of the :obj:`pyham.genome.ExtantGenome`.
 
             Returns:
-                :obj:`ham.genome.ExtantGenome` or raise KeyError
+                :obj:`pyham.genome.ExtantGenome` or raise KeyError
 
         """
 
@@ -479,10 +479,10 @@ class HAM(object):
     def get_list_ancestral_genomes(self):
 
         """  
-            Get the list of all :obj:`ham.genome.AncestralGenome` created during the parsing.
+            Get the list of all :obj:`pyham.genome.AncestralGenome` created during the parsing.
 
             Returns:
-                a list of :obj:`ham.genome.AncestralGenome`.
+                a list of :obj:`pyham.genome.AncestralGenome`.
 
         """
         return [internal_node.genome for internal_node in self.taxonomy.internal_nodes]
@@ -490,13 +490,13 @@ class HAM(object):
     def get_ancestral_genome_by_taxon(self, taxon):
 
         """  
-        Get the :obj:`ham.genome.AncestralGenome` corresponding of the query taxon.
+        Get the :obj:`pyham.genome.AncestralGenome` corresponding of the query taxon.
 
             Args:
-                taxon (:obj:`str`): treeNode object of the :obj:`ham.taxonomy.Taxonomy`.tree object.
+                taxon (:obj:`str`): treeNode object of the :obj:`pyham.taxonomy.Taxonomy`.tree object.
 
             Returns:
-                :obj:`ham.genome.AncestralGenome` or raise KeyError
+                :obj:`pyham.genome.AncestralGenome` or raise KeyError
 
         """
 
@@ -508,13 +508,13 @@ class HAM(object):
     def get_ancestral_genome_by_name(self, name):
 
         """  
-        Get the :obj:`ham.genome.AncestralGenome` corresponding of the query name.
+        Get the :obj:`pyham.genome.AncestralGenome` corresponding of the query name.
 
             Args:
-                name (:obj:`str`): Name of the :obj:`ham.genome.AncestralGenome`.
+                name (:obj:`str`): Name of the :obj:`pyham.genome.AncestralGenome`.
 
             Returns:
-                :obj:`ham.genome.AncestralGenome` or raise KeyError
+                :obj:`pyham.genome.AncestralGenome` or raise KeyError
 
         """
 
@@ -528,13 +528,13 @@ class HAM(object):
     def get_ancestral_genome_by_mrca_of_genome_set(self, genome_set):
 
         """  
-        Get the :obj:`ham.genome.AncestralGenome` corresponding to the MRCA of query genomes.
+        Get the :obj:`pyham.genome.AncestralGenome` corresponding to the MRCA of query genomes.
 
             Args:
-                genome_set (:obj:`set`): Set of :obj:`ham.genome.AncestralGenome`.
+                genome_set (:obj:`set`): Set of :obj:`pyham.genome.AncestralGenome`.
 
             Returns:
-                :obj:`ham.genome.AncestralGenome` or raise KeyError
+                :obj:`pyham.genome.AncestralGenome` or raise KeyError
 
         """
 
@@ -558,7 +558,7 @@ class HAM(object):
     def get_taxon_by_name(self, name):
 
         """  
-        Get the :obj:`ete3.TreeNode` object of the :obj:`ham.taxonomy.Taxonomy`.tree corresponding of the query name.
+        Get the :obj:`ete3.TreeNode` object of the :obj:`pyham.taxonomy.Taxonomy`.tree corresponding of the query name.
 
             Args:
                 name (:obj:`str`): Name of the treeNode.
@@ -697,7 +697,7 @@ class HAM(object):
 
     def _build_hogs_and_genes(self, file_object, filter_object):
 
-        """ This function build from an orthoxml file all data that is required to build this HAM object (using the HAM
+        """ This function build from an orthoxml file all data that is required to build this Ham object (using the Ham
         filter object).
 
             Args:

@@ -1,20 +1,20 @@
 Mapper (genomes)
 ==============
 
-.. autoclass:: ham.mapper.HOGsMap
+.. autoclass:: pyham.mapper.HOGsMap
     :members:
 
 -------
 
-.. autoclass:: ham.mapper.MapResults
+.. autoclass:: pyham.mapper.MapResults
     :members:
 
 -------
 
-.. autoclass:: ham.mapper.MapVertical
+.. autoclass:: pyham.mapper.MapVertical
     :members:
 
 ------
 
-.. autoclass:: ham.mapper.MapLateral
+.. autoclass:: pyham.mapper.MapLateral
     :members:

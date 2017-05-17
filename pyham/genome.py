@@ -9,9 +9,9 @@ class Genome(metaclass=ABCMeta):
     in the Taxonomy.tree.
 
     Attributes:
-        | taxon (:obj:`ete3.TreeNode` of the :obj:`ham.taxonomy`.tree): corresponding taxon.
+        | taxon (:obj:`ete3.TreeNode` of the :obj:`pyham.taxonomy`.tree): corresponding taxon.
         | name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating all children genome names.
-        | genes (:obj:`list`): list of :obj:`ham.abstractgene.AbstractGene` related to this Genome.
+        | genes (:obj:`list`): list of :obj:`pyham.abstractgene.AbstractGene` related to this Genome.
 
     """
 

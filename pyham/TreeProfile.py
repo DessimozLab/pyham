@@ -6,14 +6,14 @@ logger = logging.getLogger(__name__)
 
 class TreeProfile(object):
     """
-    Object that map on each node of the HAM species tree the related evolutionary information such as the number of 
+    Object that map on each node of the Ham species tree the related evolutionary information such as the number of 
     genes the related genome contains or the number of evolutionary events (duplications, genes loss or gain of genes)
-    that occurs between the parent node and itself. This can be either applied to the full HAM comparative genomic setup
+    that occurs between the parent node and itself. This can be either applied to the full Ham comparative genomic setup
     or for a specific HOG.
 
     Attributes:
-        | ham (:obj:`ham.ham.HAM`): :obj:`set` of HOG ids used by the FilterOrthoXMLParser.
-        | hog (:obj:`ham.abstractgene.HOG`, optional): If specified, compute TreeProfile on a single HOGs. Defaults is None.
+        | pyham (:obj:`pyham.pyham.Ham`): :obj:`set` of HOG ids used by the FilterOrthoXMLParser.
+        | hog (:obj:`pyham.abstractgene.HOG`, optional): If specified, compute TreeProfile on a single HOGs. Defaults is None.
         | treemap (:obj:`ete3.Etree`): Ete3 Etree object containing the taxonomy of interest with annotated node.
     """
 

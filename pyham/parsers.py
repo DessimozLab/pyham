@@ -8,14 +8,14 @@ class OrthoXMLParser(object):
     """
     Custom parser for OrthoXML containing HOGs. It can take a FilterParser object to restrict the information to parse.
      
-    The parse goes through the whole XML and create on the fly the required HAM objects:
+    The parse goes through the whole XML and create on the fly the required Ham objects:
         - In the Xref/header, the parser creates the ExtantGenome and Gene objects.
         - In the Groups section, it creates the HOGs with their hierarchy (parent/children links) and their related
         AncestralGenomes.
     
 
     Attributes:
-        ham_object (:obj:`HAM`): HAM object to feed with created objects.
+        ham_object (:obj:`Ham`): Ham object to feed with created objects.
         filterObj (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information. Defaults
         to None.
         
@@ -34,7 +34,7 @@ class OrthoXMLParser(object):
 
         """
         Args:
-            ham_object (:obj:`HAM`): HAM object to feed with created objects.
+            ham_object (:obj:`Ham`): Ham object to feed with created objects.
             filterObject (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information.
             Defaults to None.
         """
@@ -178,7 +178,7 @@ class FilterOrthoXMLParser(object):
     Custom OrthoXML parser use to read the orthoxml file and get required information base on specific query set. It use
     the ParserFilter object as input to do the selection.
 
-    The parse goes through the whole XML and create on the fly the required HAM objects:
+    The parse goes through the whole XML and create on the fly the required Ham objects:
         - In the Xref/header, the parser creates the ExtantGenome and Gene objects.
         - In the Groups section, it creates the HOGs with their hierarchy (parent/children links) and their related
         AncestralGenomes.

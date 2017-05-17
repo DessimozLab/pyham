@@ -1,6 +1,6 @@
 API
 ===
-Here is the documentation for the HAM objects.
+Here is the documentation for the Ham objects.
 
 
 .. toctree::

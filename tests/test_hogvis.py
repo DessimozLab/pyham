@@ -1,5 +1,5 @@
 import unittest
-from ham import ham, utils, hogvis
+from pyham import ham, utils, hogvis
 import os
 
 class HOGVisTest(unittest.TestCase):
@@ -9,7 +9,7 @@ class HOGVisTest(unittest.TestCase):
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/hogvisEx.orthoxml')
 
-        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
         hogs = self.ham_analysis.get_dict_top_level_hogs()
         hog = hogs["3"]
 
@@ -56,7 +56,7 @@ class HOGVisTestNoName(unittest.TestCase):
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/hogvisEx.orthoxml')
 
-        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
         hogs = self.ham_analysis.get_dict_top_level_hogs()
         hog = hogs["3"]
 

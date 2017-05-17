@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# HAM documentation build configuration file, created by
+# Ham documentation build configuration file, created by
 # sphinx-quickstart on Mon Dec 12 17:29:31 2016.
 #
 # This file is execfile()d with the current directory set to its
@@ -54,14 +54,14 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'HAM'
+project = 'Ham'
 copyright = '2017, Dessimoz Lab'
 author = 'Dessimoz Lab'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-from ham import __version__ as ham_version
+from pyham import __version__ as ham_version
 # The short X.Y version.
 version = ham_version.rsplit('.', maxsplit=1)[0]
 # The full version, including alpha/beta/rc tags.
@@ -135,7 +135,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'HAM.tex', 'HAM Documentation',
+    (master_doc, 'Ham.tex', 'Ham Documentation',
      'Dessimoz Lab', 'manual'),
 ]
 
@@ -145,7 +145,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'ham', 'HAM Documentation',
+    (master_doc, 'pyham', 'Ham Documentation',
      [author], 1)
 ]
 
@@ -156,8 +156,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'HAM', 'HAM Documentation',
-     author, 'HAM', 'One line description of project.',
+    (master_doc, 'Ham', 'Ham Documentation',
+     author, 'Ham', 'One line description of project.',
      'Miscellaneous'),
 ]
 

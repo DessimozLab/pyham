@@ -1,6 +1,6 @@
 import unittest
-from ham import ham
-from ham import utils
+from pyham import ham
+from pyham import utils
 import logging
 import os
 
@@ -45,8 +45,8 @@ class HamAnalysis(unittest.TestCase):
         # then clement select his favorite orthoXML file
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        # Clement create the HAM object that will be the kernel of all analysis
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        # Clement create the Ham object that will be the kernel of all analysis
+        ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # And verifying if all tree elements are created
         self.assertEqual(ham_analysis.taxonomy.newick_str,
@@ -77,14 +77,14 @@ class HamAnalysis(unittest.TestCase):
 
     def test_lineage_comparative_analysis(self):
 
-        # Clement initialise the ham analyzer objet as it's explained in the documentation
+        # Clement initialise the pyham analyzer objet as it's explained in the documentation
         logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
 
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+        ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         # Then clement is interest to investigate on what happened between the ancestral genomes of vertebrates
         # and the extent genomes of the mouse.
@@ -128,8 +128,8 @@ class HamAnalysis(unittest.TestCase):
         # then clement select his favorite orthoXML file
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        # Clement create the HAM object that will be the kernel of all analysis
-        ham_analysis = ham.HAM(tree_str, orthoxml_path, filter_object=f, use_internal_name=True)
+        # Clement create the Ham object that will be the kernel of all analysis
+        ham_analysis = ham.Ham(tree_str, orthoxml_path, filter_object=f, use_internal_name=True)
         self.assertEqual(f, ham_analysis.filter_obj)
 
         # Clement check that what the filter understood was good
@@ -146,7 +146,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+        ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
         # Clement get the toplevel hog and build the tree profile on them
         #for hog in ham_analysis.get_list_top_level_hogs():
@@ -158,7 +158,7 @@ class HamAnalysis(unittest.TestCase):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
-        ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
 
         # Clement run the create_tree_profile for the whole genomic setup
         #ham_analysis.create_tree_profile(outfile="./tp.png", export_with_histogram=True)

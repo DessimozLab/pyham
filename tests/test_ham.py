@@ -1,6 +1,6 @@
 import unittest
-from ham import utils
-from ham import ham
+from pyham import utils
+from pyham import ham
 import ete3
 import os
 
@@ -31,25 +31,25 @@ class HAMTestSetUp(unittest.TestCase):
     def test_wrong_newick_str(self):
 
         with self.assertRaises(ete3.parser.newick.NewickError):
-            ham.HAM(self.nwk_str_empty, self.orthoxml_path, type_hog_file='orthoxml')
+            ham.Ham(self.nwk_str_empty, self.orthoxml_path, type_hog_file='orthoxml')
 
         with self.assertRaises(ete3.parser.newick.NewickError):
-            ham.HAM(self.nwk_str_wrong, self.orthoxml_path, type_hog_file='orthoxml')
+            ham.Ham(self.nwk_str_wrong, self.orthoxml_path, type_hog_file='orthoxml')
 
     def test_wrong_type_hog_file(self):
 
         with self.assertRaises(TypeError):
-            ham.HAM(self.nwk_str, self.orthoxml_path, type_hog_file='xs')
+            ham.Ham(self.nwk_str, self.orthoxml_path, type_hog_file='xs')
 
         with self.assertRaises(TypeError):
-            ham.HAM(self.nwk_str, self.orthoxml_path, type_hog_file='')
+            ham.Ham(self.nwk_str, self.orthoxml_path, type_hog_file='')
 
         with self.assertRaises(TypeError):
-            ham.HAM(self.nwk_str, self.orthoxml_path, type_hog_file=None)
+            ham.Ham(self.nwk_str, self.orthoxml_path, type_hog_file=None)
 
     def test_wrong_filter(self):
         with self.assertRaises(TypeError):
-            ham.HAM(self.nwk_str, self.orthoxml_path, filter_object="x")
+            ham.Ham(self.nwk_str, self.orthoxml_path, filter_object="x")
 
 
 class HAMTest(unittest.TestCase):
@@ -60,7 +60,7 @@ class HAMTest(unittest.TestCase):
 
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
 
@@ -96,10 +96,10 @@ class HAMTestQuery(unittest.TestCase):
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # using newick with name on both internal nodes and leaves
-        self.h = ham.HAM(nwk_str, orthoxml_path, use_internal_name=True)
+        self.h = ham.Ham(nwk_str, orthoxml_path, use_internal_name=True)
 
         # using newick with name only at leaves
-        self.hn = ham.HAM(nwk_str_no_name, orthoxml_path)
+        self.hn = ham.Ham(nwk_str_no_name, orthoxml_path)
 
         # using newick with name on both internal nodes and leaves and filter for HOG2
         self.filter_genome = {"HUMAN", "MOUSE", "CANFA", "PANTR"}
@@ -113,7 +113,7 @@ class HAMTestQuery(unittest.TestCase):
         self.no_filter_hogs = {'1','3'}
         f = ham.ParserFilter()
         f.add_hogs_via_hogId([2])
-        self.hf = ham.HAM(nwk_str, orthoxml_path, filter_object=f,  use_internal_name=True)
+        self.hf = ham.Ham(nwk_str, orthoxml_path, filter_object=f, use_internal_name=True)
 
     # HOG
 
@@ -414,10 +414,10 @@ class HAMTestPrivate(unittest.TestCase):
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # using newick with name on both internal nodes and leaves
-        self.h = ham.HAM(nwk_str, orthoxml_path)
+        self.h = ham.Ham(nwk_str, orthoxml_path)
 
         # using newick with name only at leaves
-        self.hn = ham.HAM(nwk_str_no_name, orthoxml_path)
+        self.hn = ham.Ham(nwk_str_no_name, orthoxml_path)
 
         # using newick with name on both internal nodes and leaves and filter for HOG2
 
@@ -432,7 +432,7 @@ class HAMTestPrivate(unittest.TestCase):
         self.no_filter_hogs = {'1','3'}
         f = ham.ParserFilter()
         f.add_hogs_via_hogId([2])
-        self.hf = ham.HAM(nwk_str, orthoxml_path, filter_object=f)
+        self.hf = ham.Ham(nwk_str, orthoxml_path, filter_object=f)
 
 if __name__ == "__main__":
     unittest.main()

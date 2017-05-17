@@ -1,5 +1,5 @@
 Utils
 ==============
 
-.. automodule:: ham.utils
+.. automodule:: pyham.utils
     :members:

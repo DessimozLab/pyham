@@ -12,8 +12,12 @@ def pack():
     local('python setup.py sdist', capture=False)
 
 def deploy_test():
-    # update the pipy ham package
+    # update the pipy pyham package
     local('twine upload dist/* -r testpypi')
+
+def deploy():
+    # update the pipy pyham package
+    local('twine upload dist/* -r pypi')
 
 
 

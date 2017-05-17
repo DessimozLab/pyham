@@ -1,5 +1,5 @@
 Tree Profile
 ==============
 
-.. automodule:: ham.TreeProfile
+.. automodule:: pyham.TreeProfile
     :members:

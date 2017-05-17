@@ -1,9 +1,9 @@
 __author__ = 'admin'
 
 import unittest
-from ham import Gene, HOG, AbstractGene, EvolutionaryConceptError
+from pyham import Gene, HOG, AbstractGene, EvolutionaryConceptError
 from unittest import skip
-import ham.genome as g
+import pyham.genome as g
 import ete3
 
 

@@ -1,7 +1,7 @@
 import collections
 import unittest
-from ham import ham
-from ham import utils
+from pyham import ham
+from pyham import utils
 import os
 
 class OrthoXMLParserTest(unittest.TestCase):
@@ -34,7 +34,7 @@ class OrthoXMLParserTest(unittest.TestCase):
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        self.ham_analysis = ham.HAM(newick_str=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+        self.ham_analysis = ham.Ham(newick_str=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
 
@@ -162,7 +162,7 @@ class OrthoXMLParserTest(unittest.TestCase):
                 self._check_children_consistency(primates, ["14"])
 
 """
-Tests for FilterOrthoXMLParser are made indirectly inside HAM unit tests.
+Tests for FilterOrthoXMLParser are made indirectly inside Ham unit tests.
 """
 
 if __name__ == "__main__":

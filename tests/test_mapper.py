@@ -1,7 +1,7 @@
 import unittest
-from ham import ham
-from ham import utils
-from ham import HOGsMap, MapLateral, MapVertical
+from pyham import ham
+from pyham import utils
+from pyham import HOGsMap, MapLateral, MapVertical
 import os
 
 ##########################################################################################
@@ -43,7 +43,7 @@ class MapperTestCases:
             tree_str = utils.get_newick_string(nwk_path, type="nwk")
             orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-            self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+            self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
 
             self.human = self.ham_analysis.get_extant_genome_by_name(name="HUMAN")
             self.frog = self.ham_analysis.get_extant_genome_by_name(name="XENTR")

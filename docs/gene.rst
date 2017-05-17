@@ -3,17 +3,17 @@ Genes
 
 AbstractGene is an abstract class representing extant or ancestral genes.
 
-.. autoclass:: ham.abstractgene.AbstractGene
+.. autoclass:: pyham.abstractgene.AbstractGene
     :members:
 
 -------
 
-.. autoclass:: ham.abstractgene.Gene
+.. autoclass:: pyham.abstractgene.Gene
     :members:
 
 -------
 
-.. autoclass:: ham.abstractgene.HOG
+.. autoclass:: pyham.abstractgene.HOG
     :members:
 
 

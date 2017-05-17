@@ -2,7 +2,7 @@ Taxonomy
 ========
 
 
-.. automodule:: ham.taxonomy
+.. automodule:: pyham.taxonomy
     :members:
 
 

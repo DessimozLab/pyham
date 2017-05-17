@@ -2,5 +2,5 @@ ParserFilter
 ====
 
 
-.. autoclass:: ham.ham.ParserFilter
+.. autoclass:: pyham.ham.ParserFilter
     :members:

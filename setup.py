@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-name = 'HAM'
+name = 'pyham'
 requirements = ['ete3', 'six', 'scipy']
 
 
@@ -27,7 +27,7 @@ setup(
     description='A tool to analyse Hierarchical Orthologous Groups (HOGs)',
     long_description=long_description,
     keywords=['orthology, HOGs, orthoxml'],
-    url='http://lab.dessimoz.org/ham',
+    url='http://lab.dessimoz.org/pyham',
 
     license='MIT',
 

@@ -10,9 +10,9 @@ class AbstractGene(metaclass=ABCMeta):
     id, the genome it belongs to and  its parent AbstractGene.
     
     Attributes:
-        | parent (:obj:`ham.abstractgene.HOG`): Direct parent HOG this gene is descendant to. For and only for top level HOG, parent
+        | parent (:obj:`pyham.abstractgene.HOG`): Direct parent HOG this gene is descendant to. For and only for top level HOG, parent
         attribute is set to  None.
-        | genome (:obj:`ham.genome.Genome`): Related Genome object.
+        | genome (:obj:`pyham.genome.Genome`): Related Genome object.
         arose_by_duplication (:obj:`Bool`): True if this AbstractGene arose by a duplication from its parent.
         
     """
@@ -22,7 +22,7 @@ class AbstractGene(metaclass=ABCMeta):
         """
         Attributes:
             | arose_by_duplication (:obj:`Bool`): True if this AbstractGene arose by a duplication from its parent.
-            | ** kwargs: dictionary of attribute and value required to create the: obj:`ham.abstractgene.AbstractGene`.
+            | ** kwargs: dictionary of attribute and value required to create the: obj:`pyham.abstractgene.AbstractGene`.
         """
 
         self.parent = None
@@ -47,10 +47,10 @@ class AbstractGene(metaclass=ABCMeta):
         :obj:`AbstractGene`.
         
             Args:
-                ancestral_genome (:obj:`ham.genome.AncestralGenome`): Ancestral genome of interest.
+                ancestral_genome (:obj:`pyham.genome.AncestralGenome`): Ancestral genome of interest.
 
             Returns:
-                return :obj:`ham.abstractgene.HOG` or None and :obj:`bool`
+                return :obj:`pyham.abstractgene.HOG` or None and :obj:`bool`
 
         """
 
@@ -70,10 +70,10 @@ class AbstractGene(metaclass=ABCMeta):
     def get_top_level_hog(self):
 
         """ 
-        Get the related top level :obj:`ham.abstractgene.HOG`. If :obj:`ham.abstractgene.HOG` return self, the :obj:`ham.abstractgene.HOG` is already top level. If :obj:`ham.abstractgene.Gene` return self, the :obj:`ham.abstractgene.Gene` is a singleton.
+        Get the related top level :obj:`pyham.abstractgene.HOG`. If :obj:`pyham.abstractgene.HOG` return self, the :obj:`pyham.abstractgene.HOG` is already top level. If :obj:`pyham.abstractgene.Gene` return self, the :obj:`pyham.abstractgene.Gene` is a singleton.
 
             Returns:
-                return :obj:`ham.abstractgene.HOG`.
+                return :obj:`pyham.abstractgene.HOG`.
         """
 
         current_hog = self
@@ -89,10 +89,10 @@ class AbstractGene(metaclass=ABCMeta):
             Get for the query HOG, the ancestor or children AbstractGene in the genome of interest
             
             Args:
-                genome (:obj:`ham.genome.Genome`): Genome of interest.
+                genome (:obj:`pyham.genome.Genome`): Genome of interest.
                 
             Returns:
-                list of  :obj:`ham.abstractgene.AbstractGene`.
+                list of  :obj:`pyham.abstractgene.AbstractGene`.
                 
             Raises:
                 TypeError: if genome is not a Genome.
@@ -137,8 +137,8 @@ class HOG(AbstractGene):
 
     Attributes:
         | hog_id (:obj:`str`): hog id. Defaults is None.
-        | children (:obj:`list` of :obj:`ham.abstractgene.AbstractGene`): A list of direct descendants AbstractGene.
-        | hogvis (:obj:`ham.Hogvis`): :obj:`ham.Hogvis` object of this HOG.
+        | children (:obj:`list` of :obj:`pyham.abstractgene.AbstractGene`): A list of direct descendants AbstractGene.
+        | hogvis (:obj:`pyham.Hogvis`): :obj:`pyham.Hogvis` object of this HOG.
 
     """
 
@@ -151,10 +151,10 @@ class HOG(AbstractGene):
     def add_child(self, child_to_add):
 
         """  
-            Add in the children attribute a given :obj:`ham.abstractgene.AbstractGene` and update parent attribute in child AbstractGene.
+            Add in the children attribute a given :obj:`pyham.abstractgene.AbstractGene` and update parent attribute in child AbstractGene.
 
             Attributes:
-                child_to_add (:obj:`ham.abstractgene.AbstractGene`): add_child to add.
+                child_to_add (:obj:`pyham.abstractgene.AbstractGene`): add_child to add.
 
         """
 
@@ -222,10 +222,10 @@ class HOG(AbstractGene):
     def set_genome(self, genome):
 
         """  
-        This method set :obj:`ham.genome.AncestralGenome` given as parameter as genome attribute.
+        This method set :obj:`pyham.genome.AncestralGenome` given as parameter as genome attribute.
 
         Attributes:
-            | genome (:obj:`ham.genome.AncestralGenome`): Ancestral genome to be set as genome.
+            | genome (:obj:`pyham.genome.AncestralGenome`): Ancestral genome to be set as genome.
         """
 
         # Check that genome is an :obj:`AncestralGenome`
@@ -287,7 +287,7 @@ class HOG(AbstractGene):
         Get all :obj:`Gene` present in this HOG.
 
             Returns:
-                list of :obj:`ham.abstractgene.Gene`
+                list of :obj:`pyham.abstractgene.Gene`
 
         """
 
@@ -299,10 +299,10 @@ class HOG(AbstractGene):
 
     def get_all_descendant_genes_clustered_by_species(self):
         """ 
-        Get all :obj:`ham.abstractgene.Gene` present in this HOG clustered by species :obj:`ham.genomeExtantGenome`.
+        Get all :obj:`pyham.abstractgene.Gene` present in this HOG clustered by species :obj:`pyham.genomeExtantGenome`.
 
             Returns:
-                Dictionary of :obj:`ham.genome.ExtantGenome` map their list of :obj:`ham.abstractgene.Gene`.
+                Dictionary of :obj:`pyham.genome.ExtantGenome` map their list of :obj:`pyham.abstractgene.Gene`.
 
         """
   
@@ -315,10 +315,10 @@ class HOG(AbstractGene):
     def get_all_descendant_hogs(self): # TODO: self is also returned with it
         
         """ 
-        Get all :obj:`ham.abstractgene.HOG` present in this HOG hierarchy.
+        Get all :obj:`pyham.abstractgene.HOG` present in this HOG hierarchy.
 
             Returns:
-                Dictionary of :obj:`ham.genomeExtantGenome` map their list of :obj:`ham.abstractgene.Gene`.
+                Dictionary of :obj:`pyham.genomeExtantGenome` map their list of :obj:`pyham.abstractgene.Gene`.
 
         """
 
@@ -331,10 +331,10 @@ class HOG(AbstractGene):
     def get_all_descendant_hog_levels(self): # TODO: self is also returned with it
 
         """ 
-        Get all :obj:`ham.genome.Genome` present in this HOG hierarchy.
+        Get all :obj:`pyham.genome.Genome` present in this HOG hierarchy.
 
             Returns:
-                List of :obj:`ham.genome.Genome`.
+                List of :obj:`pyham.genome.Genome`.
 
         """
 
@@ -346,13 +346,13 @@ class HOG(AbstractGene):
 
     def get_hog_vis(self, newick_str):
 
-        """ Lazy getter of the :obj:`ham.abstractgene.HOG` Hogvis.
+        """ Lazy getter of the :obj:`pyham.abstractgene.HOG` Hogvis.
 
             Args:
                 newick_str (:obj:`str`): newick species tree used by the create_hog_visualisation.
 
             Returns:
-                :obj:`ham.Hogvis` of this HOG.
+                :obj:`pyham.Hogvis` of this HOG.
 
         """
 
@@ -390,13 +390,13 @@ class Gene(AbstractGene):
 
     def set_genome(self, genome):
         """  
-        This method set :obj:`ham.genome.ExtantGenome` given as parameter as genome attribute.
+        This method set :obj:`pyham.genome.ExtantGenome` given as parameter as genome attribute.
 
         Attributes:
-            genome (:obj:`ham.genome.ExtantGenome`): Extant genome to be set as genome.
+            genome (:obj:`pyham.genome.ExtantGenome`): Extant genome to be set as genome.
              
         Raises:
-            TypeError: If genome is not :obj:`ham.genome.ExtantGenome`.
+            TypeError: If genome is not :obj:`pyham.genome.ExtantGenome`.
             EvolutionaryConceptError: If we try to add more than one genome.
          """
 

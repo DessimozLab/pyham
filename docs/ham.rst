@@ -1,10 +1,10 @@
-HAM
+Ham
 ====
 
-ham is the main object oh HAM. It contains all the information and functions required to performs and HOGs analysis.
+ham is the main object oh Ham. It contains all the information and functions required to performs and HOGs analysis.
 
 --------
 
-.. autoclass:: ham.ham.HAM
+.. autoclass:: pyham.ham.Ham
     :members:
 

@@ -1,5 +1,5 @@
 HOG Vis
 ==============
 
-.. autoclass:: ham.Hogvis
+.. autoclass:: pyham.Hogvis
     :members:

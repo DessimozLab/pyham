@@ -1,5 +1,5 @@
 import unittest
-from ham import taxonomy, EvolutionaryConceptError
+from pyham import taxonomy, EvolutionaryConceptError
 
 
 class HAMTaxonomy(unittest.TestCase):

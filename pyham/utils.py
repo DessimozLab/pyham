@@ -25,7 +25,7 @@ def get_newick_string(source_path, type="nwk"):
 
 def previsualize_taxonomy(newick_str):
     """
-    This function help to previsualyse before running HAM what the topology will looked like and what will be the
+    This function help to previsualyse before running Ham what the topology will looked like and what will be the
     internal node naming.
     Args:
         | newick_str:

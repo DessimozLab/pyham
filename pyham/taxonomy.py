@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class Taxonomy(object):
     """
-    Taxonomy is a class to wrap the ete3 Etree used as reference species tree by HAM.
+    Taxonomy is a class to wrap the ete3 Etree used as reference species tree by Ham.
     
     Attributes:
         | newick_str (:obj:`str`): newick tree string used to build the ete3 Etree object.

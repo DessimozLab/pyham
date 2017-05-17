@@ -1,5 +1,5 @@
 import unittest
-from ham import ham, utils, TreeProfile
+from pyham import ham, utils, TreeProfile
 import os
 
 class TreeProfileTest(unittest.TestCase):
@@ -9,10 +9,10 @@ class TreeProfileTest(unittest.TestCase):
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        self.ham_analysis = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
                                     use_internal_name=True)
-        self.ham_analysis_no_name = ham.HAM(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
-                                    use_internal_name=False)
+        self.ham_analysis_no_name = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+                                            use_internal_name=False)
 
         # gene, identical, duplicated, gain, lost
         self.exp_full = {"Mammalia":[3,2,0,1,0], "Euarchontoglires":[4,2,2,0,0], "Primates":[4,4,0,0,0], "Rodents":[4,4,0,0,0], "Vertebrata":[2,None,None,None,None] }
