@@ -63,7 +63,7 @@ author = 'Dessimoz Lab'
 # built documents.
 from pyham import __version__ as ham_version
 # The short X.Y version.
-version = ham_version.rsplit('.', maxsplit=1)[0]
+version = ham_version.rsplit('.', 1)[0]
 # The full version, including alpha/beta/rc tags.
 release = ham_version
 
