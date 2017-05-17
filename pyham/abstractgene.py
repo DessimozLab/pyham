@@ -1,10 +1,18 @@
-from abc import ABCMeta, abstractmethod
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from __future__ import absolute_import
+from builtins import super
+from builtins import object
+from future import standard_library
+standard_library.install_aliases()
 import numbers
 from .genome import ExtantGenome, AncestralGenome, Genome
 from .hogvis import Hogvis
+import abc, six
 
-
-class AbstractGene(metaclass=ABCMeta):
+@six.add_metaclass(abc.ABCMeta)
+class AbstractGene(object):
     """  
     AbstractGene is an abstract class representing extant or ancestral genes. An AbstractGene is defined by an unique
     id, the genome it belongs to and  its parent AbstractGene.
@@ -29,12 +37,12 @@ class AbstractGene(metaclass=ABCMeta):
         self.genome = None
         self.arose_by_duplication = arose_by_duplication
 
-    @abstractmethod
+    @abc.abstractmethod
     def set_genome(self, genome):
         """Set the genome attribute using the given :obj:`Genome`."""
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def is_singleton(self):
         """ Return true if singletons otherwise false"""
         pass

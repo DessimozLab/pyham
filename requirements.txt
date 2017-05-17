@@ -1,3 +1,4 @@
 ete3==3.0.0b35
 six==1.10.0
 scipy==0.18.1
+future

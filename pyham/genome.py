@@ -1,9 +1,17 @@
-from abc import ABCMeta, abstractmethod
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from builtins import super
+from builtins import object
+from future import standard_library
+standard_library.install_aliases()
 import ete3
+import abc, six
 
 
-class Genome(metaclass=ABCMeta):
-
+@six.add_metaclass(abc.ABCMeta)
+class Genome(object):
     """  
     Genome is an abstract class representing extant or ancestral genomes. An Genome is defined by a unique taxon (node)
     in the Taxonomy.tree.
@@ -63,7 +71,7 @@ class Genome(metaclass=ABCMeta):
             raise EvolutionaryConceptError("only one taxon can refers to one genome")
         self.taxon = taxon
 
-    @abstractmethod
+    @abc.abstractmethod
     def get_number_genes(self):
         """ Return the number of genes"""
         pass

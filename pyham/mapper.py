@@ -1,6 +1,14 @@
-from abc import ABCMeta, abstractmethod
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from builtins import super
+from builtins import object
+from future import standard_library
+standard_library.install_aliases()
 from .genome import Genome
 import logging
+import abc, six
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +114,8 @@ class HOGsMap(object):
         return upMap
 
 
-class MapResults(metaclass=ABCMeta):
+@six.add_metaclass(abc.ABCMeta)
+class MapResults(object):
     """
     Abstract class to map HOGs across multiple genomes through their most recent common ancestral genome. The HOGs are all
     clustered based on their relation with the mrca genome HOGs (duplicated, lost, gained and identical).
@@ -138,27 +147,27 @@ class MapResults(metaclass=ABCMeta):
         self.HAM = HAM
         self.ancestor = None
 
-    @abstractmethod
+    @abc.abstractmethod
     def add_map(self, map):
         """Add a map to the MapResults object"""
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def get_lost(self):
         """Return the lost genes"""
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def get_gained(self):
         """Return the gained genes"""
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def get_identical(self):
         """Return genes that stay single copy"""
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def get_duplicated(self):
         """Return genes that duplicate"""
         pass

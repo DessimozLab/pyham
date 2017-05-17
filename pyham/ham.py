@@ -1,6 +1,16 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+from __future__ import division
+from builtins import map
+from builtins import open
+from builtins import str
+from future import standard_library
+standard_library.install_aliases()
+
 from xml.etree.ElementTree import XMLParser
 from . import taxonomy as tax
-from . import genome
+from .genome import Genome,AncestralGenome, ExtantGenome
 from . import parsers
 from . import mapper
 from . import abstractgene
@@ -200,14 +210,14 @@ class Ham(object):
             | TypeError: if genome1 and genome2 are not :obj:`pyham.genome.Genome`.
         """
 
-        if not isinstance(genome1, genome.Genome):
+        if not isinstance(genome1, Genome):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(genome.Genome.__name__,
+                            .format(Genome.__name__,
                                     type(genome1).__name__))
 
-        if not isinstance(genome2, genome.Genome):
+        if not isinstance(genome2, Genome):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(genome.Genome.__name__,
+                            .format(Genome.__name__,
                                     type(genome2).__name__))
 
         vertical_map = mapper.MapVertical(self)
@@ -231,14 +241,14 @@ class Ham(object):
             | TypeError: if genome1 and genome2 are not :obj:`pyham.genome.Genome`.
         """
 
-        if not isinstance(genome1, genome.Genome):
+        if not isinstance(genome1, Genome):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(genome.Genome.__name__,
+                            .format(Genome.__name__,
                                     type(genome1).__name__))
 
-        if not isinstance(genome2, genome.Genome):
+        if not isinstance(genome2, Genome):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(genome.Genome.__name__,
+                            .format(Genome.__name__,
                                     type(genome2).__name__))
 
         lateral_map = mapper.MapLateral(self)
@@ -542,12 +552,12 @@ class Ham(object):
             raise ValueError('Minimum 2 genomes are required, only {} provided.'.format(len(genome_set)))
 
         for g in genome_set:
-            if not isinstance(g, genome.Genome):
+            if not isinstance(g, Genome):
                 raise TypeError("expect subclass obj of '{}', got {}"
-                                .format(genome.Genome.__name__,
+                                .format(Genome.__name__,
                                         type(g).__name__))
 
-        genome_nodes = set([genome.taxon for genome in genome_set])
+        genome_nodes = set([geno.taxon for geno in genome_set])
 
         mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
 
@@ -741,7 +751,7 @@ class Ham(object):
                 return node.genome
 
             else:
-                extant_genome = genome.ExtantGenome(**kwargs)
+                extant_genome = ExtantGenome(**kwargs)
                 self.taxonomy.add_genome_to_node(node, extant_genome)
                 return extant_genome
         else:
@@ -765,7 +775,7 @@ class Ham(object):
             return tax_node.genome
 
         else:
-            ancestral_genome = genome.AncestralGenome()
+            ancestral_genome = AncestralGenome()
             self.taxonomy.add_genome_to_node(tax_node, ancestral_genome)
 
             return ancestral_genome
@@ -804,12 +814,12 @@ class Ham(object):
             raise ValueError('Minimum 2 genomes are required, only {} provided.'.format(len(genome_set)))
 
         for g in genome_set:
-            if not isinstance(g, genome.Genome):
+            if not isinstance(g, Genome):
                 raise TypeError("expect subclass obj of '{}', got {}"
-                                .format(genome.Genome.__name__,
+                                .format(Genome.__name__,
                                         type(g).__name__))
 
-        genome_nodes = set([genome.taxon for genome in genome_set])
+        genome_nodes = set([gen.taxon for gen in genome_set])
 
         mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
 
