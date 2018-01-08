@@ -3,8 +3,8 @@ from fabric.api import *
 
 def clean():
     # remove old package
-    local('rm -r dist/ 2> /dev/null', capture=False)
-    local('rm -r build/ 2> /dev/null', capture=False)
+    local('rm -rf dist/', capture=False)
+    local('rm -rf build/', capture=False)
 
 def test():
     # run unit test
