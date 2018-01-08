@@ -47,7 +47,7 @@ class Hogvis(object):
 
                      <!-- TnT -->
                      <link rel="stylesheet" href="http://omabrowser.org/static/css/tnt.css" type="text/css" />
-                     <script src="http://omabrowser.org/static/js/tnt.js"></script>
+                     <script src="http://omabrowser.org/static/js/tnt_old.min.js"></script>
                      <script src="http://omabrowser.org/static/js/hog.js.05869ae311cc8b8e04271cdb1a904fd4"></script>
 
                       <h1>HOG Viewer for $name</h1>
