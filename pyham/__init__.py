@@ -12,4 +12,4 @@ from .genome import *
 from .utils import *
 from .mapper import *
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
