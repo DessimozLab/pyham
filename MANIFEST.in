@@ -2,3 +2,4 @@ include LICENSE.txt
 include README.rst
 include docs/*rst
 include docs/Makefile
+include tests/*
