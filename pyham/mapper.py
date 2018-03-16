@@ -87,7 +87,8 @@ class HOGsMap(object):
 
         if sum_descendant != number_descendant:
             consistent = False
-            logger.critical(
+            if len(logger.handlers) > 0:
+                logger.critical(
                 'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the descendant genome but {} are founded in the sum of genes resulting of duplication, identical and gain'.format(
                     self.ancestor.name, self.descendant.name, number_descendant, sum_descendant))
 
@@ -97,7 +98,8 @@ class HOGsMap(object):
 
         if sum_ancestor != number_ancestor:
             consistent = False
-            logger.critical(
+            if len(logger.handlers) > 0:
+                logger.critical(
                 'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the ancestor genome but {} are founded in the sum of genes in identical, loss and duplicated categories'.format(
                     self.ancestor.name, self.descendant.name, number_ancestor, sum_ancestor))
 
