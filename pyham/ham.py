@@ -589,7 +589,7 @@ class Ham(object):
 
     # ... PRIVATE METHODS ... #
 
-    def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons):
+    def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons, move_up_duplication = True):
 
         """  
         Add intermediate :obj:`HOG` in between two :obj:`HOG` if their taxon are not direct parent and child in the 
@@ -616,6 +616,13 @@ class Ham(object):
         if oldest_hog == child_hog:
             raise TypeError("Cannot add missing level between an HOG and it self.")
 
+
+        duplication = False
+
+        if move_up_duplication and child_hog.arose_by_duplication != False :
+            duplication = child_hog.arose_by_duplication
+            duplication.remove_child(child_hog)
+
         # the youngest hog is removed from the oldest hog children.
         oldest_hog.remove_child(child_hog)
 
@@ -639,6 +646,9 @@ class Ham(object):
             # ... we add the child if everything is fine.
             hog.add_child(current_child)
             current_child = hog
+
+        if move_up_duplication and child_hog.arose_by_duplication != False :
+            duplication.add_child(current_child)
 
         oldest_hog.add_child(current_child)
 

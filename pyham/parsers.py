@@ -6,8 +6,10 @@ from builtins import str
 from future import standard_library
 standard_library.install_aliases()
 from . import abstractgene
+from . import genome
 import logging
 logger = logging.getLogger(__name__)
+from collections import defaultdict
 
 
 class OrthoXMLParser(object):
@@ -140,6 +142,7 @@ class OrthoXMLParser(object):
             self.hog_stack[-1].score(attrib['id'], float(attrib['value']))
 
     def end(self, tag):
+
         if tag == "{http://orthoXML.org/2011/}species":
             logger.info("Species {} created. ".format(self.current_species.name))
             self.current_species = None
@@ -172,6 +175,38 @@ class OrthoXMLParser(object):
                 hog.set_genome(ancestral_genome)
                 ancestral_genome.taxon.genome.add_gene(hog)
 
+                # get all child clustered by dup if any
+                child_by_duplication = defaultdict(list)
+
+                for child in hog.children:
+                    if child.arose_by_duplication != False:
+                        child_by_duplication[child.arose_by_duplication].append(child)
+
+
+                for duplication, children in child_by_duplication.items():
+
+                    if duplication.MRCA != hog.genome:
+
+                        mrcahog = abstractgene.HOG()
+                        mrcahog.set_genome(duplication.MRCA)
+                        duplication.MRCA.add_gene(mrcahog)
+
+                        hog.add_child(mrcahog)
+
+                        for child in children:
+                            hog.remove_child(child)
+                            mrcahog.add_child(child)
+
+                            change = self.ham_object.taxonomy.get_path_up(child.genome.taxon, mrcahog.genome.taxon)
+                            self.ham_object._add_missing_taxon(child, mrcahog, change)
+
+                        duplication.set_parent(mrcahog)
+
+                    else:
+
+                        duplication.set_parent(hog)
+
+
                 hog_genome = hog.genome
                 change = {} # {child -> [intermediate level]}
 
@@ -183,6 +218,7 @@ class OrthoXMLParser(object):
 
                 for hog_child, missing in change.items():
                     self.ham_object._add_missing_taxon(hog_child,hog,missing)
+
 
                 if len(self.hog_stack) == 0:
 

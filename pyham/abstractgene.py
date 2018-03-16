@@ -492,7 +492,7 @@ class DuplicationNode(object):
         children_genomes = set([child.genome for child in self.children])
 
         if len(children_genomes) < 2:
-            self.MRCA = list(children_genomes)[0]
+            self.MRCA = self.ham._get_ancestral_genome_by_taxon(list(children_genomes)[0].taxon.up)
 
         else:
             self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
@@ -509,3 +509,22 @@ class DuplicationNode(object):
 
         self.children.append(child)
         child.arose_by_duplication = self
+
+    def remove_child(self, child_to_remove):
+        """
+            remove child to list of children
+        """
+
+        if not isinstance(child_to_remove, AbstractGene):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(AbstractGene.__name__,
+                                    type(child_to_remove).__name__))
+
+        if child_to_remove in self.children:
+            self.children.remove(child_to_remove)
+            child_to_remove.arose_by_duplication = False
+
+        else:
+            raise ValueError("element not found in the hog children")
+
+
