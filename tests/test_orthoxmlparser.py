@@ -196,7 +196,6 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
 
-    '''
     def test_consistency_number(self):
 
         from pyham import TreeProfile
@@ -207,7 +206,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         # Verify for each HOGMAP the consistency -- that the parser did his job
         for hg in self.ham_analysis.HOGMaps.values():
             self.assertTrue(hg.consistent)
-    '''
+
     def test_numberOfGenesPerSpecies(self):
         expected_cnts = dict(HUMAN=6, PANTR=8, MOUSE=7, RATNO=4,
                              CANFA=6, XENTR=3)
@@ -215,7 +214,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         for g in self.genes.values():
             observed_cnts[g.genome.name] += 1
         self.assertDictEqual(observed_cnts, expected_cnts)
-    '''
+
     def test_number_hog_per_ancestral_genome(self):
         ags = self.ham_analysis.get_list_ancestral_genomes()
         expected_numbers = {'Vertebrata': 3, 'Mammalia': 5, 'Euarchontoglires': 6, 'Rodents': 4, 'Primates': 6}
@@ -223,7 +222,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         for ag in ags:
             observed_numbers[ag.taxon.name] += len(ag.genes)
         self.assertDictEqual(expected_numbers, observed_numbers)
-    '''
+
     def test_scores_on_toplevel(self):
         self.assertEqual(self.hogs["1"].score('consistency'), 1)
         with self.assertRaises(KeyError):
@@ -307,7 +306,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         rodents = self._get_child_by_identifier(euarchontoglires, "Rodents")
         self._check_children_consistency(rodents, {"32"})
 
-    '''
+
     def test_hog_with_duplication(self):
 
         hog3 = self.hogs["3"]
@@ -367,7 +366,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         self.assertTrue(g15.arose_by_duplication)
         g16 = self.ham_analysis.get_gene_by_id("16")
         self.assertTrue(g16.arose_by_duplication)
-    '''
+
     def test_hog_with_nested_duplication(self):
 
         hog5 = self.hogs["5"]
@@ -382,7 +381,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
 
         # Euarchontoglires paralogs A
         euarchontoglires_A = euarchontoglires[0]
-        self.assertTrue(euarchontoglires_A.arose_by_duplication)
+        self.assertNotEqual('False',euarchontoglires_A.arose_by_duplication)
         self._check_children_consistency(euarchontoglires_A, ["Primates", "Rodents"])
 
         primates = self._get_child_by_identifier(euarchontoglires_A, "Primates")
@@ -393,13 +392,13 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         self.assertFalse(rodents.arose_by_duplication)
         self._check_children_consistency(rodents, ["36", "37", "44"])
         g36 = self.ham_analysis.get_gene_by_id("36")
-        self.assertTrue(g36.arose_by_duplication)
+        self.assertNotEqual('False',g36.arose_by_duplication)
         g37 = self.ham_analysis.get_gene_by_id("37")
-        self.assertTrue(g37.arose_by_duplication)
+        self.assertNotEqual('False',g37.arose_by_duplication)
 
         # Euarchontoglires paralogs B
         euarchontoglires_B = euarchontoglires[1]
-        self.assertTrue(euarchontoglires_B.arose_by_duplication)
+        self.assertNotEqual('False',euarchontoglires_B.arose_by_duplication)
         self._check_children_consistency(euarchontoglires_B, ["Primates", "Rodents"])
 
         primates = self._get_child_by_identifier(euarchontoglires_B, "Primates")
@@ -410,9 +409,9 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         self.assertFalse(rodents.arose_by_duplication)
         self._check_children_consistency(rodents, ["35", "45"])
         g36 = self.ham_analysis.get_gene_by_id("36")
-        self.assertTrue(g36.arose_by_duplication)
+        self.assertNotEqual('False',g36.arose_by_duplication)
         g37 = self.ham_analysis.get_gene_by_id("37")
-        self.assertTrue(g37.arose_by_duplication)
+        self.assertNotEqual('False',g37.arose_by_duplication)
 
 """
 Tests for FilterOrthoXMLParser are made indirectly inside Ham unit tests.

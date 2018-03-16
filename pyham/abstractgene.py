@@ -71,7 +71,7 @@ class AbstractGene(object):
             current_hog = current_hog.parent
             if current_hog.genome == ancestral_genome:
                 return current_hog, paralog
-            if current_hog.arose_by_duplication:
+            if current_hog.arose_by_duplication != False:
                 paralog = True
         return found, paralog
 
@@ -463,6 +463,7 @@ class DuplicationNode(object):
     """
 
     def __init__(self,ham_object):
+
         self.ham = ham_object
         self.MRCA = None
         self.children = []
@@ -490,7 +491,11 @@ class DuplicationNode(object):
 
         children_genomes = set([child.genome for child in self.children])
 
-        self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
+        if len(children_genomes) < 2:
+            self.MRCA = list(children_genomes)[0]
+
+        else:
+            self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
 
     def add_child(self, child):
         """
@@ -501,7 +506,6 @@ class DuplicationNode(object):
             raise TypeError("expect subclass obj of '{}', got {}"
                             .format(AbstractGene.__name__,
                                     type(child).__name__))
-
 
         self.children.append(child)
         child.arose_by_duplication = self

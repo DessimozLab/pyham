@@ -79,7 +79,7 @@ class TreeProfile(object):
                 cpt_dupl = 0
                 cpt_ident = 0
                 for h in levelGroups[lvl.name]:
-                    if h.arose_by_duplication:
+                    if h.arose_by_duplication != False:
                         cpt_dupl += 1
                     else:
                         cpt_ident += 1

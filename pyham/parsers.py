@@ -33,8 +33,9 @@ class OrthoXMLParser(object):
         cpt (:obj:`int`): Counter of parsed hogs.
         hog_stack (:obj:`list`): Stack of hogs currently parsed. Reset at each top level hog change.
         current_species (:obj:`ExtantGenome`): Pointer to the current species parsed during xref first step.
-        paralog_stack (:obj:`list`): Stack of position in hog stack when paralogy event occured. Reset at each top level hog change.
-        d (:obj:`int`): last position in the stack where a duplication  occured.
+        paralog_stack (:obj:`list`): Stack of position in hog stack when paralogy event occured and the related DuplicationNode.
+        Reset at each top level hog change.
+        in_paralogGroup (:obj:`int`): last position in the stack where a duplication  occured.
         skip_this_hog (:obj:`Boolean`): Boolean to skip the current hog or not (used when filtering option is set).     
     """
 
@@ -61,6 +62,7 @@ class OrthoXMLParser(object):
         self.paralog_stack = []
         self.current_species = None
         self.in_paralogGroup = None
+        self.paralogyNode = None
         self.skip_this_hog = False
 
     def _build_gene(self, attrib):
@@ -73,10 +75,11 @@ class OrthoXMLParser(object):
                 self.external_id_mapper.setdefault(Id,[]).append(gene.unique_id)
 
     def _build_hog(self, attrib):
+
+        hog = abstractgene.HOG(arose_by_duplication=False, **attrib)
+
         if self.in_paralogGroup == len(self.hog_stack):
-            hog = abstractgene.HOG(arose_by_duplication=True,**attrib)
-        else:
-            hog = abstractgene.HOG(arose_by_duplication=False,**attrib)
+            self.paralogyNode.add_child(hog)
 
         if len(self.hog_stack) > 0:
             self.hog_stack[-1].add_child(hog)
@@ -95,9 +98,13 @@ class OrthoXMLParser(object):
             if attrib["id"] in self.filterObj.geneUniqueId:
                 self._build_gene(attrib)
 
-        elif tag == "{http://orthoXML.org/2011/}paralogGroup":
-            self.paralog_stack.append(len(self.hog_stack))
-            self.in_paralogGroup = self.paralog_stack[-1]
+        elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
+            dNode = abstractgene.DuplicationNode(self.ham_object)
+
+            self.paralog_stack.append({'depth':len(self.hog_stack), 'node':dNode})
+
+            self.in_paralogGroup = self.paralog_stack[-1]['depth']
+            self.paralogyNode = self.paralog_stack[-1]['node']
 
         elif tag == "{http://orthoXML.org/2011/}geneRef" and self.skip_this_hog is False:
 
@@ -106,7 +113,7 @@ class OrthoXMLParser(object):
 
             # if the gene is contained within a paralogousGroup need to update its .arose_by_duplication flag. TODO unittest
             if self.in_paralogGroup == len(self.hog_stack):
-                gene.arose_by_duplication = True
+                self.paralogyNode.add_child(gene)
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is False:
             if len(self.hog_stack) == 0 and self.filterObj is not None:
@@ -117,6 +124,7 @@ class OrthoXMLParser(object):
                 else:
                     self.skip_this_hog = True
                     self.hog_stack.append(0)
+
 
             else:
                 self._build_hog(attrib)
@@ -136,13 +144,18 @@ class OrthoXMLParser(object):
             logger.info("Species {} created. ".format(self.current_species.name))
             self.current_species = None
 
-        elif tag == "{http://orthoXML.org/2011/}paralogGroup":
-            self.paralog_stack.pop()
+        elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
+
+            ln = self.paralog_stack.pop()
+
+            ln['node'].set_MRCA()
 
             if len(self.paralog_stack) > 0:
-                self.in_paralogGroup = self.paralog_stack[-1]
+                self.in_paralogGroup = self.paralog_stack[-1]['depth']
+                self.paralogyNode = self.paralog_stack[-1]['node']
             else:
                 self.in_paralogGroup = None
+                self.paralogyNode = None
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
 
