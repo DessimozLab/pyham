@@ -5,6 +5,7 @@ from __future__ import division
 from builtins import super
 from builtins import object
 from future import standard_library
+
 standard_library.install_aliases()
 from .genome import Genome
 import logging
@@ -17,15 +18,15 @@ class HOGsMap(object):
     """
     Class to compare HOG evolutionary relations (duplication, loss, gain and identical) between an ancestor genome and
     its descendant genome.
-    
+
     Let's consider Go the oldest genome and Gy the youngest genome with their respected HOGs Ho and Hy.
-    
+
     Those relations are classified into the following categories:
         - IDENTICAL: if Ho will correspond to a single Hy.
         - DUPLICATE: If a duplication occurred in Ho in between Go ang Gy.
         - LOSS: If Ho have no representative Hy in Gy.
         - GAIN: if Hy have no ancestor Ho in Go.
-        
+
     First, a "UpMap" is build to find for each Hy its potential ancestor Ho. If during the traversal from Hy to Ho a
     duplication occurred, a flag "paralog" is added in the UpMap[Hy]. Hy with no corresponding Ho are considered as 
     gained meanwhile Ho without corresponding Hy are considered as lost. Ho with only one corresponding Hy (and no
@@ -41,8 +42,8 @@ class HOGsMap(object):
         | DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
         | LOSS (:obj:`list`): a list of Ho with no matching in Gy.
         | GAIN: (:obj:`list`): a list of Hy with no ancestor in Go.
-    
-    
+
+
     """
 
     def __init__(self, ham_object, genome1, genome2):
@@ -50,7 +51,7 @@ class HOGsMap(object):
         Args:
             | genome1 (:obj:`pyham.genome.Genome`): First :obj:`pyham.genome.Genome` to compare.
             | genome2 (:obj:`pyham.genome.Genome`): Second :obj:`pyham.genome.Genome` to compare.
-            
+
         """
 
         if not isinstance(genome1, Genome):
@@ -67,6 +68,40 @@ class HOGsMap(object):
         self.ancestor, self.descendant = self.HAM._get_oldest_from_genome_pair(genome1, genome2)
         self.upMap = self._build_UpMap()
         self.LOSS, self.GAIN, self.IDENTICAL, self.DUPLICATE = self._build_event_clusters()
+        self.consistent = self._check_consistency_numbers()  # for unittest purposes
+
+    def _check_consistency_numbers(self):
+        """  
+                This function check that the numbers in different event cluster add ups and print warning if not !
+
+        """
+
+        consistent = True
+
+        # First check for numbers additivity in descendant genome
+        duplicated_gene_descendant = 0
+        for dg in self.DUPLICATE.values():
+            duplicated_gene_descendant += len(dg)
+        sum_descendant = len(self.GAIN) + len(self.IDENTICAL.values()) + duplicated_gene_descendant
+        number_descendant = len(self.descendant.genes)
+
+        if sum_descendant != number_descendant:
+            consistent = False
+            logger.critical(
+                'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the descendant genome but {} are founded in the sum of genes resulting of duplication, identical and gain'.format(
+                    self.ancestor.name, self.descendant.name, number_descendant, sum_descendant))
+
+        # Then check for numbers additivity of ancestor genomes
+        sum_ancestor = len(self.IDENTICAL.keys()) + len(self.LOSS) + len(self.DUPLICATE.keys())
+        number_ancestor = len(self.ancestor.genes)
+
+        if sum_ancestor != number_ancestor:
+            consistent = False
+            logger.critical(
+                'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the ancestor genome but {} are founded in the sum of genes in identical, loss and duplicated categories'.format(
+                    self.ancestor.name, self.descendant.name, number_ancestor, sum_ancestor))
+
+        return consistent
 
     def _build_event_clusters(self):
         """  
@@ -131,7 +166,7 @@ class MapResults(object):
     There is two type of possible mapping:
         - vertical: compare a genome with its ancestor (that act as "mrca").
         - lateral: compare genomes with their mrca.
-    
+
     The MapResults provides methods to compare HOGs across genomes:
         - get_loss()
         - get_gain()
@@ -178,7 +213,7 @@ class MapVertical(MapResults):
     Class to map HOGs between a genome and its ancestor. 
 
     Let's consider Go the oldest genome and Gn the youngest genome with their respected HOGs Ho and Hn.
-    
+
     Attributes:
         | descendant (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Gn.
         | map (:obj:`pyham.mapper.HOGsMap`): :obj:`pyham.genome.Genome` of Go.
@@ -213,7 +248,7 @@ class MapVertical(MapResults):
     def get_lost(self):
         """
         Getter for lost genes.
-        
+
         Returns:
             List of Ho.
         """
@@ -253,7 +288,7 @@ class MapVertical(MapResults):
 
 class MapLateral(MapResults):
     """
-    
+
     Class to map HOGs between genomes through their ancestor. 
 
     Let's consider Go the oldest genome and Gn the youngest genomes with their respected HOGs Ho and Hn.
@@ -265,7 +300,7 @@ class MapLateral(MapResults):
         | GAIN (:obj:`dict`): dictionary of Gn mapped to their list of gained Hn.
         | IDENTICAL (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a Hn.
         | DUPLICATE (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a list of Hn.
-    
+
     """
 
     def __init__(self, HAM):
@@ -296,14 +331,16 @@ class MapLateral(MapResults):
             self.ancestor = HogMap.ancestor
         else:
             if self.ancestor != HogMap.ancestor:
-                raise TypeError("You can only add map to MapLateral object that have the same ancestor. The current ancestor is {} and the map ancestor you try to add is {}.".format(self.ancestor, HogMap.ancestor ))
+                raise TypeError(
+                    "You can only add map to MapLateral object that have the same ancestor. The current ancestor is {} and the map ancestor you try to add is {}.".format(
+                        self.ancestor, HogMap.ancestor))
         self.maps[HogMap.descendant] = HogMap
         self.descendants.append(HogMap.descendant)
 
     def get_lost(self):
         """
         Lazy getter for lost genes.
-        
+
         Returns:
             dictionary of Ho -> [Gn].
         """
@@ -342,8 +379,8 @@ class MapLateral(MapResults):
         if self.IDENTICAL is None:
             single = {}
             for genome, hmap in self.maps.items():
-                for hi,hj in hmap.IDENTICAL.items():
-                    single.setdefault(hi,{})[genome] = hj
+                for hi, hj in hmap.IDENTICAL.items():
+                    single.setdefault(hi, {})[genome] = hj
             self.IDENTICAL = single
 
         return self.IDENTICAL
@@ -358,8 +395,8 @@ class MapLateral(MapResults):
         if self.DUPLICATE is None:
             duplicate = {}
             for genome, hmap in self.maps.items():
-                for hi,list_hj in hmap.DUPLICATE.items():
-                    duplicate.setdefault(hi,{})[genome] = list_hj
+                for hi, list_hj in hmap.DUPLICATE.items():
+                    duplicate.setdefault(hi, {})[genome] = list_hj
             self.DUPLICATE = duplicate
 
         return self.DUPLICATE

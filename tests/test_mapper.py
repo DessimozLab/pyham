@@ -4,10 +4,6 @@ from pyham import utils
 from pyham import HOGsMap, MapLateral, MapVertical
 import os
 
-##########################################################################################
-####  ATTENTION THIS IS QUICK AND DIRTY UNIT TEST TO DEBUG NEED TO BE REDONE     #########
-##########################################################################################
-
 def _str_array(array):
     array_converted = []
     for e in array:
@@ -84,6 +80,7 @@ class HOGsMapTest(MapperTestCases.MapperTest):
 
         # two genomes on the same lineage
         map = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map.consistent)
         self.assertEqual("Euarchontoglires", map.ancestor.taxon.name)
         self.assertEqual(self.human, map.descendant)
 
@@ -91,6 +88,7 @@ class HOGsMapTest(MapperTestCases.MapperTest):
 
         with self.assertRaises(TypeError):
             map2 = HOGsMap(self.ham_analysis, self.frog, self.primates)
+            self.assertTrue(map2.consistent)
 
     def test_UpMap(self):
 
@@ -102,6 +100,7 @@ class HOGsMapTest(MapperTestCases.MapperTest):
 
         # an extant genome (human) and its ancestor (Vertebrates)
         map = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map.consistent)
         expected_map = {'1': '1', '2': None, '3': '3', "5":None}
         observed_map = _convert_map(map.upMap)
         self.assertDictEqual(expected_map, observed_map)
@@ -132,6 +131,7 @@ class HOGsMapTest(MapperTestCases.MapperTest):
 
         # an extant genome (human) and its ancestor (Vertebrates)
         map = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map.consistent)
 
         expected_LOSS = set()
         self.assertSetEqual(expected_LOSS, convert_LOSS(map.LOSS))
@@ -155,6 +155,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map = MapVertical(self.ham_analysis)
 
         map = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
         self.assertEqual(self.euarchontoglires, vertical_map.ancestor)
@@ -165,9 +166,11 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map = MapVertical(self.ham_analysis)
 
         map = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
         map2 = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map2.consistent)
         with self.assertRaises(TypeError):
             vertical_map.add_map(map2)
 
@@ -187,6 +190,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
     def test_get_lost(self):
         vertical_map = MapVertical(self.ham_analysis)
         map = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
         loss = vertical_map.get_lost()
@@ -194,6 +198,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
 
         vertical_map2 = MapVertical(self.ham_analysis)
         map2 = HOGsMap(self.ham_analysis, self.rat, self.euarchontoglires)
+        self.assertTrue(map2.consistent)
         vertical_map2.add_map(map2)
 
         loss2 = vertical_map2.get_lost()
@@ -202,6 +207,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
     def test_get_gained(self):
         vertical_map = MapVertical(self.ham_analysis)
         map = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
         gain = vertical_map.get_gained()
@@ -210,6 +216,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
     def test_get_single(self):
         vertical_map = MapVertical(self.ham_analysis)
         map = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
         single = vertical_map.get_identical()
@@ -218,6 +225,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
     def test_get_duplicated(self):
         vertical_map = MapVertical(self.ham_analysis)
         map = HOGsMap(self.ham_analysis, self.mouse, self.vertebrates)
+        self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
         duplicate = vertical_map.get_duplicated()
@@ -230,9 +238,11 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         lateral_map = MapLateral(self.ham_analysis)
 
         map = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map.consistent)
         lateral_map.add_map(map)
 
         map2 = HOGsMap(self.ham_analysis, self.rodents, self.euarchontoglires)
+        self.assertTrue(map2.consistent)
         lateral_map.add_map(map2)
 
         self.assertEqual(self.euarchontoglires, lateral_map.ancestor)
@@ -243,9 +253,11 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         lateral_map = MapLateral(self.ham_analysis)
 
         map = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map.consistent)
         lateral_map.add_map(map)
 
         map2 = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map2.consistent)
         with self.assertRaises(TypeError):
             lateral_map.add_map(map2)
 
@@ -266,9 +278,11 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         lateral_map = MapLateral(self.ham_analysis)
 
         map_human_euarc = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map_human_euarc.consistent)
         lateral_map.add_map(map_human_euarc)
 
         map_rat_euarc = HOGsMap(self.ham_analysis, self.rat, self.euarchontoglires)
+        self.assertTrue(map_rat_euarc.consistent)
         lateral_map.add_map(map_rat_euarc)
 
         loss = lateral_map.get_lost()
@@ -296,9 +310,11 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         lateral_map = MapLateral(self.ham_analysis)
 
         map_frog_vertebrate = HOGsMap(self.ham_analysis, self.frog, self.vertebrates)
+        self.assertTrue(map_frog_vertebrate.consistent)
         lateral_map.add_map(map_frog_vertebrate)
 
         map_human_euarc = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map_human_euarc.consistent)
         lateral_map.add_map(map_human_euarc)
 
         gain = lateral_map.get_gained()
@@ -309,9 +325,11 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         lateral_map = MapLateral(self.ham_analysis)
 
         map_human_euarc = HOGsMap(self.ham_analysis, self.human, self.euarchontoglires)
+        self.assertTrue(map_human_euarc.consistent)
         lateral_map.add_map(map_human_euarc)
 
         map_rat_euarc = HOGsMap(self.ham_analysis, self.rat, self.euarchontoglires)
+        self.assertTrue(map_rat_euarc.consistent)
         lateral_map.add_map(map_rat_euarc)
 
         single = lateral_map.get_identical()
@@ -332,9 +350,11 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         lateral_map = MapLateral(self.ham_analysis)
 
         map_human_vert = HOGsMap(self.ham_analysis, self.human, self.vertebrates)
+        self.assertTrue(map_human_vert.consistent)
         lateral_map.add_map(map_human_vert)
 
         map_mouse_vert = HOGsMap(self.ham_analysis, self.mouse, self.vertebrates)
+        self.assertTrue(map_mouse_vert.consistent)
         lateral_map.add_map(map_mouse_vert)
 
         duplicate = lateral_map.get_duplicated()
