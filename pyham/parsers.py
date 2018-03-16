@@ -33,7 +33,8 @@ class OrthoXMLParser(object):
         cpt (:obj:`int`): Counter of parsed hogs.
         hog_stack (:obj:`list`): Stack of hogs currently parsed. Reset at each top level hog change.
         current_species (:obj:`ExtantGenome`): Pointer to the current species parsed during xref first step.
-        in_paralogGroup (:obj:`int`): last position in the stack where a duplication  occured.
+        paralog_stack (:obj:`list`): Stack of position in hog stack when paralogy event occured. Reset at each top level hog change.
+        d (:obj:`int`): last position in the stack where a duplication  occured.
         skip_this_hog (:obj:`Boolean`): Boolean to skip the current hog or not (used when filtering option is set).     
     """
 
@@ -57,6 +58,7 @@ class OrthoXMLParser(object):
         # On the fly variable
         self.cpt = 0
         self.hog_stack = []
+        self.paralog_stack = []
         self.current_species = None
         self.in_paralogGroup = None
         self.skip_this_hog = False
@@ -94,7 +96,8 @@ class OrthoXMLParser(object):
                 self._build_gene(attrib)
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup":
-            self.in_paralogGroup = len(self.hog_stack)
+            self.paralog_stack.append(len(self.hog_stack))
+            self.in_paralogGroup = self.paralog_stack[-1]
 
         elif tag == "{http://orthoXML.org/2011/}geneRef" and self.skip_this_hog is False:
 
@@ -134,7 +137,12 @@ class OrthoXMLParser(object):
             self.current_species = None
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup":
-            self.in_paralogGroup = None
+            self.paralog_stack.pop()
+
+            if len(self.paralog_stack) > 0:
+                self.in_paralogGroup = self.paralog_stack[-1]
+            else:
+                self.in_paralogGroup = None
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
 
