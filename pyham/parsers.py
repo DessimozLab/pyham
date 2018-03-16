@@ -182,7 +182,6 @@ class OrthoXMLParser(object):
                     if child.arose_by_duplication != False:
                         child_by_duplication[child.arose_by_duplication].append(child)
 
-
                 for duplication, children in child_by_duplication.items():
 
                     if duplication.MRCA != hog.genome:
@@ -202,6 +201,12 @@ class OrthoXMLParser(object):
 
                         duplication.set_parent(mrcahog)
 
+                        for x in duplication.children:
+                            duplication.remove_child(x)
+
+                        for y in mrcahog.children:
+                            duplication.add_child(y)
+
                     else:
 
                         duplication.set_parent(hog)
@@ -218,6 +223,10 @@ class OrthoXMLParser(object):
 
                 for hog_child, missing in change.items():
                     self.ham_object._add_missing_taxon(hog_child,hog,missing)
+
+                    if hog_child.arose_by_duplication != False:
+                        duplication.remove_child(hog_child)
+                        duplication.add_child(hog.children[-1])
 
 
                 if len(self.hog_stack) == 0:

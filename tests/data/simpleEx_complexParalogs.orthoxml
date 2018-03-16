@@ -26,6 +26,7 @@ Example Notes without meaning
     <gene id="16" protId="PANTR16" geneId="PANTRg16" />
     <gene id="17" protId="PANTR17" geneId="PANTRg17" />
     <gene id="18" protId="PANTR18" geneId="PANTRg18" />
+    <gene id="19" protId="PANTR19" geneId="PANTRg19" />
    </genes>
   </database>
  </species>
@@ -38,6 +39,7 @@ Example Notes without meaning
     <gene id="24" protId="CANFA4" geneId="CANFAg5" />
     <gene id="25" protId="CANFA5" geneId="CANFAg5" />
     <gene id="26" protId="CANFA6" geneId="CANFAg6" />
+    <gene id="27" protId="CANFA7" geneId="CANFAg7" />
    </genes>
   </database>
  </species>
@@ -51,7 +53,7 @@ Example Notes without meaning
     <gene id="35" protId="MOUSE5" geneId="MOUSEg5" />
     <gene id="36" protId="MOUSE6" geneId="MOUSEg6" />
     <gene id="37" protId="MOUSE7" geneId="MOUSEg7" />
-
+    <gene id="38" protId="MOUSE8" geneId="MOUSEg8" />
    </genes>
   </database>
  </species>
@@ -71,6 +73,7 @@ Example Notes without meaning
     <gene id="51" protId="XENTR1" geneId="XENTRg1" />
     <gene id="53" protId="XENTR3" geneId="XENTRg3" />
     <gene id="54" protId="XENTR9" geneId="XENTRg4" />
+    <gene id="56" protId="XENTR6" geneId="XENTRg6" />
    </genes>
   </database>
  </species>
@@ -190,6 +193,19 @@ Example Notes without meaning
         </orthologGroup>
     </paralogGroup>
    </orthologGroup>
+
+   <orthologGroup id="6">
+   <property name="TaxRange" value="Vertebrata"/>
+   <geneRef id="56"/>
+   <orthologGroup id="6.M">
+    <property name="TaxRange" value="Mammalia"/>
+    <geneRef id="27"/>
+    <paralogGroup>
+      <geneRef id="19"/>
+      <geneRef id="38" />
+    </paralogGroup>
+   </orthologGroup>
+  </orthologGroup>
 
  </groups>
 </orthoXML>

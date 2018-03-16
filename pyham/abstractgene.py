@@ -496,6 +496,7 @@ class DuplicationNode(object):
 
         else:
             self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
+            self.MRCA = self.ham._get_ancestral_genome_by_taxon(self.MRCA.taxon.up)
 
     def add_child(self, child):
         """

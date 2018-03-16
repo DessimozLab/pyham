@@ -208,8 +208,8 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
             self.assertTrue(hg.consistent)
 
     def test_numberOfGenesPerSpecies(self):
-        expected_cnts = dict(HUMAN=6, PANTR=8, MOUSE=7, RATNO=4,
-                             CANFA=6, XENTR=3)
+        expected_cnts = dict(HUMAN=6, PANTR=9, MOUSE=8, RATNO=4,
+                             CANFA=7, XENTR=4)
         observed_cnts = collections.defaultdict(int)
         for g in self.genes.values():
             observed_cnts[g.genome.name] += 1
@@ -217,7 +217,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
 
     def test_number_hog_per_ancestral_genome(self):
         ags = self.ham_analysis.get_list_ancestral_genomes()
-        expected_numbers = {'Vertebrata': 3, 'Mammalia': 5, 'Euarchontoglires': 6, 'Rodents': 4, 'Primates': 6}
+        expected_numbers = {'Vertebrata': 4, 'Mammalia': 6, 'Euarchontoglires': 8, 'Rodents': 5, 'Primates': 7}
         observed_numbers = {'Vertebrata': 0, 'Mammalia': 0, 'Euarchontoglires': 0, 'Rodents': 0, 'Primates': 0}
         for ag in ags:
             observed_numbers[ag.taxon.name] += len(ag.genes)
@@ -237,30 +237,35 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         hog3 = self.hogs["3"]
         hog4 = self.hogs["4"]
         hog5 = self.hogs["5"]
+        hog6 = self.hogs["6"]
 
         expectedMembers_1 = {'51', '21', '1', '11', '31', '41'}
         expectedMembers_2 = {'22', '32', '2', '12'}
         expectedMembers_3 = {'13', '23',  '53', '14'}
         expectedMembers_4 = {'15','16', '24', '25', '54'}
         expectedMembers_5 = {'26', '6', '17', '35', '44','7', '18', '36', '37', '45'}
+        expectedMembers_6 = {'19', '38', '27','56'}
 
         hog1_genes = hog1.get_all_descendant_genes()
         hog2_genes = hog2.get_all_descendant_genes()
         hog3_genes = hog3.get_all_descendant_genes()
         hog4_genes = hog4.get_all_descendant_genes()
         hog5_genes = hog5.get_all_descendant_genes()
+        hog6_genes = hog6.get_all_descendant_genes()
 
         members_1 = set(x.unique_id for x in hog1_genes)
         members_2 = set(x.unique_id for x in hog2_genes)
         members_3 = set(x.unique_id for x in hog3_genes)
         members_4 = set(x.unique_id for x in hog4_genes)
         members_5 = set(x.unique_id for x in hog5_genes)
+        members_6 = set(x.unique_id for x in hog6_genes)
 
         self.assertSetEqual(expectedMembers_1, members_1)
         self.assertSetEqual(expectedMembers_2, members_2)
         self.assertSetEqual(expectedMembers_3, members_3)
         self.assertSetEqual(expectedMembers_4, members_4)
         self.assertSetEqual(expectedMembers_5, members_5)
+        self.assertSetEqual(expectedMembers_6, members_6)
 
     def test_simple_hog_structure(self):
 
@@ -305,7 +310,6 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         # Rodents
         rodents = self._get_child_by_identifier(euarchontoglires, "Rodents")
         self._check_children_consistency(rodents, {"32"})
-
 
     def test_hog_with_duplication(self):
 
@@ -381,7 +385,7 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
 
         # Euarchontoglires paralogs A
         euarchontoglires_A = euarchontoglires[0]
-        self.assertNotEqual('False',euarchontoglires_A.arose_by_duplication)
+        self.assertNotEqual(False,euarchontoglires_A.arose_by_duplication)
         self._check_children_consistency(euarchontoglires_A, ["Primates", "Rodents"])
 
         primates = self._get_child_by_identifier(euarchontoglires_A, "Primates")
@@ -392,13 +396,13 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         self.assertFalse(rodents.arose_by_duplication)
         self._check_children_consistency(rodents, ["36", "37", "44"])
         g36 = self.ham_analysis.get_gene_by_id("36")
-        self.assertNotEqual('False',g36.arose_by_duplication)
+        self.assertNotEqual(False,g36.arose_by_duplication)
         g37 = self.ham_analysis.get_gene_by_id("37")
-        self.assertNotEqual('False',g37.arose_by_duplication)
+        self.assertNotEqual(False,g37.arose_by_duplication)
 
         # Euarchontoglires paralogs B
         euarchontoglires_B = euarchontoglires[1]
-        self.assertNotEqual('False',euarchontoglires_B.arose_by_duplication)
+        self.assertNotEqual(False,euarchontoglires_B.arose_by_duplication)
         self._check_children_consistency(euarchontoglires_B, ["Primates", "Rodents"])
 
         primates = self._get_child_by_identifier(euarchontoglires_B, "Primates")
@@ -408,10 +412,46 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         rodents = self._get_child_by_identifier(euarchontoglires_B, "Rodents")
         self.assertFalse(rodents.arose_by_duplication)
         self._check_children_consistency(rodents, ["35", "45"])
-        g36 = self.ham_analysis.get_gene_by_id("36")
-        self.assertNotEqual('False',g36.arose_by_duplication)
-        g37 = self.ham_analysis.get_gene_by_id("37")
-        self.assertNotEqual('False',g37.arose_by_duplication)
+
+    def test_hog_with_losses_duplication(self):
+
+        hog6 = self.hogs["6"]
+
+        # Vertebrata
+        self.assertEqual("Vertebrata", hog6.genome.taxon.name)
+        self._check_children_consistency(hog6, ["56", "Mammalia"])
+        self.assertFalse(hog6.arose_by_duplication)
+
+        # Mammalia
+        mammalia = self._get_child_by_identifier(hog6, "Mammalia")
+        self._check_children_consistency(mammalia, ["27", "Euarchontoglires","Euarchontoglires"])
+        self.assertFalse(mammalia.arose_by_duplication)
+
+        # Euarchontoglires
+        euarchontoglires = sorted(self._get_child_by_identifier(mammalia, "Euarchontoglires"))
+
+        # Euarchontoglires paralogs A
+        euarchontoglires_A = euarchontoglires[0]
+        self.assertNotEqual(False, euarchontoglires_A.arose_by_duplication)
+        self._check_children_consistency(euarchontoglires_A, ["Primates"])
+
+        primates = self._get_child_by_identifier(euarchontoglires_A, "Primates")
+        self.assertFalse(primates.arose_by_duplication)
+        self._check_children_consistency(primates, ["19"])
+        g19 = self.ham_analysis.get_gene_by_id("19")
+        self.assertEqual(False, g19.arose_by_duplication)
+
+        # Euarchontoglires paralogs B
+        euarchontoglires_B = euarchontoglires[1]
+        self.assertNotEqual(False, euarchontoglires_B.arose_by_duplication)
+        self._check_children_consistency(euarchontoglires_B, ["Rodents"])
+
+        rodents = self._get_child_by_identifier(euarchontoglires_B, "Rodents")
+        self.assertFalse(rodents.arose_by_duplication)
+        self._check_children_consistency(rodents, ["38"])
+        g38 = self.ham_analysis.get_gene_by_id("38")
+        self.assertEqual(False, g38.arose_by_duplication)
+
 
 """
 Tests for FilterOrthoXMLParser are made indirectly inside Ham unit tests.
