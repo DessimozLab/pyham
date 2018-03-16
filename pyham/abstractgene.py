@@ -147,6 +147,7 @@ class HOG(AbstractGene):
         | hog_id (:obj:`str`): hog id. Defaults is None.
         | children (:obj:`list` of :obj:`pyham.abstractgene.AbstractGene`): A list of direct descendants AbstractGene.
         | hogvis (:obj:`pyham.Hogvis`): :obj:`pyham.Hogvis` object of this HOG.
+        | duplications (:obj:`list` of :obj:`pyham.abstractgene.DuplicationNode`): list of all duplication node child of this HOG.
 
     """
 
@@ -155,6 +156,7 @@ class HOG(AbstractGene):
         self.hog_id = id
         self.children = []
         self.hogvis = None
+        self.duplications = []
 
     def add_child(self, child_to_add):
 
@@ -452,3 +454,54 @@ class Gene(AbstractGene):
 
 class EvolutionaryConceptError(Exception):
     pass
+
+class DuplicationNode(object):
+    """
+        This object link together all abstract genes that emerges from the same duplication event. Its composed of a set of genes
+        all descendant from this duplication event and their direct related parent hog. In addition it contained the MRCA of all 
+        children genes.
+    """
+
+    def __init__(self,ham_object):
+        self.ham = ham_object
+        self.MRCA = None
+        self.children = []
+        self.parent = None
+
+    def set_parent(self, hog):
+        """
+                Args:
+                    | hog (:obj:`pyham.abstractegene.HOG`): parent :obj:`pyham.abstractegene.HOG` of this duplication.
+
+        """
+
+        if not isinstance(hog, HOG):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(HOG.__name__,
+                                    type(hog).__name__))
+
+        hog.duplications.append(self)
+        self.parent = hog
+
+    def set_MRCA(self):
+        """
+            Compute the MRCA of all genes genomes.
+        """
+
+        children_genomes = set([child.genome for child in self.children])
+
+        self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
+
+    def add_child(self, child):
+        """
+            Add child to list of children
+        """
+
+        if not isinstance(child, AbstractGene):
+            raise TypeError("expect subclass obj of '{}', got {}"
+                            .format(AbstractGene.__name__,
+                                    type(child).__name__))
+
+
+        self.children.append(child)
+        child.arose_by_duplication = self

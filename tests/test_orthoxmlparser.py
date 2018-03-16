@@ -3,6 +3,7 @@ import unittest
 from pyham import ham
 from pyham import utils
 import os
+from unittest import skip
 
 class OrthoXMLParserTest(unittest.TestCase):
     def _get_identifier(self, item):
@@ -161,6 +162,7 @@ class OrthoXMLParserTest(unittest.TestCase):
                 self._check_children_consistency(rodents, ["34"])
                 self._check_children_consistency(primates, ["14"])
 
+@skip
 class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
     def _get_identifier(self, item):
         if isinstance(item, ham.abstractgene.Gene):
