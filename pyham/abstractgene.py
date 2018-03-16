@@ -526,6 +526,6 @@ class DuplicationNode(object):
             child_to_remove.arose_by_duplication = False
 
         else:
-            raise ValueError("element not found in the hog children")
+            raise ValueError("element not found in the duplication children")
 
 

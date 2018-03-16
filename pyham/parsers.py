@@ -209,8 +209,16 @@ class OrthoXMLParser(object):
 
                     else:
 
+
                         duplication.set_parent(hog)
 
+                        for child_direct in children:
+
+                            change = self.ham_object.taxonomy.get_path_up(child_direct.genome.taxon, hog.genome.taxon)
+                            self.ham_object._add_missing_taxon(child_direct, hog, change)
+
+                            duplication.remove_child(child_direct)
+                            duplication.add_child(hog.children[-1])
 
                 hog_genome = hog.genome
                 change = {} # {child -> [intermediate level]}
@@ -222,11 +230,8 @@ class OrthoXMLParser(object):
                         change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
                 for hog_child, missing in change.items():
-                    self.ham_object._add_missing_taxon(hog_child,hog,missing)
 
-                    if hog_child.arose_by_duplication != False:
-                        duplication.remove_child(hog_child)
-                        duplication.add_child(hog.children[-1])
+                    self.ham_object._add_missing_taxon(hog_child,hog,missing)
 
 
                 if len(self.hog_stack) == 0:
