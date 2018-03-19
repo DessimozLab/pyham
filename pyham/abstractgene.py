@@ -21,7 +21,7 @@ class AbstractGene(object):
         | parent (:obj:`pyham.abstractgene.HOG`): Direct parent HOG this gene is descendant to. For and only for top level HOG, parent
         attribute is set to  None.
         | genome (:obj:`pyham.genome.Genome`): Related Genome object.
-        arose_by_duplication (:obj:`Bool`): True if this AbstractGene arose by a duplication from its parent.
+        arose_by_duplication: pyham.abstractgene.DuplicationNode if this AbstractGene arose by a duplication from its parent otherwise False.
         
     """
 
@@ -458,12 +458,17 @@ class EvolutionaryConceptError(Exception):
 class DuplicationNode(object):
     """
         This object link together all abstract genes that emerges from the same duplication event. Its composed of a set of genes
-        all descendant from this duplication event and their direct related parent hog. In addition it contained the MRCA of all 
-        children genes.
+        all descendant from this duplication event and their direct related parent hog. In addition it contained the parent of the MRCA of all 
+        children genes (otherwise MRCA return genome father duplication).
+        
+        Attributes:
+        | parent (:obj:`pyham.abstractgene.HOG`): Direct parent HOG this DuplicationNode.
+        | children: List of all duplicated genes
+        | MRCA: Parent of the MRCA of all children gene that contained the parent HOG.
+            
     """
 
     def __init__(self,ham_object):
-
         self.ham = ham_object
         self.MRCA = None
         self.children = []

@@ -6,7 +6,6 @@ from builtins import str
 from future import standard_library
 standard_library.install_aliases()
 from . import abstractgene
-from . import genome
 import logging
 logger = logging.getLogger(__name__)
 from collections import defaultdict
@@ -113,7 +112,7 @@ class OrthoXMLParser(object):
             gene = self.extant_gene_map[attrib['id']]
             self.hog_stack[-1].add_child(gene)
 
-            # if the gene is contained within a paralogousGroup need to update its .arose_by_duplication flag. TODO unittest
+            # if the gene is contained within a paralogousGroup need to update its .arose_by_duplication flag.
             if self.in_paralogGroup == len(self.hog_stack):
                 self.paralogyNode.add_child(gene)
 
@@ -170,6 +169,7 @@ class OrthoXMLParser(object):
                     self.skip_this_hog = False
 
             else:
+
                 # get the ancestral genome related to this hog based on it's children
                 ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
                 hog.set_genome(ancestral_genome)
@@ -177,21 +177,24 @@ class OrthoXMLParser(object):
 
                 # get all child clustered by dup if any
                 child_by_duplication = defaultdict(list)
-
                 for child in hog.children:
                     if child.arose_by_duplication != False:
                         child_by_duplication[child.arose_by_duplication].append(child)
 
+                # For each duplication
                 for duplication, children in child_by_duplication.items():
 
+                    # add MRCA hog if its missing
                     if duplication.MRCA != hog.genome:
 
+                        # create the MRCA hog
                         mrcahog = abstractgene.HOG()
                         mrcahog.set_genome(duplication.MRCA)
                         duplication.MRCA.add_gene(mrcahog)
 
                         hog.add_child(mrcahog)
 
+                        # add missing level down (from mrcaHOG to duplicated child)
                         for child in children:
                             hog.remove_child(child)
                             mrcahog.add_child(child)
@@ -207,8 +210,8 @@ class OrthoXMLParser(object):
                         for y in mrcahog.children:
                             duplication.add_child(y)
 
+                    # Otherwise simply add missing taxa between hog and duplicated child
                     else:
-
 
                         duplication.set_parent(hog)
 
@@ -223,16 +226,15 @@ class OrthoXMLParser(object):
                 hog_genome = hog.genome
                 change = {} # {child -> [intermediate level]}
 
-                # for all children of this hog
+                # for all children of this hog find missing level
                 for child in hog.children:
                     child_genome = child.genome
                     if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
                         change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
+                # and add them if required
                 for hog_child, missing in change.items():
-
                     self.ham_object._add_missing_taxon(hog_child,hog,missing)
-
 
                 if len(self.hog_stack) == 0:
 
