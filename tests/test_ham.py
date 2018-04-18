@@ -28,6 +28,10 @@ class HAMTestSetUp(unittest.TestCase):
 
         self.orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
+        with open(self.orthoxml_path, 'r') as orthoxml_file:
+            data = orthoxml_file.read()
+            self.orthoxml_string = data
+
     def test_wrong_newick_str(self):
 
         with self.assertRaises(ete3.parser.newick.NewickError):
@@ -50,6 +54,13 @@ class HAMTestSetUp(unittest.TestCase):
     def test_wrong_filter(self):
         with self.assertRaises(TypeError):
             ham.Ham(self.nwk_str, self.orthoxml_path, filter_object="x")
+
+    def test_orthoxml_as_string(self):
+
+        self.ham_analysis = ham.Ham(newick_str=self.nwk_str, hog_file=self.orthoxml_string, type_hog_file='orthoxml', orthoXML_as_string = True)
+
+        with self.assertRaises(IOError):
+            self.ham_analysis = ham.Ham(newick_str=self.nwk_str, hog_file=self.orthoxml_string, type_hog_file='orthoxml')
 
 
 class HAMTest(unittest.TestCase):
@@ -95,6 +106,10 @@ class HAMTestQuery(unittest.TestCase):
 
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
+        with open(orthoxml_path, 'r') as orthoxml_file:
+            data = orthoxml_file.read()
+            self.orthoxml_string = data
+
         # using newick with name on both internal nodes and leaves
         self.h = ham.Ham(nwk_str, orthoxml_path, use_internal_name=True)
 
@@ -115,6 +130,13 @@ class HAMTestQuery(unittest.TestCase):
         f.add_hogs_via_hogId([2])
         self.hf = ham.Ham(nwk_str, orthoxml_path, filter_object=f, use_internal_name=True)
 
+        # test that filter work with string
+        self.hstring = ham.Ham(nwk_str, self.orthoxml_string, use_internal_name=True,
+                                orthoXML_as_string=True)
+
+        # test that filter work with string
+        self.hfstring = ham.Ham(nwk_str, self.orthoxml_string, filter_object=f, use_internal_name=True, orthoXML_as_string = True)
+
     # HOG
 
     def test_get_hog_by_id(self):
@@ -131,6 +153,9 @@ class HAMTestQuery(unittest.TestCase):
         hog3 = self.h.get_hog_by_id(3)
         self.assertEqual(str(hog3), "<HOG(3)>")
 
+        hog3 = self.hstring.get_hog_by_id(3)
+        self.assertEqual(str(hog3), "<HOG(3)>")
+
         ###############
         # With filter #
         ###############
@@ -139,9 +164,15 @@ class HAMTestQuery(unittest.TestCase):
             hog = self.hf.get_hog_by_id(hog_id)
             self.assertEqual(str(hog), "<HOG({})>".format(hog_id))
 
+            hog = self.hfstring.get_hog_by_id(hog_id)
+            self.assertEqual(str(hog), "<HOG({})>".format(hog_id))
+
         for hog_id in self.no_filter_hogs:
             with self.assertRaises(KeyError):
                 self.hf.get_hog_by_id(hog_id)
+
+            with self.assertRaises(KeyError):
+                self.hfstring.get_hog_by_id(hog_id)
 
     def test_get_hog_by_gene(self):
 
@@ -191,6 +222,9 @@ class HAMTestQuery(unittest.TestCase):
         hogs = self.hf.get_dict_top_level_hogs()
         self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>"})
 
+        hogs = self.hfstring.get_dict_top_level_hogs()
+        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>"})
+
     # Gene
 
     def test_get_gene_by_id(self):
@@ -233,6 +267,9 @@ class HAMTestQuery(unittest.TestCase):
         gene12 = self.h.get_genes_by_external_id("PANTRg2")[0]
         self.assertEqual(str(gene12), "Gene(12)")
 
+        gene12 = self.hstring.get_genes_by_external_id("PANTRg2")[0]
+        self.assertEqual(str(gene12), "Gene(12)")
+
         ###############
         # With filter #
         ###############
@@ -260,6 +297,9 @@ class HAMTestQuery(unittest.TestCase):
 
         genes = self.hf.get_list_extant_genes()
         self.assertSetEqual(set([g.unique_id for g in genes]),self.filter_genes)
+
+        genes = self.hfstring.get_list_extant_genes()
+        self.assertSetEqual(set([g.unique_id for g in genes]), self.filter_genes)
 
     def test_get_dict_extant_genes(self):
 

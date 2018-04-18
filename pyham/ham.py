@@ -17,6 +17,7 @@ from . import abstractgene
 from .TreeProfile import TreeProfile
 import logging
 import copy
+import io
 
 logger = logging.getLogger(__name__)
 
@@ -124,7 +125,7 @@ class Ham(object):
 
     """
 
-    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False):
+    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False, orthoXML_as_string=False):
         """
 
         Args:
@@ -138,6 +139,10 @@ class Ham(object):
         # HOGs file
         self.hog_file = hog_file
         self.hog_file_type = type_hog_file
+        self.orthoXML_as_string = orthoXML_as_string
+
+        if self.orthoXML_as_string == True:
+            self.hog_file = self.hog_file.decode('utf-8')
 
         # Filtering
         if isinstance(filter_object, ParserFilter) or filter_object is None:
@@ -162,22 +167,29 @@ class Ham(object):
 
             #  If filter_object specified, pyham parse a first time to collect required information
             if self.filter_obj is not None:
+
+                if self.orthoXML_as_string == True:
+                    with io.StringIO(self.hog_file)  as orthoxml_file:
+                        self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
+
+                else:
+                    with open(self.hog_file, 'r') as orthoxml_file:
+                        self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
+
+                logger.info('Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(
+                                len(self.filter_obj.hogsId),
+                                len(self.filter_obj.geneUniqueId)))
+
+            if self.orthoXML_as_string == True:
+                with io.StringIO(self.hog_file) as orthoxml_file:
+                    self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
+
+            else:
+                # This is the actual parser to build HOG/Gene and related Genomes.
                 with open(self.hog_file, 'r') as orthoxml_file:
-                    self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
-                    logger.info(
-                        'Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(
-                            len(self.filter_obj.hogsId),
-                            len(self.filter_obj.geneUniqueId)))
+                    self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
 
-            # This is the actual parser to build HOG/Gene and related Genomes.
-            with open(self.hog_file, 'r') as orthoxml_file:
-                self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = \
-                    self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
-
-            logger.info(
-                'Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),
-                                                                                        len(
-                                                                                            self.extant_gene_map)))
+            logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),len(self.extant_gene_map)))
 
         elif self.hog_file_type == "hdf5":
             # Looping through all orthoXML within the hdf5
