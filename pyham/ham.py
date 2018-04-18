@@ -122,6 +122,7 @@ class Ham(object):
         | HOGMaps (:obj:`dict`): Dictionary that map a :obj:`frozenset` of a pair of genomes to its :obj:`pyham.mapper.HOGsMap`.
         | filter_obj (:obj:`pyham.pyham.ParserFilter`): :obj:`ParserFilter` used during the instanciation of Ham. Defaults to None.
         | taxonomy: (:obj:`pyham.mapper.Taxonomy`): :obj:`pyham.pyham.Taxonomy` build and used by :obj:`pyham.pyham.Ham` instance.
+        | orthoXML_as_string (:obj:`Bool`) If set to true, hog_file is a string of an orthoxml file. Defaults to False.
 
     """
 
