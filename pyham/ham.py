@@ -143,6 +143,7 @@ class Ham(object):
         self.orthoXML_as_string = orthoXML_as_string
 
         if self.orthoXML_as_string == True:
+            self.hog_file = self.hog_file.encode()
             self.hog_file = self.hog_file.decode('utf-8')
 
         # Filtering
