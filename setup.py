@@ -4,7 +4,7 @@ from io import open
 
 
 name = 'pyham'
-requirements = ['ete3', 'six', 'scipy', 'future']
+requirements = ['ete3', 'six', 'lxml', 'future']
 
 
 __version__ = "Undefined"
@@ -35,7 +35,7 @@ setup(
     license='MIT',
 
     classifiers=[
-         'Development Status :: 3 - Alpha',
+         'Development Status :: 5 - Production/Stable',
          'Environment :: Console',
          'Intended Audience :: Developers',
          'Intended Audience :: Science/Research',

@@ -9,7 +9,6 @@ import logging
 import json
 import datetime
 import lxml.etree as etree
-from . import abstractgene as absGene
 
 logger = logging.getLogger(__name__)
 
@@ -296,6 +295,8 @@ class OrthoXML_manager(object):
                 gene_xml.set("protId", str(gene_obj.prot_id))
 
     def _add_groups(self):
+
+        from . import abstractgene as absGene
 
         def _process_child(child, current_xml):
 
