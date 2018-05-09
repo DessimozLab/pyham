@@ -29,13 +29,13 @@ Consider using pip to install the package directly from a checked out git repo
 
 GETTING STARTED
 ---------------
-We create a small introductory blog post about HOGs and pyHam at lab.dessimoz.org/blog/2017/06/29/pyham. We highly recommend you to read it before starting using pyHam.
+We create a small introductory blog post about HOGs and pyHam at http://lab.dessimoz.org/blog/2017/06/29/pyham. We highly recommend you to read it before starting using pyHam.
 
-We also create an ipython notebook to help you with basic uses of pyHam API and embedded tools at zoo.cs.ucl.ac.uk/tutorials/tutorial_pyHam_get_started.html.
+We also create an ipython notebook to help you with basic uses of pyHam API and embedded tools at http://zoo.cs.ucl.ac.uk/tutorials/tutorial_pyHam_get_started.html.
 
 
 DOCUMENTATION
 -------------
-You can the full documentation of pyHam at zoo.cs.ucl.ac.uk/doc/pyham/index.html
+You can the full documentation of pyHam at http://zoo.cs.ucl.ac.uk/doc/pyham/index.html
 
 
