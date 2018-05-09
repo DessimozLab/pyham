@@ -1,6 +1,11 @@
 from fabric.api import *
 
 
+# TO UPDATE PIP PACKAGE
+# 1 -> update __version__ variable in pyham/__init__.py
+# 2 -> fab test clean pack deploy
+
+
 def clean():
     # remove old package
     local('rm -rf dist/', capture=False)
