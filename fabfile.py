@@ -14,7 +14,7 @@ def clean():
 def test():
     # run unit test
     local('python -m unittest discover tests/', capture=False)
-    local('python tests/functional_test.py ', capture=False)
+    local('python tests/functional_test.py', capture=False)
 
 def pack():
     # build the package

@@ -165,7 +165,6 @@ class HamAnalysis(unittest.TestCase):
         #ham_analysis.create_tree_profile(outfile="./tp2.png", export_with_histogram=True)
 
 
-
 if __name__ == "__main__":
     unittest.main()
 
