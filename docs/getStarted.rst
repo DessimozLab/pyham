@@ -65,9 +65,9 @@ Then the seconds step is the orthoXML parsing using the :obj:`pyham.parser.Ortho
 What are the visualisation tool provide by pyham ?
 ##################################################
 
-pyham provide two different phylogeny based visualisation tools called: Hogvis and Tree Profile. The goal of those visualisation tool is to synthesise concisely phylogenetic information using different perspective.
+pyham provide two different phylogeny based visualisation tools called: IHAM and Tree Profile. The goal of those visualisation tool is to synthesise concisely phylogenetic information using different perspective.
 
-Hogvis : tool to visualise how the HOG members genes are clustering based on their ancestral genes membership.
+IHAM : tool to visualise how the HOG members genes are clustering based on their ancestral genes membership.
 
 TreeProfile: TreeProfile is a tool to visualise how the genes have evolved in terms of evolutionnary events alonge a phylogenetic tree (duplication, lost, gained).
 

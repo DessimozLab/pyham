@@ -8,7 +8,7 @@ from future import standard_library
 standard_library.install_aliases()
 import numbers
 from .genome import ExtantGenome, AncestralGenome, Genome
-from .hogvis import Hogvis
+from .iham import IHAM
 import abc, six
 
 @six.add_metaclass(abc.ABCMeta)
@@ -146,7 +146,7 @@ class HOG(AbstractGene):
     Attributes:
         | hog_id (:obj:`str`): hog id. Defaults is None.
         | children (:obj:`list` of :obj:`pyham.abstractgene.AbstractGene`): A list of direct descendants AbstractGene.
-        | hogvis (:obj:`pyham.Hogvis`): :obj:`pyham.Hogvis` object of this HOG.
+        | hogvis (:obj:`pyham.IHAM`): :obj:`pyham.IHAM` object of this HOG.
         | duplications (:obj:`list` of :obj:`pyham.abstractgene.DuplicationNode`): list of all duplication node child of this HOG.
 
     """
@@ -356,18 +356,18 @@ class HOG(AbstractGene):
 
     def get_hog_vis(self, newick_str):
 
-        """ Lazy getter of the :obj:`pyham.abstractgene.HOG` Hogvis.
+        """ Lazy getter of the :obj:`pyham.abstractgene.HOG` IHAM.
 
             Args:
-                newick_str (:obj:`str`): newick species tree used by the create_hog_visualisation.
+                newick_str (:obj:`str`): newick species tree used by the create_iHam.
 
             Returns:
-                :obj:`pyham.Hogvis` of this HOG.
+                :obj:`pyham.IHAM` of this HOG.
 
         """
 
         if self.hogvis is None:
-            self.hogvis = Hogvis(newick_str, self)
+            self.hogvis = IHAM(newick_str, self)
 
         return self.hogvis
 

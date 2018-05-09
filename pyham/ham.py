@@ -272,28 +272,28 @@ class Ham(object):
 
         return lateral_map
 
-    def create_hog_visualisation(self, hog, outfile=None):
+    def create_iHam(self, hog, outfile=None):
 
         """
-        Function to compute a :obj:`pyham.Hogvis`.
+        Function to compute a :obj:`pyham.IHAM`.
 
-        If an outfile is specified, export the :obj:`pyham.Hogvis` as html file.
+        If an outfile is specified, export the :obj:`pyham.IHAM` as html file.
 
         Attributes:
-            | hog (:obj:`pyham.abstractgene.HOG`): HOG use as template for the :obj:`pyham.Hogvis`.
-            | outfile (:obj:`str`, optional): Path to the Hogvis html file.
+            | hog (:obj:`pyham.abstractgene.HOG`): HOG use as template for the :obj:`pyham.IHAM`.
+            | outfile (:obj:`str`, optional): Path to the IHAM html file.
 
         Returns:
-            | :obj:`pyham.Hogvis` 
+            | :obj:`pyham.IHAM` 
         """
 
-        newick_tree =self.taxonomy.get_newick_from_tree(hog.genome.taxon)
+        newick_tree = self.taxonomy.get_newick_from_tree(hog.genome.taxon)
 
         vis = hog.get_hog_vis(newick_tree)
 
         if outfile is not None:
             with open(outfile, 'w') as fh:
-                fh.write(vis.renderHTML)
+                fh.write(vis.HTML)
 
         return vis
 
