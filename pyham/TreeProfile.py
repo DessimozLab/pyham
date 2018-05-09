@@ -7,6 +7,7 @@ from future import standard_library
 standard_library.install_aliases()
 from .abstractgene import HOG
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -253,3 +254,94 @@ class TreeProfile(object):
             ts.legend_position = 3
 
         self.treemap.render(output,tree_style=ts)
+
+
+    def export_as_html(self, output ):
+
+        """  
+        Method to export the tree profile object as an interactive tool embedded into a html file.
+
+
+        Args:
+            | output (:obj:`str`): output file name. If filename finish by .html, a double click load the file into your default browser.
+        """
+
+        def visit_custom(node, data):
+
+            current = {
+                "name": node.name,
+                "numberGenes": node.nbr_genes,
+                "length": 0.01,
+                "collapsed": "false",
+                "evolutionaryEvents": {
+                    "identical": None,
+                    "duplicated": None,
+                    "gained": None,
+                    "lost": None
+                }
+            }
+
+            if node.is_root():
+                current['evolutionaryEvents'] = False
+
+            else:
+                current['evolutionaryEvents']["identical"] = node.identical
+                current['evolutionaryEvents']["duplicated"] = node.dupl
+                current['evolutionaryEvents']["gained"] = node.gain
+                current['evolutionaryEvents']["lost"] = node.lost
+
+            if not node.is_leaf():
+                current['children'] = []
+
+            for child in node.children:
+                current['children'].append(visit_custom(child, data))
+
+            return current
+
+        template = '''
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Phylo.io</title>
+            <meta charset="UTF-8">
+            <script src="https://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/jquery-2.1.4.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www/js/treecompare.js"></script>
+            <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/d3.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/FileSaver.min.js"></script>
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P" crossorigin="anonymous">
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//css/bootstrap-theme.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//css/style.css">
+            <style> text {{stroke: none;}}</style>
+        </head>
+        <body>
+        <div id="vis-container1" style="width: 100%; height: 100%;"></div>
+        <script type="text/javascript">
+            var treecomp = TreeCompare().init({{
+                scaleColor: "black",
+                showHistogramValues: true,
+                showHistogramSummaryValue: false
+            }});
+            treeData = '{json_data}';
+            var tree1 = treecomp.addTree(treeData, undefined, "single");
+            treecomp.viewTree(tree1.name, "vis-container1");
+            treecomp.addMainLegend(tree1.name);
+        </script>
+        </body>
+        </html>
+        '''
+
+        data = {}
+
+        data = visit_custom(self.treemap, data)
+
+        data = json.dumps(data)
+
+        template = template.format(json_data=data)
+
+        with open(output, 'w') as outfile:
+            outfile.write(template)

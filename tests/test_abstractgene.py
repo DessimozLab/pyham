@@ -4,6 +4,7 @@ from pyham.abstractgene import EvolutionaryConceptError as ECE
 import os
 
 class GeneTest(unittest.TestCase):
+
     def test_id_required(self):
         with self.assertRaises(TypeError):
             Gene()

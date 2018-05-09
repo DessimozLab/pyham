@@ -297,7 +297,7 @@ class Ham(object):
 
         return vis
 
-    def create_tree_profile(self, hog=None, outfile=None, export_with_histogram=True):
+    def create_tree_profile(self, hog=None, outfile=None, as_html=True, export_with_histogram=True):
 
         """
         Function to compute a :obj:`pyham.TreeProfile`.
@@ -312,6 +312,8 @@ class Ham(object):
             | outfile (:obj:`str`, optional): Path to the create_tree_profile output image file. valid extensions are .SVG, .PDF, .PNG.  
             | export_with_histogram (:obj:`Bool`, optional): If True, export image with histogram at each internal node otherwise 
             | display internal node information as text.
+            | as_html (:obj:`Bool`, optional): If true, the tree profile will be exported as html file containing an 
+            interactive viewer to handle tree profile information.
 
         Returns:
             | :obj:`pyham.TreeProfile` 
@@ -320,7 +322,12 @@ class Ham(object):
         tp = TreeProfile(self, hog=hog)
 
         if outfile:
-            tp.export(outfile, display_internal_histogram=export_with_histogram)
+
+            if as_html:
+                tp.export_as_html(outfile)
+
+            else:
+                tp.export(outfile, display_internal_histogram=export_with_histogram)
 
         return tp
 
