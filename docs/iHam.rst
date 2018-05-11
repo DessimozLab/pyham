@@ -1,5 +1,5 @@
-HOG Vis
-==============
+iHam
+====
 
 .. autoclass:: pyham.IHAM
     :members:

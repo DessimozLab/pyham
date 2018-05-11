@@ -29,11 +29,11 @@ pyham can be install via pip using the following command:
 Source code
 ###########
 
-The lastest source code of pyham version |release| can be download here: **www.lab.dessimoz/ham/latest.tar.gz**.
+The lastest source code of pyham can be download at https://github.com/DessimozLab/pyham .
 
 
-Install PyQt4 on Mac (only required for treeProfile)
-####################################################
+Install PyQt4 on Mac (only required if you want to use old treeProfile version without html interface)
+######################################################################################################
 
 
 **Thanks to Dr. D. Dylus for writing this section.**

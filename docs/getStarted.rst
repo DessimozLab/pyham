@@ -1,8 +1,8 @@
 .. _basics:
 The Basics on pyham
-=================
+===================
 
-pyHam (“HAM: HOG Analysis Method”) is a python library to handle orthoXML containings Hierarchical Orthologous Groups (HOGs). The motivation of pyham is to create an easy python interface to investigate on HOGs and evolutionary information that can be induced from them. pyham provide graphical tools to visualize evolution history of single gene family or comparative genomic setup.
+pyHam (“python HOG analysis method”) is a python library to handle orthoXML containings Hierarchical Orthologous Groups (HOGs). The motivation of pyham is to create an easy python interface to investigate on HOGs and evolutionary information that can be induced from them. pyham provide graphical tools to visualize evolution history of single gene family or comparative genomic setup.
 
 
 
@@ -69,9 +69,9 @@ pyham provide two different phylogeny based visualisation tools called: IHAM and
 
 IHAM : tool to visualise how the HOG members genes are clustering based on their ancestral genes membership.
 
-TreeProfile: TreeProfile is a tool to visualise how the genes have evolved in terms of evolutionnary events alonge a phylogenetic tree (duplication, lost, gained).
+TreeProfile: TreeProfile is a tool to visualise how the genes have evolved in terms of evolutionnary events along a phylogenetic tree (duplication, lost, gained).
 
-**If you want to discover more about those visualisation tools, the pyham ipython notebook tutorial provides interactive explanations.**
+**If you want to discover more about those visualisation tools, the pyham ipython notebook tutorial provides interactive explanations at** https://zoo.cs.ucl.ac.uk/tutorials/tutorial_pyHam_get_started.html .
 
 
 -----------

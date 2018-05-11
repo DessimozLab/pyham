@@ -15,7 +15,7 @@ Here is the documentation for the Ham objects.
    mapper
    utils
    treeprofile
-   hogvis
+   iHam
 
 
 

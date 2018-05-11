@@ -2,3 +2,4 @@ Sphinx==1.5.1
 noise
 fabric
 fabric3
+twine
