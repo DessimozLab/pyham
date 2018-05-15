@@ -2,3 +2,4 @@ ete3==3.0.0b35
 six==1.10.0
 future
 lxml
+twine

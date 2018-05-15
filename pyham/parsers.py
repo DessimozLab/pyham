@@ -171,7 +171,12 @@ class OrthoXMLParser(object):
             else:
 
                 # get the ancestral genome related to this hog based on it's children
-                ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
+                if len(set([child.genome for child in hog.children])) == 1:
+                    ancestral_genome = self.ham_object._get_ancestral_genome_by_taxon(hog.children[0].genome.taxon.up)
+
+                else:
+                    ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
+
                 hog.set_genome(ancestral_genome)
                 ancestral_genome.taxon.genome.add_gene(hog)
 

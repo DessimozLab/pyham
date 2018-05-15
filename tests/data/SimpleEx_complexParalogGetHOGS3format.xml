@@ -1,0 +1,228 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<orthoXML origin="OMA standalone (bottom-up)" originVersion="[VERSIONNR]" version="0.3" xmlns="http://orthoXML.org/2011/">
+  <species name="HUMAN" NCBITaxId="0">
+    <database name="" version="">
+       <genes>
+    <gene id="1" protId="HUMAN1" geneId="HUMANg1" />
+    <gene id="2" protId="HUMAN2" geneId="HUMANg2" />
+    <gene id="3" protId="HUMAN3" geneId="HUMANg3" />
+    <gene id="5" protId="HUMAN5" geneId="HUMANg5" />
+    <gene id="6" protId="HUMAN6" geneId="HUMANg6" />
+    <gene id="7" protId="HUMAN7" geneId="HUMANg7" />
+   </genes>
+    </database>
+  </species>
+  <species name="PANTR" NCBITaxId="0">
+    <database name="" version="">
+      <genes>
+    <gene id="11" protId="PANTR1" geneId="PANTRg1" />
+    <gene id="12" protId="PANTR2" geneId="PANTRg2" />
+    <gene id="13" protId="PANTR3" geneId="PANTRg3" />
+    <gene id="14" protId="PANTR4" geneId="PANTRg4" />
+    <gene id="15" protId="PANTR15" geneId="PANTRg15" />
+    <gene id="16" protId="PANTR16" geneId="PANTRg16" />
+    <gene id="17" protId="PANTR17" geneId="PANTRg17" />
+    <gene id="18" protId="PANTR18" geneId="PANTRg18" />
+    <gene id="19" protId="PANTR19" geneId="PANTRg19" />
+   </genes>
+    </database>
+  </species>
+  <species name="CANFA" NCBITaxId="0">
+    <database name="" version="">
+      <genes>
+    <gene id="21" protId="CANFA1" geneId="CANFAg1" />
+    <gene id="22" protId="CANFA2" geneId="CANFAg2" />
+    <gene id="23" protId="CANFA3" geneId="CANFAg3" />
+    <gene id="24" protId="CANFA4" geneId="CANFAg5" />
+    <gene id="25" protId="CANFA5" geneId="CANFAg5" />
+    <gene id="26" protId="CANFA6" geneId="CANFAg6" />
+    <gene id="27" protId="CANFA7" geneId="CANFAg7" />
+   </genes>
+    </database>
+  </species>
+  <species name="MOUSE" NCBITaxId="0">
+    <database name="" version="">
+      <genes>
+    <gene id="31" protId="MOUSE1" geneId="MOUSEg1" />
+    <gene id="32" protId="MOUSE2" geneId="MOUSEg2" />
+    <gene id="33" protId="MOUSE3" geneId="MOUSEg3" />
+    <gene id="34" protId="MOUSE4" geneId="MOUSEg4" />
+    <gene id="35" protId="MOUSE5" geneId="MOUSEg5" />
+    <gene id="36" protId="MOUSE6" geneId="MOUSEg6" />
+    <gene id="37" protId="MOUSE7" geneId="MOUSEg7" />
+    <gene id="38" protId="MOUSE8" geneId="MOUSEg8" />
+   </genes>
+    </database>
+  </species>
+  <species name="RATNO" NCBITaxId="0">
+    <database name="" version="">
+         <genes>
+    <gene id="41" protId="RATNO1" geneId="RATNOg1" />
+    <gene id="43" protId="RATNO3" geneId="RATNOg3" />
+    <gene id="44" protId="RATNO4" geneId="RATNOg4" />
+    <gene id="45" protId="RATNO5" geneId="RATNOg5" />
+   </genes>
+    </database>
+  </species>
+  <species name="XENTR" NCBITaxId="0">
+    <database name="" version="">
+      <genes>
+    <gene id="51" protId="XENTR1" geneId="XENTRg1" />
+    <gene id="53" protId="XENTR3" geneId="XENTRg3" />
+    <gene id="54" protId="XENTR9" geneId="XENTRg4" />
+    <gene id="56" protId="XENTR6" geneId="XENTRg6" />
+   </genes>
+    </database>
+  </species>
+
+  <scores>
+  <scoreDef id="consistency" desc="A consistency based score, just an example"/>
+  <scoreDef id="coverage" desc="yet another example score"/>
+ </scores>
+  <groups>
+
+    <orthologGroup id="1">
+      <score id="consistency" value="1.0"/>
+      <property name="TaxRange" value="Vertebrata"/>
+      <orthologGroup>
+        <property name="TaxRange" value="Mammalia"/>
+        <geneRef id="21"/>
+        <orthologGroup>
+          <property name="TaxRange" value="Euarchontoglires"/>
+          <orthologGroup>
+            <property name="TaxRange" value="Rodents"/>
+            <geneRef id="41"/>
+            <geneRef id="31"/>
+          </orthologGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Primates"/>
+            <geneRef id="11"/>
+            <geneRef id="1"/>
+          </orthologGroup>
+        </orthologGroup>
+      </orthologGroup>
+      <geneRef id="51"/>
+    </orthologGroup>
+
+    <orthologGroup id="2">
+      <property name="TaxRange" value="Mammalia"/>
+      <geneRef id="22"/>
+      <orthologGroup>
+        <property name="TaxRange" value="Euarchontoglires"/>
+        <orthologGroup>
+          <property name="TaxRange" value="Primates"/>
+          <geneRef id="12"/>
+          <geneRef id="2"/>
+        </orthologGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Rodents"/>
+          <geneRef id="32"/>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+
+    <orthologGroup id="3">
+      <property name="TaxRange" value="Vertebrata"/>
+      <geneRef id="53"/>
+      <orthologGroup>
+        <property name="TaxRange" value="Mammalia"/>
+        <geneRef id="23"/>
+        <orthologGroup>
+          <property name="TaxRange" value="Euarchontoglires"/>
+          <orthologGroup>
+            <property name="TaxRange" value="Primates"/>
+            <paralogGroup>
+              <geneRef id="13"/>
+              <geneRef id="14"/>
+            </paralogGroup>
+          </orthologGroup>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+
+    <orthologGroup id="4">
+      <property name="TaxRange" value="Vertebrata"/>
+      <orthologGroup>
+        <property name="TaxRange" value="Mammalia"/>
+        <paralogGroup>
+          <geneRef id="24"/>
+          <geneRef id="25"/>
+        </paralogGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Euarchontoglires"/>
+          <orthologGroup>
+            <property name="TaxRange" value="Primates"/>
+            <paralogGroup>
+              <geneRef id="15"/>
+              <geneRef id="16"/>
+            </paralogGroup>
+          </orthologGroup>
+        </orthologGroup>
+      </orthologGroup>
+      <geneRef id="54"/>
+    </orthologGroup>
+
+    <orthologGroup id="5">
+      <property name="TaxRange" value="Mammalia"/>
+      <paralogGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Euarchontoglires"/>
+          <orthologGroup>
+            <property name="TaxRange" value="Rodents"/>
+            <paralogGroup>
+              <geneRef id="37"/>
+              <geneRef id="36"/>
+            </paralogGroup>
+            <geneRef id="44"/>
+          </orthologGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Primates"/>
+            <geneRef id="6"/>
+            <geneRef id="17"/>
+          </orthologGroup>
+        </orthologGroup>
+        <orthologGroup>
+          <property name="TaxRange" value="Euarchontoglires"/>
+          <orthologGroup>
+            <property name="TaxRange" value="Rodents"/>
+            <geneRef id="35"/>
+            <geneRef id="45"/>
+          </orthologGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Primates"/>
+            <geneRef id="7"/>
+            <geneRef id="18"/>
+          </orthologGroup>
+        </orthologGroup>
+      </paralogGroup>
+      <geneRef id="26"/>
+    </orthologGroup>
+
+    <orthologGroup id="6">
+      <property name="TaxRange" value="Vertebrata"/>
+      <orthologGroup>
+        <property name="TaxRange" value="Mammalia"/>
+        <paralogGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Euarchontoglires"/>
+            <orthologGroup>
+              <property name="TaxRange" value="Primates"/>
+              <geneRef id="19"/>
+            </orthologGroup>
+          </orthologGroup>
+          <orthologGroup>
+            <property name="TaxRange" value="Euarchontoglires"/>
+            <orthologGroup>
+              <property name="TaxRange" value="Rodents"/>
+              <geneRef id="38"/>
+            </orthologGroup>
+          </orthologGroup>
+        </paralogGroup>
+        <geneRef id="27"/>
+      </orthologGroup>
+      <geneRef id="56"/>
+    </orthologGroup>
+
+
+  </groups>
+</orthoXML>
