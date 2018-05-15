@@ -3,6 +3,17 @@
 VERSION 1.0.2
 
 FIX:
+    - UnitTesting module compatible for p2 and p3.
+
+IMPROVEMENTS:
+    - None
+
+
+########################################################################################
+
+VERSION 1.0.2
+
+FIX:
     - OrthoXML parser raise useless 'ValueError: Minimum 2 genomes are required, only 1 provided.' for highly duplicated HOGs.
 
 IMPROVEMENTS:

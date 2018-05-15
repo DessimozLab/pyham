@@ -417,8 +417,14 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
             # Euarchontoglires
             euarchontoglires = self._get_child_by_identifier(hog5, "Euarchontoglires")
 
+            if self.ham_analysis.get_gene_by_id("35") in euarchontoglires[0].get_all_descendant_genes():
+                euarchontoglires_A = euarchontoglires[1]
+                euarchontoglires_B = euarchontoglires[0]
+            else:
+                euarchontoglires_A = euarchontoglires[0]
+                euarchontoglires_B = euarchontoglires[1]
+
             # Euarchontoglires paralogs A
-            euarchontoglires_A = euarchontoglires[0]
             self.assertNotEqual(False, euarchontoglires_A.arose_by_duplication)
             self._check_children_consistency(euarchontoglires_A, ["Primates", "Rodents"])
 
@@ -435,7 +441,6 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
             self.assertNotEqual(False, g37.arose_by_duplication)
 
             # Euarchontoglires paralogs B
-            euarchontoglires_B = euarchontoglires[1]
             self.assertNotEqual(False, euarchontoglires_B.arose_by_duplication)
             self._check_children_consistency(euarchontoglires_B, ["Primates", "Rodents"])
 
@@ -464,10 +469,17 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
             self.assertFalse(mammalia.arose_by_duplication)
 
             # Euarchontoglires
-            euarchontoglires = sorted(self._get_child_by_identifier(mammalia, "Euarchontoglires"))
+            euarchontoglires = self._get_child_by_identifier(mammalia, "Euarchontoglires")
+
+            if self.ham_analysis.get_gene_by_id("38") in euarchontoglires[0].get_all_descendant_genes():
+                euarchontoglires_A = euarchontoglires[1]
+                euarchontoglires_B = euarchontoglires[0]
+            else:
+                euarchontoglires_A = euarchontoglires[0]
+                euarchontoglires_B = euarchontoglires[1]
+
 
             # Euarchontoglires paralogs A
-            euarchontoglires_A = euarchontoglires[0]
             self.assertNotEqual(False, euarchontoglires_A.arose_by_duplication)
             self._check_children_consistency(euarchontoglires_A, ["Primates"])
 
@@ -478,7 +490,6 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
             self.assertEqual(False, g19.arose_by_duplication)
 
             # Euarchontoglires paralogs B
-            euarchontoglires_B = euarchontoglires[1]
             self.assertNotEqual(False, euarchontoglires_B.arose_by_duplication)
             self._check_children_consistency(euarchontoglires_B, ["Rodents"])
 
