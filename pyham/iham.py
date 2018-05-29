@@ -335,7 +335,7 @@ class OrthoXML_manager(object):
         _visit(self.hog, self.groupsxml)
 
     def get_orthoxml_str(self):
-        return etree.tostring(self.xml, encoding='utf8', method='xml', pretty_print=False)
+        return etree.tostring(self.xml, encoding='utf8', method='xml', pretty_print=False).decode('utf-8')
 
 
 
