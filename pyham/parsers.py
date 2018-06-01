@@ -228,6 +228,8 @@ class OrthoXMLParser(object):
                             duplication.remove_child(child_direct)
                             duplication.add_child(hog.children[-1])
 
+                    duplication.children = set(duplication.children) #todo invest in detail if duplicated hog in children
+
                 hog_genome = hog.genome
                 change = {} # {child -> [intermediate level]}
 

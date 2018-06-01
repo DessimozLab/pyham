@@ -308,27 +308,53 @@ class OrthoXML_manager(object):
 
         def _visit(hog, parent):
 
-            current_hog_xml = etree.SubElement(parent, "orthologGroup")
-            taxon = etree.SubElement(current_hog_xml, "property")
-            taxon.set("name", 'TaxRange')
-            taxon.set("value", hog.genome.name)
+            if len(hog.children) == 1:
+                _process_child(hog.children[0], parent)
 
-            current_hog_xml.set('id', str(hog.hog_id))
+            elif len(hog.duplications) > 0:
 
-            processed_child = []
-            if len(hog.duplications) > 0:
+                dup_child = []
 
                 for duplicationNode in hog.duplications:
+                    dup_child += duplicationNode.children
 
-                    paralogGroup = etree.SubElement(current_hog_xml, "paralogGroup")
+                remaining_hog = list(set(hog.children) - set(dup_child))
 
-                    for child in duplicationNode.children:
-                        _process_child(child, paralogGroup)
-                        processed_child.append(child)
+                if len(remaining_hog) == 0:
 
-            remaining_hog = list(set(hog.children) - set(processed_child))
-            for child in remaining_hog:
-                    _process_child(child, current_hog_xml)
+                    current_hog_xml = parent
+
+                else:
+
+                    current_hog_xml = etree.SubElement(parent, "orthologGroup")
+                    taxon = etree.SubElement(current_hog_xml, "property")
+                    taxon.set("name", 'TaxRange')
+                    taxon.set("value", hog.genome.name)
+
+                    current_hog_xml.set('id', str(hog.hog_id))
+
+            else:
+                current_hog_xml = etree.SubElement(parent, "orthologGroup")
+                taxon = etree.SubElement(current_hog_xml, "property")
+                taxon.set("name", 'TaxRange')
+                taxon.set("value", hog.genome.name)
+
+                current_hog_xml.set('id', str(hog.hog_id))
+
+                processed_child = []
+                if len(hog.duplications) > 0:
+
+                    for duplicationNode in hog.duplications:
+
+                        paralogGroup = etree.SubElement(current_hog_xml, "paralogGroup")
+
+                        for child in duplicationNode.children:
+                            _process_child(child, paralogGroup)
+                            processed_child.append(child)
+
+                remaining_hog = list(set(hog.children) - set(processed_child))
+                for child in remaining_hog:
+                        _process_child(child, current_hog_xml)
 
         self.groupsxml = etree.SubElement(self.xml, "groups")
 
