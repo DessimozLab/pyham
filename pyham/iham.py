@@ -309,7 +309,7 @@ class OrthoXML_manager(object):
         def _visit(hog, parent):
 
             if len(hog.children) == 1:
-                _process_child(hog.children[0], parent)
+                current_hog_xml = parent
 
             elif len(hog.duplications) > 0:
 
