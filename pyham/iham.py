@@ -341,20 +341,20 @@ class OrthoXML_manager(object):
 
                 current_hog_xml.set('id', str(hog.hog_id))
 
-                processed_child = []
-                if len(hog.duplications) > 0:
+            processed_child = []
+            if len(hog.duplications) > 0:
 
-                    for duplicationNode in hog.duplications:
+                for duplicationNode in hog.duplications:
 
-                        paralogGroup = etree.SubElement(current_hog_xml, "paralogGroup")
+                    paralogGroup = etree.SubElement(current_hog_xml, "paralogGroup")
 
-                        for child in duplicationNode.children:
-                            _process_child(child, paralogGroup)
-                            processed_child.append(child)
+                    for child in duplicationNode.children:
+                        _process_child(child, paralogGroup)
+                        processed_child.append(child)
 
-                remaining_hog = list(set(hog.children) - set(processed_child))
-                for child in remaining_hog:
-                        _process_child(child, current_hog_xml)
+            remaining_hog = list(set(hog.children) - set(processed_child))
+            for child in remaining_hog:
+                    _process_child(child, current_hog_xml)
 
         self.groupsxml = etree.SubElement(self.xml, "groups")
 
