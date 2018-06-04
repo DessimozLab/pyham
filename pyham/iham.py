@@ -311,7 +311,7 @@ class OrthoXML_manager(object):
             if len(hog.children) == 1:
                 current_hog_xml = parent
 
-            elif len(hog.duplications) > 0:
+            elif len(hog.duplications) == 1:
 
                 dup_child = []
 

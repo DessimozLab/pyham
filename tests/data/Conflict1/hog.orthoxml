@@ -1,0 +1,33 @@
+<orthoXML origin="OMA standalone (bottom-up)" originVersion="Jun 2018" version="0.3" xmlns="http://orthoXML.org/2011/">
+  <species name="XENTR" NCBITaxId="-1">
+    <database name="None" version="None">
+      <genes>
+        <gene id="945115" protId="A0A1B8XX07"/>
+      </genes>
+    </database>
+  </species>
+  <species name="BRAFL" NCBITaxId="-1">
+    <database name="None" version="None">
+      <genes>
+        <gene id="126915" protId="C4A0X2"/>
+      </genes>
+    </database>
+  </species>
+  <species name="MONDO" NCBITaxId="-1">
+    <database name="None" version="None">
+      <genes>
+        <gene id="506675" protId="H9H7V4"/>
+      </genes>
+    </database>
+  </species>
+  <groups>
+    <orthologGroup id="12122">
+      <property name="TaxRange" value="Chordata"/>
+      <geneRef id="126915"/>
+      <paralogGroup>
+        <geneRef id="506675"/>
+        <geneRef id="945115"/>
+      </paralogGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>
