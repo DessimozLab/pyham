@@ -36,32 +36,6 @@ The orthoXML format is composed of two main parts:
 
 -----------
 
-
-How pyham worked under-the-hood ?
-#################################
-
-pyham require as minimal input an orthoxml that contains HOGs and a newick species tree.
-**The leaves name in the newick tree should correspond 1:1 with the species name tag use in the header part of the orthoXML.**
-
-The first step is to instantiate a :obj:`pyham.taxonomy.Taxonomy` object by constructing a ete3.Etree object based on the inputted newick tree and assign to each Etree node the related :obj:`pyham.genome.Genome`.
-
-:obj:`pyham.genome.ExtantGenome` are named according to the newick leaves name while :obj:`pyham.genome.AncestralGenome` are either name using the internal node name from the newick tree or the the concatenation of the genome children name.
-
-Then the seconds step is the orthoXML parsing using the :obj:`pyham.parser.OrthoXMLParser` that can be split in 2 steps:
-    -   First the header part with the cross reference is parse. For each gene element within species elements, the related :obj:`pyham.abstractgene.ExtantGene` is build using the xref id (id, geneId,protId,transcriptId). **The "id" tag will be the unique identifier of the related genes accross the pyham analysis.**
-    -   Second, the groups element part is parse. For each top level groups, we are creating the :obj:`pyham.abstractgene.HOG` for each internal orthologGroups founded insided and connecting them based on the nested groups hierarchy. **The** :obj:`pyham.abstractgene.HOG` **are connected to the related** the :obj:`pyham.genome.AncestralGenome` **they belong to based on the a mrca search of all the species its descendants**  :obj:`pyham.abstractgene.ExtantGene`.
-        The hierarchical structure is build by saving the parent/children relations accross :obj:`pyham.abstractgene.HOG` and the :obj:`pyham.abstractgene.ExtantGene`. The paralogGroup information is stored by taging all HOGs emerging through duplication.
-
-.. note:: Ham provide a way to restrict the orthoxml parsing to the information of interest in case of large orthoXML files.
-            To proceed the :obj:`pyham.ham.FilterParser` can take as input which HOGs to proccess (based on a gene id, an hog id or a external id) and pre-select for the minimal required information to load for the :obj:`pyham.parser.OrthoXMLParser`.
-
-
-**Glossary**:
-    - **Top level HOG**:  root HOG that have no parent and is direct child of the groups element. This HOG have an unique top level id that act as unique identifier.
-    - **Gene Unique id** (protId, geneId, transcriptId): The unique id is orthoXML id founded in the "id" tag in the header part. The others ids are for cross references and are not meant to be unique.
-    - **Singleton**: Gene that is present in the orthoxml (in the header part) but belong to any HOGs.
------------
-
 What are the visualisation tool provide by pyham ?
 ##################################################
 
