@@ -305,30 +305,33 @@ class TreeProfile(object):
             <title>Phylo.io</title>
             <meta charset="UTF-8">
             <script src="https://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/jquery-2.1.4.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www/js/treecompare.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/jquery-2.1.4.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www/js/treecompare.js"></script>
             <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/d3.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//js/FileSaver.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/d3.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/FileSaver.min.js"></script>
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk" crossorigin="anonymous">
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P" crossorigin="anonymous">
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//css/bootstrap.min.css">
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//css/bootstrap-theme.min.css">
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/7f83193b4efaee7920451ecfb4d917014a4df437/www//css/style.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap-theme.min.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/style.css">
             <style> text {{stroke: none;}}</style>
         </head>
-        <body>
-        <div id="vis-container1" style="width: 100%; height: 100%;"></div>
+        <body id="phylo">
+        <div id="vis-container1" style="width: 100%; height: 100%;">
+        <div id="scale-1"> </div>
+        </div>
         <script type="text/javascript">
             var treecomp = TreeCompare().init({{
+                enableScale: true,
                 scaleColor: "black",
                 showHistogramValues: true,
                 showHistogramSummaryValue: false
             }});
             treeData = '{json_data}';
             var tree1 = treecomp.addTree(treeData, undefined, "single");
-            treecomp.viewTree(tree1.name, "vis-container1");
+            treecomp.viewTree(tree1.name, "vis-container1", "scale-1");
             treecomp.addMainLegend(tree1.name);
         </script>
         </body>
