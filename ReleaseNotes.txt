@@ -1,6 +1,17 @@
 ########################################################################################
 
-VERSION 1.0.7
+VERSION 1.0.9
+
+FIX:
+    - None
+
+IMPROVEMENTS:
+    - Tree profile: add scale bar, remove level annotations for taxonomic range without ancestral genes.
+    - For clarity purposes, genes that don't duplicate or get lost between two taxon are now denoted as 'retained' instead of 'identical'.
+
+########################################################################################
+
+VERSION 1.0.8
 
 FIX:
     - fix secure duplication handling fix.

@@ -113,12 +113,12 @@ class HOGsMapTest(MapperTestCases.MapperTest):
         def convert_GAIN(GAIN):
             return set([str(new_hog) for new_hog in GAIN])
 
-        def convert_IDENTICAL(IDENTICAL):
-            cIDENTICAL = set()
-            for hog_ancestor, hog_descendant in IDENTICAL.items():
+        def convert_RETAINED(RETAINED):
+            cRETAINED = set()
+            for hog_ancestor, hog_descendant in RETAINED.items():
                 x = [str(hog_ancestor), str(hog_descendant)]
-                cIDENTICAL.add(frozenset(x))
-            return cIDENTICAL
+                cRETAINED.add(frozenset(x))
+            return cRETAINED
 
         def convert_DUPLICATE(DUPLICATE):
             cDUPLICATE = set()
@@ -141,9 +141,9 @@ class HOGsMapTest(MapperTestCases.MapperTest):
         expected_GAIN.add("Gene(5)")
         self.assertSetEqual(expected_GAIN, convert_GAIN(map.GAIN))
 
-        expected_IDENTICAL = set()
-        expected_IDENTICAL.add(frozenset(["<HOG(1)>", "Gene(1)"]))
-        self.assertSetEqual(expected_IDENTICAL, convert_IDENTICAL(map.IDENTICAL))
+        expected_RETAINED = set()
+        expected_RETAINED.add(frozenset(["<HOG(1)>", "Gene(1)"]))
+        self.assertSetEqual(expected_RETAINED, convert_RETAINED(map.RETAINED))
 
         expected_DUPLICATE = set()
         expected_DUPLICATE.add(frozenset(["<HOG(3)>", "Gene(3)"]))
@@ -219,7 +219,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         self.assertTrue(map.consistent)
         vertical_map.add_map(map)
 
-        single = vertical_map.get_identical()
+        single = vertical_map.get_retained()
         self.assertDictEqual({'<HOG(1)>': 'Gene(1)'}, _str_dict_one_value(single))
 
     def test_get_duplicated(self):
@@ -332,7 +332,7 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         self.assertTrue(map_rat_euarc.consistent)
         lateral_map.add_map(map_rat_euarc)
 
-        single = lateral_map.get_identical()
+        single = lateral_map.get_retained()
 
         for hog in single.keys():
             if str(hog) == "<HOG(3.E.1)>":

@@ -16,13 +16,13 @@ logger = logging.getLogger(__name__)
 
 class HOGsMap(object):
     """
-    Class to compare HOG evolutionary relations (duplication, loss, gain and identical) between an ancestor genome and
+    Class to compare HOG evolutionary relations (duplication, loss, gain and retained) between an ancestor genome and
     its descendant genome.
 
     Let's consider Go the oldest genome and Gy the youngest genome with their respected HOGs Ho and Hy.
 
     Those relations are classified into the following categories:
-        - IDENTICAL: if Ho will correspond to a single Hy.
+        - RETAINED: if Ho will correspond to a single Hy.
         - DUPLICATE: If a duplication occurred in Ho in between Go ang Gy.
         - LOSS: If Ho have no representative Hy in Gy.
         - GAIN: if Hy have no ancestor Ho in Go.
@@ -30,7 +30,7 @@ class HOGsMap(object):
     First, a "UpMap" is build to find for each Hy its potential ancestor Ho. If during the traversal from Hy to Ho a
     duplication occurred, a flag "paralog" is added in the UpMap[Hy]. Hy with no corresponding Ho are considered as 
     gained meanwhile Ho without corresponding Hy are considered as lost. Ho with only one corresponding Hy (and no
-    duplication tag) are clustered as identical otherwhise as duplicated.
+    duplication tag) are clustered as retained otherwhise as duplicated.
 
 
     Attributes:
@@ -38,7 +38,7 @@ class HOGsMap(object):
         | ancestor (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Go.
         | descendant (:obj:`pyham.genome.Genome`): :obj:`pyham.genome.Genome` of Gy.
         | upMap (:obj:`dict`):  a dictionary that map each Ho with its related Hy (or None if no HOG founded) associated a boolean if a duplication occurs or not in between them.
-        | IDENTICAL (:obj:`dict`): Dictionary that map a Ho with its descendant Hy.
+        | RETAINED (:obj:`dict`): Dictionary that map a Ho with its descendant Hy.
         | DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
         | LOSS (:obj:`list`): a list of Ho with no matching in Gy.
         | GAIN: (:obj:`list`): a list of Hy with no ancestor in Go.
@@ -67,7 +67,7 @@ class HOGsMap(object):
         self.HAM = ham_object
         self.ancestor, self.descendant = self.HAM._get_oldest_from_genome_pair(genome1, genome2)
         self.upMap = self._build_UpMap()
-        self.LOSS, self.GAIN, self.IDENTICAL, self.DUPLICATE = self._build_event_clusters()
+        self.LOSS, self.GAIN, self.RETAINED, self.DUPLICATE = self._build_event_clusters()
         self.consistent = self._check_consistency_numbers()  # for unittest purposes
 
     def _check_consistency_numbers(self):
@@ -82,25 +82,25 @@ class HOGsMap(object):
         duplicated_gene_descendant = 0
         for dg in self.DUPLICATE.values():
             duplicated_gene_descendant += len(dg)
-        sum_descendant = len(self.GAIN) + len(self.IDENTICAL.values()) + duplicated_gene_descendant
+        sum_descendant = len(self.GAIN) + len(self.RETAINED.values()) + duplicated_gene_descendant
         number_descendant = len(self.descendant.genes)
 
         if sum_descendant != number_descendant:
             consistent = False
             if len(logger.handlers) > 0:
                 logger.critical(
-                'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the descendant genome but {} are founded in the sum of genes resulting of duplication, identical and gain'.format(
+                'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the descendant genome but {} are founded in the sum of genes resulting of duplication, retained and gain'.format(
                     self.ancestor.name, self.descendant.name, number_descendant, sum_descendant))
 
         # Then check for numbers additivity of ancestor genomes
-        sum_ancestor = len(self.IDENTICAL.keys()) + len(self.LOSS) + len(self.DUPLICATE.keys())
+        sum_ancestor = len(self.RETAINED.keys()) + len(self.LOSS) + len(self.DUPLICATE.keys())
         number_ancestor = len(self.ancestor.genes)
 
         if sum_ancestor != number_ancestor:
             consistent = False
             if len(logger.handlers) > 0:
                 logger.critical(
-                'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the ancestor genome but {} are founded in the sum of genes in identical, loss and duplicated categories'.format(
+                'Inconsistency founded when comparing {} with its descendant genome {}. There is {} genes in the ancestor genome but {} are founded in the sum of genes in retained, loss and duplicated categories'.format(
                     self.ancestor.name, self.descendant.name, number_ancestor, sum_ancestor))
 
         return consistent
@@ -110,11 +110,11 @@ class HOGsMap(object):
         This method builds all the event clusters based on the UpMap.
 
         Returns:
-            list of loss, list of gain, dict of identical and dict of duplicated.
+            list of loss, list of gain, dict of retained and dict of duplicated.
 
         """
         GAIN = []  # [Hy]
-        IDENTICAL = {}  # {Ho -> Hy}
+        RETAINED = {}  # {Ho -> Hy}
         DUPLICATE = {}  # {Ho -> [Hy]}
         ancestral_hogs_computed = set()
 
@@ -125,13 +125,13 @@ class HOGsMap(object):
                 if Ho[1]:  # DUPLICATE
                     DUPLICATE.setdefault(Ho[0], []).append(Hy)
                 else:  # SINGLE
-                    IDENTICAL[Ho[0]] = Hy
+                    RETAINED[Ho[0]] = Hy
                 ancestral_hogs_computed.add(Ho[0])
 
         # LOSS
         LOSS = set(self.ancestor.genes) - ancestral_hogs_computed
 
-        return LOSS, GAIN, IDENTICAL, DUPLICATE
+        return LOSS, GAIN, RETAINED, DUPLICATE
 
     def _build_UpMap(self):
         """  
@@ -155,12 +155,12 @@ class HOGsMap(object):
 class MapResults(object):
     """
     Abstract class to map HOGs across multiple genomes through their most recent common ancestral genome. The HOGs are all
-    clustered based on their relation with the mrca genome HOGs (duplicated, lost, gained and identical).
+    clustered based on their relation with the mrca genome HOGs (duplicated, lost, gained and retained).
 
     Let's consider Go the mrca genome and Gn the youngest genomes with their respected HOGs Ho and Hn.
 
     The HOG relations between Ho and Hn are classified into the following categories:
-        - IDENTICAL: if Ho will correspond to a single Hn in Gn.
+        - RETAINED: if Ho will correspond to a single Hn in Gn.
         - DUPLICATE: If a duplication occurred in Ho in between Go ang Gn.
         - LOSS: If Ho have no representative Hn in Gn.
         - GAIN: if Hn have no ancestor Ho in Go.
@@ -173,7 +173,7 @@ class MapResults(object):
         - get_loss()
         - get_gain()
         - get_duplicate()
-        - get_identical()
+        - get_retained()
 
     Attributes:
         | Ham (:obj:`pyham.pyham.Ham`): Ham object.
@@ -200,7 +200,7 @@ class MapResults(object):
         pass
 
     @abc.abstractmethod
-    def get_identical(self):
+    def get_retained(self):
         """Return genes that stay single copy"""
         pass
 
@@ -267,15 +267,15 @@ class MapVertical(MapResults):
         """
         return self.map.GAIN
 
-    def get_identical(self):
+    def get_retained(self):
         """
-         Getter for identical genes.
+         Getter for retained genes.
 
          Returns:
              Dictionary of Ho mapped to their descendant Hy.
          """
 
-        return self.map.IDENTICAL
+        return self.map.RETAINED
 
     def get_duplicated(self):
         """
@@ -300,7 +300,7 @@ class MapLateral(MapResults):
         | map (:obj:`dict`): dictionary of Gn mapped to a HOGMap(Go,Gn).
         | LOSS (:obj:`dict`): dictionary of Ho mapped to the list of Gn where this HOG is lost.
         | GAIN (:obj:`dict`): dictionary of Gn mapped to their list of gained Hn.
-        | IDENTICAL (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a Hn.
+        | RETAINED (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a Hn.
         | DUPLICATE (:obj:`dict`): dictionary of Ho mapped to a dict of Gn mapped to a list of Hn.
 
     """
@@ -311,7 +311,7 @@ class MapLateral(MapResults):
         self.maps = {}
         self.LOSS = None
         self.GAIN = None
-        self.IDENTICAL = None
+        self.RETAINED = None
         self.DUPLICATE = None
 
     def add_map(self, HogMap):
@@ -370,22 +370,22 @@ class MapLateral(MapResults):
             self.GAIN = gain
         return self.GAIN
 
-    def get_identical(self):
+    def get_retained(self):
         """
-        Lazy getter for identical genes.
+        Lazy getter for retained genes.
 
         Returns:
             dictionary of Hi -> dict of Gn -> Hn.
         """
 
-        if self.IDENTICAL is None:
+        if self.RETAINED is None:
             single = {}
             for genome, hmap in self.maps.items():
-                for hi, hj in hmap.IDENTICAL.items():
+                for hi, hj in hmap.RETAINED.items():
                     single.setdefault(hi, {})[genome] = hj
-            self.IDENTICAL = single
+            self.RETAINED = single
 
-        return self.IDENTICAL
+        return self.RETAINED
 
     def get_duplicated(self):
         """

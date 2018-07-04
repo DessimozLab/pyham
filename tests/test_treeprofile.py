@@ -14,7 +14,7 @@ class TreeProfileTest(unittest.TestCase):
         self.ham_analysis_no_name = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
                                             use_internal_name=False)
 
-        # gene, identical, duplicated, gain, lost
+        # gene, retained, duplicated, gain, lost
         self.exp_full = {"Mammalia":[3,2,0,1,0], "Euarchontoglires":[4,2,2,0,0], "Primates":[4,4,0,0,0], "Rodents":[4,4,0,0,0], "Vertebrata":[2,None,None,None,None] }
 
         self.exp_full_nn = {"HUMAN/PANTR/MOUSE/RATNO/CANFA": [3, 2, 0, 1, 0], "HUMAN/PANTR/MOUSE/RATNO": [4, 2, 2, 0, 0], "HUMAN/PANTR": [4, 4, 0, 0, 0],
@@ -22,7 +22,7 @@ class TreeProfileTest(unittest.TestCase):
                             "HUMAN": [4, 3, 0, 1, 1], "PANTR": [4, 4, 0, 0, 0], "MOUSE": [4, 4, 0, 0, 0], "RATNO": [2, 1, 0, 1, 3],
                             "CANFA": [3, 3, 0, 0,0], "XENTR": [2, 2, 0, 0, 0]}
 
-        # gene, identical, duplicated, lost
+        # gene, retained, duplicated, lost
         self.expected_level_1 = {"Mammalia": [1, 1, 0, 0], "Euarchontoglires": [1, 1, 0, 0], "Primates": [1, 1, 0, 0],
                             "Rodents": [1, 1, 0, 0], "Vertebrata": [1, None, None, None], "HUMAN":[1,1,0,0],
                             "PANTR":[1,1,0,0], "MOUSE":[1,1,0,0], "RATNO":[1,1,0,0], "CANFA":[1,1,0,0], "XENTR":[1,1,0,0]}
@@ -54,7 +54,7 @@ class TreeProfileTest(unittest.TestCase):
 
             for lvl in tp_h.treemap.traverse():
                 if lvl.name in exp.keys():
-                    observed_level = [lvl.nbr_genes, lvl.identical, lvl.dupl, lvl.lost]
+                    observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.lost]
                     self.assertListEqual(exp[lvl.name], observed_level)
 
     def test_tp_hog_at_level(self):
@@ -72,18 +72,18 @@ class TreeProfileTest(unittest.TestCase):
 
             for lvl in tp_h.treemap.traverse():
                 if lvl.name in exp.keys() and not lvl.is_root():
-                    observed_level = [lvl.nbr_genes, lvl.identical, lvl.dupl, lvl.lost]
+                    observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.lost]
                     self.assertListEqual(exp[lvl.name], observed_level)
 
     def test_tp_full(self):
         tp = TreeProfile(self.ham_analysis)
         for lvl in tp.treemap.traverse():
             if lvl.name in self.exp_full.keys():
-                observed_level = [lvl.nbr_genes, lvl.identical, lvl.dupl, lvl.gain, lvl.lost]
+                observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.gain, lvl.lost]
                 self.assertListEqual(self.exp_full[lvl.name], observed_level)
 
         tp_nn = TreeProfile(self.ham_analysis_no_name)
         for lvl in tp_nn.treemap.traverse():
             if lvl.name in self.exp_full_nn.keys():
-                observed_level = [lvl.nbr_genes, lvl.identical, lvl.dupl, lvl.gain, lvl.lost]
+                observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.gain, lvl.lost]
                 self.assertListEqual(self.exp_full_nn[lvl.name], observed_level)

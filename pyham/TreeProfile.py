@@ -44,7 +44,7 @@ class TreeProfile(object):
         each nodes (representing an AbstractGene):
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
             - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
-            - identical: numbers of HOGs that have stay identical (in term of copy numbers) in between this node and
+            - retained: numbers of HOGs that have stay retained (in term of copy numbers) in between this node and
             its parent.
             - lost: numbers of HOGs that have been lost in between this node and its parent.
 
@@ -104,7 +104,7 @@ class TreeProfile(object):
 
             lvl.add_feature("dupl", cpt_dupl)
             lvl.add_feature("lost", cpt_lost)
-            lvl.add_feature("identical", cpt_ident)
+            lvl.add_feature("retained", cpt_ident)
 
         return treeMap
 
@@ -116,7 +116,7 @@ class TreeProfile(object):
             - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
             - lost: numbers of HOGs that have been lost in between this node and its parent.
             - gain: numbers of HOGs that have "emerged" at this node.
-            - identical: numbers of HOGs that have stay identical (in term of copy numbers) in between this node and
+            - retained: numbers of HOGs that have stay retained (in term of copy numbers) in between this node and
             its parent.
             
         In order to get all those node informations, the HOGMap between each node and its parent is computed.
@@ -125,12 +125,12 @@ class TreeProfile(object):
             TreeMap
         """
 
-        def _add_annot(node, nbr, dupl, lost, gain, identical):
+        def _add_annot(node, nbr, dupl, lost, gain, retained):
             node.add_feature("nbr_genes", nbr)
             node.add_feature("dupl", dupl)
             node.add_feature("lost", lost)
             node.add_feature("gain", gain)
-            node.add_feature("identical", identical)
+            node.add_feature("retained", retained)
 
         treeMap = self.ham.taxonomy.tree.copy(method="newick")
 
@@ -154,7 +154,7 @@ class TreeProfile(object):
                 nbr_duplicate = 0
                 for gs in hogmap.DUPLICATE.values():
                     nbr_duplicate += len(gs)
-                _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.IDENTICAL.keys()))
+                _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.RETAINED.keys()))
 
         return treeMap
 
@@ -178,21 +178,21 @@ class TreeProfile(object):
 
         if self.hog is None:
             _color_scheme = ["#41c1c2","#bdc3c7","#f39c12","#27ae60","#e74c3c"]
-            _label_legend = ["Genes","Identicals","Duplicated","Novel","Lost"]
+            _label_legend = ["Genes","Retained","Duplicated","Novel","Lost"]
             _values_legend = [max_genes,max_genes,max_genes,max_genes,max_genes]
             w_legend = 50 # todo calculate base on len(_values)
         else:
             _color_scheme = ["#41c1c2", "#bdc3c7", "#f39c12", "#e74c3c"]
-            _label_legend = ["Genes", "Identicals", "Duplicated", "Lost"]
+            _label_legend = ["Genes", "Retained", "Duplicated", "Lost"]
             _values_legend = [max_genes, max_genes, max_genes, max_genes]
             w_legend = 40  # todo calculate base on len(_values)
 
         def _layout(node):
 
             if self.hog is None:
-                 _label = [str(node.nbr_genes),str(node.identical),str(node.dupl),str(node.gain),str(node.lost)]
+                 _label = [str(node.nbr_genes),str(node.retained),str(node.dupl),str(node.gain),str(node.lost)]
             else:
-                _label = [str(node.nbr_genes), str(node.identical), str(node.dupl), str(node.lost)]
+                _label = [str(node.nbr_genes), str(node.retained), str(node.dupl), str(node.lost)]
 
             def _add_face(name_feature, value_feature, cnum=1, pos="branch-right"):
                 node.add_face(TextFace("{}: {}".format(name_feature, value_feature)), column=cnum, position=pos)
@@ -201,8 +201,8 @@ class TreeProfile(object):
 
                 _add_face("#genes", node.nbr_genes, cnum=cNbr, pos=posNbr)
 
-                if node.identical is not None:
-                    _add_face("#Identical", node.identical, cnum=cAttr, pos=posAtt)
+                if node.retained is not None:
+                    _add_face("#Retained", node.retained, cnum=cAttr, pos=posAtt)
 
                 if node.dupl is not None:
                     _add_face("#Duplicated", node.dupl, cnum=cAttr, pos=posAtt)
@@ -216,10 +216,10 @@ class TreeProfile(object):
             if node.is_leaf():
                 if display_internal_histogram:
                     if self.hog is None:
-                        values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
+                        values = [node.nbr_genes,node.retained,node.dupl,node.gain,node.lost]
                         w_plot = 50
                     else:
-                        values = [node.nbr_genes, node.identical, node.dupl, node.lost]
+                        values = [node.nbr_genes, node.retained, node.dupl, node.lost]
                         w_plot = 40
                     node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-right")
                 else:
@@ -232,10 +232,10 @@ class TreeProfile(object):
                         node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=[str(node.nbr_genes)], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
                     else:
                         if self.hog is None:
-                            values = [node.nbr_genes,node.identical,node.dupl,node.gain,node.lost]
+                            values = [node.nbr_genes,node.retained,node.dupl,node.gain,node.lost]
                             w_plot = 50
                         else:
-                            values = [node.nbr_genes,node.identical,node.dupl,node.lost]
+                            values = [node.nbr_genes,node.retained,node.dupl,node.lost]
                             w_plot = 40
                         node.add_face(BarChartFace(values, deviations=None, width=w_plot, height=25, colors=_color_scheme, labels=_label, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=1, position = "branch-top")
 
@@ -274,7 +274,7 @@ class TreeProfile(object):
                 "length": 0.01,
                 "collapsed": "false",
                 "evolutionaryEvents": {
-                    "identical": None,
+                    "retained": None,
                     "duplicated": None,
                     "gained": None,
                     "lost": None
@@ -285,7 +285,7 @@ class TreeProfile(object):
                 current['evolutionaryEvents'] = False
 
             else:
-                current['evolutionaryEvents']["identical"] = node.identical
+                current['evolutionaryEvents']["retained"] = node.retained
                 current['evolutionaryEvents']["duplicated"] = node.dupl
                 current['evolutionaryEvents']["gained"] = node.gain
                 current['evolutionaryEvents']["lost"] = node.lost
