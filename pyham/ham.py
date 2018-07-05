@@ -749,6 +749,36 @@ class Ham(object):
 
         return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
+    def _get_ancestral_genome_by_name(self, name):
+
+        """  
+        Get the :obj:`pyham.genome.AncestralGenome` corresponding of the query name, if not founded in the taxonomy.tree.node.genome then created it.
+
+            Args:
+                name (:obj:`str`): Name of the :obj:`pyham.genome.AncestralGenome`.
+
+            Returns:
+                :obj:`pyham.genome.AncestralGenome` or raise KeyError
+
+        """
+
+        nodes_founded = self.taxonomy.tree.search_nodes(name=name)
+
+        if len(nodes_founded) == 1:
+
+            node = nodes_founded[0]
+
+            if "genome" in node.features:
+                return node.genome
+
+            else:
+                ancestral_genome = AncestralGenome()
+                self.taxonomy.add_genome_to_node(node, ancestral_genome)
+
+                return ancestral_genome
+        else:
+            raise KeyError('{} node(s) founded for the ancestral genome named {}'.format(len(nodes_founded), name))
+
     def _get_extant_genome_by_name(self, **kwargs):
 
         """ 

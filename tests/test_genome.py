@@ -15,9 +15,9 @@ class ExtantGenomeTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             a = g.ExtantGenome()
 
-        # missing NCBITaxId should raises error
-        with self.assertRaises(TypeError):
-            b = g.ExtantGenome(name="HUMAN")
+        # missing NCBITaxId will put -1 as default
+        b = g.ExtantGenome(name="HUMAN")
+        self.assertEqual(b.taxid, "-1")
 
         # missing name should raises error
         with self.assertRaises(TypeError):

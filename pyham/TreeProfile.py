@@ -140,15 +140,16 @@ class TreeProfile(object):
                 _add_annot(node, len(node_genome.genes), None, None, None, None)
 
             else:
-                node_genome_up = self.ham.get_ancestral_genome_by_name(node.up.name)
+                node_genome_up = self.ham._get_ancestral_genome_by_name(node.up.name)
 
                 if node.is_leaf():
                     node_genome = self.ham._get_extant_genome_by_name(name=node.name)
                     nbr = node_genome.get_number_genes(singleton=True)
 
                 else:
-                    node_genome = self.ham.get_ancestral_genome_by_name(node.name)
+                    node_genome = self.ham._get_ancestral_genome_by_name(node.name)
                     nbr = node_genome.get_number_genes()
+
                 hogmap = self.ham._get_HOGMap({node_genome, node_genome_up})
 
                 nbr_duplicate = 0
@@ -274,7 +275,7 @@ class TreeProfile(object):
                 "length": 0.01,
                 "collapsed": "false",
                 "evolutionaryEvents": {
-                    "retained": None,
+                    "identical": None,
                     "duplicated": None,
                     "gained": None,
                     "lost": None
@@ -285,7 +286,7 @@ class TreeProfile(object):
                 current['evolutionaryEvents'] = False
 
             else:
-                current['evolutionaryEvents']["retained"] = node.retained
+                current['evolutionaryEvents']["identical"] = node.retained
                 current['evolutionaryEvents']["duplicated"] = node.dupl
                 current['evolutionaryEvents']["gained"] = node.gain
                 current['evolutionaryEvents']["lost"] = node.lost

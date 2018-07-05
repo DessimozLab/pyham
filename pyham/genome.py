@@ -125,7 +125,7 @@ class ExtantGenome(Genome):
 
     """
 
-    def __init__(self, name, NCBITaxId, **kwargs):
+    def __init__(self, name, NCBITaxId='-1', **kwargs):
         super(ExtantGenome, self).__init__()
         self.name = name
         self.taxid = NCBITaxId
