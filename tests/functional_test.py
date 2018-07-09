@@ -98,7 +98,7 @@ class HamAnalysis(unittest.TestCase):
         vertical_map_mouse_vs_vert = ham_analysis.compare_genomes_vertically(mouse, vertebrates)
 
         # Now he is interest by the HOG that have stay single copy between these two levels
-        self.assertDictEqual({'<HOG(1)>': 'Gene(31)'}, _str_dict_one_value(vertical_map_mouse_vs_vert.get_identical()))
+        self.assertDictEqual({'<HOG(1)>': 'Gene(31)'}, _str_dict_one_value(vertical_map_mouse_vs_vert.get_retained()))
 
         # ... and at the duplicated genes
         self.assertDictEqual({'<HOG(3)>': {'Gene(34)', 'Gene(33)'}}, _str_dict_array_value(vertical_map_mouse_vs_vert.get_duplicated()))
