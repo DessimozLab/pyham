@@ -328,7 +328,7 @@ class TreeProfile(object):
                 enableScale: true,
                 scaleColor: "black",
                 showHistogramValues: true,
-                showHistogramSummaryValue: false
+                showHistogramSummaryValue: true
             }});
             treeData = '{json_data}';
             var tree1 = treecomp.addTree(treeData, undefined, "single");
