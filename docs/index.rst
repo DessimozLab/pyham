@@ -72,6 +72,27 @@ What is the orthoXML format ?
 The orthoXML format is a XML based format designed to encode gene trees. If you want to know more about orthoXML, we
 invite you to visit the official website http://orthoxml.org/0.3/orthoxml_doc_v0.3.html
 
+How pyHam objects are organised ?
+#################################
+
+In order to use pyHam you need to understand how objects are organised and created.
+
+**IMPORTANT**\: this section aims to describe how objects are created and linked together, not how to set up a pyHam session.
+
+There is 3 important types of object in pyHam:
+ - the :obj:`pyham.taxonomy.Taxonomy`: regroups all information and functions related to the inputted reference phylogeny. The :attr:`pyham.taxonomy.Taxonomy.tree` attribute contains an ete3.Tree that will allow you to perform tree based manipulation.
+ - The :obj:`pyham.genome.Genome`: Represents the extant (:obj:`pyham.genome.ExtantGenome`) and ancestral genome (:obj:`pyham.genome.AncestralGenome`) with their list of associated genes (The :attr:`pyham.genome.Genome.genes`). Each of them are linked to an unique tree node in Taxonomy.tree at their related taxonomic ranges.
+ - The :obj:`pyham.abstractgene.AbstractGene`: Represents the extant genes (:obj:`pyham.abstractgene.Gene`) and ancestral genes (:obj:`pyham.abstractgene.HOG`). Each of them are attached to a unique :obj:`pyham.genome.Genome` and are connected to each other through their 'parent' and 'children' attributes.
+
+pyHam build those objects applying the following 3 step procedure on the inputted orthoXML and reference species tree:
+
+ 1. Create the :obj:`pyham.taxonomy.Taxonomy` using the input species tree and store the induced ete3.Tree in tree attribute. The whole tree is traverse once to build related :obj:`pyham.genome.ExtantGenome` and :obj:`pyham.genome.AncestralGenome` and  attach them to the related tree node. During this process :obj:`pyham.genome.AncestralGenome` are name either by using internal node name of the species tree (is the use_internal_name is specified during :obj:`pyham.ham.Ham` initialisation) or either using the concatenation of all descendant extant gene names.
+
+ 2. The first part the orthoXML provide an unique id and optional external ideas for each extant genes. pyHam will use those information to build the :obj:`pyham.abstractgene.Gene` and add them to their related :obj:`pyham.genome.ExtantGenome`.
+
+ 3. The second part the orthoXML contains HOGs encoded as nested groups of orthologous groups and paralogous. pyHam uses orthologous groups to build :obj:`pyham.abstractgene.HOG` (representing ancestral genes at a specific level) and infer their related taxonomic range based on the MRCA of all descendant genes. :obj:`pyham.abstractgene.HOG` and :obj:`pyham.abstractgene.Gene` are linked through parent and children attributes. Paralogous groups are used to regroups all children of an HOG that have emerged from the same duplication event.
+
+ Then, pyHam is ready to be used !
 
 How to use pyham on my dataset ?
 ################################
