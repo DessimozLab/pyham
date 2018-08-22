@@ -79,9 +79,12 @@ class TreeProfile(object):
             if not lvl.is_root():
                 cpt_dupl = 0
                 cpt_ident = 0
+                set_dup_parent = set()
+
                 for h in levelGroups[lvl.name]:
                     if h.arose_by_duplication != False:
                         cpt_dupl += 1
+                        set_dup_parent.add(h.parent)
                     else:
                         cpt_ident += 1
 
@@ -97,14 +100,22 @@ class TreeProfile(object):
                     else:
                         cpt_lost += 1
 
+                cpt_duplication = max(0, len(list(set_dup_parent)) - cpt_dupl)
+                nbr_ev = cpt_lost + cpt_duplication
+
+
             else:
                 cpt_dupl = None
                 cpt_ident = None
                 cpt_lost = None
+                cpt_duplication = None
+                nbr_ev = None
 
             lvl.add_feature("dupl", cpt_dupl)
             lvl.add_feature("lost", cpt_lost)
             lvl.add_feature("retained", cpt_ident)
+            lvl.add_feature("nbr_events", nbr_ev)
+            lvl.add_feature("duplication", cpt_duplication)
 
         return treeMap
 
@@ -125,19 +136,21 @@ class TreeProfile(object):
             TreeMap
         """
 
-        def _add_annot(node, nbr, dupl, lost, gain, retained):
+        def _add_annot(node, nbr, dupl, lost, gain, retained, duplication, nbr_ev):
             node.add_feature("nbr_genes", nbr)
+            node.add_feature("nbr_events", nbr_ev)
             node.add_feature("dupl", dupl)
             node.add_feature("lost", lost)
             node.add_feature("gain", gain)
             node.add_feature("retained", retained)
+            node.add_feature("duplication", duplication)
 
         treeMap = self.ham.taxonomy.tree.copy(method="newick")
 
         for node in treeMap.traverse():
             if node.is_root():
                 node_genome = self.ham.get_ancestral_genome_by_name(node.name)
-                _add_annot(node, len(node_genome.genes), None, None, None, None)
+                _add_annot(node, len(node_genome.genes), None, None, None, None, None, None)
 
             else:
                 node_genome_up = self.ham._get_ancestral_genome_by_name(node.up.name)
@@ -155,7 +168,10 @@ class TreeProfile(object):
                 nbr_duplicate = 0
                 for gs in hogmap.DUPLICATE.values():
                     nbr_duplicate += len(gs)
-                _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.RETAINED.keys()))
+
+                nbr_ev = hogmap.number_duplication + len(hogmap.LOSS) + len(hogmap.GAIN)
+
+                _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.RETAINED.keys()), hogmap.number_duplication, nbr_ev)
 
         return treeMap
 
@@ -256,7 +272,6 @@ class TreeProfile(object):
 
         self.treemap.render(output,tree_style=ts)
 
-
     def export_as_html(self, output ):
 
         """  
@@ -272,13 +287,16 @@ class TreeProfile(object):
             current = {
                 "name": node.name,
                 "numberGenes": node.nbr_genes,
+                "numberEvents": node.nbr_events,
+
                 "length": 0.01,
                 "collapsed": "false",
                 "evolutionaryEvents": {
-                    "identical": None,
+                    "retained": None,
                     "duplicated": None,
                     "gained": None,
-                    "lost": None
+                    "lost": None,
+                    "duplication": None
                 }
             }
 
@@ -286,10 +304,11 @@ class TreeProfile(object):
                 current['evolutionaryEvents'] = False
 
             else:
-                current['evolutionaryEvents']["identical"] = node.retained
+                current['evolutionaryEvents']["retained"] = node.retained
                 current['evolutionaryEvents']["duplicated"] = node.dupl
                 current['evolutionaryEvents']["gained"] = node.gain
                 current['evolutionaryEvents']["lost"] = node.lost
+                current['evolutionaryEvents']["duplication"] = node.duplication
 
             if not node.is_leaf():
                 current['children'] = []
@@ -307,7 +326,7 @@ class TreeProfile(object):
             <meta charset="UTF-8">
             <script src="https://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/jquery-2.1.4.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www/js/treecompare.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/106d500de4403546273734d2bb5d36e30797e3d3/www/js/treecompare.js"></script>
             <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/d3.min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/bootstrap.min.js"></script>

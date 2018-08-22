@@ -42,6 +42,7 @@ class HOGsMap(object):
         | DUPLICATE (:obj:`dict`): Dictionary that map a Ho with its list of descendants Hy.
         | LOSS (:obj:`list`): a list of Ho with no matching in Gy.
         | GAIN: (:obj:`list`): a list of Hy with no ancestor in Go.
+        | number_duplication: (:obj:`int`): number of duplication events that explain the DUPLICATE genes.
 
 
     """
@@ -68,6 +69,7 @@ class HOGsMap(object):
         self.ancestor, self.descendant = self.HAM._get_oldest_from_genome_pair(genome1, genome2)
         self.upMap = self._build_UpMap()
         self.LOSS, self.GAIN, self.RETAINED, self.DUPLICATE = self._build_event_clusters()
+        self.number_duplication = self._count_duplications()
         self.consistent = self._check_consistency_numbers()  # for unittest purposes
 
     def _check_consistency_numbers(self):
@@ -104,6 +106,16 @@ class HOGsMap(object):
                     self.ancestor.name, self.descendant.name, number_ancestor, sum_ancestor))
 
         return consistent
+
+    def _count_duplications(self):
+
+        dup = 0
+
+        for Ho, Hys in self.DUPLICATE.items():
+
+            dup += len(Hys) - 1
+
+        return dup
 
     def _build_event_clusters(self):
         """  
@@ -149,7 +161,6 @@ class HOGsMap(object):
             upMap[Hy] = [Ho, paralog]
 
         return upMap
-
 
 @six.add_metaclass(abc.ABCMeta)
 class MapResults(object):
@@ -286,6 +297,16 @@ class MapVertical(MapResults):
         """
 
         return self.map.DUPLICATE
+
+    def get_number_duplications(self):
+        """
+        Getter of number of duplication events.
+
+        Returns:
+            int for number of duplications.
+        """
+
+        return self.map.number_duplication()
 
 
 class MapLateral(MapResults):
