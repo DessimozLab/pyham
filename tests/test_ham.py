@@ -57,10 +57,10 @@ class HAMTestSetUp(unittest.TestCase):
 
     def test_orthoxml_as_string(self):
 
-        self.ham_analysis = ham.Ham(newick_str=self.nwk_str, hog_file=self.orthoxml_string, type_hog_file='orthoxml', orthoXML_as_string = True)
+        self.ham_analysis = ham.Ham(tree_file=self.nwk_str, hog_file=self.orthoxml_string, type_hog_file='orthoxml', orthoXML_as_string = True)
 
         with self.assertRaises(IOError):
-            self.ham_analysis = ham.Ham(newick_str=self.nwk_str, hog_file=self.orthoxml_string, type_hog_file='orthoxml')
+            self.ham_analysis = ham.Ham(tree_file=self.nwk_str, hog_file=self.orthoxml_string, type_hog_file='orthoxml')
 
 
 class HAMTest(unittest.TestCase):
@@ -71,7 +71,7 @@ class HAMTest(unittest.TestCase):
 
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        self.ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
 

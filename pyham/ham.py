@@ -114,6 +114,7 @@ class Ham(object):
     """
     
     Attributes:
+        | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
         | hog_file (:obj:`str`): Path to the file that contained the HOGs information.
         | hog_file_type (:obj:`str`): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
         | top_level_hogs (:obj:`dict`): Dictionary that map hog unique id with its list of related :obj:`pyham.abstractgene.HOG`.
@@ -126,19 +127,23 @@ class Ham(object):
 
     """
 
-    def __init__(self, newick_str, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False, orthoXML_as_string=False):
+    def __init__(self, tree_file, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False, orthoXML_as_string=False, tree_format='newick_string', phyloxml_species_name_tag=None):
         """
 
         Args:
-            | newick_str (:obj:`str`): Newick str used to build the taxonomy.
+            | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
             | hog_file (:obj:`str`): Path to the file that contained the HOGs information.
             | type_hog_file (:obj:`str`, optional): File type of the hog_file. Can be "orthoxml or "hdf5". Defaults to "orthoxml".
             | filter_object (:obj:`pyham.pyham.ParserFilter`, optional): :obj:`pyham.pyham.ParserFilter` used during the instantiation of pyham.pyham.Ham. Defaults to None.
-            | use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given newick string. This should be set to False when support values are provided in the newick. Defaults to False.
+            | use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given taxonomy. This should be set to False when support values are provided in the newick. Defaults to False.
+            | tree_format (:obj:`str`): type of inputted tree file. Defaults to newick_string. Can be 'newick', 'phyloxml, 'newick_string'.
+            | phyloxml_species_name_tag (:obj:`str`) tag to use in the phyloxml to name the species. Defaults will use clade.name if any then taxonomy.scientific_name to populate species names.
+            available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
         """
 
         # HOGs file
         self.hog_file = hog_file
+        self.tree_file = tree_file
         self.hog_file_type = type_hog_file
         self.orthoXML_as_string = orthoXML_as_string
 
@@ -155,7 +160,7 @@ class Ham(object):
                                     type(filter_object).__name__))
 
         # Taxonomy
-        self.taxonomy = tax.Taxonomy(newick_str, use_internal_name=use_internal_name)
+        self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_species_name_tag=phyloxml_species_name_tag)
         logger.info('Build taxonomy: completed.')
 
         # Misc. information
@@ -273,7 +278,7 @@ class Ham(object):
 
         return lateral_map
 
-    def create_iHam(self, hog, outfile=None):
+    def create_iHam(self, hog, outfile=None): #todo Make this compatible phyloxml
 
         """
         Function to compute a :obj:`pyham.IHAM`.

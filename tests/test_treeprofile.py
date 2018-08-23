@@ -9,9 +9,9 @@ class TreeProfileTest(unittest.TestCase):
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+        self.ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
                                     use_internal_name=True)
-        self.ham_analysis_no_name = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+        self.ham_analysis_no_name = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
                                             use_internal_name=False)
 
         # gene, retained, duplicated, gain, lost

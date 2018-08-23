@@ -36,7 +36,7 @@ class OrthoXMLParserTest(unittest.TestCase):
         nwk_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
-        self.ham_analysis = ham.Ham(newick_str=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+        self.ham_analysis = ham.Ham(tree_file=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
                                     use_internal_name=True)
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
@@ -195,12 +195,12 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx_complexParalogs.orthoxml')
         orthoxml_path_v3 = os.path.join(os.path.dirname(__file__), './data/SimpleEx_complexParalogGetHOGS3format.xml')
 
-        self.ham_analysis = ham.Ham(newick_str=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+        self.ham_analysis = ham.Ham(tree_file=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
                                     use_internal_name=True)
         self.hogs = self.ham_analysis.get_dict_top_level_hogs()
         self.genes = self.ham_analysis.get_dict_extant_genes()
 
-        self.ham_analysis_v3 = ham.Ham(newick_str=nwk_str, hog_file=orthoxml_path_v3, type_hog_file='orthoxml',
+        self.ham_analysis_v3 = ham.Ham(tree_file=nwk_str, hog_file=orthoxml_path_v3, type_hog_file='orthoxml',
                                        use_internal_name=True)
         self.hogs_v3 = self.ham_analysis_v3.get_dict_top_level_hogs()
         self.genes_v3 = self.ham_analysis_v3.get_dict_extant_genes()

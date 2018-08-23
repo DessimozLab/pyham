@@ -1,0 +1,52 @@
+<phyloxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phyloxml.org"
+          xsi:schemaLocation="http://www.phyloxml.org http://www.phyloxml.org/1.20/phyloxml.xsd">
+    <phylogeny rooted="true" rerootable="false">
+        <name>Species phylogeny of the pyHam example</name>
+        <clade>
+            <clade>
+                <taxonomy>
+                    <code>XENTR</code>
+                    <scientific_name>Xenopus Tropicallis</scientific_name>
+                </taxonomy>
+            </clade>
+            <clade>
+                <clade>
+                    <clade>
+                        <clade>
+                            <taxonomy>
+                                <code>RATNO</code>
+                                <scientific_name>Ratus Norvegicus</scientific_name>
+                            </taxonomy>
+                        </clade>
+                        <clade>
+                            <taxonomy>
+                                <code>MOUSE</code>
+                                <scientific_name>Mus Musculus</scientific_name>
+                            </taxonomy>
+                        </clade>
+                    </clade>
+                    <clade>
+                        <clade>
+                            <taxonomy>
+                                <code>PANTR</code>
+                                <scientific_name>Chimp</scientific_name>
+                            </taxonomy>
+                        </clade>
+                        <clade>
+                            <taxonomy>
+                                <code>HUMAN</code>
+                                <scientific_name>Homo Sapiens</scientific_name>
+                            </taxonomy>
+                        </clade>
+                    </clade>
+                </clade>
+                <clade>
+                    <taxonomy>
+                        <code>CANFA</code>
+                        <scientific_name>Canis Familiaris</scientific_name>
+                    </taxonomy>
+                </clade>
+            </clade>
+        </clade>
+    </phylogeny>
+</phyloxml>

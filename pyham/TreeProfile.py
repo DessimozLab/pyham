@@ -53,7 +53,7 @@ class TreeProfile(object):
         """
 
         # copy the required taxonomy using query hog as root level
-        treeMap = hog.genome.taxon.copy(method="newick")
+        treeMap = hog.genome.taxon.copy(method="newick")  # todo updat this ssith phyloxml
 
         # create a dictionary that map node with related hogs/genes
         levelGroups = {}

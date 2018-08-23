@@ -11,7 +11,7 @@ class HAMTestConflict1(unittest.TestCase):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/Conflict1/tree.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/Conflict1/hog.orthoxml')
-        self.ham_analysis = ham.Ham(newick_str=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+        self.ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
         self.hog = self.ham_analysis.get_list_top_level_hogs()[0]
 
     def test_only_one_hog(self):

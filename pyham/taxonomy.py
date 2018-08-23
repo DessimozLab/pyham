@@ -24,19 +24,22 @@ class Taxonomy(object):
         | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
 
     """
-    def __init__(self, newick_str, use_internal_name=False):
+    def __init__(self, tree_file, tree_format='newick_string', use_internal_name=False, phyloxml_species_name_tag=None):
         """
         Args:
-            | newick_str (:obj:`str`): Newick str used to build ete3 Etree object.
+            | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
+            | tree_format (:obj:`str`): type of inputted tree file. Defaults to newick_string. Can be 'newick', 'phyloxml, 'newick_string'.
             | use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the 
             | concatenatation of the children name. Defaults to False.
         """
 
-        self.newick_str = newick_str
-        self.tree = ete3.Tree(self.newick_str, format=1)
+        self.tree_file = tree_file
+        self.use_internal_name = use_internal_name
+        self.phyloxml_species_name_tag = phyloxml_species_name_tag
+        self.tree = self._build_tree(tree_file, tree_format)
 
         # create internal node name if required
-        if use_internal_name is False:
+        if self.use_internal_name is False:
             for node in self.tree.traverse("postorder"):
                 if node.is_leaf() is False:
                     self.set_taxon_name(node)
@@ -119,6 +122,75 @@ class Taxonomy(object):
             level_name += "/"
 
         node.name = str(level_name[:-1])
+
+    def _get_name_phyloxml(self, node):
+
+        if self.phyloxml_species_name_tag is None:
+
+            if node.name != '':
+                return node.name
+
+            if node.name == '' and node.phyloxml_clade.taxonomy[0].scientific_name != '':
+                return node.phyloxml_clade.taxonomy[0].scientific_name
+            else:
+                raise KeyError(
+                    "Node {} in the phyloxml file {} have no clade name or phylogeny scientific name to populate the species name".format(
+                        node, self.tree_file))
+
+        elif self.phyloxml_species_name_tag == 'clade_name':
+                if node.name != '':
+                    return node.name
+                else:
+                    raise KeyError(
+                        "Node {} in the phyloxml file {} have no clade name or phylogeny scientific name to populate the species name".format(
+                            node, self.tree_file))
+
+        elif self.phyloxml_species_name_tag == 'taxonomy_scientific_name':
+            if node.phyloxml_clade.taxonomy[0].scientific_name != '':
+                return node.phyloxml_clade.taxonomy[0].scientific_name
+            else:
+                raise KeyError(
+                    "Node {} in the phyloxml file {} have no taxonomy scientific name  to populate the species name".format(
+                        node, self.tree_file))
+
+        elif self.phyloxml_species_name_tag == 'taxonomy_code':
+            if node.phyloxml_clade.taxonomy[0].code != '':
+                return node.phyloxml_clade.taxonomy[0].code
+            else:
+                raise KeyError(
+                    "Node {} in the phyloxml file {} have no taxonomy scientific code  to populate the species name".format(
+                        node, self.tree_file))
+
+    def _build_tree(self, tree_file, tree_format):
+
+        if tree_format == 'newick_string':
+            self.newick_str = tree_file
+            return ete3.Tree(self.newick_str, format=1)
+
+        elif tree_format == 'newick':
+            with open(tree_file, 'r') as nwk_file:
+                self.newick_str = nwk_file.read()
+            return ete3.Tree(self.newick_str, format=1)
+
+        elif tree_format == 'phyloxml':
+            from ete3 import Phyloxml
+            project = Phyloxml()
+            project.build_from_file(tree_file)
+            self.newick_str = None
+
+            tree = project.get_phylogeny()[0]
+
+            for node in tree:
+
+                # assign name to extant species
+                if node.is_leaf():
+                    node.name = self._get_name_phyloxml(node)
+
+                # assign name to ancestral species
+                elif self.use_internal_name:
+                        node.name = self._get_name_phyloxml(node)
+
+            return tree
 
     def _check_consistency_names(self):
 

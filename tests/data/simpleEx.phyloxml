@@ -1,0 +1,78 @@
+<phyloxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phyloxml.org"
+          xsi:schemaLocation="http://www.phyloxml.org http://www.phyloxml.org/1.20/phyloxml.xsd">
+    <phylogeny rooted="true" rerootable="false">
+        <name>Species phylogeny of the pyHam example</name>
+        <clade>
+            <name>Vertebrata</name>
+            <taxonomy>
+                <scientific_name>Vertebrata</scientific_name>
+            </taxonomy>
+            <clade>
+                <name>XENTR</name>
+                <taxonomy>
+                    <code>XENTR</code>
+                    <scientific_name>Xenopus Tropicallis</scientific_name>
+                </taxonomy>
+            </clade>
+            <clade>
+                <name>Mammalia</name>
+                <taxonomy>
+                    <scientific_name>Mammalia</scientific_name>
+                </taxonomy>
+                <clade>
+                    <name>Euarchontoglires</name>
+                    <taxonomy>
+                        <scientific_name>Euarchontoglires</scientific_name>
+                    </taxonomy>
+                    <clade>
+                        <name>Rodents</name>
+                        <taxonomy>
+                            <scientific_name>Rodents</scientific_name>
+                        </taxonomy>
+                        <clade>
+                            <name>RATNO</name>
+                            <taxonomy>
+                                <code>RATNO</code>
+                                <scientific_name>Ratus Norvegicus</scientific_name>
+                            </taxonomy>
+                        </clade>
+                        <clade>
+                            <name>MOUSE</name>
+                            <taxonomy>
+                                <code>MOUSE</code>
+                                <scientific_name>Mus Musculus</scientific_name>
+                            </taxonomy>
+                        </clade>
+                    </clade>
+                    <clade>
+                        <name>Primates</name>
+                        <taxonomy>
+                            <scientific_name>Primates</scientific_name>
+                        </taxonomy>
+                        <clade>
+                            <name>PANTR</name>
+                            <taxonomy>
+                                <code>PANTR</code>
+                                <scientific_name>Chimp</scientific_name>
+                            </taxonomy>
+                        </clade>
+                        <clade>
+                            <name>HUMAN</name>
+                            <taxonomy>
+                                <code>HUMAN</code>
+                                <scientific_name>Homo Sapiens</scientific_name>
+                            </taxonomy>
+                        </clade>
+                    </clade>
+                </clade>
+                <clade>
+                    <name>CANFA</name>
+                    <taxonomy>
+                        <code>CANFA</code>
+                        <scientific_name>Canis Familiaris</scientific_name>
+                    </taxonomy>
+                </clade>
+            </clade>
+        </clade>
+    </phylogeny>
+</phyloxml>

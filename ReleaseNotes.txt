@@ -1,5 +1,19 @@
 ########################################################################################
 
+VERSION 1.1.0
+
+FIX:
+    - None
+
+IMPROVEMENTS:
+    - Tree Profile: add option to switch between number of genes resulting of each types of phylogenetic events or number of
+    phylogenetic events (NEW)
+    - Tree Profile: add few customisation options (Hide/Show elements, switch between fixed size of stacks or based on genome sizes)
+    - Add UnitTest for iHam
+    - Add number of duplication events in VerticalMapper.
+
+########################################################################################
+
 VERSION 1.0.9
 
 FIX:
