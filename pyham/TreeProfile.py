@@ -53,7 +53,17 @@ class TreeProfile(object):
         """
 
         # copy the required taxonomy using query hog as root level
-        treeMap = hog.genome.taxon.copy(method="newick")  # todo updat this ssith phyloxml
+        if self.ham.taxonomy.tree_format == 'phyloxml':
+            # Rebuild full tree from input data and annotate it with name if required
+            tree_copy = self.ham.taxonomy._build_tree(self.ham.taxonomy.tree_file, self.ham.taxonomy.tree_format)
+            self.ham.taxonomy._generate_internal_node_name(tree_copy)
+
+            # Prune at root hog level
+            hog_taxon_in_copy = tree_copy.search_nodes(name=hog.genome.taxon.name)[0]
+            treeMap = hog_taxon_in_copy.detach()
+        else:
+            treeMap = hog.genome.taxon.copy(method="newick")
+
 
         # create a dictionary that map node with related hogs/genes
         levelGroups = {}
@@ -100,7 +110,7 @@ class TreeProfile(object):
                     else:
                         cpt_lost += 1
 
-                cpt_duplication = max(0, len(list(set_dup_parent)) - cpt_dupl)
+                cpt_duplication = max(0, cpt_dupl - len(list(set_dup_parent)))
                 nbr_ev = cpt_lost + cpt_duplication
 
 
@@ -145,7 +155,13 @@ class TreeProfile(object):
             node.add_feature("retained", retained)
             node.add_feature("duplication", duplication)
 
-        treeMap = self.ham.taxonomy.tree.copy(method="newick")
+
+        if self.ham.taxonomy.tree_format == 'phyloxml':
+            # Rebuild full tree from input data and annotate it with name if required
+            treeMap = self.ham.taxonomy._build_tree(self.ham.taxonomy.tree_file, self.ham.taxonomy.tree_format)
+            self.ham.taxonomy._generate_internal_node_name(treeMap)
+        else:
+            treeMap = self.ham.taxonomy.tree.copy(method="newick")
 
         for node in treeMap.traverse():
             if node.is_root():
@@ -326,7 +342,7 @@ class TreeProfile(object):
             <meta charset="UTF-8">
             <script src="https://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/jquery-2.1.4.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/106d500de4403546273734d2bb5d36e30797e3d3/www/js/treecompare.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/74953fb1565b9516521729a21db9d8f3d03adc49/www/js/treecompare.js"></script>
             <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/d3.min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/bootstrap.min.js"></script>

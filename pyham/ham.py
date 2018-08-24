@@ -278,7 +278,7 @@ class Ham(object):
 
         return lateral_map
 
-    def create_iHam(self, hog, outfile=None): #todo Make this compatible phyloxml
+    def create_iHam(self, hog, outfile=None): #todo Make this compatible with phyloxml input
 
         """
         Function to compute a :obj:`pyham.IHAM`.

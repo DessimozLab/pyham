@@ -11,6 +11,7 @@ IMPROVEMENTS:
     - Tree Profile: add few customisation options (Hide/Show elements, switch between fixed size of stacks or based on genome sizes)
     - Add UnitTest for iHam
     - Add number of duplication events in VerticalMapper.
+    - Add phyloXML as input format for phylogeny.
 
 ########################################################################################
 

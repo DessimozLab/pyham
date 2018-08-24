@@ -34,15 +34,15 @@ class Taxonomy(object):
         """
 
         self.tree_file = tree_file
+        self.tree_format = tree_format
         self.use_internal_name = use_internal_name
         self.phyloxml_species_name_tag = phyloxml_species_name_tag
+
+        # create tree
         self.tree = self._build_tree(tree_file, tree_format)
 
         # create internal node name if required
-        if self.use_internal_name is False:
-            for node in self.tree.traverse("postorder"):
-                if node.is_leaf() is False:
-                    self.set_taxon_name(node)
+        self._generate_internal_node_name(self.tree)
 
         # check unicity of leaves name.
         self._check_consistency_names()
@@ -122,6 +122,12 @@ class Taxonomy(object):
             level_name += "/"
 
         node.name = str(level_name[:-1])
+
+    def _generate_internal_node_name(self, tree):
+        if self.use_internal_name is False:
+            for node in tree.traverse("postorder"):
+                if node.is_leaf() is False:
+                    self.set_taxon_name(node)
 
     def _get_name_phyloxml(self, node):
 

@@ -104,6 +104,8 @@ class HAMTestQuery(unittest.TestCase):
         nwk_path_no_name = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         nwk_str_no_name = utils.get_newick_string(nwk_path_no_name, type="nwk")
 
+        phyloxml_file = os.path.join(os.path.dirname(__file__), './data/simpleEx.phyloxml')
+
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         with open(orthoxml_path, 'r') as orthoxml_file:
@@ -115,6 +117,9 @@ class HAMTestQuery(unittest.TestCase):
 
         # using newick with name only at leaves
         self.hn = ham.Ham(nwk_str_no_name, orthoxml_path)
+
+        # using phyloxml file with name
+        self.hpx = ham.Ham(phyloxml_file, orthoxml_path,  use_internal_name=True, tree_format='phyloxml')
 
         # using newick with name on both internal nodes and leaves and filter for HOG2
         self.filter_genome = {"HUMAN", "MOUSE", "CANFA", "PANTR"}
@@ -156,6 +161,10 @@ class HAMTestQuery(unittest.TestCase):
         hog3 = self.hstring.get_hog_by_id(3)
         self.assertEqual(str(hog3), "<HOG(3)>")
 
+        hog3 = self.hpx.get_hog_by_id(3)
+        self.assertEqual(str(hog3), "<HOG(3)>")
+
+
         ###############
         # With filter #
         ###############
@@ -182,6 +191,9 @@ class HAMTestQuery(unittest.TestCase):
         hog3 = self.h.get_hog_by_gene(gene3)
         self.assertEqual(str(hog3), "<HOG(3)>")
 
+        hog3 = self.hpx.get_hog_by_gene(gene3)
+        self.assertEqual(str(hog3), "<HOG(3)>")
+
         # If gene argument is not a Gene object
         with self.assertRaises(KeyError):
             self.h.get_hog_by_gene("gene")
@@ -204,6 +216,9 @@ class HAMTestQuery(unittest.TestCase):
         hogs = self.h.get_list_top_level_hogs()
         self.assertSetEqual(_str_array(hogs), {"<HOG(2)>", "<HOG(1)>", "<HOG(3)>"})
 
+        hogs = self.hpx.get_list_top_level_hogs()
+        self.assertSetEqual(_str_array(hogs), {"<HOG(2)>", "<HOG(1)>", "<HOG(3)>"})
+
         ###############
         # With filter #
         ###############
@@ -213,6 +228,9 @@ class HAMTestQuery(unittest.TestCase):
 
     def test_get_dict_top_level_hogs(self):
         hogs = self.h.get_dict_top_level_hogs()
+        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>", "1": "<HOG(1)>", "3": "<HOG(3)>"})
+
+        hogs = self.hpx.get_dict_top_level_hogs()
         self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>", "1": "<HOG(1)>", "3": "<HOG(3)>"})
 
         ###############
@@ -235,6 +253,9 @@ class HAMTestQuery(unittest.TestCase):
 
         # Get Gene with str(id)
         gene3 = self.h.get_gene_by_id("3")
+        self.assertEqual(str(gene3), "Gene(3)")
+
+        gene3 = self.hpx.get_gene_by_id("3")
         self.assertEqual(str(gene3), "Gene(3)")
 
         # Get Gene with int(id)
@@ -270,6 +291,15 @@ class HAMTestQuery(unittest.TestCase):
         gene12 = self.hstring.get_genes_by_external_id("PANTRg2")[0]
         self.assertEqual(str(gene12), "Gene(12)")
 
+        # Get Gene with protId
+        gene12 = self.hpx.get_genes_by_external_id("PANTR2")[0]
+        self.assertEqual(str(gene12), "Gene(12)")
+
+        # Get Gene with geneId
+        gene12 = self.hpx.get_genes_by_external_id("PANTRg2")[0]
+        self.assertEqual(str(gene12), "Gene(12)")
+
+
         ###############
         # With filter #
         ###############
@@ -286,6 +316,12 @@ class HAMTestQuery(unittest.TestCase):
     def test_get_list_extant_genes(self):
 
         genes = self.h.get_list_extant_genes()
+        expected = {'Gene(33)', 'Gene(14)', 'Gene(31)', 'Gene(51)', 'Gene(13)', 'Gene(11)', 'Gene(12)', 'Gene(23)',
+                    'Gene(21)', 'Gene(2)', 'Gene(34)', 'Gene(1)', 'Gene(32)', 'Gene(5)', 'Gene(22)', 'Gene(3)',
+                    'Gene(41)', 'Gene(53)', 'Gene(43)'}
+        self.assertSetEqual(_str_array(genes), expected)
+
+        genes = self.hpx.get_list_extant_genes()
         expected = {'Gene(33)', 'Gene(14)', 'Gene(31)', 'Gene(51)', 'Gene(13)', 'Gene(11)', 'Gene(12)', 'Gene(23)',
                     'Gene(21)', 'Gene(2)', 'Gene(34)', 'Gene(1)', 'Gene(32)', 'Gene(5)', 'Gene(22)', 'Gene(3)',
                     'Gene(41)', 'Gene(53)', 'Gene(43)'}
@@ -308,6 +344,14 @@ class HAMTestQuery(unittest.TestCase):
             'Gene(11)', '1': 'Gene(1)', '22': 'Gene(22)', '3': 'Gene(3)', '41': 'Gene(41)', '51': 'Gene(51)', '53':
             'Gene(53)', '14': 'Gene(14)', '13': 'Gene(13)', '43': 'Gene(43)', '32': 'Gene(32)', '23': 'Gene(23)', '21':
             'Gene(21)', '31': 'Gene(31)'}
+        self.assertDictEqual(_str_dict_one_value(genes), expected)
+
+        genes = self.hpx.get_dict_extant_genes()
+        expected = {'34': 'Gene(34)', '33': 'Gene(33)', '2': 'Gene(2)', '12': 'Gene(12)', '5': 'Gene(5)', '11':
+            'Gene(11)', '1': 'Gene(1)', '22': 'Gene(22)', '3': 'Gene(3)', '41': 'Gene(41)', '51': 'Gene(51)', '53':
+                        'Gene(53)', '14': 'Gene(14)', '13': 'Gene(13)', '43': 'Gene(43)', '32': 'Gene(32)',
+                    '23': 'Gene(23)', '21':
+                        'Gene(21)', '31': 'Gene(31)'}
         self.assertDictEqual(_str_dict_one_value(genes), expected)
 
         ###############
@@ -333,6 +377,8 @@ class HAMTestQuery(unittest.TestCase):
         h = self.h.get_extant_genome_by_name("HUMAN")
         self.assertEqual(h.name, "HUMAN")
 
+        h = self.hpx.get_extant_genome_by_name("HUMAN")
+        self.assertEqual(h.name, "HUMAN")
         ###############
         # With filter #
         ###############
@@ -348,6 +394,10 @@ class HAMTestQuery(unittest.TestCase):
     def test_get_list_extant_genomes(self):
 
         leg = self.h.get_list_extant_genomes()
+        expected = {'RATNO', 'HUMAN', 'MOUSE', 'XENTR', 'PANTR', 'CANFA'}
+        self.assertSetEqual(_str_array(leg), expected)
+
+        leg = self.hpx.get_list_extant_genomes()
         expected = {'RATNO', 'HUMAN', 'MOUSE', 'XENTR', 'PANTR', 'CANFA'}
         self.assertSetEqual(_str_array(leg), expected)
 
@@ -369,12 +419,21 @@ class HAMTestQuery(unittest.TestCase):
         mouse = self.hn.get_taxon_by_name("MOUSE")
         self.assertEqual(mouse.name, "MOUSE")
 
+
+        # get Taxnode at leaf
+        mouse = self.hpx.get_taxon_by_name("MOUSE")
+        self.assertEqual(mouse.name, "MOUSE")
+
     # AncestralGenome
 
     def test_get_ancestral_genome_by_taxon(self):
 
         mammals_tax = self.h.get_taxon_by_name("Mammalia")
         mammals = self.h.get_ancestral_genome_by_taxon(mammals_tax)
+        self.assertEqual(mammals.name, "Mammalia")
+
+        mammals_tax = self.hpx.get_taxon_by_name("Mammalia")
+        mammals = self.hpx.get_ancestral_genome_by_taxon(mammals_tax)
         self.assertEqual(mammals.name, "Mammalia")
 
         ###############
@@ -388,6 +447,9 @@ class HAMTestQuery(unittest.TestCase):
     def test_get_ancestral_genome_by_name(self):
 
         mammals = self.h.get_ancestral_genome_by_name("Mammalia")
+        self.assertEqual(mammals.name, "Mammalia")
+
+        mammals = self.hpx.get_ancestral_genome_by_name("Mammalia")
         self.assertEqual(mammals.name, "Mammalia")
 
         rodents = self.hn.get_ancestral_genome_by_name("MOUSE/RATNO")
