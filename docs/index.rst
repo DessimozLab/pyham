@@ -98,7 +98,9 @@ How to use pyham on my dataset ?
 ################################
 
 In order to use pyHam you need:
- - A species tree of the phylogeny of interest (Supported format: newick, internal node names are optional, polytomies are accepted)
+ - A species tree of the phylogeny of interest in the following format:
+    - **newick**: unique leaf names, internal node names are optional to name ancestral genomes, polytomies are accepted.
+    - **phyloxml**:  genomes are named after clade name attributes or if any phylogeny scientific_name attributes (custom attribute tag can be provided), internal node names are optional to name ancestral genomes, polytomies are accepted.
  - HOGs encoded in an OrthoXML file.
 
 **IMPORTANT**\, species names need to be matching between the species tree and the orthoXML.
