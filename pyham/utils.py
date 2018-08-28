@@ -35,7 +35,7 @@ def previsualize_taxonomy(newick_str):
     This function help to previsualyse before running Ham what the topology will looked like and what will be the
     internal node naming.
     Args:
-        | newick_str:
+        | tree_str:
     """
 
     t = tax.Taxonomy(newick_str)

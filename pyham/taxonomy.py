@@ -8,6 +8,9 @@ standard_library.install_aliases()
 import ete3
 import logging
 from .genome import ExtantGenome, AncestralGenome, Genome
+from six import StringIO
+from ete3 import Phyloxml
+import re
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +21,7 @@ class Taxonomy(object):
     Taxonomy is a class to wrap the ete3 Etree used as reference species tree by Ham.
     
     Attributes:
-        | newick_str (:obj:`str`): newick tree string used to build the ete3 Etree object.
+        | tree_str (:obj:`str`): newick tree string used to build the ete3 Etree object.
         | tree (:obj:`ete3 Etree`): species ete3 Etree tree.
         | internal_nodes (:obj:`set`): Set of Etree node that contained a AncestralGenome.
         | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
@@ -129,6 +132,32 @@ class Taxonomy(object):
                 if node.is_leaf() is False:
                     self.set_taxon_name(node)
 
+        if self.tree_format == 'phyloxml':
+
+            # build phyloxml project
+            project = Phyloxml()
+            phylo = self.tree
+            project.add_phylogeny(phylo)
+
+            # Export phyloxml document
+            OUTPUT = StringIO()
+            project.export(OUTPUT)
+
+            # Some ad-hoc changes to the phyloxml formatted document to meet the schema definition
+            text = OUTPUT.getvalue()
+            text = text.replace("phy:", "")
+            text = re.sub('branch_length_attr="[^"]+"', "", text)
+            header = """
+            <phyloxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phyloxml.org"          xsi:schemaLocation="http://www.phyloxml.org http://www.phyloxml.org/1.20/phyloxml.xsd">  
+            """
+            text = re.sub('<Phyloxml[^>]+>', header, text)
+            text = text.replace('Phyloxml', 'phyloxml')
+            text = text.replace('\n', '').replace("'", '')
+
+            self.tree_str = text
+        else:
+            self.tree_str = self.tree.write(format=8, format_root_node=True)
+
     def _get_name_phyloxml(self, node):
 
         if self.phyloxml_species_name_tag is None:
@@ -170,19 +199,19 @@ class Taxonomy(object):
     def _build_tree(self, tree_file, tree_format):
 
         if tree_format == 'newick_string':
-            self.newick_str = tree_file
-            return ete3.Tree(self.newick_str, format=1)
+            self.tree_str = tree_file
+            return ete3.Tree(self.tree_str, format=1)
 
         elif tree_format == 'newick':
             with open(tree_file, 'r') as nwk_file:
-                self.newick_str = nwk_file.read()
-            return ete3.Tree(self.newick_str, format=1)
+                self.tree_str = nwk_file.read()
+            return ete3.Tree(self.tree_str, format=1)
 
         elif tree_format == 'phyloxml':
             from ete3 import Phyloxml
             project = Phyloxml()
             project.build_from_file(tree_file)
-            self.newick_str = None
+            self.tree_str = None
 
             tree = project.get_phylogeny()[0]
 
