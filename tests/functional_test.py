@@ -46,11 +46,11 @@ class HamAnalysis(unittest.TestCase):
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         # Clement create the Ham object that will be the kernel of all analysis
-        ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml')
+        ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, use_internal_name=True, type_hog_file='orthoxml')
 
         # And verifying if all tree elements are created
-        self.assertEqual(ham_analysis.taxonomy.newick_str,
-                         "(XENTR, (((HUMAN, PANTR)Primates, (MOUSE, RATNO)Rodents)Euarchontoglires, "
+        self.assertEqual(ham_analysis.taxonomy.tree_str,
+                         "(XENTR,(((HUMAN,PANTR)Primates,(MOUSE,RATNO)Rodents)Euarchontoglires,"
                          "CANFA)Mammalia)Vertebrata;")
 
         # After he get all the top level hogs
