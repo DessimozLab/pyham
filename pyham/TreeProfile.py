@@ -340,18 +340,18 @@ class TreeProfile(object):
         <head>
             <title>Phylo.io</title>
             <meta charset="UTF-8">
-            <script src="https://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/jquery-2.1.4.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/74953fb1565b9516521729a21db9d8f3d03adc49/www/js/treecompare.js"></script>
-            <script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/d3.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/FileSaver.min.js"></script>
-            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk" crossorigin="anonymous">
-            <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P" crossorigin="anonymous">
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap.min.css">
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap-theme.min.css">
-            <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/style.css">
+            <script src="//peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
+            <script type="text/javascript" src="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/jquery-2.1.4.min.js"></script>
+            <script type="text/javascript" src="//cdn.rawgit.com/DessimozLab/phylo-io/74953fb1565b9516521729a21db9d8f3d03adc49/www/js/treecompare.js"></script>
+            <script type="text/javascript" src="//underscorejs.org/underscore-min.js"></script>
+            <script type="text/javascript" src="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/d3.min.js"></script>
+            <script type="text/javascript" src="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/FileSaver.min.js"></script>
+            <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.8/css/solid.css" integrity="sha384-v2Tw72dyUXeU3y4aM2Y0tBJQkGfplr39mxZqlTBDUZAb9BGoC40+rdFCG0m10lXk" crossorigin="anonymous">
+            <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P" crossorigin="anonymous">
+            <link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap-theme.min.css">
+            <link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/style.css">
             <style> text {{stroke: none;}}</style>
         </head>
         <body id="phylo">
