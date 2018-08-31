@@ -352,9 +352,49 @@ class TreeProfile(object):
             <link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap.min.css">
             <link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap-theme.min.css">
             <link rel="stylesheet" type="text/css" href="//cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/style.css">
-            <style> text {{stroke: none;}}</style>
+            <style>
+            
+            text {{stroke: none;}}
+            
+            #help_modal_button {{
+                position: fixed;
+                right: 10px;
+                margin-right: 10px; /*magic number */
+                bottom: 10px;
+                z-index: 99;
+            }}
+            
+            </style>
         </head>
         <body id="phylo">
+        
+        <!-- Modal -->
+        <div class="modal  fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Tree profile help</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <embed src="https://cdn.rawgit.com/DessimozLab/pyham/fc01fb94/help.pdf" frameborder="0" width="100%" height="400px">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Button trigger modal -->
+        <button id="help_modal_button" type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal">
+            Help
+        </button>
+        
+        
+        
         <div id="vis-container1" style="width: 100%; height: 100%;">
         <div id="scale-1"> </div>
         </div>
