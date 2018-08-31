@@ -163,6 +163,7 @@ class IHAM(object):
                             .text(node.node_name());
                 })
                 .orthoxml(data.orthoxml)
+                .show_oma_link(false)
                 .newick(data.tree)
                 .fam_data(data.fam_data)
                 .tree_width(330)
