@@ -26,8 +26,6 @@ class HAMTaxonomy(unittest.TestCase):
         self.set_species_name = {"HUMAN", "PANTR", "MOUSE", "RATNO", "CANFA", "XENTR"}
         self.set_species_sciname = {"Homo Sapiens", "Chimp", "Mus Musculus", "Ratus Norvegicus", "Canis Familiaris", "Xenopus Tropicallis"}
 
-
-
     def test_non_unique_leaf_names(self):
         with self.assertRaises(KeyError):
             taxonomy.Taxonomy(self.newick_str_non_unique)
@@ -48,9 +46,12 @@ class HAMTaxonomy(unittest.TestCase):
         self.assertSetEqual(self.expected_name_native_nf, observed_name)
 
         # using the file phyloxml
-        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml')
+        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_species_name_tag='taxonomy_scientific_name')
+
         observed_name = {node.name for node in t3.tree.traverse() if node.is_leaf() is False}
         self.assertSetEqual(self.expected_name_native_nf, observed_name)
+
+
 
     def test_dont_use_internal_name(self):
 

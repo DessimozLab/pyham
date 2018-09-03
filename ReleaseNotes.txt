@@ -1,5 +1,15 @@
 ########################################################################################
 
+VERSION 1.1.2
+
+FIX:
+    - Bug ancestral name were not set correctly using phyloxml taxonomy scientific name tag
+
+IMPROVEMENTS:
+    - None.
+
+########################################################################################
+
 VERSION 1.1.1
 
 FIX:

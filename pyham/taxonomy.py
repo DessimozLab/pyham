@@ -215,7 +215,7 @@ class Taxonomy(object):
 
             tree = project.get_phylogeny()[0]
 
-            for node in tree:
+            for node in tree.traverse():
 
                 # assign name to extant species
                 if node.is_leaf():
@@ -223,7 +223,7 @@ class Taxonomy(object):
 
                 # assign name to ancestral species
                 elif self.use_internal_name:
-                        node.name = self._get_name_phyloxml(node)
+                    node.name = self._get_name_phyloxml(node)
 
             return tree
 
@@ -239,10 +239,19 @@ class Taxonomy(object):
 
         for node in self.tree.traverse():
             if node.is_leaf():
-                leaf_names.append(node.name)
+                if self.tree_format == 'phyloxml':
+                    nn = self._get_name_phyloxml(node)
+                    if nn != None:
+                        leaf_names.append(nn)
+                else:
+                    leaf_names.append(node.name)
             else:
-                int_names.append(node.name)
-
+                if self.tree_format == 'phyloxml':
+                    nn = self._get_name_phyloxml(node)
+                    if nn != None:
+                        int_names.append(nn)
+                else:
+                    int_names.append(node.name)
 
         # check for leaves name
         if len(leaf_names) != len(set(leaf_names)):
