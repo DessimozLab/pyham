@@ -33,6 +33,7 @@ class HAMTaxonomy(unittest.TestCase):
         with self.assertRaises(KeyError):
             taxonomy.Taxonomy(self.newick_str_non_unique, use_internal_name=False)
 
+
     def test_use_internal_name(self):
 
         # using the normal newick
@@ -45,12 +46,17 @@ class HAMTaxonomy(unittest.TestCase):
         observed_name = {node.name for node in t2.tree.traverse() if node.is_leaf() is False}
         self.assertSetEqual(self.expected_name_native_nf, observed_name)
 
-        # using the file phyloxml
-        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_species_name_tag='taxonomy_scientific_name')
-
+        # using the file phyloxml with sciname
+        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_internal_name_tag='taxonomy_scientific_name', phyloxml_leaf_name_tag='taxonomy_scientific_name')
         observed_name = {node.name for node in t3.tree.traverse() if node.is_leaf() is False}
         self.assertSetEqual(self.expected_name_native_nf, observed_name)
 
+        # using the file phyloxml with clade name
+        t4 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml',
+                               phyloxml_internal_name_tag='clade_name',
+                               phyloxml_leaf_name_tag='taxonomy_scientific_name')
+        observed_name = {node.name for node in t4.tree.traverse() if node.is_leaf() is False}
+        self.assertSetEqual(self.expected_name_native_nf, observed_name)
 
 
     def test_dont_use_internal_name(self):
@@ -66,13 +72,13 @@ class HAMTaxonomy(unittest.TestCase):
         self.assertSetEqual(self.expected_name_concat_nf, observed_name)
 
         # using the file phyloxml
-        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=False, tree_format='phyloxml')
+        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=False, tree_format='phyloxml', phyloxml_leaf_name_tag='taxonomy_code')
         observed_name = {node.name for node in t3.tree.traverse() if node.is_leaf() is False}
         self.assertSetEqual(self.expected_name_concat_nf2, observed_name)
 
+
         # using the file phyloxml with phylogeny code
-        t6 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=False, tree_format='phyloxml',
-                               phyloxml_species_name_tag='taxonomy_code')
+        t6 = taxonomy.Taxonomy(self.phyloxml_file_no_int_name, use_internal_name=False, tree_format='phyloxml', phyloxml_leaf_name_tag='taxonomy_code')
         observed_name = {node.name for node in t6.tree.traverse() if node.is_leaf() is False}
         self.assertSetEqual(self.expected_name_concat_nf2, observed_name)
 
@@ -81,30 +87,28 @@ class HAMTaxonomy(unittest.TestCase):
         observed_name = {node.name for node in t_support.tree.traverse() if node.is_leaf() is False}
         self.assertSetEqual(self.expected_name_concat_ns, observed_name)
 
+
     def test_all_correct_name(self):
         # using the file newick
         t2 = taxonomy.Taxonomy(self.newick_file, use_internal_name=True, tree_format='newick')
         observed_name = {node.name for node in t2.tree.traverse() if node.is_leaf() is True}
         self.assertSetEqual(self.set_species_name, observed_name)
 
-        # using the file phyloxml
-        t3 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml')
-        observed_name = {node.name for node in t3.tree.traverse() if node.is_leaf() is True}
-        self.assertSetEqual(self.set_species_name, observed_name)
-
         # using the file phyloxml with clade name
-        t4 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_species_name_tag='clade_name')
+        t4 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_internal_name_tag='taxonomy_scientific_name', phyloxml_leaf_name_tag='clade_name')
         observed_name = {node.name for node in t4.tree.traverse() if node.is_leaf() is True}
         self.assertSetEqual(self.set_species_name, observed_name)
 
         # using the file phyloxml with phylogeny sciname
-        t5 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml',
-                               phyloxml_species_name_tag='taxonomy_scientific_name')
+        t5 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_internal_name_tag='taxonomy_scientific_name' ,
+                               phyloxml_leaf_name_tag='taxonomy_scientific_name')
         observed_name = {node.name for node in t5.tree.traverse() if node.is_leaf() is True}
         self.assertSetEqual(self.set_species_sciname, observed_name)
 
         # using the file phyloxml with phylogeny code
-        t6 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml',
-                               phyloxml_species_name_tag='taxonomy_code')
+        t6 = taxonomy.Taxonomy(self.phyloxml_file, use_internal_name=True, tree_format='phyloxml', phyloxml_internal_name_tag='taxonomy_scientific_name',
+                               phyloxml_leaf_name_tag='taxonomy_code')
         observed_name = {node.name for node in t6.tree.traverse() if node.is_leaf() is True}
         self.assertSetEqual(self.set_species_name, observed_name)
+
+

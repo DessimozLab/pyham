@@ -8,7 +8,7 @@ standard_library.install_aliases()
 import ete3
 import logging
 from .genome import ExtantGenome, AncestralGenome, Genome
-from six import StringIO
+from six import BytesIO
 from ete3 import Phyloxml
 import re
 
@@ -27,7 +27,7 @@ class Taxonomy(object):
         | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
 
     """
-    def __init__(self, tree_file, tree_format='newick_string', use_internal_name=False, phyloxml_species_name_tag=None):
+    def __init__(self, tree_file, tree_format='newick_string', use_internal_name=False, phyloxml_leaf_name_tag=None, phyloxml_internal_name_tag=None):
         """
         Args:
             | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
@@ -39,7 +39,8 @@ class Taxonomy(object):
         self.tree_file = tree_file
         self.tree_format = tree_format
         self.use_internal_name = use_internal_name
-        self.phyloxml_species_name_tag = phyloxml_species_name_tag
+        self.phyloxml_leaf_name_tag = phyloxml_leaf_name_tag
+        self.phyloxml_internal_name_tag = phyloxml_internal_name_tag
 
         # create tree
         self.tree = self._build_tree(tree_file, tree_format)
@@ -134,18 +135,72 @@ class Taxonomy(object):
 
         if self.tree_format == 'phyloxml':
 
+
+            #### IMPORTANT ####
+
+            '''
+            This code section is an horrible fix due to incompatibility of Phyloxml().export() with python3.
+            
+            We overwrite the export module (and its functions) here to deal with both byte and unicode.
+            
+            TODO: this should be replace as ASAP
+            '''
+
+            def showIndent(outfile, level):
+                for idx in range(level):
+                    g = '    '
+                    g = g.encode('UTF-8')
+                    outfile.write(g)
+            namespace_ = 'phy:'
+            name_ = 'Phyloxml'
+            namespacedef_ = ''
+            outfile = BytesIO()
+            level = 0
+            def export(xxxx, outfile, level, namespace_='phy:', name_='Phyloxml', namespacedef_=''):
+                showIndent(outfile, level)
+                x = '<%s%s%s' % (namespace_, name_, namespacedef_ and ' ' + namespacedef_ or '',)
+                x = x.encode('UTF-8')
+                outfile.write(x)
+                already_processed = []
+                exportAttributes(xxxx, outfile, level, already_processed, namespace_, name_='Phyloxml')
+                if hasContent_(xxxx):
+                    y = '>\n'
+                    y = y.encode('UTF-8')
+                    outfile.write(y)
+                    exportChildren(xxxx, outfile, level + 1, namespace_, name_)
+                    showIndent(outfile, level)
+                    z = '</%s%s>\n' % (namespace_, name_)
+                    z = z.encode('UTF-8')
+                    outfile.write(z)
+                else:
+                    v = '/>\n'
+                    v = v.encode('UTF-8')
+                    outfile.write(v)
+            def exportAttributes(xxxx, outfile, level, already_processed, namespace_='phy:', name_='Phyloxml'):
+                pass
+            def exportChildren(xxxx, outfile, level, namespace_='phy:', name_='Phyloxml', fromsubclass_=False):
+                for phylogeny_ in xxxx.phylogeny:
+                    export(phylogeny_, outfile, level, namespace_, name_='phylogeny')
+            def hasContent_(xxxx):
+                if hasattr(xxxx, 'phylogeny'):
+                    return True
+                else:
+                    return False
+
+            #### IMPORTANT ####
+
             # build phyloxml project
             project = Phyloxml()
-            phylo = self.tree
-            project.add_phylogeny(phylo)
+            project.add_phylogeny(tree)
 
             # Export phyloxml document
-            OUTPUT = StringIO()
-            project.export(OUTPUT)
+            export(project, outfile, level, namespace_='phy:', name_='Phyloxml', namespacedef_='')
+            OUTPUT= outfile
+
 
             # Some ad-hoc changes to the phyloxml formatted document to meet the schema definition
-            text = OUTPUT.getvalue()
-            text = text.replace("phy:", "")
+            text = OUTPUT.read().decode('UTF-8')
+            text = text.replace('phy:', '')
             text = re.sub('branch_length_attr="[^"]+"', "", text)
             header = """
             <phyloxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phyloxml.org"          xsi:schemaLocation="http://www.phyloxml.org http://www.phyloxml.org/1.20/phyloxml.xsd">  
@@ -158,21 +213,9 @@ class Taxonomy(object):
         else:
             self.tree_str = self.tree.write(format=8, format_root_node=True)
 
-    def _get_name_phyloxml(self, node):
+    def _get_name_phyloxml(self, node, phyloxml_species_name_tag):
 
-        if self.phyloxml_species_name_tag is None:
-
-            if node.name != '':
-                return node.name
-
-            if node.name == '' and node.phyloxml_clade.taxonomy[0].scientific_name != '':
-                return node.phyloxml_clade.taxonomy[0].scientific_name
-            else:
-                raise KeyError(
-                    "Node {} in the phyloxml file {} have no clade name or phylogeny scientific name to populate the species name".format(
-                        node, self.tree_file))
-
-        elif self.phyloxml_species_name_tag == 'clade_name':
+        if phyloxml_species_name_tag == 'clade_name':
                 if node.name != '':
                     return node.name
                 else:
@@ -180,7 +223,7 @@ class Taxonomy(object):
                         "Node {} in the phyloxml file {} have no clade name or phylogeny scientific name to populate the species name".format(
                             node, self.tree_file))
 
-        elif self.phyloxml_species_name_tag == 'taxonomy_scientific_name':
+        elif phyloxml_species_name_tag == 'taxonomy_scientific_name':
             if node.phyloxml_clade.taxonomy[0].scientific_name != '':
                 return node.phyloxml_clade.taxonomy[0].scientific_name
             else:
@@ -188,7 +231,7 @@ class Taxonomy(object):
                     "Node {} in the phyloxml file {} have no taxonomy scientific name  to populate the species name".format(
                         node, self.tree_file))
 
-        elif self.phyloxml_species_name_tag == 'taxonomy_code':
+        elif phyloxml_species_name_tag == 'taxonomy_code':
             if node.phyloxml_clade.taxonomy[0].code != '':
                 return node.phyloxml_clade.taxonomy[0].code
             else:
@@ -219,11 +262,11 @@ class Taxonomy(object):
 
                 # assign name to extant species
                 if node.is_leaf():
-                    node.name = self._get_name_phyloxml(node)
+                    node.name = self._get_name_phyloxml(node, self.phyloxml_leaf_name_tag)
 
                 # assign name to ancestral species
                 elif self.use_internal_name:
-                    node.name = self._get_name_phyloxml(node)
+                    node.name = self._get_name_phyloxml(node, self.phyloxml_internal_name_tag)
 
             return tree
 
@@ -238,16 +281,20 @@ class Taxonomy(object):
         int_names = []
 
         for node in self.tree.traverse():
+
+            if node.name == None:
+                raise KeyError("{} node have no name".format(node))
+
             if node.is_leaf():
                 if self.tree_format == 'phyloxml':
-                    nn = self._get_name_phyloxml(node)
+                    nn = self._get_name_phyloxml(node, self.phyloxml_leaf_name_tag)
                     if nn != None:
                         leaf_names.append(nn)
                 else:
                     leaf_names.append(node.name)
             else:
                 if self.tree_format == 'phyloxml':
-                    nn = self._get_name_phyloxml(node)
+                    nn = self._get_name_phyloxml(node,  self.phyloxml_internal_name_tag)
                     if nn != None:
                         int_names.append(nn)
                 else:

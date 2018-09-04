@@ -26,6 +26,8 @@ class HAMTestSetUp(unittest.TestCase):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         self.nwk_str = utils.get_newick_string(nwk_path, type="nwk")
 
+        self.phyloxml_file = os.path.join(os.path.dirname(__file__), './data/simpleEx.phyloxml')
+
         self.orthoxml_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.orthoxml')
 
         with open(self.orthoxml_path, 'r') as orthoxml_file:
@@ -39,6 +41,13 @@ class HAMTestSetUp(unittest.TestCase):
 
         with self.assertRaises(ete3.parser.newick.NewickError):
             ham.Ham(self.nwk_str_wrong, self.orthoxml_path, type_hog_file='orthoxml')
+
+    def test_phyloxml_tag(self):
+
+        with self.assertRaises(TypeError):
+            ham.Ham(self.phyloxml_file, self.orthoxml_path, type_hog_file='orthoxml', tree_format='phyloxml', phyloxml_leaf_name_tag='None')
+
+        ham.Ham(self.phyloxml_file, self.orthoxml_path, type_hog_file='orthoxml', tree_format='phyloxml',  phyloxml_leaf_name_tag='clade_name')
 
     def test_wrong_type_hog_file(self):
 
@@ -119,7 +128,7 @@ class HAMTestQuery(unittest.TestCase):
         self.hn = ham.Ham(nwk_str_no_name, orthoxml_path)
 
         # using phyloxml file with name
-        self.hpx = ham.Ham(phyloxml_file, orthoxml_path,  use_internal_name=True, tree_format='phyloxml')
+        self.hpx = ham.Ham(phyloxml_file, orthoxml_path,  use_internal_name=True, tree_format='phyloxml', phyloxml_internal_name_tag='taxonomy_scientific_name', phyloxml_leaf_name_tag='taxonomy_code' )
 
         # using newick with name on both internal nodes and leaves and filter for HOG2
         self.filter_genome = {"HUMAN", "MOUSE", "CANFA", "PANTR"}

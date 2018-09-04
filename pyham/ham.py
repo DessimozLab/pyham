@@ -127,7 +127,7 @@ class Ham(object):
 
     """
 
-    def __init__(self, tree_file, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False, orthoXML_as_string=False, tree_format='newick_string', phyloxml_species_name_tag=None):
+    def __init__(self, tree_file, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False, orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', phyloxml_leaf_name_tag='taxonomy_scientific_name'):
         """
 
         Args:
@@ -137,7 +137,9 @@ class Ham(object):
             | filter_object (:obj:`pyham.pyham.ParserFilter`, optional): :obj:`pyham.pyham.ParserFilter` used during the instantiation of pyham.pyham.Ham. Defaults to None.
             | use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given taxonomy. This should be set to False when support values are provided in the newick. Defaults to False.
             | tree_format (:obj:`str`): type of inputted tree file. Defaults to newick_string. Can be 'newick', 'phyloxml, 'newick_string'.
-            | phyloxml_species_name_tag (:obj:`str`) tag to use in the phyloxml to name the species. Defaults will use clade.name if any then taxonomy.scientific_name to populate species names.
+            | phyloxml_leaf_name_tag (:obj:`str`) tag to use in the phyloxml to name the extant species (leaves). Defaults tag is taxonomy.scientific_name to populate species names.
+            available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
+            | phyloxml_internal_name_tag (:obj:`str`) tag to use in the phyloxml to name the ancestral species (internal nodes). Defaults will use taxonomy.scientific_name to populate species names.
             available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
         """
 
@@ -160,7 +162,13 @@ class Ham(object):
                                     type(filter_object).__name__))
 
         # Taxonomy
-        self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_species_name_tag=phyloxml_species_name_tag)
+
+        accepted_tag_phyloxml = ['clade_name', 'taxonomy_scientific_name', 'taxonomy_code']
+
+        if phyloxml_leaf_name_tag not in accepted_tag_phyloxml or phyloxml_internal_name_tag not in accepted_tag_phyloxml:
+            raise TypeError("{} is an invalid type phyloxml tag name")
+
+        self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_leaf_name_tag=phyloxml_leaf_name_tag, phyloxml_internal_name_tag=phyloxml_internal_name_tag)
         logger.info('Build taxonomy: completed.')
 
         # Misc. information
