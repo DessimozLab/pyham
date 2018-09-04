@@ -1,5 +1,16 @@
 ########################################################################################
 
+VERSION 1.1.3
+
+FIX:
+    - Fix Bytes Error for phyloxml in python 3.
+
+IMPROVEMENTS:
+    - Add few option to improve selection of xml tag in phyloxml for extant and ancestral
+     species names.
+
+########################################################################################
+
 VERSION 1.1.2
 
 FIX:
