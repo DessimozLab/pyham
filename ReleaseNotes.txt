@@ -1,5 +1,15 @@
 ########################################################################################
 
+VERSION 1.1.4
+
+FIX:
+    - Remote js library not loaded when opening iham or tree profile html output file.
+
+IMPROVEMENTS:
+    - x
+
+########################################################################################
+
 VERSION 1.1.3
 
 FIX:

@@ -27,14 +27,24 @@ Consider using pip to install the package directly from a checked out git repo
    python -m pip install --upgrade pip
    pip install pyham
 
-GETTING STARTED
+Example
+-------
+We prepare a ready-to-use example (see example folder) with few python scripts to use main pyHam features.
+You just have to run the following command in bash:
+.. code-block:: sh
+
+   python run_hog_queries.py
+   python run_treeProfile.py
+   python run_iHam.py
+
+Getting started
 ---------------
 We create a small introductory blog post about HOGs and pyHam at http://lab.dessimoz.org/blog/2017/06/29/pyham. We highly recommend you to read it before starting using pyHam.
 
 We also create an ipython notebook to help you with basic uses of pyHam API and embedded tools at http://zoo.cs.ucl.ac.uk/tutorials/tutorial_pyHam_get_started.html.
 
 
-DOCUMENTATION
+Documentation
 -------------
 You can the full documentation of pyHam at http://zoo.cs.ucl.ac.uk/doc/pyham/index.html
 
