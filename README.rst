@@ -86,7 +86,7 @@ Support for pyHam by various HOG inference resources.
 .. _Newicke: https://www.ensembl.org/info/about/speciestree.html
 .. _Newickh: http://hieranoid.sbc.su.se/download/H2/66c.tree
 
-.. _All HOGso:  https://omabrowser.org/All/oma-groups.orthoXML.xml.gz
+.. _All HOGso:  https://omabrowser.org/All/oma-hogs.orthoXML.gz
 .. _one HOG at a timeo:  https://omabrowser.org/oma/hogs/
 
 
