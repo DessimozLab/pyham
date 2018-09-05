@@ -44,6 +44,51 @@ We create a small introductory blog post about HOGs and pyHam at http://lab.dess
 
 We also create an ipython notebook to help you with basic uses of pyHam API and embedded tools at http://zoo.cs.ucl.ac.uk/tutorials/tutorial_pyHam_get_started.html.
 
+Table of compatibility
+----------------------
+
+Support for pyHam by various HOG inference resources.
+
++-----------------+------------------------------+---------------------------------------+-----------+
+| Resource        | Species tree format          | OrthoXML                              | SUPPORT   |
++=================+==============================+=======================================+===========+
+||OMA browser|_   | |PhyloXMLo|_ and |Newicko|_  ||All HOGso|_ , or |one HOG at a timeo|_|    YES    |
++-----------------+------------------------------+---------------------------------------+-----------+
+||OMA standalone|_| PhyloXML and Newick          | All HOGs                              |    YES    |
++-----------------+------------------------------+---------------------------------------+-----------+
+| |Ensembl|_      | |Newicke|_                   |    one HOG at a time                  |    YES    |
++-----------------+------------------------------+---------------------------------------+-----------+
+| |HieranoidDB|_  | |Newickh|_                   |    one HOG at a time                  |    YES    |
++-----------------+------------------------------+---------------------------------------+-----------+
+
+.. |OMA browser| replace:: ``OMA browser``
+.. |OMA standalone| replace:: ``OMA standalone``
+.. |Ensembl| replace:: ``Ensembl``
+.. |HieranoidDB| replace:: ``HieranoidDB``
+
+.. |PhyloXMLo| replace:: ``PhyloXML``
+.. |Newicko| replace:: ``Newick``
+.. |PhyloXMLs| replace:: ``PhyloXML``
+.. |Newicks| replace:: ``Newick``
+.. |Newicke| replace:: ``Newick``
+.. |Newickh| replace:: ``Newick``
+
+.. |All HOGso| replace:: ``All HOGs``
+.. |one HOG at a timeo| replace:: ``one HOG at a time``
+
+.. _OMA browser: https://omabrowser.org
+.. _OMA standalone: https://omabrowser.org/standalone/
+.. _Ensembl: https://www.ensembl.org/index.html
+.. _HieranoidDB: http://hieranoidb.sbc.su.se/
+
+.. _PhyloXMLo: https://omabrowser.org/All/speciestree.phyloxml
+.. _Newicko: https://omabrowser.org/All/speciestree.nwk
+.. _Newicke: https://www.ensembl.org/info/about/speciestree.html
+.. _Newickh: http://hieranoid.sbc.su.se/download/H2/66c.tree
+
+.. _All HOGso:  https://omabrowser.org/All/oma-groups.orthoXML.xml.gz
+.. _one HOG at a timeo:  https://omabrowser.org/oma/hogs/
+
 
 Documentation
 -------------
