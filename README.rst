@@ -31,6 +31,7 @@ Example
 -------
 We prepare a ready-to-use example (see example folder) with few python scripts to use main pyHam features.
 You just have to run the following command in bash:
+
 .. code-block:: sh
 
    python run_hog_queries.py
