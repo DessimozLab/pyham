@@ -4,7 +4,7 @@ from io import open
 
 
 name = 'pyham'
-requirements = ['ete3', 'six', 'lxml', 'future']
+requirements = ['ete3', 'six', 'lxml', 'future','coreapi']
 
 
 __version__ = "Undefined"

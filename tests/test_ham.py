@@ -34,6 +34,26 @@ class HAMTestSetUp(unittest.TestCase):
             data = orthoxml_file.read()
             self.orthoxml_string = data
 
+    def test_load_from_server(self):
+
+        # Not valid use_data_from
+        with self.assertRaises(TypeError):
+            ham.Ham(use_data_from='xxx')
+
+        #  Valid use_data_from but missing query_database
+        with self.assertRaises(TypeError):
+            ham.Ham(use_data_from='oma')
+
+    def test_load_from_oma(self):
+
+        ham.Ham(query_database="HUMAN2", use_data_from='oma')
+
+        with self.assertRaises(TypeError):
+            ham.Ham(query_database = "1bshwls", use_data_from = 'oma')
+
+        with self.assertRaises(TypeError):
+            ham.Ham(use_data_from = 'oma')
+
     def test_wrong_newick_str(self):
 
         with self.assertRaises(ete3.parser.newick.NewickError):

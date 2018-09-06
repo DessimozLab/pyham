@@ -18,6 +18,9 @@ from .TreeProfile import TreeProfile
 import logging
 import copy
 import io
+import coreapi
+from urllib.request import urlopen
+
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +130,9 @@ class Ham(object):
 
     """
 
-    def __init__(self, tree_file, hog_file, type_hog_file="orthoxml", filter_object=None, use_internal_name=False, orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', phyloxml_leaf_name_tag='taxonomy_scientific_name'):
+    def __init__(self, tree_file=None, hog_file=None, type_hog_file="orthoxml", filter_object=None, use_internal_name=False,\
+                 orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', \
+                 phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None):
         """
 
         Args:
@@ -141,13 +146,76 @@ class Ham(object):
             available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
             | phyloxml_internal_name_tag (:obj:`str`) tag to use in the phyloxml to name the ancestral species (internal nodes). Defaults will use taxonomy.scientific_name to populate species names.
             available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
+            | use_data_from (:obj:`str`) if specified,  use data from a remote databaseto populate pyHam. Defaults to None. Options: 'oma'.
+            | query_database (:obj:`str`) if use_data_from is specified, use this as a query to fetch the orthoxml and \
+            tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
         """
 
-        # HOGs file
-        self.hog_file = hog_file
-        self.tree_file = tree_file
-        self.hog_file_type = type_hog_file
-        self.orthoXML_as_string = orthoXML_as_string
+        if use_data_from!=None:
+            if query_database is None:
+                raise TypeError(
+                    "query_database argument can't be empty.")
+
+            if use_data_from == 'oma':
+
+                # Initialize a client & load the schema document
+                client = coreapi.Client()
+                schema = client.get("https://omabrowser.org/api/docs")
+
+                # Get the gene data
+                try:
+
+                    action_gene = ["protein", "read"]
+                    params_gene = {
+                        "entry_id": query_database,
+                    }
+
+                    gene = client.action(schema, action_gene, params=params_gene)
+                    top_level = gene['hog_levels'][-1]
+
+                except coreapi.exceptions.ErrorMessage as exc:
+                    raise TypeError("{} is not a valid oma Id".format(query_database))
+
+                # Get the phyloxml data
+                action_phy = ["taxonomy", "list"]
+                params_phy = {
+                    "type": 'phyloxml',
+                    "members": top_level,
+                }
+
+                open_tax = client.action(schema, action_phy, params=params_phy)
+
+                self.tree_file = 'taxonomy_from_oma_open_at_{}.phyloxml'.format(top_level)
+
+                with open(self.tree_file, 'w') as f:
+                    f.write(open_tax.read().decode())
+
+                # Get the phyloxml data
+                oma_url = 'https://omabrowser.org/oma/hogs/{}/orthoxml'.format(gene['omaid'])
+                self.hog_file = urlopen(oma_url).read().decode('utf-8')
+                self.hog_file_type = type_hog_file
+
+                self.orthoXML_as_string = True
+                use_internal_name = True
+                tree_format = 'phyloxml'
+
+            elif use_data_from == 'ensembl':
+                raise NotImplementedError("This function is not yet implemented.")
+
+            elif use_data_from not in ['oma', 'ensembl']:
+                raise TypeError("{} is not a valid option for use_data_from. Available options: 'oma', 'ensembl'.".format(use_data_from))
+
+            elif tree_file==None and hog_file==None :
+                raise TypeError("Arguments tree_file:{} or hog_file:{} should not be empty.".format(tree_file, hog_file ))
+        else:
+            if tree_file == None and hog_file == None:
+                raise TypeError("Arguments tree_file:{} or hog_file:{} should not be empty.".format(tree_file, hog_file))
+
+            # HOGs file
+            self.hog_file = hog_file
+            self.tree_file = tree_file
+            self.hog_file_type = type_hog_file
+            self.orthoXML_as_string = orthoXML_as_string
 
         if self.orthoXML_as_string == True:
             self.hog_file = self.hog_file.encode()

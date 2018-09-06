@@ -17,7 +17,3 @@ hog = pyham_analysis.get_hog_by_id('HOG:0355161')
 # create the iHam for it and store it into an html file
 output_name = "iHam{}.html".format(hog.hog_id)
 pyham_analysis.create_iHam(hog=hog,outfile=output_name)
-
-# Here a little demo of what you can see with hogs vis
-from IPython.display import IFrame
-IFrame(output_name, width=1000, height=640)

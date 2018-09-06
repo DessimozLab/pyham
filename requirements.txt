@@ -3,3 +3,4 @@ six==1.10.0
 future
 lxml
 twine
+coreapi
