@@ -342,7 +342,7 @@ class TreeProfile(object):
             <meta charset="UTF-8">
             <script src="https://peterolson.github.com/BigInteger.js/BigInteger.min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/jquery-2.1.4.min.js"></script>
-            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/74953fb1565b9516521729a21db9d8f3d03adc49/www/js/treecompare.js"></script>
+            <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/9eae3d2af33f1f75bff78e393909dccfdd400650/www/js/treecompare.js"></script>
             <script type="text/javascript" src="https://underscorejs.org/underscore-min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/d3.min.js"></script>
             <script type="text/javascript" src="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//js/bootstrap.min.js"></script>
