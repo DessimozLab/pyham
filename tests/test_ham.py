@@ -3,7 +3,6 @@ from pyham import utils
 from pyham import ham
 import ete3
 import os
-from unittest import skip
 
 # This helps to convert elements of list/dictionary to string in order to make easier assertEqual test.
 def _str_dict_one_value(dict):
@@ -45,7 +44,7 @@ class HAMTestSetUp(unittest.TestCase):
         with self.assertRaises(TypeError):
             ham.Ham(use_data_from='oma')
 
-    @skip
+    '''
     def test_load_from_oma(self):
 
         ham.Ham(query_database="HUMAN2", use_data_from='oma')
@@ -55,6 +54,7 @@ class HAMTestSetUp(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             ham.Ham(use_data_from = 'oma')
+    '''
 
     def test_wrong_newick_str(self):
 

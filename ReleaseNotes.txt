@@ -6,7 +6,8 @@ FIX:
     - Remote js library not loaded when opening iham or tree profile html output file.
 
 IMPROVEMENTS:
-    - x
+    - Add possibility to load one hog for remote database by single gene query (only oma for now)
+    - TreeProfile: Make visualisation clearer.
 
 ########################################################################################
 
