@@ -56,7 +56,7 @@ class IHAM(object):
 
     <!-- TnT Tooltip-->
     <link rel="stylesheet" href="https://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css"/>
-    <script src="https://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.min.js" charset="utf-8"></script>
+    <script src="https://omabrowser.org/static/js/tnt.tooltip.min.js" charset="utf-8"></script>
 
     <script src="https://dessimozlab.github.io/iHam/iHam.js"></script>
     <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css" type="text/css"/>
