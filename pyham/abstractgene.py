@@ -455,6 +455,7 @@ class Gene(AbstractGene):
 class EvolutionaryConceptError(Exception):
     pass
 
+
 class DuplicationNode(object):
     """
         This object link together all abstract genes that emerges from the same duplication event. Its composed of a set of genes

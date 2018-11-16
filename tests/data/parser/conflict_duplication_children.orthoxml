@@ -1,0 +1,71 @@
+<orthoXML origin="OMA standalone (bottom-up)" originVersion="Nov 2018" version="0.3" xmlns="http://orthoXML.org/2011/">
+<species name="BRAFL" NCBITaxId="-1">
+<database name="None" version="None">
+<genes>
+<gene id="98565" protId="C3XPJ8"/>
+</genes>
+</database>
+</species>
+<species name="NEMVE" NCBITaxId="-1">
+<database name="None" version="None">
+<genes>
+<gene id="554504" protId="A7SRI3"/>
+</genes>
+</database>
+</species>
+<species name="XENTR" NCBITaxId="-1">
+<database name="None" version="None">
+<genes>
+<gene id="949655" protId="A4IIS3"/>
+</genes>
+</database>
+</species>
+<species name="LEPOC" NCBITaxId="-1">
+<database name="None" version="None">
+<genes>
+<gene id="415062" protId="W5LVD7"/>
+<gene id="420780" protId="W5MF71"/>
+<gene id="422356" protId="W5MKS4"/>
+</genes>
+</database>
+</species>
+<species name="DANRE" NCBITaxId="-1">
+<database name="None" version="None">
+<genes>
+<gene id="242658" protId="B8X730"/>
+<gene id="241815" protId="B0V329"/>
+<gene id="242979" protId="E7EZ39"/>
+<gene id="237675" protId="A0A0R4IMJ2"/>
+</genes>
+</database>
+</species>
+<groups>
+    <orthologGroup id="22743">
+      <property name="TaxRange" value="Eumetazoa"/>
+      <paralogGroup>
+        <geneRef id="98565"/>
+        <orthologGroup id="None">
+          <property name="TaxRange" value="Euteleostomi"/>
+          <paralogGroup>
+            <orthologGroup id="None">
+              <property name="TaxRange" value="Neopterygii"/>
+              <paralogGroup>
+                <geneRef id="415062"/>
+                <geneRef id="420780"/>
+              </paralogGroup>
+              <paralogGroup>
+                <geneRef id="242658"/>
+                <geneRef id="241815"/>
+                <geneRef id="242979"/>
+                <geneRef id="237675"/>
+              </paralogGroup>
+            </orthologGroup>
+            <geneRef id="422356"/>
+          </paralogGroup>
+          <geneRef id="949655"/>
+        </orthologGroup>
+      </paralogGroup>
+      <geneRef id="554504"/>
+    </orthologGroup>
+    </groups>
+</orthoXML>

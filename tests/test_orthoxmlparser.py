@@ -1,8 +1,10 @@
 import collections
 import unittest
 from pyham import ham
+from pyham import abstractgene
 from pyham import utils
 import os
+import numpy as np
 from unittest import skip
 
 
@@ -501,6 +503,40 @@ class OrthoXMLParserTest_complexParalogs(unittest.TestCase):
 
         _test_one(self.hogs["6"])
         _test_one(self.hogs_v3["6"])
+
+    def test_duplication_children_all_in_hog_children(self):
+
+        for top_hog in self.ham_analysis.get_list_top_level_hogs():
+
+            for sub_hog in top_hog.get_all_descendant_hogs():
+
+                for dup in sub_hog.duplications:
+
+                    for e in dup.children:
+                        self.assertTrue(e in sub_hog.children)
+
+
+class OrthoXMLParser_Weird_Element_In_duplicationChildren(unittest.TestCase):
+
+    def setUp(self):
+
+        nwk_path = os.path.join(os.path.dirname(__file__), './data/parser/tree.newick')
+        nwk_str = utils.get_newick_string(nwk_path, type="nwk")
+        orthoxml_path = os.path.join(os.path.dirname(__file__), './data/parser/conflict_duplication_children.orthoxml')
+
+        self.ham_analysis = ham.Ham(tree_file=nwk_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+                                    use_internal_name=True)
+
+    def test_duplication_children_all_in_hog_children(self):
+
+        for top_hog in self.ham_analysis.get_list_top_level_hogs():
+
+            for sub_hog in top_hog.get_all_descendant_hogs():
+
+                for dup in sub_hog.duplications:
+
+                    for e in dup.children:
+                        self.assertTrue(e in sub_hog.children)
 
 
 """

@@ -1,5 +1,15 @@
 ########################################################################################
 
+VERSION 1.1.6
+
+FIX:
+    - Fix duplicated items in duplicationNode children for complex paralogous cases.
+
+IMPROVEMENTS:
+    - None
+
+########################################################################################
+
 VERSION 1.1.5
 
 FIX:

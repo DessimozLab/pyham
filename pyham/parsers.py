@@ -9,6 +9,7 @@ from . import abstractgene
 import logging
 logger = logging.getLogger(__name__)
 from collections import defaultdict
+import numpy as np
 
 
 class OrthoXMLParser(object):
@@ -102,7 +103,7 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
             dNode = abstractgene.DuplicationNode(self.ham_object)
 
-            self.paralog_stack.append({'depth':len(self.hog_stack), 'node':dNode})
+            self.paralog_stack.append({'depth': len(self.hog_stack), 'node': dNode})
 
             self.in_paralogGroup = self.paralog_stack[-1]['depth']
             self.paralogyNode = self.paralog_stack[-1]['node']
@@ -126,9 +127,10 @@ class OrthoXMLParser(object):
                     self.skip_this_hog = True
                     self.hog_stack.append(0)
 
-
             else:
                 self._build_hog(attrib)
+
+
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
             self.hog_stack.append(0)
@@ -209,10 +211,10 @@ class OrthoXMLParser(object):
 
                         duplication.set_parent(mrcahog)
 
-                        for x in duplication.children:
+                        for x in list(duplication.children):
                             duplication.remove_child(x)
 
-                        for y in mrcahog.children:
+                        for y in list(mrcahog.children):
                             duplication.add_child(y)
 
                     # Otherwise simply add missing taxa between hog and duplicated child
@@ -228,7 +230,7 @@ class OrthoXMLParser(object):
                             duplication.remove_child(child_direct)
                             duplication.add_child(hog.children[-1])
 
-                    duplication.children = list(set(duplication.children)) #todo invest in detail if duplicated hog in children
+                    #duplication.children = list(set(duplication.children)) # this should be fix by add list() to duplication.children
 
                 hog_genome = hog.genome
                 change = {} # {child -> [intermediate level]}
@@ -241,13 +243,15 @@ class OrthoXMLParser(object):
 
                 # and add them if required
                 for hog_child, missing in change.items():
-                    self.ham_object._add_missing_taxon(hog_child,hog,missing)
+                    self.ham_object._add_missing_taxon(hog_child, hog, missing)
+
 
                 if len(self.hog_stack) == 0:
 
                     self.toplevel_hogs[hog.hog_id] = hog
 
                     self.cpt += 1
+
                     if self.cpt % 500 == 0:
                         logger.info("{} HOGs parsed. ".format(self.cpt))
 
