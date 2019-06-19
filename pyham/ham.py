@@ -177,10 +177,10 @@ class Ham(object):
                     raise TypeError("{} is not a valid oma Id".format(query_database))
 
                 # Get the phyloxml data
-                action_phy = ["taxonomy", "list"]
+                action_phy = ["taxonomy", "read"]
                 params_phy = {
                     "type": 'phyloxml',
-                    "members": top_level,
+                    "root_id": top_level,
                 }
 
                 open_tax = client.action(schema, action_phy, params=params_phy)

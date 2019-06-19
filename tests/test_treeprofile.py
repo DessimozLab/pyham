@@ -1,5 +1,6 @@
 import unittest
 from pyham import ham, utils, TreeProfile
+import tempfile
 import os
 
 class TreeProfileTest(unittest.TestCase):
@@ -87,3 +88,15 @@ class TreeProfileTest(unittest.TestCase):
             if lvl.name in self.exp_full_nn.keys():
                 observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.gain, lvl.lost]
                 self.assertListEqual(self.exp_full_nn[lvl.name], observed_level)
+
+
+class ServerBasedTreeProfileTest(unittest.TestCase):
+
+    def test_non_luca_root_hog_works_from_omabrowser(self):
+        analysis = ham.Ham(query_database='P53_RAT', use_data_from='oma')
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fn = os.path.join(tmpdir, 'tree_profile.html')
+            analysis.create_tree_profile(outfile=fn)
+            with open(fn, 'rt') as fh:
+                html = fh.read()
+            self.assertIn('treeData', html)
