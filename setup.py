@@ -1,11 +1,14 @@
 from setuptools import setup, find_packages
 import os
+import sys
 from io import open
 
 
 name = 'pyham'
 requirements = ['ete3', 'six', 'lxml', 'future','coreapi']
-
+if sys.version_info > (3, 3):
+    # ete3 uses some py3 incompatible types if scipy is not present 
+    requirements.extend(['scipy'])  
 
 __version__ = "Undefined"
 for line in open('{}/__init__.py'.format(name.lower())):
