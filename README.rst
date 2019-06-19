@@ -14,6 +14,11 @@ available at http://orthoxml.org.
 For extended documentation we refer to the docs folder that contain information
 on common use cases and API documentation of the library.
 
+How to cite pyHam
+-----------------
+If you use pyHam in your work, please consider citing:
+
+*Clément-Marie Train, Miguel Pignatelli, Adrian Altenhoff, Christophe Dessimoz; iHam and pyHam: visualizing and processing hierarchical orthologous groups, Bioinformatics, bty994, https://doi.org/10.1093/bioinformatics/bty994*
 
 Installation
 ------------
