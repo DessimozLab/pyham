@@ -1,5 +1,16 @@
 ########################################################################################
 
+VERSION 1.1.7
+
+FIX:
+    - Fix issue with retrieving the correct species tree for a ham analysis if run 
+      from remote datasource (oma server). (Fixes github issue #2)
+
+IMPROVEMENTS:
+    - None
+
+########################################################################################
+
 VERSION 1.1.6
 
 FIX:
