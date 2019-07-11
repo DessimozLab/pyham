@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class TreeProfile(object):
     """
-    Object that map on each node of the Ham species tree the related evolutionary information such as the number of 
+    Object that map on each node of the Ham species tree the related evolutionary information such as the number of
     genes the related genome contains or the number of evolutionary events (duplications, genes loss or gain of genes)
     that occurs between the parent node and itself. This can be either applied to the full Ham comparative genomic setup
     or for a specific HOG.
@@ -39,7 +39,7 @@ class TreeProfile(object):
             raise TypeError("Invalid argument {} for HOG".format(hog))
 
     def computeTP_hog(self, hog):
-        """  
+        """
         Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
         each nodes (representing an AbstractGene):
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
@@ -72,7 +72,8 @@ class TreeProfile(object):
 
         # add all of subhog to the related level in levelGroups
         for subhog in hog.get_all_descendant_hogs():
-            levelGroups[subhog.genome.name].append(subhog)
+            if subhog.genome.name in levelGroups:
+                levelGroups[subhog.genome.name].append(subhog)
 
         # add empty extant genome to levelGroups
         for extantGenome in treeMap.get_leaves():
@@ -130,7 +131,7 @@ class TreeProfile(object):
         return treeMap
 
     def compute_tree_profile_full(self):
-        """  
+        """
         Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
         each nodes (the root node contains only nbr_genes):
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
@@ -139,9 +140,9 @@ class TreeProfile(object):
             - gain: numbers of HOGs that have "emerged" at this node.
             - retained: numbers of HOGs that have stay retained (in term of copy numbers) in between this node and
             its parent.
-            
+
         In order to get all those node informations, the HOGMap between each node and its parent is computed.
-            
+
         Returns:
             TreeMap
         """
@@ -193,11 +194,11 @@ class TreeProfile(object):
 
     def export(self, output, layout_function=None, display_internal_histogram=True):
 
-        """  
+        """
         Method to export the tree profile object as figure (available format .SVG, .PDF, .PNG).
-        
+
         -- Some magic going there --
-        
+
         Args:
             | output (:obj:`str`): output file name. The extension of output will set the format of the figure (SVG, .PDF, .PNG)
             | layout_function (:obj:`function`, optional): custom layout_fn for ete3 TreeStyle.
@@ -290,7 +291,7 @@ class TreeProfile(object):
 
     def export_as_html(self, output ):
 
-        """  
+        """
         Method to export the tree profile object as an interactive tool embedded into a html file.
 
 
@@ -353,9 +354,9 @@ class TreeProfile(object):
             <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/bootstrap-theme.min.css">
             <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/DessimozLab/phylo-io/5e89fafc3b1746b22da33c20b2af621d5807b6fb/www//css/style.css">
             <style>
-            
+
             text {{stroke: none;}}
-            
+
             #help_modal_button {{
                 position: fixed;
                 right: 10px;
@@ -363,11 +364,11 @@ class TreeProfile(object):
                 bottom: 10px;
                 z-index: 99;
             }}
-            
+
             </style>
         </head>
         <body id="phylo">
-        
+
         <!-- Modal -->
         <div class="modal  fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog modal-lg" role="document">
@@ -392,9 +393,9 @@ class TreeProfile(object):
         <button id="help_modal_button" type="button" class="btn btn-sm" data-toggle="modal" data-target="#myModal">
             Help
         </button>
-        
-        
-        
+
+
+
         <div id="vis-container1" style="width: 100%; height: 100%;">
         <div id="scale-1"> </div>
         </div>
