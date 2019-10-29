@@ -1,3 +1,4 @@
+import shutil
 import unittest
 from pyham import ham, utils, TreeProfile
 import tempfile
@@ -92,11 +93,17 @@ class TreeProfileTest(unittest.TestCase):
 
 class ServerBasedTreeProfileTest(unittest.TestCase):
 
+    def setUp(self) -> None:
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self) -> None:
+        shutil.rmtree(self.tmpdir)
+
     def test_non_luca_root_hog_works_from_omabrowser(self):
         analysis = ham.Ham(query_database='P53_RAT', use_data_from='oma')
-        with tempfile.TemporaryDirectory() as tmpdir:
-            fn = os.path.join(tmpdir, 'tree_profile.html')
-            analysis.create_tree_profile(outfile=fn)
-            with open(fn, 'rt') as fh:
-                html = fh.read()
-            self.assertIn('treeData', html)
+
+        fn = os.path.join(self.tmpdir, 'tree_profile.html')
+        analysis.create_tree_profile(outfile=fn)
+        with open(fn, 'rt') as fh:
+            html = fh.read()
+        self.assertIn('treeData', html)
