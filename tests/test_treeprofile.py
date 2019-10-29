@@ -93,10 +93,10 @@ class TreeProfileTest(unittest.TestCase):
 
 class ServerBasedTreeProfileTest(unittest.TestCase):
 
-    def setUp(self) -> None:
+    def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
 
-    def tearDown(self) -> None:
+    def tearDown(self):
         shutil.rmtree(self.tmpdir)
 
     def test_non_luca_root_hog_works_from_omabrowser(self):
