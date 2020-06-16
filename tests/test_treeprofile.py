@@ -2,6 +2,7 @@ import unittest
 from pyham import ham, utils, TreeProfile
 import tempfile
 import os
+from unittest import skip
 
 class TreeProfileTest(unittest.TestCase):
 
@@ -92,6 +93,7 @@ class TreeProfileTest(unittest.TestCase):
 
 class ServerBasedTreeProfileTest(unittest.TestCase):
 
+    @skip
     def test_non_luca_root_hog_works_from_omabrowser(self):
         analysis = ham.Ham(query_database='P53_RAT', use_data_from='oma')
         with tempfile.TemporaryDirectory() as tmpdir:
