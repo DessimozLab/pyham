@@ -27,13 +27,14 @@ class Taxonomy(object):
         | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
 
     """
-    def __init__(self, tree_file, tree_format='newick_string', use_internal_name=False, phyloxml_leaf_name_tag=None, phyloxml_internal_name_tag=None):
+    def __init__(self, tree_file, tree_format='newick_string', use_internal_name=False, phyloxml_leaf_name_tag=None, phyloxml_internal_name_tag=None, quoted_node_names=True):
         """
         Args:
             | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
             | tree_format (:obj:`str`): type of inputted tree file. Defaults to newick_string. Can be 'newick', 'phyloxml, 'newick_string'.
             | use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the 
             | concatenatation of the children name. Defaults to False.
+            | quoted_node_names (:obj:'Boolean', optional): Specify whether newick file has quoted node names.
         """
 
         self.tree_file = tree_file
@@ -43,7 +44,7 @@ class Taxonomy(object):
         self.phyloxml_internal_name_tag = phyloxml_internal_name_tag
 
         # create tree
-        self.tree = self._build_tree(tree_file, tree_format)
+        self.tree = self._build_tree(tree_file, tree_format, quoted_node_names)
 
         # create internal node name if required
         self._generate_internal_node_name(self.tree)
@@ -239,16 +240,16 @@ class Taxonomy(object):
                     "Node {} in the phyloxml file {} have no taxonomy scientific code  to populate the species name".format(
                         node, self.tree_file))
 
-    def _build_tree(self, tree_file, tree_format):
+    def _build_tree(self, tree_file, tree_format, quoted_node_names):
 
         if tree_format == 'newick_string':
             self.tree_str = tree_file
-            return ete3.Tree(self.tree_str, format=1)
+            return ete3.Tree(self.tree_str, format=1, quoted_node_names=quoted_node_names)
 
         elif tree_format == 'newick':
             with open(tree_file, 'r') as nwk_file:
                 self.tree_str = nwk_file.read()
-            return ete3.Tree(self.tree_str, format=1)
+            return ete3.Tree(self.tree_str, format=1, quoted_node_names=quoted_node_names)
 
         elif tree_format == 'phyloxml':
             from ete3 import Phyloxml
