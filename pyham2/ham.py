@@ -902,11 +902,12 @@ class Ham(object):
                 :obj:`AncestralGenome`
 
         """
-
-        if "genome" in tax_node.features:
+        #make sure genome is ancestral genome
+        if "genome" in tax_node.features and isinstance(tax_node.genome, AncestralGenome):
             return tax_node.genome
-
+        
         else:
+        #create genome or overwrite extant genome with ancestral genome
             ancestral_genome = AncestralGenome()
             self.taxonomy.add_genome_to_node(tax_node, ancestral_genome)
 
