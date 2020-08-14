@@ -3,6 +3,7 @@ import unittest
 from pyham import ham, utils, TreeProfile
 import tempfile
 import os
+from unittest import skip
 
 class TreeProfileTest(unittest.TestCase):
 
