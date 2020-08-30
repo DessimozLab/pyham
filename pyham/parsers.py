@@ -73,8 +73,8 @@ class OrthoXMLParser(object):
         self.current_species.add_gene(gene)
         self.extant_gene_map[gene.unique_id] = gene
         for type, Id in attrib.items():
-            if type is not "id":
-                self.external_id_mapper.setdefault(Id,[]).append(gene.unique_id)
+            if type != "id":
+                self.external_id_mapper.setdefault(Id, []).append(gene.unique_id)
 
     def _build_hog(self, attrib):
 
@@ -135,7 +135,8 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
             self.hog_stack.append(0)
 
-        elif tag == "{http://orthoXML.org/2011/}property" and attrib['name'] == "TaxRange":
+        elif tag == "{http://orthoXML.org/2011/}property":
+            self.hog_stack[-1].add_property(attrib["name"], attrib["value"])
             #self.hog_stack[-1].set_genome(attrib["value"])
             pass
 
@@ -174,8 +175,23 @@ class OrthoXMLParser(object):
 
                 # get the ancestral genome related to this hog based on it's children
                 if len(set([child.genome for child in hog.children])) == 1:
+                    try:
+                        if hog['TaxRange'] == hog.children[0].genome.name:
+                            # remove this hog structure.
+                            for child in hog.children:
+                                child.parent = hog.parent
+                            hog.parent.children.remove(hog)
+                            hog.parent.children.extend(hog.children)
+                            if hog.arose_by_duplication != False:
+                                dupl_node = hog.arose_by_duplication
+                                dupl_node.remove_child(hog)
+                                for child in hog.children:
+                                    dupl_node.add_child(child)
+                                self.paralog_stack[-1]['depth'] -= 1
+                            return
+                    except KeyError:
+                        pass
                     ancestral_genome = self.ham_object._get_ancestral_genome_by_taxon(hog.children[0].genome.taxon.up)
-
                 else:
                     ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
 

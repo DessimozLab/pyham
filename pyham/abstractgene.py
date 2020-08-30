@@ -35,6 +35,7 @@ class AbstractGene(object):
 
         self.parent = None
         self.genome = None
+        self._properties = {}
         self.arose_by_duplication = arose_by_duplication
 
     @abc.abstractmethod
@@ -135,6 +136,12 @@ class AbstractGene(object):
                 raise KeyError("get level cannot return itself".format())
 
         return rlist
+
+    def add_property(self, name, value):
+        self._properties[name] = value
+
+    def __getitem__(self, item):
+        return self._properties[item]
 
 
 class HOG(AbstractGene):

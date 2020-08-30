@@ -243,12 +243,12 @@ class Taxonomy(object):
 
         if tree_format == 'newick_string':
             self.tree_str = tree_file
-            return ete3.Tree(self.tree_str, format=1)
+            return ete3.Tree(self.tree_str, quoted_node_names=True, format=1)
 
         elif tree_format == 'newick':
             with open(tree_file, 'r') as nwk_file:
                 self.tree_str = nwk_file.read()
-            return ete3.Tree(self.tree_str, format=1)
+            return ete3.Tree(self.tree_str, quoted_node_names=True, format=1)
 
         elif tree_format == 'phyloxml':
             from ete3 import Phyloxml
