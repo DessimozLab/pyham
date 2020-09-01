@@ -2,6 +2,9 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import division
+
+import gzip
+import re
 from builtins import map
 from builtins import open
 from builtins import str
@@ -235,7 +238,7 @@ class Ham(object):
 
         if phyloxml_leaf_name_tag not in accepted_tag_phyloxml or phyloxml_internal_name_tag not in accepted_tag_phyloxml:
             raise TypeError("{} is an invalid type phyloxml tag name")
-
+        self.species_resolve_mode = species_resolve_mode
         self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_leaf_name_tag=phyloxml_leaf_name_tag, phyloxml_internal_name_tag=phyloxml_internal_name_tag)
         logger.info('Build taxonomy: completed.')
 
@@ -256,7 +259,8 @@ class Ham(object):
                         self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
 
                 else:
-                    with open(self.hog_file, 'r') as orthoxml_file:
+                    open_ = gzip.open if self.hog_file.endswith('.gz') else open
+                    with open_(self.hog_file, 'rt') as orthoxml_file:
                         self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
 
                 logger.info('Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(
@@ -269,7 +273,8 @@ class Ham(object):
 
             else:
                 # This is the actual parser to build HOG/Gene and related Genomes.
-                with open(self.hog_file, 'r') as orthoxml_file:
+                open_ = gzip.open if self.hog_file.endswith('.gz') else open
+                with open_(self.hog_file, 'rt') as orthoxml_file:
                     self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
 
             logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),len(self.extant_gene_map)))
@@ -878,6 +883,16 @@ class Ham(object):
         if len(nodes_founded) == 1:
 
             node = nodes_founded[0]
+            if len(node.children) > 0 and self.species_resolve_mode == "OMA":
+                cand = []
+                for child in node.children:
+                    if len(child.name) == 5 and re.match(r'[A-Z][A-Z0-9]{4}', child.name) is not None:
+                        cand.append(child)
+                if len(cand) == 1:
+                    node = child
+            if len(node.children) > 0:
+                raise TypeError("species name '{}' maps to an ancestral name, not a leaf of the taxonomy"
+                                .format(kwargs["name"]))
 
             if "genome" in node.features:
                 return node.genome
