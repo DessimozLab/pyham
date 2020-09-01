@@ -135,7 +135,8 @@ class Ham(object):
 
     def __init__(self, tree_file=None, hog_file=None, type_hog_file="orthoxml", filter_object=None, use_internal_name=False,\
                  orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', \
-                 phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None):
+                 phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None,
+                 species_resolve_mode=None):
         """
 
         Args:
