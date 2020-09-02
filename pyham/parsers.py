@@ -170,106 +170,97 @@ class OrthoXMLParser(object):
             if self.skip_this_hog:
                 if len(self.hog_stack) == 0:
                     self.skip_this_hog = False
-
             else:
-
-                # get the ancestral genome related to this hog based on it's children
-                if len(set([child.genome for child in hog.children])) == 1:
-                    try:
-                        if hog['TaxRange'] == hog.children[0].genome.name:
-                            # remove this hog structure.
-                            for child in hog.children:
-                                child.parent = hog.parent
-                            hog.parent.children.remove(hog)
-                            hog.parent.children.extend(hog.children)
-                            if hog.arose_by_duplication != False:
-                                dupl_node = hog.arose_by_duplication
-                                dupl_node.remove_child(hog)
+                try:
+                    # get the ancestral genome related to this hog based on it's children
+                    if len(set([child.genome for child in hog.children])) == 1:
+                        try:
+                            if hog['TaxRange'] == hog.children[0].genome.name:
+                                # remove this hog structure.
                                 for child in hog.children:
-                                    dupl_node.add_child(child)
-                                self.paralog_stack[-1]['depth'] -= 1
-                            return
-                    except KeyError:
-                        pass
-                    ancestral_genome = self.ham_object._get_ancestral_genome_by_taxon(hog.children[0].genome.taxon.up)
-                else:
-                    ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
-
-                hog.set_genome(ancestral_genome)
-                ancestral_genome.taxon.genome.add_gene(hog)
-
-                # get all child clustered by dup if any
-                child_by_duplication = defaultdict(list)
-                for child in hog.children:
-                    if child.arose_by_duplication != False:
-                        child_by_duplication[child.arose_by_duplication].append(child)
-
-                # For each duplication
-                for duplication, children in child_by_duplication.items():
-
-                    # add MRCA hog if its missing
-                    if duplication.MRCA != hog.genome:
-
-                        # create the MRCA hog
-                        mrcahog = abstractgene.HOG()
-                        mrcahog.set_genome(duplication.MRCA)
-                        duplication.MRCA.add_gene(mrcahog)
-
-                        hog.add_child(mrcahog)
-
-                        # add missing level down (from mrcaHOG to duplicated child)
-                        for child in children:
-                            hog.remove_child(child)
-                            mrcahog.add_child(child)
-
-                            change = self.ham_object.taxonomy.get_path_up(child.genome.taxon, mrcahog.genome.taxon)
-                            self.ham_object._add_missing_taxon(child, mrcahog, change)
-
-                        duplication.set_parent(mrcahog)
-
-                        for x in list(duplication.children):
-                            duplication.remove_child(x)
-
-                        for y in list(mrcahog.children):
-                            duplication.add_child(y)
-
-                    # Otherwise simply add missing taxa between hog and duplicated child
+                                    child.parent = hog.parent
+                                hog.parent.children.remove(hog)
+                                hog.parent.children.extend(hog.children)
+                                if hog.arose_by_duplication != False:
+                                    dupl_node = hog.arose_by_duplication
+                                    dupl_node.remove_child(hog)
+                                    for child in hog.children:
+                                        dupl_node.add_child(child)
+                                    self.paralog_stack[-1]['depth'] -= 1
+                                return
+                        except KeyError:
+                            pass
+                        ancestral_genome = self.ham_object._get_ancestral_genome_by_taxon(hog.children[0].genome.taxon.up)
                     else:
+                        ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
 
-                        duplication.set_parent(hog)
+                    hog.set_genome(ancestral_genome)
+                    ancestral_genome.taxon.genome.add_gene(hog)
 
-                        for child_direct in children:
+                    # get all child clustered by dup if any
+                    child_by_duplication = defaultdict(list)
+                    for child in hog.children:
+                        if child.arose_by_duplication != False:
+                            child_by_duplication[child.arose_by_duplication].append(child)
 
-                            change = self.ham_object.taxonomy.get_path_up(child_direct.genome.taxon, hog.genome.taxon)
-                            self.ham_object._add_missing_taxon(child_direct, hog, change)
+                    # For each duplication
+                    for duplication, children in child_by_duplication.items():
 
-                            duplication.remove_child(child_direct)
-                            duplication.add_child(hog.children[-1])
+                        # add MRCA hog if its missing
+                        if duplication.MRCA != hog.genome:
 
-                    #duplication.children = list(set(duplication.children)) # this should be fix by add list() to duplication.children
+                            # create the MRCA hog
+                            mrcahog = abstractgene.HOG()
+                            mrcahog.set_genome(duplication.MRCA)
+                            duplication.MRCA.add_gene(mrcahog)
 
-                hog_genome = hog.genome
-                change = {} # {child -> [intermediate level]}
+                            hog.add_child(mrcahog)
 
-                # for all children of this hog find missing level
-                for child in hog.children:
-                    child_genome = child.genome
-                    if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
-                        change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
+                            # add missing level down (from mrcaHOG to duplicated child)
+                            for child in children:
+                                hog.remove_child(child)
+                                mrcahog.add_child(child)
 
-                # and add them if required
-                for hog_child, missing in change.items():
-                    self.ham_object._add_missing_taxon(hog_child, hog, missing)
+                                change = self.ham_object.taxonomy.get_path_up(child.genome.taxon, mrcahog.genome.taxon)
+                                self.ham_object._add_missing_taxon(child, mrcahog, change)
 
+                            duplication.set_parent(mrcahog)
+                            for x in list(duplication.children):
+                                duplication.remove_child(x)
+                            for y in list(mrcahog.children):
+                                duplication.add_child(y)
 
-                if len(self.hog_stack) == 0:
+                        # Otherwise simply add missing taxa between hog and duplicated child
+                        else:
+                            duplication.set_parent(hog)
+                            for child_direct in children:
+                                change = self.ham_object.taxonomy.get_path_up(child_direct.genome.taxon, hog.genome.taxon)
+                                self.ham_object._add_missing_taxon(child_direct, hog, change)
 
-                    self.toplevel_hogs[hog.hog_id] = hog
+                                duplication.remove_child(child_direct)
+                                duplication.add_child(hog.children[-1])
 
-                    self.cpt += 1
+                    hog_genome = hog.genome
+                    change = {} # {child -> [intermediate level]}
 
-                    if self.cpt % 500 == 0:
-                        logger.info("{} HOGs parsed. ".format(self.cpt))
+                    # for all children of this hog find missing level
+                    for child in hog.children:
+                        child_genome = child.genome
+                        if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
+                            change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
+
+                    # and add them if required
+                    for hog_child, missing in change.items():
+                        self.ham_object._add_missing_taxon(hog_child, hog, missing)
+
+                    if len(self.hog_stack) == 0:
+                        self.toplevel_hogs[hog.hog_id] = hog
+                        self.cpt += 1
+                        if self.cpt % 500 == 0:
+                            logger.info("{} HOGs parsed. ".format(self.cpt))
+                except Exception as e:
+                    logger.error("cannot parse HOG '{}': {}".format(hog.hog_id, e))
+                    raise
 
     def data(self, data):
         # Ignore data inside nodes
