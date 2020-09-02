@@ -5,7 +5,7 @@ from io import open
 
 
 name = 'pyham'
-requirements = ['ete3', 'six', 'lxml', 'future','coreapi']
+requirements = ['ete3 >= 3.1', 'six', 'lxml', 'future']
 if sys.version_info > (3, 3):
     # ete3 uses some py3 incompatible types if scipy is not present 
     requirements.extend(['scipy'])  
