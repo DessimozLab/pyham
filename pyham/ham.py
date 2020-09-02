@@ -890,7 +890,8 @@ class Ham(object):
                     if len(child.name) == 5 and re.match(r'[A-Z][A-Z0-9]{4}', child.name) is not None:
                         cand.append(child)
                 if len(cand) == 1:
-                    node = child
+                    node = cand[0]
+                    kwargs['name'] = node.name
             if len(node.children) > 0:
                 raise TypeError("species name '{}' maps to an ancestral name, not a leaf of the taxonomy"
                                 .format(kwargs["name"]))
