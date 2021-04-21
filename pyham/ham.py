@@ -21,8 +21,8 @@ from .TreeProfile import TreeProfile
 import logging
 import copy
 import io
-import coreapi
-from urllib.request import urlopen
+
+
 
 
 logger = logging.getLogger(__name__)
@@ -155,48 +155,32 @@ class Ham(object):
             tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
         """
 
-        if use_data_from!=None:
+        if use_data_from is not None:
             if query_database is None:
-                raise TypeError(
-                    "query_database argument can't be empty.")
+                raise TypeError("query_database argument can't be empty.")
 
             if use_data_from == 'oma':
 
-                # Initialize a client & load the schema document
-                client = coreapi.Client()
-                schema = client.get("https://omabrowser.org/api/docs")
+                import requests
+                protein_url = "https://omabrowser.org/api/protein/{}/".format(query_database)
+                res = requests.get(protein_url)
+                if not res.ok:
+                    res.raise_for_status()
+                gene = res.json()
+                top_level = gene['hog_levels'][-1]
 
-                # Get the gene data
-                try:
-
-                    action_gene = ["protein", "read"]
-                    params_gene = {
-                        "entry_id": query_database,
-                    }
-
-                    gene = client.action(schema, action_gene, params=params_gene)
-                    top_level = gene['hog_levels'][-1]
-
-                except coreapi.exceptions.ErrorMessage as exc:
-                    raise TypeError("{} is not a valid oma Id".format(query_database))
-
-                # Get the phyloxml data
-                action_phy = ["taxonomy", "read"]
-                params_phy = {
-                    "type": 'phyloxml',
-                    "root_id": top_level,
-                }
-
-                open_tax = client.action(schema, action_phy, params=params_phy)
+                rep_tax = requests.get("https://omabrowser.org/api/taxonomy/{}/".format(top_level),
+                                       params={"type": "phyloxml"})
+                if not rep_tax.ok:
+                    rep_tax.raise_for_status()
 
                 self.tree_file = 'taxonomy_from_oma_open_at_{}.phyloxml'.format(top_level)
-
                 with open(self.tree_file, 'w') as f:
-                    f.write(open_tax.read().decode())
+                    f.write(rep_tax.text)
 
                 # Get the phyloxml data
-                oma_url = 'https://omabrowser.org/oma/hogs/{}/orthoxml'.format(gene['omaid'])
-                self.hog_file = urlopen(oma_url).read().decode('utf-8')
+                oma_url = 'https://omabrowser.org/oma/hog/{}/orthoxml/'.format(gene['oma_hog_id'])
+                self.hog_file = requests.get(oma_url).text
                 self.hog_file_type = type_hog_file
 
                 self.orthoXML_as_string = True
