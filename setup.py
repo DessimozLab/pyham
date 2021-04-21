@@ -50,12 +50,14 @@ setup(
          'Programming Language :: Python :: 3.5',
          'Programming Language :: Python :: 3.6',
          'Programming Language :: Python :: 3.7',
+         'Programming Language :: Python :: 3.8',
+         'Programming Language :: Python :: 3.9',
          ],
 
     packages=find_packages(exclude=[]),
     install_requires=requirements,
     extras_require={
-        'test': ['noise'],
-        'dev': ['noise', 'sphinx', 'wheel', 'twine', 'fabric', 'fabric3'],
+        'test': ['nose'],
+        'dev': ['nose', 'sphinx', 'wheel', 'twine', 'fabric', 'fabric3'],
     }
 )
