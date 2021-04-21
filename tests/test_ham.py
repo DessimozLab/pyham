@@ -4,18 +4,14 @@ from pyham import ham
 import ete3
 import os
 
+
 # This helps to convert elements of list/dictionary to string in order to make easier assertEqual test.
 def _str_dict_one_value(dict):
-    for kk in dict.keys():
-        dict[str(kk)] = dict.pop(kk)
-    for k, v in dict.items():
-        dict[k] = str(v)
-    return dict
+    return {str(key): str(val) for key, val in dict.items()}
+
+
 def _str_array(array):
-    array_converted = []
-    for e in array:
-        array_converted.append(str(e))
-    return set(array_converted)
+    return set(str(e) for e in array)
 
 
 class HAMTestSetUp(unittest.TestCase):

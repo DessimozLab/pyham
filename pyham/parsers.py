@@ -135,12 +135,10 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
             self.hog_stack.append(0)
 
-        elif tag == "{http://orthoXML.org/2011/}property":
+        elif tag == "{http://orthoXML.org/2011/}property" and not self.skip_this_hog:
             self.hog_stack[-1].add_property(attrib["name"], attrib["value"])
-            #self.hog_stack[-1].set_genome(attrib["value"])
-            pass
 
-        elif tag == "{http://orthoXML.org/2011/}score" and self.skip_this_hog is False:
+        elif tag == "{http://orthoXML.org/2011/}score" and not self.skip_this_hog:
             self.hog_stack[-1].score(attrib['id'], float(attrib['value']))
 
     def end(self, tag):

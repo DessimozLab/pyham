@@ -5,29 +5,15 @@ import logging
 import os
 
 def _str_array(array):
-    array_converted = []
-    for e in array:
-        array_converted.append(str(e))
-    return set(array_converted)
+    return set(str(e) for e in array)
 
 
 def _str_dict_one_value(dict):
-    for kk in dict.keys():
-        dict[str(kk)] = dict.pop(kk)
-    for k, v in dict.items():
-        dict[k] = str(v)
-    return dict
+    return {str(key): str(val) for key, val in dict.items()}
 
 
 def _str_dict_array_value(dict):
-    for kk in dict.keys():
-        dict[str(kk)] = dict.pop(kk)
-    for k, vs in dict.items():
-        array = []
-        for v in vs:
-            array.append(str(v))
-        dict[k] = set(array)
-    return dict
+    return {str(key): set(str(v) for v in val) for key, val in dict.items()}
 
 
 class HamAnalysis(unittest.TestCase):
