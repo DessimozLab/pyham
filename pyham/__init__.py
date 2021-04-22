@@ -14,4 +14,4 @@ from .mapper import *
 from .TreeProfile import *
 from .iham import *
 
-__version__ = "1.1.9"
+__version__ = "1.1.10"
