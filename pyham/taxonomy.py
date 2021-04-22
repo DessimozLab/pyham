@@ -240,7 +240,7 @@ class Taxonomy(object):
                     "Node {} in the phyloxml file {} have no taxonomy scientific code  to populate the species name".format(
                         node, self.tree_file))
 
-    def _build_tree(self, tree_file, tree_format, quoted_node_names):
+    def _build_tree(self, tree_file, tree_format, quoted_node_names=True):
 
         if tree_format == 'newick_string':
             self.tree_str = tree_file
