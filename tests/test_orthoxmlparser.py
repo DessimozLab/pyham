@@ -539,6 +539,37 @@ class OrthoXMLParser_Weird_Element_In_duplicationChildren(unittest.TestCase):
                         self.assertTrue(e in sub_hog.children)
 
 
+class TestAugmentedOrthoxmlExample(unittest.TestCase):
+    def setUp(self):
+        self.phyloxml_path = os.path.join(os.path.dirname(__file__), "data", "p53_augmented_speciestree.phyloxml")
+        self.orthoxml_path = os.path.join(os.path.dirname(__file__), "data", "p53_augmented.orthoxml")
+        self.ham_analysis = ham.Ham(tree_file=self.phyloxml_path, tree_format="phyloxml", hog_file=self.orthoxml_path,
+                                    type_hog_file="orthoxml", use_internal_name=True)
+
+    def test_expected_content_at_Characiphysae(self):
+        ag = self.ham_analysis.get_ancestral_genome_by_name("Characiphysae")
+        self.assertEqual(2, len(ag.genes))
+
+    def test_score_at_Characiphysae(self):
+        ag = self.ham_analysis.get_ancestral_genome_by_name("Characiphysae")
+        for hog in ag.genes:
+            self.assertEqual(1, hog.score('CompletenessScore'))
+            self.assertEqual(3, int(hog['NrMemberGenes']))
+
+    def test_dupl_after_neoptery(self):
+        ag = self.ham_analysis.get_ancestral_genome_by_name("Teleostei")
+        h1 = [hog for hog in ag.genes if "ASTMX10477" in [g.prot_id for g in hog.get_all_descendant_genes()]][0]
+        self.assertEqual(30, int(h1['NrMemberGenes']))
+        self.assertIsNotNone(h1.arose_by_duplication)
+
+        neoptery_hog = h1.parent
+        self.assertEqual("Neopterygii", neoptery_hog.genome.name)
+        self.assertEqual(38, int(neoptery_hog['NrMemberGenes']))
+
+
+
+
+
 """
 Tests for FilterOrthoXMLParser are made indirectly inside Ham unit tests.
 """
