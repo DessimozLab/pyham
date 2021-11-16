@@ -539,6 +539,23 @@ class OrthoXMLParser_Weird_Element_In_duplicationChildren(unittest.TestCase):
                         self.assertTrue(e in sub_hog.children)
 
 
+class TestParsingMultipleDuplicationExample(unittest.TestCase):
+    def setUp(self):
+        self.nwk_str = "(betta_splendens,anabas_testudineus);"
+        self.orthoxml_path = os.path.join(os.path.dirname(__file__), "data", "multiple_duplication_example.xml")
+
+    def test_parser_accepts_multiple_consequative_dups(self):
+        ham_analysis = ham.Ham(tree_file=self.nwk_str, hog_file=self.orthoxml_path, type_hog_file='orthoxml',
+                               use_internal_name=True)
+        hogs = ham_analysis.get_list_top_level_hogs()
+        self.assertEqual(1, len(hogs))
+        hog = hogs[0]
+        self.assertEqual(5, len(hog.children))
+        self.assertFalse(hog.children[0].arose_by_duplication)
+        dup_events = {g.arose_by_duplication for g in hog.children[1:]}
+        self.assertEqual(1, len(dup_events))
+
+
 class TestAugmentedOrthoxmlExample(unittest.TestCase):
     def setUp(self):
         self.phyloxml_path = os.path.join(os.path.dirname(__file__), "data", "p53_augmented_speciestree.phyloxml")
