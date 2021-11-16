@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orthoXML xsi:schemaLocation="http://orthoXML.org http://orthoXML.org/0.3/orthoxml.xsd" version="0.3" origin="Ensembl" originVersion="Unknown" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://orthoXML.org/2011/">
+  <species NCBITaxId="158456" name="betta_splendens">
+    <database name="Unknown" version="fBetSpl5.2/2019-05-Ensembl">
+      <genes>
+        <gene id="948443112" geneId="ENSBSLG00000016595" protId="ENSBSLP00000034367" />
+        <gene id="949090975" geneId="ENSBSLG00000022939" protId="ENSBSLP00000048205" />
+        <gene id="948280354" geneId="ENSBSLG00000007050" protId="ENSBSLP00000013302" />
+        <gene id="948946073" geneId="ENSBSLG00000012101" protId="ENSBSLP00000023746" />
+      </genes>
+    </database>
+  </species>
+  <species name="anabas_testudineus">
+    <database name="Unknown" version="BROADS1/2006-06-Ensembl">
+      <genes>
+        <gene id="705198" geneId="ENSGACG00000019378" protId="ENSGACP00000025614" />
+      </genes>
+    </database>
+  </species>
+  <groups>
+    <orthologGroup id="1">
+      <paralogGroup id="2">
+        <property name="taxon_name" value="Betta splendens" />
+        <paralogGroup id="3">
+          <property name="taxon_name" value="Betta splendens" />
+          <geneRef id="948280354" />
+          <geneRef id="948443112" />
+        </paralogGroup>
+        <paralogGroup id="4">
+          <property name="taxon_name" value="Betta splendens" />
+          <geneRef id="949090975" />
+          <geneRef id="948946073" />
+        </paralogGroup>
+      </paralogGroup>
+      <geneRef id="705198" />
+    </orthologGroup>
+  </groups>
+</orthoXML>

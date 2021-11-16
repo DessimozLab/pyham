@@ -101,9 +101,14 @@ class OrthoXMLParser(object):
                 self._build_gene(attrib)
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
-            dNode = abstractgene.DuplicationNode(self.ham_object)
+            cur_depth = len(self.hog_stack)
+            if len(self.paralog_stack)>0 and self.paralog_stack[-1]['depth'] == cur_depth:
+                # we have a directly nested paralog group. use the same DuplicationNode
+                dNode = self.paralog_stack[-1]['node']
+            else:
+                dNode = abstractgene.DuplicationNode(self.ham_object)
 
-            self.paralog_stack.append({'depth': len(self.hog_stack), 'node': dNode})
+            self.paralog_stack.append({'depth': cur_depth, 'node': dNode})
 
             self.in_paralogGroup = self.paralog_stack[-1]['depth']
             self.paralogyNode = self.paralog_stack[-1]['node']
