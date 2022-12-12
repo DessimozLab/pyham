@@ -160,7 +160,7 @@ class HOG(AbstractGene):
 
     def __init__(self, id=None, **kwargs):
         super(HOG, self).__init__(**kwargs)
-        self.hog_id = id
+        self.hog_id = kwargs.get('og', id)  # If we have the gene named in og tag, use this.
         self.children = []
         self.hogvis = None
         self.duplications = []
@@ -476,11 +476,12 @@ class DuplicationNode(object):
             
     """
 
-    def __init__(self,ham_object):
+    def __init__(self,ham_object, id=None):
         self.ham = ham_object
         self.MRCA = None
         self.children = []
         self.parent = None
+        self.id = id
 
     def set_parent(self, hog):
         """

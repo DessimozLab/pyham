@@ -136,7 +136,7 @@ class Ham(object):
     def __init__(self, tree_file=None, hog_file=None, type_hog_file="orthoxml", filter_object=None, use_internal_name=False,\
                  orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', \
                  phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None,
-                 species_resolve_mode=None):
+                 species_resolve_mode=None, with_parser_progress=False):
         """
 
         Args:
@@ -153,7 +153,9 @@ class Ham(object):
             | use_data_from (:obj:`str`) if specified,  use data from a remote databaseto populate pyHam. Defaults to None. Options: 'oma'.
             | query_database (:obj:`str`) if use_data_from is specified, use this as a query to fetch the orthoxml and \
             tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
+            | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file. 
         """
+        self.with_parser_progress = with_parser_progress
 
         if use_data_from is not None:
             if query_database is None:
@@ -719,7 +721,8 @@ class Ham(object):
             ancestral_genome = self._get_ancestral_genome_by_taxon(tax)
 
             # ... we create the related hog and add it to the ancestral genome...
-            hog = abstractgene.HOG()
+            hog = abstractgene.HOG(id=oldest_hog.hog_id)
+            setattr(hog, '_missing_in_xml', oldest_hog.genome)
             hog.set_genome(ancestral_genome)
             ancestral_genome.add_gene(hog)
 
@@ -812,7 +815,7 @@ class Ham(object):
 
         """
 
-        factory = parsers.OrthoXMLParser(self, filterObject=filter_object)
+        factory = parsers.OrthoXMLParser(self, filterObject=filter_object, with_progress=self.with_parser_progress)
         parser = XMLParser(target=factory)
 
         for line in file_object:
