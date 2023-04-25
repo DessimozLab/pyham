@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="Nov 2021" version="0.3">
+   <species name="PITSOR" NCBITaxId="1">
+      <database name="QFO database " version="2020">
+         <genes>
+            <gene id="1231015086" protId="PITSOR_R14991"/>
+            <gene id="1231015674" protId="PITSOR_R15239"/>
+            <gene id="1231015675" protId="PITSOR_R15259"/>
+         </genes>
+      </database>
+   </species>
+   <species name="SAPAEN" NCBITaxId="1">
+      <database name="QFO database " version="2020">
+         <genes>
+            <gene id="1002014945" protId="SAPAEN_R15500"/>
+            <gene id="1002015159" protId="SAPAEN_R15184"/>
+            <gene id="1002015291" protId="SAPAEN_R14971"/>
+         </genes>
+      </database>
+   </species>
+   <groups>
+      <orthologGroup id="HOG_0010360_sub10023">
+         <property name="TaxRange" value="Passeriformes_4a"/>
+         <orthologGroup id="HOG_0010360_sub100">
+            <property name="TaxRange" value="Pitta_sordida-Sapayoa_aenigma"/>
+               <geneRef id="1002015291"/>
+               <geneRef id="1231015675"/>
+         </orthologGroup>
+         <orthologGroup id="HOG_0010360_sub1002">
+            <property name="TaxRange" value="Pitta_sordida-Sapayoa_aenigma"/>
+            <paralogGroup>
+               <geneRef id="1231015086"/>
+               <geneRef id="1231015674"/>
+            </paralogGroup>
+            <paralogGroup>
+               <geneRef id="1002014945"/>
+               <geneRef id="1002015159"/>
+            </paralogGroup>
+         </orthologGroup>
+      </orthologGroup>
+   </groups>
+</orthoXML>
+

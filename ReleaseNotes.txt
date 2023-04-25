@@ -1,5 +1,15 @@
 ########################################################################################
 
+VERSION 1.1.12
+
+FIX:
+    - Fix issue of OrthoXML_manager.get_orthoxml_str not creating orthologous group if only content paralogous groups inside.
+
+IMPROVEMENTS:
+    - Update iHam libraries to latest
+
+########################################################################################
+
 VERSION 1.1.7
 
 FIX:
