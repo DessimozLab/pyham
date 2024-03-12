@@ -1,0 +1,17 @@
+ete3>=3.1
+six
+lxml
+future
+requests
+scipy
+
+[dev]
+nose
+sphinx
+wheel
+twine
+fabric
+fabric3
+
+[test]
+nose
