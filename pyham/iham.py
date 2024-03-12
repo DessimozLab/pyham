@@ -20,8 +20,13 @@ class IHAM(object):
         self.html_template = self._get_html_template()
         self.famdata = json.dumps(self._get_famdata())
         self.orthoxml = OrthoXML_manager(self.hog)
+        try:
+            numeric_hogid = int(self.hog.hog_id)
+            hogid = "HOG:{:07d}".format(numeric_hogid)
+        except ValueError:
+            hogid = self.hog.hog_id
         self.HTML = self.html_template.safe_substitute({'name': hog.hog_id,
-                                                        'hog_id': 'HOG{:07d}'.format(hog.hog_id),
+                                                        'hog_id': hogid,
                                                         "tree": self.newick_str,
                                                         "orthoxml": self.orthoxml.get_orthoxml_str(),
                                                         "fam_data": self.famdata

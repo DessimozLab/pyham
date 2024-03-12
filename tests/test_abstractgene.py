@@ -92,7 +92,7 @@ class HogTest(unittest.TestCase):
 
     def test_representation_of_Hog(self):
         a = HOG(id="441.2a", bla="don't know")
-        self.assertEqual("{!r}".format(a), "<HOG(441.2a)>")
+        self.assertEqual("{!r}".format(a), "<HOG(id=441.2a)>")
 
     def test_add_score(self):
         a = HOG()

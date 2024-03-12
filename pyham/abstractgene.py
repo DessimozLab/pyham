@@ -160,7 +160,10 @@ class HOG(AbstractGene):
 
     def __init__(self, id=None, **kwargs):
         super(HOG, self).__init__(**kwargs)
-        self.hog_id = kwargs.get('og', id)  # If we have the gene named in og tag, use this.
+        self.hog_id = id
+        if id is None:
+            self.hog_id = kwargs.get('og', id) # If we have the gene named in og tag, use this.
+        self.og = kwargs.get('og')
         self.children = []
         self.hogvis = None
         self.duplications = []
@@ -384,7 +387,21 @@ class HOG(AbstractGene):
         return False
 
     def __repr__(self):
-        return "<{}({})>".format(self.__class__.__name__, self.hog_id if self.hog_id else "")
+        ids = []
+        if self.hog_id is not None:
+            ids.append("id={}".format(self.hog_id))
+        if self.og is not None and self.og != self.hog_id:
+            ids.append("og={}".format(self.og))
+        if len(ids) == 0:
+            n = self.parent
+            while n.hog_id is None and n.parent is not None:
+                n = n.parent
+            ids.append("id={}-{}".format(n.hog_id, self.__hash__()))
+        try:
+            ids.append("level={}".format(self.genome.name))
+        except AttributeError:
+            pass
+        return "<{}({})>".format(self.__class__.__name__, ";".join(ids))
 
 
 class Gene(AbstractGene):

@@ -128,11 +128,11 @@ class HOGsMapTest(MapperTestCases.MapperTest):
         self.assertSetEqual(expected_GAIN, convert_GAIN(map.GAIN))
 
         expected_RETAINED = set()
-        expected_RETAINED.add(frozenset(["<HOG(1)>", "Gene(1)"]))
+        expected_RETAINED.add(frozenset(["<HOG(id=1;level=Vertebrata)>", "Gene(1)"]))
         self.assertSetEqual(expected_RETAINED, convert_RETAINED(map.RETAINED))
 
         expected_DUPLICATE = set()
-        expected_DUPLICATE.add(frozenset(["<HOG(3)>", "Gene(3)"]))
+        expected_DUPLICATE.add(frozenset(["<HOG(id=3;level=Vertebrata)>", "Gene(3)"]))
         self.assertSetEqual(expected_DUPLICATE, convert_DUPLICATE(map.DUPLICATE))
 
 
@@ -180,7 +180,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map.add_map(map)
 
         loss = vertical_map.get_lost()
-        self.assertEqual(set(["<HOG(3.E.2)>"]), _str_array(loss))
+        self.assertEqual({"<HOG(id=3.E.2;level=Euarchontoglires)>"}, _str_array(loss))
 
         vertical_map2 = MapVertical(self.ham_analysis)
         map2 = HOGsMap(self.ham_analysis, self.rat, self.euarchontoglires)
@@ -188,7 +188,8 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map2.add_map(map2)
 
         loss2 = vertical_map2.get_lost()
-        self.assertEqual({"<HOG(2.E)>", "<HOG(3.E.2)>", "<HOG(3.E.1)>"}, set(_str_array(loss2)))
+        self.assertEqual({"<HOG(id=2.E;level=Euarchontoglires)>", "<HOG(id=3.E.2;level=Euarchontoglires)>",
+                          "<HOG(id=3.E.1;level=Euarchontoglires)>"}, _str_array(loss2))
 
     def test_get_gained(self):
         vertical_map = MapVertical(self.ham_analysis)
@@ -206,7 +207,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map.add_map(map)
 
         single = vertical_map.get_retained()
-        self.assertDictEqual({'<HOG(1)>': 'Gene(1)'}, _str_dict_one_value(single))
+        self.assertDictEqual({'<HOG(id=1;level=Vertebrata)>': 'Gene(1)'}, _str_dict_one_value(single))
 
     def test_get_duplicated(self):
         vertical_map = MapVertical(self.ham_analysis)
@@ -215,7 +216,7 @@ class VerticalMapperTest(MapperTestCases.MapperTest):
         vertical_map.add_map(map)
 
         duplicate = vertical_map.get_duplicated()
-        self.assertDictEqual({'<HOG(3)>': {'Gene(33)', 'Gene(34)'}}, _str_dict_array_value(duplicate))
+        self.assertDictEqual({'<HOG(id=3;level=Vertebrata)>': {'Gene(33)', 'Gene(34)'}}, _str_dict_array_value(duplicate))
 
 
 class LateralMapperTest(MapperTestCases.MapperTest):
@@ -274,11 +275,12 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         loss = lateral_map.get_lost()
 
         for hog in loss.keys():
-            if str(hog) == "<HOG(3.E.2)>":
+            sh = str(hog)
+            if sh.startswith("<HOG(id=3.E.2"):
                 H3_E_2 = hog
-            elif str(hog) == "<HOG(3.E.1)>":
+            elif sh.startswith("<HOG(id=3.E.1"):
                 H3_E_1 = hog
-            elif str(hog) == "<HOG(2.E)>":
+            elif sh.startswith("<HOG(id=2.E"):
                 H2_E = hog
 
         self.assertEqual({self.rat}, set(loss[H2_E]))
@@ -321,11 +323,12 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         single = lateral_map.get_retained()
 
         for hog in single.keys():
-            if str(hog) == "<HOG(3.E.1)>":
+            sh = str(hog)
+            if sh.startswith("<HOG(id=3.E.1"):
                 H3_E_1 = hog
-            elif str(hog) == "<HOG(1.M.E)>":
+            elif sh.startswith("<HOG(id=1.M.E"):
                 H1_M_E = hog
-            elif str(hog) == "<HOG(2.E)>":
+            elif sh.startswith("<HOG(id=2.E"):
                 H2_E = hog
 
         self.assertDictEqual({str(self.human): "Gene(3)"},_str_dict_one_value(single[H3_E_1]))
@@ -346,7 +349,7 @@ class LateralMapperTest(MapperTestCases.MapperTest):
         duplicate = lateral_map.get_duplicated()
 
         for hog in duplicate.keys():
-            if str(hog) == "<HOG(3)>":
+            if str(hog).startswith("<HOG(id=3"):
                 H = hog
 
         self.assertDictEqual({str(self.human): {"Gene(3)"}, str(self.mouse):{ 'Gene(33)', 'Gene(34)'}}, _str_dict_array_value(duplicate[H]))
