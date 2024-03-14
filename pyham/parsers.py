@@ -121,6 +121,8 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}geneRef" and self.skip_this_hog is False:
 
             gene = self.extant_gene_map[attrib['id']]
+            if 'LOFT' in attrib:
+                gene.set_LOFT(attrib['LOFT'])
             self.hog_stack[-1].add_child(gene)
 
             # if the gene is contained within a paralogousGroup need to update its .arose_by_duplication flag.

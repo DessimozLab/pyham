@@ -715,13 +715,14 @@ class Ham(object):
 
         # Then for each intermediate level in between the two hogs...
         current_child = child_hog
+        hog_id = child_hog.hog_id if hasattr(child_hog, 'hog_id') else oldest_hog.hog_id
         for tax in missing_taxons:
 
             # ... we get the related ancestral genome of this level...
             ancestral_genome = self._get_ancestral_genome_by_taxon(tax)
 
             # ... we create the related hog and add it to the ancestral genome...
-            hog = abstractgene.HOG(id=oldest_hog.hog_id)
+            hog = abstractgene.HOG(id=hog_id)
             setattr(hog, '_missing_in_xml', oldest_hog.genome)
             hog.set_genome(ancestral_genome)
             ancestral_genome.add_gene(hog)

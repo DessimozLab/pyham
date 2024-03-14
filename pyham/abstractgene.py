@@ -422,6 +422,15 @@ class Gene(AbstractGene):
         self.prot_id = protId
         self.transcript_id = transcriptId
 
+    def set_LOFT(self, loft_id):
+        """Set the LOFT identifier for the gene.
+
+        In case the ID has already been set, a ValueError is raised. It is assumed
+        that a gene can only have one LOFT identifier."""
+        if hasattr(self, 'hog_id'):
+            raise ValueError("Gene {} has already a LOFT identifier assigned ({}).".format(self, self.hog_id))
+        self.hog_id = loft_id
+
     def set_genome(self, genome):
         """  
         This method set :obj:`pyham.genome.ExtantGenome` given as parameter as genome attribute.
