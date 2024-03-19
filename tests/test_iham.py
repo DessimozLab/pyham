@@ -4,18 +4,18 @@ import os, tempfile
 
 def generate_hog_pair(newick_name, orthoxml_name):
 
-    ph, hog, iham_str = get_pyham_data_for_test(newick_name, orthoxml_name)
+    ph, hog, iham_str = get_pyham_data_for_run(newick_name, orthoxml_name)
 
     file = tempfile.NamedTemporaryFile(mode='w', delete=False)
 
     with file as f: f.write(iham_str)
 
-    ph2, hog2, iham_str2 = get_pyham_data_for_test(newick_name, file.name, orthoxml_file=True)
+    ph2, hog2, iham_str2 = get_pyham_data_for_run(newick_name, file.name, orthoxml_file=True)
 
 
     return hog, hog2
 
-def get_pyham_data_for_test(nwk, orthoxml, orthoxml_file = False):
+def get_pyham_data_for_run(nwk, orthoxml, orthoxml_file = False):
 
     nwk_path = os.path.join(os.path.dirname(__file__), nwk)
     tree_str = utils.get_newick_string(nwk_path, type="nwk")
