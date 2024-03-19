@@ -1,0 +1,2622 @@
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="Apr 2023" version="0.3">
+  <species name="Acanthisitta chloris" NCBITaxId="57068">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Acrocephalus arundinaceus" NCBITaxId="39621">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Aegotheles bennettii" NCBITaxId="48278">
+    <database name="" version="">
+      <genes>
+        <gene id="45261" protId="AEGBEN15237"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Aegithalos caudatus" NCBITaxId="73327">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Agapornis roseicollis" NCBITaxId="60468">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Agelaius phoeniceus" NCBITaxId="39638">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Alaudala cheleensis" NCBITaxId="670337">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Alca torda" NCBITaxId="28689">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Alectura lathami" NCBITaxId="81907">
+    <database name="" version="">
+      <genes>
+        <gene id="139303" protId="ALELAT14862"/>
+        <gene id="139489" protId="ALELAT15048"/>
+        <gene id="139735" protId="ALELAT15294"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Aleadryas rufinucha" NCBITaxId="461220">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Alopecoenas beccarii" NCBITaxId="262131">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Amazona guildingii" NCBITaxId="175529">
+    <database name="" version="">
+      <genes>
+        <gene id="186957" protId="AMAGUI15362"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Anas platyrhynchos" NCBITaxId="8839">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anas zonorhyncha" NCBITaxId="75864">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anhinga anhinga" NCBITaxId="56067">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anhinga rufa" NCBITaxId="317792">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anolis carolinensis" NCBITaxId="28377">
+    <database name="" version="Ensembl 70; AnoCar2.0; 11-DEC-2012">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anser cygnoid" NCBITaxId="8845">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anseranas semipalmata" NCBITaxId="8851">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Antrostomus carolinensis" NCBITaxId="279965">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Anthoscopus minutus" NCBITaxId="156561">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Apaloderma vittatum" NCBITaxId="57397">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Aphelocoma coerulescens" NCBITaxId="39617">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Apteryx australis" NCBITaxId="8822">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Aptenodytes forsteri" NCBITaxId="9233">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Apteryx haastii" NCBITaxId="8823">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Apteryx owenii" NCBITaxId="8824">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Apteryx rowi" NCBITaxId="308060">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Aquila chrysaetos" NCBITaxId="8962">
+    <database name="" version="">
+      <genes>
+        <gene id="455100" protId="AQUCHR16078"/>
+        <gene id="455101" protId="AQUCHR16079"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Aramus guarauna" NCBITaxId="54356">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ardeotis kori" NCBITaxId="89386">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Arenaria interpres" NCBITaxId="54971">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Asarcornis scutulata" NCBITaxId="75869">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Atlantisia rogersi" NCBITaxId="2478892">
+    <database name="" version="">
+      <genes>
+        <gene id="533197" protId="ATLROG14457"/>
+        <gene id="533373" protId="ATLROG14633"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Atrichornis clamosus" NCBITaxId="449594">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Balearica regulorum" NCBITaxId="925459">
+    <database name="" version="">
+      <genes>
+        <gene id="555950" protId="BALREG05924"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Balaeniceps rex" NCBITaxId="33584">
+    <database name="" version="">
+      <genes>
+        <gene id="577113" protId="BALREX12994"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Baryphthengus martii" NCBITaxId="176943">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Bombycilla garrulus" NCBITaxId="125297">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Bos taurus" NCBITaxId="9913">
+    <database name="" version="Ensembl 102; ARS-UCD1.2; GCA_002263795.2">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Brachypodius atriceps" NCBITaxId="182895">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Brachypteracias leptosomus" NCBITaxId="135165">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Bucorvus abyssinicus" NCBITaxId="153643">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Bucco capensis" NCBITaxId="135168">
+    <database name="" version="">
+      <genes>
+        <gene id="692003" protId="BUCCAP15414"/>
+        <gene id="692427" protId="BUCCAP15838"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Buceros rhinoceros" NCBITaxId="175835">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Buphagus erythrorhynchus" NCBITaxId="245048">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Burhinus bistriatus" NCBITaxId="240201">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cairina moschata" NCBITaxId="8855">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Calypte anna" NCBITaxId="9244">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Calonectris borealis" NCBITaxId="1323832">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Caloenas nicobarica" NCBITaxId="187106">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Calcarius ornatus" NCBITaxId="198940">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Calidris pugnax" NCBITaxId="198806">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Callipepla squamata" NCBITaxId="9009">
+    <database name="" version="">
+      <genes>
+        <gene id="846609" protId="CALSQU15636"/>
+        <gene id="847295" protId="CALSQU16322"/>
+        <gene id="847425" protId="CALSQU16452"/>
+        <gene id="847521" protId="CALSQU16548"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Calyptomena viridis" NCBITaxId="135972">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Callaeas wilsoni" NCBITaxId="1347786">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Campylorhamphus procurvoides" NCBITaxId="190295">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Canis lupus familiaris" NCBITaxId="9615">
+    <database name="" version="Ensembl 70; CanFam3.1; 11-DEC-2012">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cardinalis cardinalis" NCBITaxId="98964">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cariama cristata" NCBITaxId="54380">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Casuarius casuarius" NCBITaxId="8787">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cathartes aura" NCBITaxId="43455">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Catharus fuscescens" NCBITaxId="159581">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Centropus bengalensis" NCBITaxId="1463675">
+    <database name="" version="">
+      <genes>
+        <gene id="1004246" protId="CENBEN14836"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Centropus unirufus" NCBITaxId="1118519">
+    <database name="" version="">
+      <genes>
+        <gene id="1019612" protId="CENUNI14899"/>
+        <gene id="1019613" protId="CENUNI14900"/>
+        <gene id="1019614" protId="CENUNI14901"/>
+        <gene id="1019966" protId="CENUNI15253"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Cepphus grylle" NCBITaxId="28697">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cephalopterus ornatus" NCBITaxId="114276">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Certhia brachydactyla" NCBITaxId="73330">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cercotrichas coryphaeus" NCBITaxId="614051">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Certhia familiaris" NCBITaxId="73333">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cettia cetti" NCBITaxId="68486">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ceuthmochares aereus" NCBITaxId="1961834">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ceyx cyanopectus" NCBITaxId="390723">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Charadrius alexandrinus" NCBITaxId="50392">
+    <database name="" version="">
+      <genes>
+        <gene id="1158109" protId="CHAALE16080"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chaetops frenatus" NCBITaxId="221966">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chaetorhynchus papuensis" NCBITaxId="254446">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chaetura pelagica" NCBITaxId="8897">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chauna torquata" NCBITaxId="30388">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Charadrius vociferus" NCBITaxId="50402">
+    <database name="" version="">
+      <genes>
+        <gene id="1232733" protId="CHAVOC12663"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Chelonoidis abingdonii" NCBITaxId="106734">
+    <database name="" version="Ensembl 96; ASM359739v1; GCA_003597395.1">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chionis minor" NCBITaxId="227182">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chloroceryle aenea" NCBITaxId="176938">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chloropsis cyanopogon" NCBITaxId="1218682">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chloropsis hardwickii" NCBITaxId="667144">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chlamydotis macqueenii" NCBITaxId="187382">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chlorodrepanis virens" NCBITaxId="64799">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chordeiles acutipennis" NCBITaxId="118183">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chroicocephalus maculipennis" NCBITaxId="287016">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chrysemys picta bellii" NCBITaxId="8478">
+    <database name="" version="Ensembl 95; Chrysemys_picta_bellii-3.0.3">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Chunga burmeisteri" NCBITaxId="1352770">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ciconia maguari" NCBITaxId="52777">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ciccaba nigrolineata" NCBITaxId="1118524">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cinclus mexicanus" NCBITaxId="161649">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Circaetus pectoralis" NCBITaxId="321084">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cisticola juncidis" NCBITaxId="52622">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Climacteris rufus" NCBITaxId="47695">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cnemophilus loriae" NCBITaxId="254448">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cochlearius cochlearius" NCBITaxId="110676">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Columba livia" NCBITaxId="8932">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Columbina picui" NCBITaxId="115618">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Colius striatus" NCBITaxId="57412">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Colinus virginianus" NCBITaxId="9014">
+    <database name="" version="">
+      <genes>
+        <gene id="1593610" protId="COLVIR10793"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Copsychus sechellarum" NCBITaxId="797021">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Corvus brachyrhynchos" NCBITaxId="85066">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Corythaixoides concolor" NCBITaxId="103956">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Corvus cornix" NCBITaxId="181096">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Corythaeola cristata" NCBITaxId="103954">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Corvus moneduloides" NCBITaxId="1196302">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Coturnix japonica" NCBITaxId="93934">
+    <database name="" version="">
+      <genes>
+        <gene id="1703732" protId="COTJAP11611"/>
+        <gene id="1703733" protId="COTJAP11612"/>
+        <gene id="1703736" protId="COTJAP11615"/>
+        <gene id="1703737" protId="COTJAP11616"/>
+        <gene id="1703738" protId="COTJAP11617"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Crocodylus porosus" NCBITaxId="8502">
+    <database name="" version="Ensembl Vertebrates 52; CroPor_comp1">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Crotophaga sulcirostris" NCBITaxId="33598">
+    <database name="" version="">
+      <genes>
+        <gene id="1738682" protId="CROSUL14807"/>
+        <gene id="1738785" protId="CROSUL14910"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Crypturellus cinnamomeus" NCBITaxId="889801">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Crypturellus soui" NCBITaxId="458187">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Crypturellus undulatus" NCBITaxId="48396">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Cuculus canorus" NCBITaxId="55661">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Danio rerio" NCBITaxId="7955">
+    <database name="" version="Ensembl 106; GRCz11; GCA_000002035.4">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Daphoenositta chrysoptera" NCBITaxId="254528">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dasyornis broadbenti" NCBITaxId="243059">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dicaeum eximium" NCBITaxId="667154">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dicrurus megarhynchus" NCBITaxId="450177">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Donacobius atricapilla" NCBITaxId="237420">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dromas ardeola" NCBITaxId="458190">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dromaius novaehollandiae" NCBITaxId="8790">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Drymodes brunneopygia" NCBITaxId="626378">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dryoscopus gambensis" NCBITaxId="85069">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Dyaphorophyia castanea" NCBITaxId="1160851">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Edolisoma coerulescens" NCBITaxId="2585810">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Egretta garzetta" NCBITaxId="188379">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Elachura formosa" NCBITaxId="1463973">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Emberiza fucata" NCBITaxId="337179">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Eolophus roseicapillus" NCBITaxId="176039">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Erithacus rubecula" NCBITaxId="37610">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Erpornis zantholeuca" NCBITaxId="1112836">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Erythrocercus mccallii" NCBITaxId="107208">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Eubucco bourcierii" NCBITaxId="91767">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Eudromia elegans" NCBITaxId="8805">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Eulacestoma nigropectus" NCBITaxId="461239">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Eurystomus gularis" NCBITaxId="325343">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Eurypyga helias" NCBITaxId="54383">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Falco cherrug" NCBITaxId="345164">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Falcunculus frontatus" NCBITaxId="254539">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Falco peregrinus" NCBITaxId="8954">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ficedula albicollis" NCBITaxId="59894">
+    <database name="" version="">
+      <genes>
+        <gene id="2253269" protId="FICALB15095"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Formicarius rufipectus" NCBITaxId="1118560">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Fregetta grallaria" NCBITaxId="79628">
+    <database name="" version="">
+      <genes>
+        <gene id="2285172" protId="FREGRA15607"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Fregata magnificens" NCBITaxId="37042">
+    <database name="" version="">
+      <genes>
+        <gene id="2299977" protId="FREMAG14684"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Fulmarus glacialis" NCBITaxId="30455">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Furnarius figulus" NCBITaxId="463165">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Galbula dea" NCBITaxId="1109041">
+    <database name="" version="">
+      <genes>
+        <gene id="2345551" protId="GALDEA15705"/>
+        <gene id="2345554" protId="GALDEA15708"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gallus gallus" NCBITaxId="9031">
+    <database name="" version="">
+      <genes>
+        <gene id="2350798" protId="GALGAL04728"/>
+        <gene id="2350800" protId="GALGAL04730"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Gavia stellata" NCBITaxId="37040">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Geococcyx californianus" NCBITaxId="8947">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Geospiza fortis" NCBITaxId="48883">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Glaucidium brasilianum" NCBITaxId="78217">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Glareola pratincola" NCBITaxId="43316">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Grantiella picta" NCBITaxId="266360">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Grallaria varia" NCBITaxId="117165">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Grus americana" NCBITaxId="9117">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Gymnorhina tibicen" NCBITaxId="9132">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Haliaeetus albicilla" NCBITaxId="8969">
+    <database name="" version="">
+      <genes>
+        <gene id="2518924" protId="HALALB16587"/>
+        <gene id="2518925" protId="HALALB16588"/>
+        <gene id="2518926" protId="HALALB16589"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Haliaeetus leucocephalus" NCBITaxId="52644">
+    <database name="" version="">
+      <genes>
+        <gene id="2528438" protId="HALLEU09230"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Halcyon senegalensis" NCBITaxId="342381">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Heliornis fulica" NCBITaxId="54369">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Hemiprocne comata" NCBITaxId="243314">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Hemignathus wilsoni" NCBITaxId="2518271">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Herpetotheres cachinnans" NCBITaxId="56343">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Himantopus himantopus" NCBITaxId="225398">
+    <database name="" version="">
+      <genes>
+        <gene id="2629393" protId="HIMHIM15360"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Hippolais icterina" NCBITaxId="68497">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Hirundo rustica" NCBITaxId="43150">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Horornis vulcanius" NCBITaxId="2585811">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Homo sapiens" NCBITaxId="9606">
+    <database name="" version="Ensembl 102; GRCh38">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Hydrobates tethys" NCBITaxId="79633">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Hylia prasina" NCBITaxId="208073">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Hypocryptadius cinnamomeus" NCBITaxId="589841">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ibidorhyncha struthersii" NCBITaxId="425643">
+    <database name="" version="">
+      <genes>
+        <gene id="2754268" protId="IBISTR15175"/>
+        <gene id="2754326" protId="IBISTR15233"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Ifrita kowaldi" NCBITaxId="461245">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Illadopsis cleaveri" NCBITaxId="201329">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Indicator maculatus" NCBITaxId="545262">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Irena cyanogastra" NCBITaxId="175120">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Jacana jacana" NCBITaxId="54508">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Junco hyemalis" NCBITaxId="40217">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Lanius ludovicianus" NCBITaxId="28713">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Larus smithsonianus" NCBITaxId="243888">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Leiothrix lutea" NCBITaxId="36275">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Leptocoma aspasia" NCBITaxId="2585812">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Lepidothrix coronata" NCBITaxId="321398">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Leptosomus discolor" NCBITaxId="188344">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Leucopsar rothschildi" NCBITaxId="127929">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Limosa lapponica" NCBITaxId="161683">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Locustella ochotensis" NCBITaxId="187437">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Lonchura striata" NCBITaxId="40157">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Lophotis ruficrista" NCBITaxId="172689">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Loxia curvirostra" NCBITaxId="64802">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Loxia leucoptera" NCBITaxId="96539">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Machaerirhynchus nigripectus" NCBITaxId="1160894">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Malurus elegans" NCBITaxId="720584">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Manacus manacus" NCBITaxId="196037">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Meleagris gallopavo" NCBITaxId="9103">
+    <database name="" version="">
+      <genes>
+        <gene id="3109595" protId="MELGAL11137"/>
+        <gene id="3109596" protId="MELGAL11138"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Melospiza melodia" NCBITaxId="44397">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Melopsittacus undulatus" NCBITaxId="13146">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Melanocharis versteri" NCBITaxId="254552">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Menura novaehollandiae" NCBITaxId="47692">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Merops nubicus" NCBITaxId="57421">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Mesembrinibis cayennensis" NCBITaxId="1118748">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Mesitornis unicolor" NCBITaxId="54374">
+    <database name="" version="">
+      <genes>
+        <gene id="3210091" protId="MESUNI01558"/>
+        <gene id="3210092" protId="MESUNI01559"/>
+        <gene id="3210093" protId="MESUNI01560"/>
+        <gene id="3210094" protId="MESUNI01561"/>
+        <gene id="3210095" protId="MESUNI01562"/>
+        <gene id="3210096" protId="MESUNI01563"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mionectes macconnelli" NCBITaxId="254557">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Mohoua ochrocephala" NCBITaxId="874463">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Molothrus ater" NCBITaxId="84834">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Motacilla alba" NCBITaxId="45807">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Mus musculus" NCBITaxId="10090">
+    <database name="" version="Ensembl 104; GRCm39">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Myiagra hebetior" NCBITaxId="381031">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Mystacornis crossleyi" NCBITaxId="98133">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nannopterum auritus" NCBITaxId="56069">
+    <database name="" version="">
+      <genes>
+        <gene id="3356161" protId="NANAUR17165"/>
+        <gene id="3356168" protId="NANAUR17172"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Nannopterum brasilianus" NCBITaxId="37046">
+    <database name="" version="">
+      <genes>
+        <gene id="3364148" protId="NANBRA07977"/>
+        <gene id="3364149" protId="NANBRA07978"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Nannopterum harrisi" NCBITaxId="473964">
+    <database name="" version="">
+      <genes>
+        <gene id="3381500" protId="NANHAR08913"/>
+        <gene id="3381501" protId="NANHAR08914"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Neopipo cinnamomea" NCBITaxId="456388">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Neodrepanis coruscans" NCBITaxId="254563">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nesospiza acunhae" NCBITaxId="381881">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nestor notabilis" NCBITaxId="176057">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nicator chloris" NCBITaxId="237433">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nipponia nippon" NCBITaxId="128390">
+    <database name="" version="">
+      <genes>
+        <gene id="3473087" protId="NIPNIP11445"/>
+        <gene id="3474083" protId="NIPNIP12441"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Notiomystis cincta" NCBITaxId="366454">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nothocercus julius" NCBITaxId="2585813">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nothocercus nigrocapillus" NCBITaxId="1977171">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nothoprocta ornata" NCBITaxId="83376">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nothoprocta pentlandii" NCBITaxId="2585814">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nothoprocta perdicaria" NCBITaxId="30464">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Numida meleagris" NCBITaxId="8996">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nyctibius bracteatus" NCBITaxId="48426">
+    <database name="" version="">
+      <genes>
+        <gene id="3601056" protId="NYCBRA15452"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Nyctibius grandis" NCBITaxId="48427">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nyctiprogne leucopyga" NCBITaxId="382315">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Nycticryphes semicollaris" NCBITaxId="227226">
+    <database name="" version="">
+      <genes>
+        <gene id="3648141" protId="NYCSEM15869"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Oceanites oceanicus" NCBITaxId="79653">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Odontophorus gujanensis" NCBITaxId="886794">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Oenanthe oenanthe" NCBITaxId="279966">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Onychorhynchus coronatus" NCBITaxId="360224">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Opisthocomus hoazin" NCBITaxId="30419">
+    <database name="" version="">
+      <genes>
+        <gene id="3714040" protId="OPIHOA02407"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Oreocharis arfaki" NCBITaxId="979223">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Oreotrochilus melanogaster" NCBITaxId="689266">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Oriolus oriolus" NCBITaxId="181099">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Origma solitaria" NCBITaxId="720586">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Orthonyx spaldingii" NCBITaxId="38397">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Oxyruncus cristatus" NCBITaxId="114331">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Oxylabes madagascariensis" NCBITaxId="98144">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pachyramphus minor" NCBITaxId="369605">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pachycephala philippinensis" NCBITaxId="449367">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Panurus biarmicus" NCBITaxId="181101">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pandion haliaetus" NCBITaxId="56262">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Parus major" NCBITaxId="9157">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pardalotus punctatus" NCBITaxId="254575">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Paradisaea raggiana" NCBITaxId="36268">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Passerina amoena" NCBITaxId="142471">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Passer domesticus" NCBITaxId="48849">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Patagioenas fasciata" NCBITaxId="372321">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pedionomus torquatus" NCBITaxId="227192">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pelecanus crispus" NCBITaxId="36300">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pelodiscus sinensis" NCBITaxId="13735">
+    <database name="" version="Ensembl 68; PelSin_1.0; 6-AUG-2012">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pelecanoides urinatrix" NCBITaxId="37079">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Penelope pileata" NCBITaxId="1118817">
+    <database name="" version="">
+      <genes>
+        <gene id="4063314" protId="PENPIL15716"/>
+        <gene id="4063370" protId="PENPIL15772"/>
+        <gene id="4063409" protId="PENPIL15811"/>
+        <gene id="4063410" protId="PENPIL15812"/>
+        <gene id="4063411" protId="PENPIL15813"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Peucedramus taeniatus" NCBITaxId="135441">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Phalacrocorax carbo" NCBITaxId="9209">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Phasianus colchicus" NCBITaxId="9054">
+    <database name="" version="">
+      <genes>
+        <gene id="4107200" protId="PHACOL14839"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Phaethon lepturus" NCBITaxId="97097">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Phainopepla nitens" NCBITaxId="161653">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Phaetusa simplex" NCBITaxId="297813">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pheucticus melanocephalus" NCBITaxId="371919">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Phoenicopterus ruber" NCBITaxId="9217">
+    <database name="" version="">
+      <genes>
+        <gene id="4180102" protId="PHORUB10408"/>
+        <gene id="4180103" protId="PHORUB10409"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Phylloscopus trochilus" NCBITaxId="9182">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Piaya cayana" NCBITaxId="33601">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Picathartes gymnocephalus" NCBITaxId="175131">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Picoides pubescens" NCBITaxId="118200">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sus scrofa" NCBITaxId="9823">
+    <database name="" version="Ensembl 94; Sscrofa11.1">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Piprites chloris" NCBITaxId="114369">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pitta sordida" NCBITaxId="9163">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ploceus nigricollis" NCBITaxId="441696">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pluvianellus socialis" NCBITaxId="227228">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Podiceps cristatus" NCBITaxId="345573">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Podarcis muralis" NCBITaxId="64176">
+    <database name="" version="Ensembl Vertebrates 51; PodMur_1.0">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Podilymbus podiceps" NCBITaxId="9252">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Podargus strigoides" NCBITaxId="8905">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Poecile atricapillus" NCBITaxId="48891">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Polioptila caerulea" NCBITaxId="66707">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pomatorhinus ruficollis" NCBITaxId="932028">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pomatostomus ruficeps" NCBITaxId="9176">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Probosciger aterrimus" NCBITaxId="141839">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Promerops cafer" NCBITaxId="254652">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Prunella fulvescens" NCBITaxId="670355">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Prunella himalayana" NCBITaxId="670356">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pseudopodoces humilis" NCBITaxId="181119">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pseudonaja textilis" NCBITaxId="8673">
+    <database name="" version="Ensembl Vertebrates 51; EBS10Xv2-PRI">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Psilopogon haemacephalus" NCBITaxId="2585815">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Psophia crepitans" NCBITaxId="54359">
+    <database name="" version="">
+      <genes>
+        <gene id="4587503" protId="PSOCRE14946"/>
+        <gene id="4587633" protId="PSOCRE15076"/>
+        <gene id="4587788" protId="PSOCRE15231"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Pterocles burchelli" NCBITaxId="2585816">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pterocles gutturalis" NCBITaxId="240206">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pteruthius melanotis" NCBITaxId="357074">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ptilorrhoa leucosticta" NCBITaxId="449384">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ptilonorhynchus violaceus" NCBITaxId="28724">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pycnonotus jocosus" NCBITaxId="182897">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Pygoscelis adeliae" NCBITaxId="9238">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Quiscalus mexicanus" NCBITaxId="64278">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Ramphastos sulfuratus" NCBITaxId="322582">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rattus norvegicus" NCBITaxId="10116">
+    <database name="" version="Ensembl 106; mRatBN7.2; GCA_015227675.2">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Regulus satrapa" NCBITaxId="13245">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhabdornis inornatus" NCBITaxId="237438">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhagologus leucostigma" NCBITaxId="156170">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhadina sibilatrix" NCBITaxId="2585818">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhea americana" NCBITaxId="8797">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhegmatorhina hoffmannsi" NCBITaxId="468512">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhea pennata" NCBITaxId="8795">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhinoptilus africanus" NCBITaxId="240209">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhinopomastus cyanomelas" NCBITaxId="113115">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhipidura dahli" NCBITaxId="667186">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhodinocichla rosea" NCBITaxId="58203">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhynochetos jubatus" NCBITaxId="54386">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rissa tridactyla" NCBITaxId="75485">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rostratula benghalensis" NCBITaxId="118793">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Rynchops niger" NCBITaxId="227184">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sagittarius serpentarius" NCBITaxId="56258">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sakesphorus luctuosus" NCBITaxId="419690">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sapayoa aenigma" NCBITaxId="239371">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Saxicola maurus" NCBITaxId="230657">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sclerurus mexicanus" NCBITaxId="265632">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Scopus umbretta" NCBITaxId="33581">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Scytalopus superciliaris" NCBITaxId="312124">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Semnornis frantzii" NCBITaxId="91796">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Serinus canaria" NCBITaxId="9135">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Serilophus lunatus" NCBITaxId="239386">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Setophaga coronata" NCBITaxId="111975">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Setophaga kirtlandii" NCBITaxId="298831">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sinosuthora webbiana" NCBITaxId="337173">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sitta europaea" NCBITaxId="50251">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Smithornis capensis" NCBITaxId="363769">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sphenodon punctatus" NCBITaxId="8508">
+    <database name="" version="Ensembl 95; ASM311381v1">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Spizella passerina" NCBITaxId="40210">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Spizaetus tyrannus" NCBITaxId="252798">
+    <database name="" version="">
+      <genes>
+        <gene id="5259852" protId="SPITYR15781"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sporophila hypoxantha" NCBITaxId="256693">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Steatornis caripensis" NCBITaxId="48435">
+    <database name="" version="">
+      <genes>
+        <gene id="5291368" protId="STECAR15403"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sterrhoptilus dennistouni" NCBITaxId="2585820">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Stercorarius parasiticus" NCBITaxId="54059">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Struthio camelus" NCBITaxId="8801">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Struthidea cinerea" NCBITaxId="181839">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Strix occidentalis" NCBITaxId="201991">
+    <database name="" version="">
+      <genes>
+        <gene id="5369514" protId="STROCC15264"/>
+        <gene id="5369515" protId="STROCC15265"/>
+        <gene id="5369516" protId="STROCC15266"/>
+        <gene id="5369517" protId="STROCC15267"/>
+        <gene id="5369518" protId="STROCC15268"/>
+        <gene id="5369519" protId="STROCC15269"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sturnus vulgaris" NCBITaxId="9172">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sula dactylatra" NCBITaxId="56068">
+    <database name="" version="">
+      <genes>
+        <gene id="5402306" protId="SULDAC14625"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Sylvia atricapilla" NCBITaxId="48155">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sylvia borin" NCBITaxId="73324">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Sylvietta virens" NCBITaxId="208069">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Syrrhaptes paradoxus" NCBITaxId="302527">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tachuris rubrigastra" NCBITaxId="495162">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Taeniopygia guttata" NCBITaxId="59729">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tauraco erythrolophus" NCBITaxId="121530">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Thalassarche chlororhynchos" NCBITaxId="54017">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Thinocorus orbignyianus" NCBITaxId="161742">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Thryothorus ludovicianus" NCBITaxId="74200">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tichodroma muraria" NCBITaxId="237442">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tinamus guttatus" NCBITaxId="94827">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Todus mexicanus" NCBITaxId="135184">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Toxostoma redivivum" NCBITaxId="99882">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tricholaema leucomelas" NCBITaxId="240729">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Trogon melanurus" NCBITaxId="56311">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Turnix velox" NCBITaxId="2529409">
+    <database name="" version="">
+      <genes>
+        <gene id="5658976" protId="TURVEL14141"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Tympanuchus cupido" NCBITaxId="9004">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tyrannus savana" NCBITaxId="137541">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Tyto alba" NCBITaxId="56313">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Upupa epops" NCBITaxId="57439">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Uria aalge" NCBITaxId="13746">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Uria lomvia" NCBITaxId="28711">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Urile pelagicus" NCBITaxId="2723871">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Urocolius indicus" NCBITaxId="458196">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Urocynchramus pylzowi" NCBITaxId="571890">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Vidua chalybeata" NCBITaxId="81927">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Vidua macroura" NCBITaxId="187451">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Vireo altiloquus" NCBITaxId="34956">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Xenopus tropicalis" NCBITaxId="8364">
+    <database name="" version="Refseq; UCB_Xtro_10.0; GCF_000004195.4; 18-DEC-2019">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Xiphorhynchus elegans" NCBITaxId="269412">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Zapornia atra" NCBITaxId="2585822">
+    <database name="" version="">
+      <genes>
+        <gene id="5900026" protId="ZAPATR14719"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Zonotrichia albicollis" NCBITaxId="44394">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Zosterops hypoxanthus" NCBITaxId="2485327">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <species name="Zosterops lateralis" NCBITaxId="43581">
+    <database name="" version="">
+      <genes>
+      </genes>
+    </database>
+  </species>
+  <groups>
+    <orthologGroup id="HOG:0011318" og="HOG:0011318">
+      <property name="TaxRange" value="Neognathae" IsRoot="True"/>
+      <geneRef id="139303" LOFT="HOG:0011318"/>
+      <orthologGroup og="HOG:0011318">
+        <property name="TaxRange" value="Neoaves"/>
+        <orthologGroup og="HOG:0011318">
+          <property name="TaxRange" value="Rallidae"/>
+          <geneRef id="533373" LOFT="HOG:0011318"/>
+          <geneRef id="5900026" LOFT="HOG:0011318"/>
+        </orthologGroup>
+        <geneRef id="5658976" LOFT="HOG:0011318"/>
+      </orthologGroup>
+    </orthologGroup>
+    <orthologGroup id="HOG:0011319" og="HOG:0011319">
+      <property name="TaxRange" value="Neognathae" IsRoot="True"/>
+      <orthologGroup og="HOG:0011319">
+        <property name="TaxRange" value="Galliformes"/>
+        <paralogGroup>
+          <geneRef id="139489" LOFT="HOG:0011319.1a"/>
+          <geneRef id="139735" LOFT="HOG:0011319.1b"/>
+        </paralogGroup>
+        <paralogGroup>
+          <geneRef id="4063314" LOFT="HOG:0011319.2a"/>
+          <orthologGroup og="HOG:0011319.2b">
+            <property name="TaxRange" value="Galliformes 1a" IsRoot="True"/>
+            <paralogGroup>
+              <geneRef id="4063411" LOFT="HOG:0011319.2b.1a"/>
+              <geneRef id="4063409" LOFT="HOG:0011319.2b.1b"/>
+              <geneRef id="4063370" LOFT="HOG:0011319.2b.1c"/>
+              <geneRef id="4063410" LOFT="HOG:0011319.2b.1d"/>
+            </paralogGroup>
+            <paralogGroup>
+              <orthologGroup og="HOG:0011319.2b.2a">
+                <property name="TaxRange" value="Odontophoridae-Phasianidae" IsRoot="True"/>
+                <geneRef id="846609" LOFT="HOG:0011319.2b.2a"/>
+                <orthologGroup og="HOG:0011319.2b.2a">
+                  <property name="TaxRange" value="Coturnix japonica-Gallus gallus"/>
+                  <geneRef id="1703737" LOFT="HOG:0011319.2b.2a"/>
+                  <geneRef id="2350800" LOFT="HOG:0011319.2b.2a"/>
+                </orthologGroup>
+              </orthologGroup>
+              <orthologGroup og="HOG:0011319.2b.2b">
+                <property name="TaxRange" value="Odontophoridae-Phasianidae" IsRoot="True"/>
+                <orthologGroup og="HOG:0011319.2b.2b">
+                  <property name="TaxRange" value="Callipepla squamata-Colinus virginianus"/>
+                  <paralogGroup>
+                    <geneRef id="847521" LOFT="HOG:0011319.2b.2b.1a"/>
+                    <geneRef id="847425" LOFT="HOG:0011319.2b.2b.1b"/>
+                    <geneRef id="847295" LOFT="HOG:0011319.2b.2b.1c"/>
+                  </paralogGroup>
+                  <geneRef id="1593610" LOFT="HOG:0011319.2b.2b"/>
+                </orthologGroup>
+                <orthologGroup og="HOG:0011319.2b.2b">
+                  <property name="TaxRange" value="Phasianidae"/>
+                  <paralogGroup>
+                    <orthologGroup og="HOG:0011319.2b.2b.2a">
+                      <property name="TaxRange" value="Coturnix japonica-Gallus gallus" IsRoot="True"/>
+                      <geneRef id="1703733" LOFT="HOG:0011319.2b.2b.2a"/>
+                      <geneRef id="2350798" LOFT="HOG:0011319.2b.2b.2a"/>
+                    </orthologGroup>
+                    <geneRef id="1703732" LOFT="HOG:0011319.2b.2b.2b"/>
+                    <geneRef id="1703738" LOFT="HOG:0011319.2b.2b.2c"/>
+                    <geneRef id="1703736" LOFT="HOG:0011319.2b.2b.2d"/>
+                  </paralogGroup>
+                  <orthologGroup og="HOG:0011319.2b.2b">
+                    <property name="TaxRange" value="Phasianidae 1a"/>
+                    <paralogGroup>
+                      <geneRef id="3109595" LOFT="HOG:0011319.2b.2b.3a"/>
+                      <geneRef id="3109596" LOFT="HOG:0011319.2b.2b.3b"/>
+                    </paralogGroup>
+                    <geneRef id="4107200" LOFT="HOG:0011319.2b.2b"/>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </paralogGroup>
+          </orthologGroup>
+        </paralogGroup>
+      </orthologGroup>
+      <orthologGroup og="HOG:0011319">
+        <property name="TaxRange" value="Neoaves"/>
+        <orthologGroup og="HOG:0011319">
+          <property name="TaxRange" value="Gruiformes"/>
+          <geneRef id="533197" LOFT="HOG:0011319"/>
+          <orthologGroup og="HOG:0011319">
+            <property name="TaxRange" value="Gruiformes 1a"/>
+            <paralogGroup>
+              <geneRef id="4587788" LOFT="HOG:0011319.3a"/>
+              <geneRef id="4587633" LOFT="HOG:0011319.3b"/>
+              <geneRef id="4587503" LOFT="HOG:0011319.3c"/>
+            </paralogGroup>
+            <geneRef id="555950" LOFT="HOG:0011319"/>
+          </orthologGroup>
+        </orthologGroup>
+        <orthologGroup og="HOG:0011319">
+          <property name="TaxRange" value="Neoaves 1a"/>
+          <paralogGroup>
+            <orthologGroup og="HOG:0011319.4a">
+              <property name="TaxRange" value="Neoaves 2b" IsRoot="True"/>
+              <paralogGroup>
+                <geneRef id="3210091" LOFT="HOG:0011319.4a.3a"/>
+                <geneRef id="3210094" LOFT="HOG:0011319.4a.3b"/>
+                <geneRef id="3210092" LOFT="HOG:0011319.4a.3c"/>
+                <geneRef id="3210095" LOFT="HOG:0011319.4a.3d"/>
+                <geneRef id="3210093" LOFT="HOG:0011319.4a.3e"/>
+              </paralogGroup>
+              <orthologGroup og="HOG:0011319.4a">
+                <property name="TaxRange" value="Cuculiformes"/>
+                <paralogGroup>
+                  <geneRef id="1738785" LOFT="HOG:0011319.4a.4a"/>
+                  <geneRef id="1738682" LOFT="HOG:0011319.4a.4b"/>
+                </paralogGroup>
+                <paralogGroup>
+                  <geneRef id="1019614" LOFT="HOG:0011319.4a.5a"/>
+                  <orthologGroup og="HOG:0011319.4a.5b">
+                    <property name="TaxRange" value="Centropus" IsRoot="True"/>
+                    <paralogGroup>
+                      <geneRef id="1019612" LOFT="HOG:0011319.4a.5b.4a"/>
+                      <geneRef id="1019613" LOFT="HOG:0011319.4a.5b.4b"/>
+                      <geneRef id="1019966" LOFT="HOG:0011319.4a.5b.4c"/>
+                    </paralogGroup>
+                    <geneRef id="1004246" LOFT="HOG:0011319.4a.5b"/>
+                  </orthologGroup>
+                </paralogGroup>
+              </orthologGroup>
+            </orthologGroup>
+            <geneRef id="3210096" LOFT="HOG:0011319.4b"/>
+          </paralogGroup>
+          <paralogGroup>
+            <geneRef id="4180102" LOFT="HOG:0011319.5a"/>
+            <orthologGroup og="HOG:0011319.5b">
+              <property name="TaxRange" value="Neoaves 2c" IsRoot="True"/>
+              <geneRef id="3714040" LOFT="HOG:0011319.5b"/>
+              <geneRef id="4180103" LOFT="HOG:0011319.5b"/>
+              <orthologGroup og="HOG:0011319.5b">
+                <property name="TaxRange" value="Neoaves 4c"/>
+                <paralogGroup>
+                  <geneRef id="3473087" LOFT="HOG:0011319.5b.6a"/>
+                  <orthologGroup og="HOG:0011319.5b.6b">
+                    <property name="TaxRange" value="Neoaves 5c" IsRoot="True"/>
+                    <orthologGroup og="HOG:0011319.5b.6b">
+                      <property name="TaxRange" value="Pelecaniformes"/>
+                      <geneRef id="3474083" LOFT="HOG:0011319.5b.6b"/>
+                      <geneRef id="577113" LOFT="HOG:0011319.5b.6b"/>
+                    </orthologGroup>
+                    <orthologGroup og="HOG:0011319.5b.6b">
+                      <property name="TaxRange" value="Suliformes"/>
+                      <geneRef id="2299977" LOFT="HOG:0011319.5b.6b"/>
+                      <orthologGroup og="HOG:0011319.5b.6b">
+                        <property name="TaxRange" value="Suliformes 1a"/>
+                        <paralogGroup>
+                          <orthologGroup og="HOG:0011319.5b.6b.5a">
+                            <property name="TaxRange" value="Nannopterum" IsRoot="True"/>
+                            <geneRef id="3381501" LOFT="HOG:0011319.5b.6b.5a"/>
+                            <orthologGroup og="HOG:0011319.5b.6b.5a">
+                              <property name="TaxRange" value="Nannopterum auritus-Nannopterum brasilianus"/>
+                              <geneRef id="3356161" LOFT="HOG:0011319.5b.6b.5a"/>
+                              <geneRef id="3364148" LOFT="HOG:0011319.5b.6b.5a"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                          <orthologGroup og="HOG:0011319.5b.6b.5b">
+                            <property name="TaxRange" value="Nannopterum" IsRoot="True"/>
+                            <geneRef id="3381500" LOFT="HOG:0011319.5b.6b.5b"/>
+                            <orthologGroup og="HOG:0011319.5b.6b.5b">
+                              <property name="TaxRange" value="Nannopterum auritus-Nannopterum brasilianus"/>
+                              <geneRef id="3356168" LOFT="HOG:0011319.5b.6b.5b"/>
+                              <geneRef id="3364149" LOFT="HOG:0011319.5b.6b.5b"/>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </paralogGroup>
+                        <geneRef id="5402306" LOFT="HOG:0011319.5b.6b"/>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                </paralogGroup>
+                <geneRef id="2285172" LOFT="HOG:0011319.5b"/>
+              </orthologGroup>
+            </orthologGroup>
+          </paralogGroup>
+          <paralogGroup>
+            <geneRef id="692003" LOFT="HOG:0011319.6a"/>
+            <orthologGroup og="HOG:0011319.6b">
+              <property name="TaxRange" value="Neoaves 2a" IsRoot="True"/>
+              <orthologGroup og="HOG:0011319.6b">
+                <property name="TaxRange" value="Accipitriformes-Strigiformes"/>
+                <paralogGroup>
+                  <geneRef id="5369517" LOFT="HOG:0011319.6b.7a"/>
+                  <geneRef id="5369515" LOFT="HOG:0011319.6b.7b"/>
+                  <geneRef id="5369518" LOFT="HOG:0011319.6b.7c"/>
+                  <geneRef id="5369516" LOFT="HOG:0011319.6b.7d"/>
+                  <geneRef id="5369519" LOFT="HOG:0011319.6b.7e"/>
+                  <geneRef id="5369514" LOFT="HOG:0011319.6b.7f"/>
+                </paralogGroup>
+                <orthologGroup og="HOG:0011319.6b">
+                  <property name="TaxRange" value="Accipitridae 1a"/>
+                  <paralogGroup>
+                    <geneRef id="2518925" LOFT="HOG:0011319.6b.8a"/>
+                    <geneRef id="2518926" LOFT="HOG:0011319.6b.8b"/>
+                    <orthologGroup og="HOG:0011319.6b.8c">
+                      <property name="TaxRange" value="Haliaeetus" IsRoot="True"/>
+                      <geneRef id="2518924" LOFT="HOG:0011319.6b.8c"/>
+                      <geneRef id="2528438" LOFT="HOG:0011319.6b.8c"/>
+                    </orthologGroup>
+                  </paralogGroup>
+                  <orthologGroup og="HOG:0011319.6b">
+                    <property name="TaxRange" value="Aquila chrysaetos-Spizaetus tyrannus"/>
+                    <paralogGroup>
+                      <geneRef id="455100" LOFT="HOG:0011319.6b.9a"/>
+                      <geneRef id="455101" LOFT="HOG:0011319.6b.9b"/>
+                    </paralogGroup>
+                    <geneRef id="5259852" LOFT="HOG:0011319.6b"/>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+              <orthologGroup og="HOG:0011319.6b">
+                <property name="TaxRange" value="Galbuliformes"/>
+                <paralogGroup>
+                  <geneRef id="2345554" LOFT="HOG:0011319.6b.10a"/>
+                  <geneRef id="2345551" LOFT="HOG:0011319.6b.10b"/>
+                </paralogGroup>
+                <geneRef id="692427" LOFT="HOG:0011319.6b"/>
+              </orthologGroup>
+              <orthologGroup og="HOG:0011319.6b">
+                <property name="TaxRange" value="Passeriformes-Psittaciformes"/>
+                <geneRef id="186957" LOFT="HOG:0011319.6b"/>
+                <geneRef id="2253269" LOFT="HOG:0011319.6b"/>
+              </orthologGroup>
+            </orthologGroup>
+          </paralogGroup>
+          <orthologGroup og="HOG:0011319">
+            <property name="TaxRange" value="Caprimulgimorphae"/>
+            <geneRef id="5291368" LOFT="HOG:0011319"/>
+            <geneRef id="3601056" LOFT="HOG:0011319"/>
+            <geneRef id="45261" LOFT="HOG:0011319"/>
+          </orthologGroup>
+          <orthologGroup og="HOG:0011319">
+            <property name="TaxRange" value="Charadriiformes"/>
+            <orthologGroup og="HOG:0011319">
+              <property name="TaxRange" value="Charadriiformes 2d"/>
+              <orthologGroup og="HOG:0011319">
+                <property name="TaxRange" value="Charadriidae"/>
+                <geneRef id="1158109" LOFT="HOG:0011319"/>
+                <geneRef id="1232733" LOFT="HOG:0011319"/>
+              </orthologGroup>
+              <orthologGroup og="HOG:0011319">
+                <property name="TaxRange" value="Himantopus himantopus-Ibidorhyncha struthersii"/>
+                <paralogGroup>
+                  <geneRef id="2754326" LOFT="HOG:0011319.7a"/>
+                  <geneRef id="2754268" LOFT="HOG:0011319.7b"/>
+                </paralogGroup>
+                <geneRef id="2629393" LOFT="HOG:0011319"/>
+              </orthologGroup>
+            </orthologGroup>
+            <geneRef id="3648141" LOFT="HOG:0011319"/>
+          </orthologGroup>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>

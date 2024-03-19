@@ -9,6 +9,7 @@ from . import abstractgene
 import logging
 logger = logging.getLogger(__name__)
 from collections import defaultdict
+from tqdm.auto import tqdm
 import numpy as np
 
 
@@ -41,12 +42,13 @@ class OrthoXMLParser(object):
         skip_this_hog (:obj:`Boolean`): Boolean to skip the current hog or not (used when filtering option is set).     
     """
 
-    def __init__(self, ham_object, filterObject=None):
+    def __init__(self, ham_object, filterObject=None, with_progress=False):
 
         """
         Args:
             ham_object (:obj:`Ham`): Ham object to feed with created objects.
             filterObject (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information.
+            with_progress (:bool:, optional): Whether to display a tqdm progress bar whilst parsing.
             Defaults to None.
         """
 
@@ -66,6 +68,9 @@ class OrthoXMLParser(object):
         self.in_paralogGroup = None
         self.paralogyNode = None
         self.skip_this_hog = False
+
+        # save progress bar option
+        self.with_progress = with_progress
 
     def _build_gene(self, attrib):
         gene = abstractgene.Gene(**attrib)
@@ -106,7 +111,7 @@ class OrthoXMLParser(object):
                 # we have a directly nested paralog group. use the same DuplicationNode
                 dNode = self.paralog_stack[-1]['node']
             else:
-                dNode = abstractgene.DuplicationNode(self.ham_object)
+                dNode = abstractgene.DuplicationNode(self.ham_object, id=attrib.get('og', None))
 
             self.paralog_stack.append({'depth': cur_depth, 'node': dNode})
 
@@ -116,6 +121,8 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}geneRef" and self.skip_this_hog is False:
 
             gene = self.extant_gene_map[attrib['id']]
+            if 'LOFT' in attrib:
+                gene.set_LOFT(attrib['LOFT'])
             self.hog_stack[-1].add_child(gene)
 
             # if the gene is contained within a paralogousGroup need to update its .arose_by_duplication flag.
@@ -123,6 +130,14 @@ class OrthoXMLParser(object):
                 self.paralogyNode.add_child(gene)
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is False:
+            if "id" in attrib:
+                if self.with_progress:
+                    if hasattr(self, 'sp_pbar'):
+                        self.sp_pbar.close()
+                        delattr(self, 'sp_pbar')
+                        self.hog_pbar = tqdm(desc='Parsing HOGs')
+                    self.hog_pbar.update()
+
             if len(self.hog_stack) == 0 and self.filterObj is not None:
 
                 if str(attrib["id"]) in self.filterObj.hogsId:
@@ -152,6 +167,11 @@ class OrthoXMLParser(object):
             logger.info("Species {} created. ".format(self.current_species.name))
             self.current_species = None
 
+            if self.with_progress:
+                if not hasattr(self, 'sp_pbar'):
+                    self.sp_pbar = tqdm(desc='Parsing Species')
+                self.sp_pbar.update()
+
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
 
             ln = self.paralog_stack.pop()
@@ -166,7 +186,6 @@ class OrthoXMLParser(object):
                 self.paralogyNode = None
 
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
-
             # get the latest hog
             hog = self.hog_stack.pop()
 
@@ -213,7 +232,7 @@ class OrthoXMLParser(object):
                         if duplication.MRCA != hog.genome:
 
                             # create the MRCA hog
-                            mrcahog = abstractgene.HOG()
+                            mrcahog = abstractgene.HOG(id=hog.hog_id)
                             mrcahog.set_genome(duplication.MRCA)
                             duplication.MRCA.add_gene(mrcahog)
 
@@ -264,6 +283,10 @@ class OrthoXMLParser(object):
                 except Exception as e:
                     logger.error("cannot parse HOG '{}': {}".format(hog.hog_id, e))
                     raise
+        elif tag == "{http://orthoXML.org/2011/}groups":
+            if self.with_progress:
+                self.hog_pbar.close()
+                delattr(self, 'hog_pbar')
 
     def data(self, data):
         # Ignore data inside nodes

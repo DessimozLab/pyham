@@ -20,7 +20,13 @@ class IHAM(object):
         self.html_template = self._get_html_template()
         self.famdata = json.dumps(self._get_famdata())
         self.orthoxml = OrthoXML_manager(self.hog)
+        try:
+            numeric_hogid = int(self.hog.hog_id)
+            hogid = "HOG:{:07d}".format(numeric_hogid)
+        except ValueError:
+            hogid = self.hog.hog_id
         self.HTML = self.html_template.safe_substitute({'name': hog.hog_id,
+                                                        'hog_id': hogid,
                                                         "tree": self.newick_str,
                                                         "orthoxml": self.orthoxml.get_orthoxml_str(),
                                                         "fam_data": self.famdata
@@ -31,7 +37,7 @@ class IHAM(object):
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>HOG $name</title>
+    <title>$hog_id</title>
     <script src="https://d3js.org/d3.v3.js"></script>
 
     <!-- Bootstrap CDN -->
@@ -97,10 +103,10 @@ class IHAM(object):
 <body>
 
 <div id="header">
-    <h3>Hierarchical group HOG:0000474 open at level of <span id="current-node"></span></h3>
+    <h3>Hierarchical group $hog_id open at level of <span id="current-node"></span></h3>
 
     <div id="menu-bar">
-        
+
         <div id="gene-tooltips-dropdown" class="dropdown">
             <button class="btn btn-sm btn-outline-dark dropdown-toggle" type="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">

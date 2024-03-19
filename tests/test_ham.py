@@ -179,17 +179,17 @@ class HAMTestQuery(unittest.TestCase):
 
         # Get Hog with str(id)
         hog3 = self.h.get_hog_by_id("3")
-        self.assertEqual(str(hog3), "<HOG(3)>")
+        self.assertEqual(str(hog3), "<HOG(id=3;level=Vertebrata)>")
 
         # Get Hog with int(id)
         hog3 = self.h.get_hog_by_id(3)
-        self.assertEqual(str(hog3), "<HOG(3)>")
+        self.assertEqual(str(hog3), "<HOG(id=3;level=Vertebrata)>")
 
         hog3 = self.hstring.get_hog_by_id(3)
-        self.assertEqual(str(hog3), "<HOG(3)>")
+        self.assertEqual(str(hog3), "<HOG(id=3;level=Vertebrata)>")
 
         hog3 = self.hpx.get_hog_by_id(3)
-        self.assertEqual(str(hog3), "<HOG(3)>")
+        self.assertEqual(str(hog3), "<HOG(id=3;level=Vertebrata)>")
 
 
         ###############
@@ -198,10 +198,10 @@ class HAMTestQuery(unittest.TestCase):
 
         for hog_id in self.filter_hogs:
             hog = self.hf.get_hog_by_id(hog_id)
-            self.assertEqual(str(hog), "<HOG({})>".format(hog_id))
+            self.assertTrue(str(hog).startswith("<HOG(id={}".format(hog_id)))
 
             hog = self.hfstring.get_hog_by_id(hog_id)
-            self.assertEqual(str(hog), "<HOG({})>".format(hog_id))
+            self.assertTrue(str(hog).startswith("<HOG(id={}".format(hog_id)))
 
         for hog_id in self.no_filter_hogs:
             with self.assertRaises(KeyError):
@@ -216,10 +216,10 @@ class HAMTestQuery(unittest.TestCase):
 
         # Get Hog with Gene object
         hog3 = self.h.get_hog_by_gene(gene3)
-        self.assertEqual(str(hog3), "<HOG(3)>")
+        self.assertEqual(str(hog3), "<HOG(id=3;level=Vertebrata)>")
 
         hog3 = self.hpx.get_hog_by_gene(gene3)
-        self.assertEqual(str(hog3), "<HOG(3)>")
+        self.assertEqual(str(hog3), "<HOG(id=3;level=Vertebrata)>")
 
         # If gene argument is not a Gene object
         with self.assertRaises(KeyError):
@@ -232,7 +232,7 @@ class HAMTestQuery(unittest.TestCase):
         for gene_id in self.filter_genes:
             gene = self.hf.get_gene_by_id(gene_id)
             hog = self.hf.get_hog_by_gene(gene)
-            self.assertEqual(str(hog), "<HOG({})>".format(hog.hog_id))
+            self.assertTrue(str(hog).startswith("<HOG(id={}".format(hog.hog_id)))
 
         for gene_id in self.no_filter_genes:
             with self.assertRaises(KeyError):
@@ -241,34 +241,34 @@ class HAMTestQuery(unittest.TestCase):
 
     def test_get_list_top_level_hogs(self):
         hogs = self.h.get_list_top_level_hogs()
-        self.assertSetEqual(_str_array(hogs), {"<HOG(2)>", "<HOG(1)>", "<HOG(3)>"})
+        self.assertSetEqual(_str_array(hogs), {"<HOG(id=2;level=Mammalia)>", "<HOG(id=1;level=Vertebrata)>", "<HOG(id=3;level=Vertebrata)>"})
 
         hogs = self.hpx.get_list_top_level_hogs()
-        self.assertSetEqual(_str_array(hogs), {"<HOG(2)>", "<HOG(1)>", "<HOG(3)>"})
+        self.assertSetEqual(_str_array(hogs), {"<HOG(id=2;level=Mammalia)>", "<HOG(id=1;level=Vertebrata)>", "<HOG(id=3;level=Vertebrata)>"})
 
         ###############
         # With filter #
         ###############
 
         hogs = self.hf.get_list_top_level_hogs()
-        self.assertSetEqual(_str_array(hogs), {"<HOG(2)>"})
+        self.assertSetEqual(_str_array(hogs), {"<HOG(id=2;level=Mammalia)>"})
 
     def test_get_dict_top_level_hogs(self):
         hogs = self.h.get_dict_top_level_hogs()
-        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>", "1": "<HOG(1)>", "3": "<HOG(3)>"})
+        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(id=2;level=Mammalia)>", "1": "<HOG(id=1;level=Vertebrata)>", "3": "<HOG(id=3;level=Vertebrata)>"})
 
         hogs = self.hpx.get_dict_top_level_hogs()
-        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>", "1": "<HOG(1)>", "3": "<HOG(3)>"})
+        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(id=2;level=Mammalia)>", "1": "<HOG(id=1;level=Vertebrata)>", "3": "<HOG(id=3;level=Vertebrata)>"})
 
         ###############
         # With filter #
         ###############
 
         hogs = self.hf.get_dict_top_level_hogs()
-        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>"})
+        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(id=2;level=Mammalia)>"})
 
         hogs = self.hfstring.get_dict_top_level_hogs()
-        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(2)>"})
+        self.assertDictEqual(_str_dict_one_value(hogs), {"2": "<HOG(id=2;level=Mammalia)>"})
 
     # Gene
 

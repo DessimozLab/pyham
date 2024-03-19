@@ -5,9 +5,9 @@ from io import open
 
 
 name = 'pyham'
-requirements = ['ete3 >= 3.1', 'six', 'lxml', 'future', 'requests']
+requirements = ['ete3 >= 3.1', 'six', 'lxml', 'future', 'requests', 'tqdm']
 if sys.version_info > (3, 3):
-    # ete3 uses some py3 incompatible types if scipy is not present 
+    # ete3 uses some py3 incompatible types if scipy is not present
     requirements.extend(['scipy'])
 if sys.version_info < (3, 5):
     requirements.extend(['numpy'])
