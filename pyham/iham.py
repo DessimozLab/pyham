@@ -50,16 +50,8 @@ class IHAM(object):
     <!-- Roboto font -->
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
-    <!-- TnT -->
-    <link rel="stylesheet" href="https://tntvis.github.io/tnt/build/tnt.css" type="text/css"/>
-    <script src="https://tntvis.github.io/tnt/build/tnt.js" charset="utf-8"></script>
-
-    <!-- TnT Tooltip-->
-    <link rel="stylesheet" href="https://tntvis.github.io/tnt.tooltip/build/tnt.tooltip.css" type="text/css"/>
-    <script src="https://omabrowser.org/static/js/tnt.tooltip.min.js" charset="utf-8"></script>
-
-    <script src="https://dessimozlab.github.io/iHam/iHam.js"></script>
-    <link rel="stylesheet" href="https://dessimozlab.github.io/iHam/iHam.css" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/gh/DessimozLab/iHam@master/build/iHam.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/DessimozLab/iHam@master/build/iHam.css" type="text/css"/>
 
     <style>
         body {
@@ -321,7 +313,7 @@ class OrthoXML_manager(object):
 
                 remaining_hog = list(set(hog.children) - set(dup_child))
 
-                if len(remaining_hog) == 0:
+                if len(remaining_hog) == 0 and len(hog.duplications) == 1  :
 
                     current_hog_xml = parent
 
