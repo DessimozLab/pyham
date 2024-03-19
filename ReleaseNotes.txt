@@ -1,3 +1,19 @@
+
+########################################################################################
+
+VERSION 1.2.0
+
+FIX:
+    - Remove unnecessary files from git repo
+    - replace outdated nosetests -> pytest as test running
+
+IMPROVEMENTS:
+    - Improve handling of HOG IDs in pyham. HOG objects use "hog_id" or "og" attribute 
+      from orthoxml to show objects, and also include the taxonomic range.
+    - LOFT attribute will be loaded for gene elements if assigned in orthoxml.
+
+
+
 ########################################################################################
 
 VERSION 1.1.12
