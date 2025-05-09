@@ -260,7 +260,7 @@ class Ham(object):
 
             else:
                 # This is the actual parser to build HOG/Gene and related Genomes.
-                open_ = gzip.open if self.hog_file.endswith('.gz') else open
+                open_ = gzip.open if str(self.hog_file).endswith('.gz') else open
                 with open_(self.hog_file, 'rt') as orthoxml_file:
                     self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
 

@@ -102,6 +102,21 @@ class Taxonomy(object):
 
         return intermediate_level
 
+    def is_child_recursive(self, node, ancestor_node):
+        """  Check if the node is a child of the ancestor node.
+
+            Args:
+                | node (:obj:`node`): node to check.
+                | ancestor_node (:obj:`node`): ancestor node.
+
+            Returns:
+                :obj:`bool` True if the node is a child of the ancestor node.
+        """
+        for tax in node.iter_ancestors():
+            if tax == ancestor_node:
+                return True
+        return False
+
     def get_newick_from_tree(self, node):
         """  return the newick tree string (format 8: all names) rooted at the given node.
 
