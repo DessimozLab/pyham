@@ -4,7 +4,7 @@ import unittest
 from pyham import Gene, HOG, AbstractGene, EvolutionaryConceptError
 from unittest import skip
 import pyham.genome as g
-import ete3
+import ete4
 
 
 class ExtantGenomeTest(unittest.TestCase):
@@ -41,20 +41,20 @@ class GenomeTest(unittest.TestCase):
             a2.set_taxon(b)
 
         # valid
-        c = ete3.Tree("(A:1,(B:1,(E:1,D:1)Internal_1:0.5)Internal_2:0.5)Root;", format=1)
-        a1.set_taxon(c.get_tree_root())
-        a2.set_taxon(c.get_tree_root())
+        c = ete4.Tree("(A:1,(B:1,(E:1,D:1)Internal_1:0.5)Internal_2:0.5)Root;", parser=1)
+        a1.set_taxon(c.root)
+        a2.set_taxon(c.root)
 
-        # try to wrongly reassign a taxonomic range to a extant genomes
-        d = ete3.Tree("(E:1,D:1)Internal;", format=1)
+        # try to wrongly reassign a  taxonomic range to a extant genomes
+        d = ete4.Tree("(E:1,D:1)Internal;", parser=1)
         with self.assertRaises(EvolutionaryConceptError):
-            a1.set_taxon(d.get_tree_root())
+            a1.set_taxon(d.root)
         with self.assertRaises(EvolutionaryConceptError):
-            a2.set_taxon(d.get_tree_root())
+            a2.set_taxon(d.root)
 
         # reassign the same taxonomy
-        a1.set_taxon(c.get_tree_root())
-        a2.set_taxon(c.get_tree_root())
+        a1.set_taxon(c.root)
+        a2.set_taxon(c.root)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import ete3
+import ete4
 import abc
 
 
@@ -9,7 +9,7 @@ class Genome(metaclass=abc.ABCMeta):
     in the Taxonomy.tree.
 
     Attributes:
-        | taxon (:obj:`ete3.TreeNode` of the :obj:`pyham.taxonomy`.tree): corresponding taxon.
+        | taxon (:obj:`ete4.Tree` of the :obj:`pyham.taxonomy`.tree): corresponding taxon.
         | name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating all children genome names.
         | genes (:obj:`list`): list of :obj:`pyham.abstractgene.AbstractGene` related to this Genome.
 
@@ -51,13 +51,13 @@ class Genome(metaclass=abc.ABCMeta):
             taxon (Taxonomy.tree node): corresponding taxon.
 
         Raises:
-            TypeError: if taxon is not an ete3.coretype.tree.TreeNode.
+            TypeError: if taxon is not an ete4.Tree.
             EvolutionaryConceptError: if genome already have a taxon set.
         """
 
-        if not isinstance(taxon, ete3.coretype.tree.TreeNode):
+        if not isinstance(taxon, ete4.Tree):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(ete3.coretype.tree.TreeNode.__name__,
+                            .format(ete4.Tree.__name__,
                                     type(taxon).__name__))
         if self.taxon is not None and taxon != self.taxon:
             raise EvolutionaryConceptError("only one taxon can refers to one genome")

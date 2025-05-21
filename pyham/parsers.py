@@ -261,7 +261,7 @@ class OrthoXMLParser(object):
                     # for all children of this hog find missing level
                     for child in hog.children:
                         child_genome = child.genome
-                        if hog_genome.taxon.depth != child_genome.taxon.depth - 1:
+                        if hog_genome.taxon.props['depth'] != child_genome.taxon.props['depth'] - 1:
                             change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
                     # and add them if required
