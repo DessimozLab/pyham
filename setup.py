@@ -46,12 +46,7 @@ setup(
          'Intended Audience :: Science/Research',
          'Topic :: Scientific/Engineering :: Bio-Informatics',
          'License :: OSI Approved :: MIT License',
-         'Programming Language :: Python :: 2',
-         'Programming Language :: Python :: 2.7',
          'Programming Language :: Python :: 3',
-         'Programming Language :: Python :: 3.5',
-         'Programming Language :: Python :: 3.6',
-         'Programming Language :: Python :: 3.7',
          'Programming Language :: Python :: 3.8',
          'Programming Language :: Python :: 3.9',
          'Programming Language :: Python :: 3.10',
@@ -61,7 +56,7 @@ setup(
     packages=find_packages(exclude=[]),
     install_requires=requirements,
     extras_require={
-        'test': ['nose'],
-        'dev': ['nose', 'sphinx', 'wheel', 'twine', 'fabric', 'fabric3'],
+        'test': ['pytest'],
+        'dev': ['pytest', 'sphinx', 'wheel', 'twine'],
     }
 )

@@ -1,18 +1,9 @@
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from __future__ import absolute_import
-from builtins import super
-from builtins import object
-from future import standard_library
-standard_library.install_aliases()
 import numbers
 from .genome import ExtantGenome, AncestralGenome, Genome
 from .iham import IHAM
-import abc, six
+import abc
 
-@six.add_metaclass(abc.ABCMeta)
-class AbstractGene(object):
+class AbstractGene(metaclass=abc.ABCMeta):
     """  
     AbstractGene is an abstract class representing extant or ancestral genes. An AbstractGene is defined by an unique
     id, the genome it belongs to and  its parent AbstractGene.

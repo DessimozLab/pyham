@@ -1,16 +1,5 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-
 import gzip
 import re
-from builtins import map
-from builtins import open
-from builtins import str
-from future import standard_library
-standard_library.install_aliases()
-
 from xml.etree.ElementTree import XMLParser
 from . import taxonomy as tax
 from .genome import Genome,AncestralGenome, ExtantGenome
@@ -672,14 +661,14 @@ class Ham(object):
 
         """
 
-        nodes_founded = self.taxonomy.tree.search_nodes(name=name)
+        nodes_found = list(self.taxonomy.tree.search_nodes(name=name))
 
-        if not nodes_founded:
+        if not nodes_found:
             raise KeyError('No node founded for the species name: {}'.format(name))
-        elif len(nodes_founded) == 1:
-            return nodes_founded[0]
+        elif len(nodes_found) == 1:
+            return nodes_found[0]
         else:
-            raise KeyError('{} nodes founded for the species name: {}'.format(len(nodes_founded), name))
+            raise KeyError('{} nodes founded for the species name: {}'.format(len(nodes_found), name))
 
     # ... PRIVATE METHODS ... #
 
@@ -837,11 +826,11 @@ class Ham(object):
 
         """
 
-        nodes_founded = self.taxonomy.tree.search_nodes(name=name)
+        nodes_found = list(self.taxonomy.tree.search_nodes(name=name))
 
-        if len(nodes_founded) == 1:
+        if len(nodes_found) == 1:
 
-            node = nodes_founded[0]
+            node = nodes_found[0]
 
             if "genome" in node.features:
                 return node.genome
@@ -852,7 +841,7 @@ class Ham(object):
 
                 return ancestral_genome
         else:
-            raise KeyError('{} node(s) founded for the ancestral genome named {}'.format(len(nodes_founded), name))
+            raise KeyError('{} node(s) founded for the ancestral genome named {}'.format(len(nodes_found), name))
 
     def _get_extant_genome_by_name(self, **kwargs):
 
@@ -867,11 +856,11 @@ class Ham(object):
 
         """
 
-        nodes_founded = self.taxonomy.tree.search_nodes(name=kwargs['name'])
+        nodes_found = list(self.taxonomy.tree.search_nodes(name=kwargs['name']))
 
-        if len(nodes_founded) == 1:
+        if len(nodes_found) == 1:
 
-            node = nodes_founded[0]
+            node = nodes_found[0]
             if len(node.children) > 0 and self.species_resolve_mode == "OMA":
                 cand = []
                 for child in node.children:
@@ -892,7 +881,7 @@ class Ham(object):
                 self.taxonomy.add_genome_to_node(node, extant_genome)
                 return extant_genome
         else:
-            raise KeyError('{} node(s) founded for the species name: {}'.format(len(nodes_founded), kwargs['name']))
+            raise KeyError('{} node(s) found for the species name: {}'.format(len(nodes_found), kwargs['name']))
 
     def _get_ancestral_genome_by_taxon(self, tax_node):
 

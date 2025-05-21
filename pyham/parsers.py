@@ -1,10 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from builtins import str
-from future import standard_library
-standard_library.install_aliases()
 from . import abstractgene
 import logging
 logger = logging.getLogger(__name__)
@@ -217,7 +210,7 @@ class OrthoXMLParser(object):
                         ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
 
                     hog.set_genome(ancestral_genome)
-                    ancestral_genome.taxon.genome.add_gene(hog)
+                    ancestral_genome.add_gene(hog)
 
                     # get all child clustered by dup if any
                     child_by_duplication = defaultdict(list)
@@ -229,8 +222,7 @@ class OrthoXMLParser(object):
                     for duplication, children in child_by_duplication.items():
 
                         # add MRCA hog if its missing
-                        if duplication.MRCA != hog.genome:
-
+                        if duplication.MRCA != hog.genome and self.ham_object.taxonomy.is_child_recursive(duplication.MRCA.taxon, hog.genome.taxon):
                             # create the MRCA hog
                             mrcahog = abstractgene.HOG(id=hog.hog_id)
                             mrcahog.set_genome(duplication.MRCA)
@@ -254,6 +246,7 @@ class OrthoXMLParser(object):
 
                         # Otherwise simply add missing taxa between hog and duplicated child
                         else:
+                            duplication.MRCA = self.ham_object._get_ancestral_genome_by_taxon(hog.genome.taxon)
                             duplication.set_parent(hog)
                             for child_direct in children:
                                 change = self.ham_object.taxonomy.get_path_up(child_direct.genome.taxon, hog.genome.taxon)

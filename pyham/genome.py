@@ -1,17 +1,9 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from builtins import super
-from builtins import object
-from future import standard_library
-standard_library.install_aliases()
 import ete3
-import abc, six
+import abc
 
 
-@six.add_metaclass(abc.ABCMeta)
-class Genome(object):
+
+class Genome(metaclass=abc.ABCMeta):
     """  
     Genome is an abstract class representing extant or ancestral genomes. An Genome is defined by a unique taxon (node)
     in the Taxonomy.tree.

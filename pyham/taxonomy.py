@@ -1,15 +1,8 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from __future__ import print_function
-from __future__ import division
-from builtins import str
-from future import standard_library
-standard_library.install_aliases()
 import ete3
 import logging
 from .genome import ExtantGenome, AncestralGenome, Genome
-from six import BytesIO
 from ete3 import Phyloxml
+from io import BytesIO
 import re
 
 
@@ -321,7 +314,7 @@ class Taxonomy(object):
             raise KeyError("Leaves names are not unique ! Leaves founded: {}".format(int_names))
 
         # Check for internal names
-        if len(set(int_names)) != len(set(int_names)):
+        if len(int_names) != len(set(int_names)):
             raise KeyError("Internal Names are not unique. Internal names founded: {}. If you specify use_internal_name=False, please report the bug to us.".format(int_names))
 
     def _add_depth(self, node, depth=0):
