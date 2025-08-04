@@ -19,10 +19,10 @@ def create_tree_from_newick(tree: Union[str, PathLike], tree_format: Optional[st
         tree = tree.strip()
         if not tree.endswith(';'):
             tree += ';'
-        tree = Tree(tree, parser=1, quoted_node_names=quoted_node_names)
+        tree = Tree(tree, parser=1) #, quoted_node_names=quoted_node_names)
     elif tree_format == 'newick':
         # If tree is a path, read the newick file
-        tree = Tree(str(tree), parser=1, quoted_node_names=quoted_node_names)
+        tree = Tree(str(tree), parser=1) #, quoted_node_names=quoted_node_names)
     else:
         raise ValueError("tree_format must be 'newick' or 'newick_string'")
 
@@ -47,9 +47,9 @@ def create_tree_from_phyloxml(tree: Union[str, PathLike], phyloxml_leaf_name_tag
 
     def set_leaf_name(node):
         attr = phyloxml_leaf_name_tag.split('_', 1)[-1]
-        if not hasattr(node, attr) or len(getattr(node, attr)) == 0:
+        node.name = node.props.get(attr, None)
+        if node.name is None:
             raise KeyError(f"Node {node} in the phyloxml file {tree} has no {phyloxml_leaf_name_tag} attribute to populate the species name")
-        node.name = getattr(node, attr)
 
     def set_internal_name(node):
         if not use_internal_name:
@@ -57,9 +57,9 @@ def create_tree_from_phyloxml(tree: Union[str, PathLike], phyloxml_leaf_name_tag
             node.name = '/'.join(child.name for child in node.get_children())
         else:
             attr = phyloxml_internal_name_tag.split('_', 1)[-1]
-            if not hasattr(node, attr) or len(getattr(node, attr)) == 0:
+            node.name = node.props.get(attr, None)
+            if node.name is None:
                 raise KeyError(f"Node {node} in the phyloxml file {tree} has no {phyloxml_internal_name_tag} attribute to populate the species name")
-            node.name = getattr(node, attr)
 
     for node in factory.root.traverse("postorder"):
         # assign name to extant species
@@ -152,7 +152,7 @@ class Taxonomy(object):
 
     @property
     def tree_str(self):
-        return self.tree.write(format=8, format_root_node=True)
+        return self.tree.write(parser=8, format_root_node=True)
 
     def add_genome_to_node(self, node, genome):
         """  add the given genome to the node attribute "genome".
@@ -235,7 +235,7 @@ class Taxonomy(object):
         int_names = []
 
         for node in self.tree.traverse():
-            if node.name is None:
+            if node.name is None and not node.is_root:
                 raise KeyError("{} node has no name attribute".format(node))
             if node.is_leaf:
                 leaf_names.append(node.name)
@@ -260,6 +260,5 @@ class Taxonomy(object):
 
 
 def build_taxon_node(id, name=None, **kwargs):
-    node = Tree(name=name)
-    node.add_prop("taxon_id", id)
+    node = Tree({"name": name, "taxon_id": id})
     return node

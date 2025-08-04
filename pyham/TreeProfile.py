@@ -1,6 +1,7 @@
 from .abstractgene import HOG
 import logging
 import json
+from ete4 import Tree
 
 logger = logging.getLogger(__name__)
 
@@ -131,7 +132,7 @@ class TreeProfile(object):
             TreeMap
         """
 
-        def _add_annot(node, nbr, dupl, lost, gain, retained, duplication, nbr_ev):
+        def _add_annot(node: Tree, nbr, dupl, lost, gain, retained, duplication, nbr_ev):
             node.add_prop("nbr_genes", nbr)
             node.add_prop("nbr_events", nbr_ev)
             node.add_prop("dupl", dupl)
@@ -265,9 +266,9 @@ class TreeProfile(object):
             ts.legend.add_face(BarChartFace(_values_legend, deviations=None, width=w_legend, height=25, colors=_color_scheme, labels=_label_legend, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0)
             ts.legend_position = 3
 
-        self.treemap.render(output,tree_style=ts)
+        self.treemap.render(output, tree_style=ts)
 
-    def export_as_html(self, output ):
+    def export_as_html(self, output):
 
         """
         Method to export the tree profile object as an interactive tool embedded into a html file.
@@ -280,9 +281,9 @@ class TreeProfile(object):
         def visit_custom(node, data):
 
             current = {
-                "name": node.name,
-                "numberGenes": node.nbr_genes,
-                "numberEvents": node.nbr_events,
+                "name": node.props['name'],
+                "numberGenes": node.props['nbr_genes'],
+                "numberEvents": node.props['nbr_events'],
 
                 "length": 0.01,
                 "collapsed": "false",
@@ -299,11 +300,11 @@ class TreeProfile(object):
                 current['evolutionaryEvents'] = False
 
             else:
-                current['evolutionaryEvents']["retained"] = node.retained
-                current['evolutionaryEvents']["duplicated"] = node.dupl
-                current['evolutionaryEvents']["gained"] = node.gain
-                current['evolutionaryEvents']["lost"] = node.lost
-                current['evolutionaryEvents']["duplication"] = node.duplication
+                current['evolutionaryEvents']["retained"] = node.props['retained']
+                current['evolutionaryEvents']["duplicated"] = node.props['dupl']
+                current['evolutionaryEvents']["gained"] = node.props['gain']
+                current['evolutionaryEvents']["lost"] = node.props['lost']
+                current['evolutionaryEvents']["duplication"] = node.props['duplication']
 
             if not node.is_leaf:
                 current['children'] = []

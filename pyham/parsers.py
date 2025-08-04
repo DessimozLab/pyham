@@ -276,7 +276,7 @@ class OrthoXMLParser(object):
                     # for all children of this hog find missing level
                     for child in hog.children:
                         child_genome = child.genome
-                        if hog_genome.taxon.props['depth'] != child_genome.taxon.props['depth'] - 1:
+                        if hog_genome.taxon.props["depth"] != child_genome.taxon.props["depth"] - 1:
                             change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
                     # and add them if required
@@ -410,7 +410,7 @@ class PhyloXMLToETE:
 
         if tag == "clade":
             dist = attrib.get("branch_length", None)
-            node = self.node_factory(dist=dist)
+            node = self.node_factory({"dist": dist})
             if len(self.stack) > 0:
                 self.stack[-1].add_child(node)
             else:
@@ -439,13 +439,13 @@ class PhyloXMLToETE:
                 node = self.stack[-1]
                 sci_name = self.taxonomy_data.get('scientific_name')
                 if sci_name:
-                    node.add_feature('scientific_name', sci_name)
+                    node.add_prop('scientific_name', sci_name)
                 taxon_id = self.taxonomy_data.get('id')
                 if taxon_id:
-                    node.add_feature('taxon_id', taxon_id)
+                    node.add_prop('taxon_id', taxon_id)
                 code = self.taxonomy_data.get('code')
                 if code:
-                    node.add_feature('code', code)
+                    node.add_prop('code', code)
                 self.in_taxonomy = False
                 self.taxonomy_data = None
 
