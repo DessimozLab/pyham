@@ -642,7 +642,7 @@ class Ham(object):
 
         genome_nodes = set([geno.taxon for geno in genome_set])
 
-        mrca_node = self.taxonomy.tree.common_ancestor(genome_nodes)
+        mrca_node = self.taxonomy.tree.common_ancestor(*genome_nodes)
 
         return self.get_ancestral_genome_by_taxon(mrca_node)
 
@@ -741,7 +741,7 @@ class Ham(object):
 
         """
 
-        mrca = self.taxonomy.tree.common_ancestor({g1.taxon,g2.taxon})
+        mrca = self.taxonomy.tree.common_ancestor(g1.taxon,g2.taxon)
 
         if g1.taxon == mrca:
             return g1, g2
@@ -947,6 +947,6 @@ class Ham(object):
 
         genome_nodes = set([gen.taxon for gen in genome_set])
 
-        mrca_node = self.taxonomy.tree.common_ancestor(genome_nodes)
+        mrca_node = self.taxonomy.tree.common_ancestor(*genome_nodes)
 
         return self._get_ancestral_genome_by_taxon(mrca_node)

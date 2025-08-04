@@ -160,7 +160,8 @@ class OrthoXMLParser(object):
             taxon = build_taxon_node(**attrib)
             self.taxon_stack.append(taxon)
             if len(self.taxon_stack) > 1:
-                self.taxon_stack[-1].add_child(taxon)
+                self.taxon_stack[-2].add_child(child=taxon)
+                logger.debug("Taxon {} added to {}".format(taxon.name, self.taxon_stack[-2].name))
 
     def end(self, tag):
 
@@ -177,7 +178,8 @@ class OrthoXMLParser(object):
             taxonomy = self.taxon_stack.pop()
             if len(self.taxon_stack) == 0:
                 # we have now the full taxonomy tree. Add it to the ham object.
-                self.ham_object.taxonomy = Taxonomy(taxonomy)
+                #self.ham_object.taxonomy = Taxonomy(taxonomy)
+                pass
 
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:

@@ -4,13 +4,15 @@ from pyham import ham
 from pathlib import Path
 import os
 
+
 class AncestralTomatoGenomeContentTest(unittest.TestCase):
 
     def setUp(self):
         nwk_path = os.path.join(os.path.dirname(__file__), './data/tomato.nwk')
         tree_str = utils.get_newick_string(nwk_path, type="nwk")
         orthoxml_path = os.path.join(os.path.dirname(__file__), './data/tom.orthoxml')
-        self.ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml', use_internal_name=True)
+        self.ham_analysis = ham.Ham(tree_file=tree_str, hog_file=orthoxml_path, type_hog_file='orthoxml',
+                                    use_internal_name=True)
 
     def test_ancestral_genome(self):
         anc_genome = self.ham_analysis.get_ancestral_genome_by_name("NODE_29")

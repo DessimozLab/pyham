@@ -1,7 +1,7 @@
 import unittest
 from pyham import utils
 from pyham import ham
-import ete4
+from ete4.parser.newick import NewickError
 import os
 
 
@@ -18,7 +18,7 @@ class HAMTestSetUp(unittest.TestCase):
 
     def setUp(self):
         self.nwk_str_empty = ""
-        self.nwk_str_wrong = "(A,B)x0.4"
+        self.nwk_str_wrong = "(A,B))54"
         nwk_path = os.path.join(os.path.dirname(__file__), './data/simpleEx.nwk')
         self.nwk_str = utils.get_newick_string(nwk_path, type="nwk")
 
@@ -54,10 +54,10 @@ class HAMTestSetUp(unittest.TestCase):
 
     def test_wrong_newick_str(self):
 
-        #with self.assertRaises(ete4.newick.NewickError):
-        #    ham.Ham(self.nwk_str_empty, self.orthoxml_path, type_hog_file='orthoxml')
+        with self.assertRaises(KeyError):
+            ham.Ham(self.nwk_str_empty, self.orthoxml_path, type_hog_file='orthoxml')
 
-        with self.assertRaises(ete4.newick.NewickError):
+        with self.assertRaises(NewickError):
             ham.Ham(self.nwk_str_wrong, self.orthoxml_path, type_hog_file='orthoxml')
 
     def test_phyloxml_tag(self):
