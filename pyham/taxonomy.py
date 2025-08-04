@@ -1,15 +1,13 @@
-import re
 import logging
 import warnings
 import gzip
-from io import BytesIO
 from os import PathLike
 from typing import Union, Optional
 from xml.etree.ElementTree import XMLParser
 from ete3 import Tree
 
 from .genome import ExtantGenome, AncestralGenome, Genome
-from ete3 import Phyloxml
+
 logger = logging.getLogger(__name__)
 
 
@@ -84,7 +82,7 @@ class Taxonomy(object):
         | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
 
     """
-    def __init__(self, tree, **kwargs): #tree_format='newick_string', use_internal_name=False, phyloxml_leaf_name_tag=None, phyloxml_internal_name_tag=None, quoted_node_names=True):
+    def __init__(self, tree, **kwargs):
         """
         Args:
             | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
@@ -129,6 +127,17 @@ class Taxonomy(object):
 
     @classmethod
     def from_newick(cls, tree: Union[str, PathLike], use_internal_name=False, quoted_node_names=True):
+        """  Create a Taxonomy object from a newick file or string.
+
+        Args:
+            | tree (:obj:`str`): Path to the file that contained the taxonomy information, or a newick string.
+            | use_internal_name (:obj:`Boolean`, optional): Specify whether using the given internal node name or use the
+            | concatenatation of the children name. Defaults to False.
+            | quoted_node_names (:obj:'Boolean', optional): Specify whether the newick tree has quoted node names. Defaults to True.
+
+        Returns:
+            obj:`Taxonomy`: Taxonomy object with the ete3 tree.
+        """
         tree_inst = create_tree_from_newick(tree, quoted_node_names=quoted_node_names, use_internal_name=use_internal_name)
         return cls(tree_inst)
 
