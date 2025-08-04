@@ -17,6 +17,17 @@ class AncestralTomatoGenomeContentTest(unittest.TestCase):
         self.assertIsNotNone(anc_genome, "Ancestral genome should not be None")
         self.assertEqual(len(anc_genome.genes), 1, "Ancestral genome should have genes")
 
+    def test_fetch_subhog_by_id(self):
+        query_hog_id = "HOG:0027790.3c.9ba.5i.8ai_69"
+        subhog = self.ham_analysis.get_hog_by_id(query_hog_id)
+        self.assertEqual(subhog.hog_id, query_hog_id, "SubHOG should match the queried ID")
+
+    def test_fetch_roothog_by_id(self):
+        query_hog_id = "HOG:0027790_45"
+        root_hog = self.ham_analysis.get_hog_by_id(query_hog_id)
+        self.assertEqual(root_hog.hog_id, query_hog_id, "Root HOG should match the queried ID")
+        self.assertIsNone(root_hog.parent, "Root HOG should not have a parent")
+
 
 class AncestralMetazoaGenomeContentTest(unittest.TestCase):
     def setUp(self):

@@ -1,4 +1,5 @@
 from . import abstractgene
+from .taxonomy import build_taxon_node, Taxonomy
 import logging
 logger = logging.getLogger(__name__)
 from collections import defaultdict
@@ -13,6 +14,7 @@ class OrthoXMLParser(object):
      
     The parse goes through the whole XML and create on the fly the required Ham objects:
         - In the Xref/header, the parser creates the ExtantGenome and Gene objects.
+        - the taxonomy group and its taxon elements are parsed to create the taxonomy tree, if no species tree is provided.
         - In the Groups section, it creates the HOGs with their hierarchy (parent/children links) and their related
         AncestralGenomes.
     
@@ -57,6 +59,7 @@ class OrthoXMLParser(object):
         self.cpt = 0
         self.hog_stack = []
         self.paralog_stack = []
+        self.taxon_stack = []
         self.current_species = None
         self.in_paralogGroup = None
         self.paralogyNode = None
@@ -87,7 +90,6 @@ class OrthoXMLParser(object):
         self.hog_stack.append(hog)
 
     def start(self, tag, attrib):
-
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = self.ham_object._get_extant_genome_by_name(**attrib)
 
@@ -154,6 +156,12 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}score" and not self.skip_this_hog:
             self.hog_stack[-1].score(attrib['id'], float(attrib['value']))
 
+        elif tag == "{http://orthoXML.org/2011/}taxon":
+            taxon = build_taxon_node(**attrib)
+            self.taxon_stack.append(taxon)
+            if len(self.taxon_stack) > 1:
+                self.taxon_stack[-1].add_child(taxon)
+
     def end(self, tag):
 
         if tag == "{http://orthoXML.org/2011/}species":
@@ -164,6 +172,13 @@ class OrthoXMLParser(object):
                 if not hasattr(self, 'sp_pbar'):
                     self.sp_pbar = tqdm(desc='Parsing Species')
                 self.sp_pbar.update()
+
+        elif tag == "{http://orthoXML.org/2011/}taxon":
+            taxonomy = self.taxon_stack.pop()
+            if len(self.taxon_stack) == 0:
+                # we have now the full taxonomy tree. Add it to the ham object.
+                self.ham_object.taxonomy = Taxonomy(taxonomy)
+
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
 
@@ -373,3 +388,79 @@ class FilterOrthoXMLParser(object):
     def close(self):
         # Nothing special to do here
         return
+
+
+
+
+class PhyloXMLToETE:
+    def __init__(self, node_factory=None):
+        self.root = None
+        self.stack = []
+        self.current_tag = None
+        self.buffer = ''
+        self.in_taxonomy = False
+        self.taxonomy_data = None
+        self.in_clade = False
+        from .taxonomy import Tree
+        self.node_factory = node_factory if node_factory else Tree
+
+    def start(self, tag, attrib):
+        tag = self._strip_ns(tag)
+        self.current_tag = tag
+
+        if tag == "clade":
+            dist = attrib.get("branch_length", None)
+            node = self.node_factory(dist=dist)
+            if len(self.stack) > 0:
+                self.stack[-1].add_child(node)
+            else:
+                self.root = node
+            self.stack.append(node)
+
+        elif tag == "taxonomy":
+            self.in_taxonomy = True
+            self.taxonomy_data = {}
+
+    def end(self, tag):
+        tag = self._strip_ns(tag)
+
+        if tag == "name" and not self.in_taxonomy:
+            if len(self.stack) == 0:
+                self.buffer = ""
+                return
+            # name of clade. -> set the name of the last node in the stack
+            self.stack[-1].name = self.buffer.strip()
+
+        elif self.in_taxonomy:
+            if tag in ('scientific_name', 'id', 'code'):
+                self.taxonomy_data[tag] = self.buffer.strip()
+
+            elif tag == "taxonomy":
+                node = self.stack[-1]
+                sci_name = self.taxonomy_data.get('scientific_name')
+                if sci_name:
+                    node.add_feature('scientific_name', sci_name)
+                taxon_id = self.taxonomy_data.get('id')
+                if taxon_id:
+                    node.add_feature('taxon_id', taxon_id)
+                code = self.taxonomy_data.get('code')
+                if code:
+                    node.add_feature('code', code)
+                self.in_taxonomy = False
+                self.taxonomy_data = None
+
+        elif tag == "clade":
+            self.stack.pop()
+
+        self.buffer = ""
+        self.current_tag = None
+
+    def data(self, data):
+        if self.current_tag:
+            self.buffer += data
+
+    def close(self):
+        return self.root
+
+    def _strip_ns(self, tag):
+        return tag.split('}', 1)[-1] if '}' in tag else tag

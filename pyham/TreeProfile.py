@@ -46,16 +46,7 @@ class TreeProfile(object):
         """
 
         # copy the required taxonomy using query hog as root level
-        if self.ham.taxonomy.tree_format == 'phyloxml':
-            # Rebuild full tree from input data and annotate it with name if required
-            tree_copy = self.ham.taxonomy._build_tree(self.ham.taxonomy.tree_file, self.ham.taxonomy.tree_format)
-            self.ham.taxonomy._generate_internal_node_name(tree_copy)
-
-            # Prune at root hog level
-            hog_taxon_in_copy = tree_copy.search_nodes(name=hog.genome.taxon.name)[0]
-            treeMap = hog_taxon_in_copy.detach()
-        else:
-            treeMap = hog.genome.taxon.copy(method="newick")
+        treeMap = hog.genome.taxon.copy()
 
 
         # create a dictionary that map node with related hogs/genes
@@ -150,13 +141,7 @@ class TreeProfile(object):
             node.add_feature("duplication", duplication)
 
 
-        if self.ham.taxonomy.tree_format == 'phyloxml':
-            # Rebuild full tree from input data and annotate it with name if required
-            treeMap = self.ham.taxonomy._build_tree(self.ham.taxonomy.tree_file, self.ham.taxonomy.tree_format)
-            self.ham.taxonomy._generate_internal_node_name(treeMap)
-        else:
-            treeMap = self.ham.taxonomy.tree.copy(method="newick")
-
+        treeMap = self.ham.taxonomy.tree.copy()
         for node in treeMap.traverse():
             if node.is_root():
                 node_genome = self.ham.get_ancestral_genome_by_name(node.name)

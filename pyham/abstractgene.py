@@ -493,7 +493,7 @@ class DuplicationNode(object):
             
     """
 
-    def __init__(self,ham_object, id=None):
+    def __init__(self, ham_object, id=None):
         self.ham = ham_object
         self.MRCA = None
         self.children = []
