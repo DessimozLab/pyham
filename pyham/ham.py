@@ -545,7 +545,7 @@ class Ham(object):
 
         """
 
-        return [leaf.genome for leaf in self.taxonomy.leaves]
+        return [leaf.props['genome'] for leaf in self.taxonomy.leaves]
 
     def get_extant_genome_by_name(self, name):
 
@@ -562,8 +562,8 @@ class Ham(object):
 
         for taxon in self.taxonomy.leaves:
             if taxon.name == name:
-                if "genome" in taxon.features:
-                    return taxon.genome
+                if "genome" in taxon.props:
+                    return taxon.props['genome']
 
         raise KeyError('No extant genomes match the query name: {}'.format(name))
 
@@ -578,7 +578,7 @@ class Ham(object):
                 a list of :obj:`pyham.genome.AncestralGenome`.
 
         """
-        return [internal_node.genome for internal_node in self.taxonomy.internal_nodes]
+        return [internal_node.props['genome'] for internal_node in self.taxonomy.internal_nodes]
 
     def get_ancestral_genome_by_taxon(self, taxon):
 
@@ -593,8 +593,8 @@ class Ham(object):
 
         """
 
-        if taxon in self.taxonomy.internal_nodes and "genome" in taxon.features:
-                return taxon.genome
+        if taxon in self.taxonomy.internal_nodes and "genome" in taxon.props:
+                return taxon.props['genome']
 
         raise KeyError("Taxon {} doesn't have a genome attached to it.".format(taxon))
 
@@ -613,8 +613,8 @@ class Ham(object):
 
         for taxon in self.taxonomy.internal_nodes:
             if taxon.name == name:
-                if "genome" in taxon.features:
-                    return taxon.genome
+                if "genome" in taxon.props:
+                    return taxon.props['genome']
 
         raise KeyError('No ancestral genomes match the query name: {}'.format(name))
 
@@ -642,7 +642,7 @@ class Ham(object):
 
         genome_nodes = set([geno.taxon for geno in genome_set])
 
-        mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
+        mrca_node = self.taxonomy.tree.common_ancestor(genome_nodes)
 
         return self.get_ancestral_genome_by_taxon(mrca_node)
 
@@ -741,7 +741,7 @@ class Ham(object):
 
         """
 
-        mrca = self.taxonomy.tree.get_common_ancestor({g1.taxon,g2.taxon})
+        mrca = self.taxonomy.tree.common_ancestor({g1.taxon,g2.taxon})
 
         if g1.taxon == mrca:
             return g1, g2
@@ -832,8 +832,8 @@ class Ham(object):
 
             node = nodes_found[0]
 
-            if "genome" in node.features:
-                return node.genome
+            if "genome" in node.props:
+                return node.props['genome']
 
             else:
                 ancestral_genome = AncestralGenome()
@@ -873,8 +873,8 @@ class Ham(object):
                 raise TypeError("species name '{}' maps to an ancestral name, not a leaf of the taxonomy"
                                 .format(kwargs["name"]))
 
-            if "genome" in node.features:
-                return node.genome
+            if "genome" in node.props:
+                return node.props['genome']
 
             else:
                 extant_genome = ExtantGenome(**kwargs)
@@ -897,8 +897,8 @@ class Ham(object):
 
         """
 
-        if "genome" in tax_node.features:
-            return tax_node.genome
+        if "genome" in tax_node.props:
+            return tax_node.props['genome']
 
         else:
             ancestral_genome = AncestralGenome()
@@ -947,6 +947,6 @@ class Ham(object):
 
         genome_nodes = set([gen.taxon for gen in genome_set])
 
-        mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
+        mrca_node = self.taxonomy.tree.common_ancestor(genome_nodes)
 
         return self._get_ancestral_genome_by_taxon(mrca_node)

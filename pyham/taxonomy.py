@@ -4,7 +4,7 @@ import gzip
 from os import PathLike
 from typing import Union, Optional
 from xml.etree.ElementTree import XMLParser
-from ete3 import Tree
+from ete4 import Tree
 
 from .genome import ExtantGenome, AncestralGenome, Genome
 
@@ -19,17 +19,17 @@ def create_tree_from_newick(tree: Union[str, PathLike], tree_format: Optional[st
         tree = tree.strip()
         if not tree.endswith(';'):
             tree += ';'
-        tree = Tree(tree, format=1, quoted_node_names=quoted_node_names)
+        tree = Tree(tree, parser=1, quoted_node_names=quoted_node_names)
     elif tree_format == 'newick':
         # If tree is a path, read the newick file
-        tree = Tree(str(tree), format=1, quoted_node_names=quoted_node_names)
+        tree = Tree(str(tree), parser=1, quoted_node_names=quoted_node_names)
     else:
         raise ValueError("tree_format must be 'newick' or 'newick_string'")
 
     if not use_internal_name:
         # Generate internal node names by concatenating children names
         for node in tree.traverse("postorder"):
-            if not node.is_leaf():
+            if not node.is_leaf:
                 node.name = '/'.join(child.name for child in node.get_children())
 
     return tree
@@ -63,7 +63,7 @@ def create_tree_from_phyloxml(tree: Union[str, PathLike], phyloxml_leaf_name_tag
 
     for node in factory.root.traverse("postorder"):
         # assign name to extant species
-        if node.is_leaf():
+        if node.is_leaf:
             set_leaf_name(node)
         else:
             set_internal_name(node)
@@ -73,13 +73,13 @@ def create_tree_from_phyloxml(tree: Union[str, PathLike], phyloxml_leaf_name_tag
 
 class Taxonomy(object):
     """
-    Taxonomy is a class to wrap the ete3 Etree used as reference species tree by Ham.
+    Taxonomy is a class to wrap the ete4 tree used as reference species tree by Ham.
     
     Attributes:
-        | tree_str (:obj:`str`): newick tree string used to build the ete3 Etree object.
-        | tree (:obj:`ete3 Etree`): species ete3 Etree tree.
-        | internal_nodes (:obj:`set`): Set of Etree node that contained a AncestralGenome.
-        | leaves (:obj:`set`): Set of Etree node that contained a ExtantGenome.
+        | tree_str (:obj:`str`): newick tree string used to build the ete4 Tree object.
+        | tree (:obj:`ete4 Tree`): species ete4 Tree tree.
+        | internal_nodes (:obj:`set`): Set of Tree node that contained a AncestralGenome.
+        | leaves (:obj:`set`): Set of Tree node that contained a ExtantGenome.
 
     """
     def __init__(self, tree, **kwargs):
@@ -119,7 +119,7 @@ class Taxonomy(object):
         self._check_consistency_names()
 
         # add depth to each node of the tree.
-        self._add_depth(self.tree.get_tree_root(), depth=0)
+        self._add_depth(self.tree.root, depth=0)
 
         # tracker for Genome created.
         self.internal_nodes = set()
@@ -163,7 +163,7 @@ class Taxonomy(object):
 
         """
 
-        node.add_feature("genome", genome)
+        node.add_prop("genome", genome)
         genome.set_taxon(node)
 
         if isinstance(genome, ExtantGenome):
@@ -190,7 +190,7 @@ class Taxonomy(object):
 
         intermediate_level = []
 
-        for tax in lowest_node.iter_ancestors():
+        for tax in lowest_node.ancestors():
             if tax == ancestor_node:
                 break
             intermediate_level.append(tax)
@@ -207,7 +207,7 @@ class Taxonomy(object):
             Returns:
                 :obj:`bool` True if the node is a child of the ancestor node.
         """
-        for tax in node.iter_ancestors():
+        for tax in node.ancestors():
             if tax == ancestor_node:
                 return True
         return False
@@ -222,7 +222,7 @@ class Taxonomy(object):
                  :obj:`str` of the subtree.
          """
 
-        return node.write(format=8, format_root_node=True)
+        return node.write(parser=8, format_root_node=True)
 
     def _check_consistency_names(self):
 
@@ -237,7 +237,7 @@ class Taxonomy(object):
         for node in self.tree.traverse():
             if node.name is None:
                 raise KeyError("{} node has no name attribute".format(node))
-            if node.is_leaf():
+            if node.is_leaf:
                 leaf_names.append(node.name)
             else:
                 int_names.append(node.name)
@@ -250,20 +250,16 @@ class Taxonomy(object):
         if len(int_names) != len(set(int_names)):
             raise KeyError("Internal Names are not unique. Internal names founded: {}. If you specify use_internal_name=False, please report the bug to us.".format(int_names))
 
-    def _add_depth(self, node, depth=0):
+    def _add_depth(self, node:Tree, depth=0):
         """  
         Recursive function to add depth to each node of a Etree.
         """
-        node.add_feature("depth", depth)
+        node.add_prop("depth", depth)
         for n in node.get_children():
             self._add_depth(n, depth + 1)
 
 
-
-
 def build_taxon_node(id, name=None, **kwargs):
     node = Tree(name=name)
-    node.add_feature("taxon_id", id)
+    node.add_prop("taxon_id", id)
     return node
-
-

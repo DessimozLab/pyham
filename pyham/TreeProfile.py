@@ -60,7 +60,7 @@ class TreeProfile(object):
                 levelGroups[subhog.genome.name].append(subhog)
 
         # add empty extant genome to levelGroups
-        for extantGenome in treeMap.get_leaves():
+        for extantGenome in treeMap.leaves():
             levelGroups[extantGenome.name] = []
 
         # add genes to related extant genome in levelGroups
@@ -68,10 +68,10 @@ class TreeProfile(object):
             levelGroups[species.name] = genes
 
         for lvl in treeMap.traverse():
-            lvl.add_feature("nbr_genes", len(levelGroups[lvl.name]))
-            lvl.add_feature("gain", None)
+            lvl.add_prop("nbr_genes", len(levelGroups[lvl.name]))
+            lvl.add_prop("gain", None)
 
-            if not lvl.is_root():
+            if not lvl.is_root:
                 cpt_dupl = 0
                 cpt_ident = 0
                 set_dup_parent = set()
@@ -106,11 +106,11 @@ class TreeProfile(object):
                 cpt_duplication = None
                 nbr_ev = None
 
-            lvl.add_feature("dupl", cpt_dupl)
-            lvl.add_feature("lost", cpt_lost)
-            lvl.add_feature("retained", cpt_ident)
-            lvl.add_feature("nbr_events", nbr_ev)
-            lvl.add_feature("duplication", cpt_duplication)
+            lvl.add_prop("dupl", cpt_dupl)
+            lvl.add_prop("lost", cpt_lost)
+            lvl.add_prop("retained", cpt_ident)
+            lvl.add_prop("nbr_events", nbr_ev)
+            lvl.add_prop("duplication", cpt_duplication)
 
         return treeMap
 
@@ -132,25 +132,25 @@ class TreeProfile(object):
         """
 
         def _add_annot(node, nbr, dupl, lost, gain, retained, duplication, nbr_ev):
-            node.add_feature("nbr_genes", nbr)
-            node.add_feature("nbr_events", nbr_ev)
-            node.add_feature("dupl", dupl)
-            node.add_feature("lost", lost)
-            node.add_feature("gain", gain)
-            node.add_feature("retained", retained)
-            node.add_feature("duplication", duplication)
+            node.add_prop("nbr_genes", nbr)
+            node.add_prop("nbr_events", nbr_ev)
+            node.add_prop("dupl", dupl)
+            node.add_prop("lost", lost)
+            node.add_prop("gain", gain)
+            node.add_prop("retained", retained)
+            node.add_prop("duplication", duplication)
 
 
         treeMap = self.ham.taxonomy.tree.copy()
         for node in treeMap.traverse():
-            if node.is_root():
+            if node.is_root:
                 node_genome = self.ham.get_ancestral_genome_by_name(node.name)
                 _add_annot(node, len(node_genome.genes), None, None, None, None, None, None)
 
             else:
                 node_genome_up = self.ham._get_ancestral_genome_by_name(node.up.name)
 
-                if node.is_leaf():
+                if node.is_leaf:
                     node_genome = self.ham._get_extant_genome_by_name(name=node.name)
                     nbr = node_genome.get_number_genes(singleton=True)
 
@@ -183,7 +183,7 @@ class TreeProfile(object):
             | display_internal_histogram (:obj:`Boolean`, optional): Display internal node as histogram or raw text with numbers. Defaults to True.
         """
 
-        from ete3 import TreeStyle, TextFace, NodeStyle, BarChartFace
+        from ete4 import TreeStyle, TextFace, NodeStyle, BarChartFace
 
         # maximum number of genes per node in this treeMap
         max_genes = max([d for d in self.treemap.traverse()], key=lambda x:x.nbr_genes).nbr_genes
@@ -225,7 +225,7 @@ class TreeProfile(object):
                 if node.lost is not None:
                     _add_face("#Lost", node.lost, cnum=cAttr, pos=posAtt)
 
-            if node.is_leaf():
+            if node.is_leaf:
                 if display_internal_histogram:
                     if self.hog is None:
                         values = [node.nbr_genes,node.retained,node.dupl,node.gain,node.lost]
@@ -240,7 +240,7 @@ class TreeProfile(object):
             else:
 
                 if display_internal_histogram:
-                    if node.is_root():
+                    if node.is_root:
                         node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=[str(node.nbr_genes)], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
                     else:
                         if self.hog is None:
@@ -295,7 +295,7 @@ class TreeProfile(object):
                 }
             }
 
-            if node.is_root():
+            if node.is_root:
                 current['evolutionaryEvents'] = False
 
             else:
@@ -305,7 +305,7 @@ class TreeProfile(object):
                 current['evolutionaryEvents']["lost"] = node.lost
                 current['evolutionaryEvents']["duplication"] = node.duplication
 
-            if not node.is_leaf():
+            if not node.is_leaf:
                 current['children'] = []
 
             for child in node.children:

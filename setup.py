@@ -5,7 +5,7 @@ from io import open
 
 
 name = 'pyham'
-requirements = ['ete3 >= 3.1', 'six', 'lxml', 'future', 'requests', 'tqdm']
+requirements = ['ete4 >= 4.3', 'lxml','requests', 'tqdm']
 if sys.version_info > (3, 3):
     # ete3 uses some py3 incompatible types if scipy is not present
     requirements.extend(['scipy'])
@@ -51,6 +51,8 @@ setup(
          'Programming Language :: Python :: 3.9',
          'Programming Language :: Python :: 3.10',
          'Programming Language :: Python :: 3.11',
+         'Programming Language :: Python :: 3.12',
+         'Programming Language :: Python :: 3.13',
          ],
 
     packages=find_packages(exclude=[]),

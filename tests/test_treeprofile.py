@@ -57,7 +57,8 @@ class TreeProfileTest(unittest.TestCase):
 
             for lvl in tp_h.treemap.traverse():
                 if lvl.name in exp.keys():
-                    observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.lost]
+                    observed_level = [lvl.props['nbr_genes'], lvl.props['retained'], lvl.props['dupl'],
+                                      lvl.props['lost']]
                     self.assertListEqual(exp[lvl.name], observed_level)
 
     def test_tp_hog_at_level(self):
@@ -74,21 +75,25 @@ class TreeProfileTest(unittest.TestCase):
                 exp = self.expected_level_3
 
             for lvl in tp_h.treemap.traverse():
-                if lvl.name in exp.keys() and not lvl.is_root():
-                    observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.lost]
+                if lvl.name in exp.keys() and not lvl.is_root:
+                    observed_level = [lvl.props['nbr_genes'], lvl.props['retained'], lvl.props['dupl'],
+                                      lvl.props['lost']]
                     self.assertListEqual(exp[lvl.name], observed_level)
 
     def test_tp_full(self):
         tp = TreeProfile(self.ham_analysis)
         for lvl in tp.treemap.traverse():
             if lvl.name in self.exp_full.keys():
-                observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.gain, lvl.lost]
+                observed_level = [lvl.props['nbr_genes'], lvl.props['retained'], lvl.props['dupl'], lvl.props['gain'],
+                                  lvl.props['lost']]
                 self.assertListEqual(self.exp_full[lvl.name], observed_level)
 
         tp_nn = TreeProfile(self.ham_analysis_no_name)
         for lvl in tp_nn.treemap.traverse():
             if lvl.name in self.exp_full_nn.keys():
-                observed_level = [lvl.nbr_genes, lvl.retained, lvl.dupl, lvl.gain, lvl.lost]
+                observed_level = [lvl.props['nbr_genes'], lvl.props['retained'], lvl.props['dupl'], lvl.props['gain'],
+                                  lvl.props['lost']]
+
                 self.assertListEqual(self.exp_full_nn[lvl.name], observed_level)
 
 
