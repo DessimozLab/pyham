@@ -1,4 +1,5 @@
 from . import abstractgene
+from .genome import ExtantGenome
 from .taxonomy import build_taxon_node, Taxonomy
 import logging
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ class OrthoXMLParser(object):
         skip_this_hog (:obj:`Boolean`): Boolean to skip the current hog or not (used when filtering option is set).     
     """
 
-    def __init__(self, ham_object, filterObject=None, with_progress=False):
+    def __init__(self, ham_object, taxonomy=None, filterObject=None, with_progress=False):
 
         """
         Args:
@@ -46,13 +47,13 @@ class OrthoXMLParser(object):
             with_progress (:bool:, optional): Whether to display a tqdm progress bar whilst parsing.
             Defaults to None.
         """
-
         self.ham_object = ham_object
         self.filterObj = filterObject
+        self.taxonomy = ham_object.taxonomy
 
         # usefull information
         self.extant_gene_map = {}
-        self.external_id_mapper = {}
+        self.external_id_mapper = defaultdict(list)
         self.toplevel_hogs = {}
 
         # On the fly variable
@@ -64,13 +65,13 @@ class OrthoXMLParser(object):
         self.in_paralogGroup = None
         self.paralogyNode = None
         self.skip_this_hog = False
+        self._genomes_to_add = []
 
         # save progress bar option
         self.with_progress = with_progress
 
     def _build_gene(self, attrib):
         gene = abstractgene.Gene(**attrib)
-        gene.set_genome(self.current_species)
         self.current_species.add_gene(gene)
         self.extant_gene_map[gene.unique_id] = gene
         for type, Id in attrib.items():
@@ -78,7 +79,6 @@ class OrthoXMLParser(object):
                 self.external_id_mapper.setdefault(Id, []).append(gene.unique_id)
 
     def _build_hog(self, attrib):
-
         hog = abstractgene.HOG(arose_by_duplication=False, **attrib)
 
         if self.in_paralogGroup == len(self.hog_stack):
@@ -86,23 +86,69 @@ class OrthoXMLParser(object):
 
         if len(self.hog_stack) > 0:
             self.hog_stack[-1].add_child(hog)
-
         self.hog_stack.append(hog)
+
+    def _update_progress_bar(self, tag):
+        if tag == "{http://orthoXML.org/2011/}species":
+            if not hasattr(self, 'sp_pbar'):
+                self.sp_pbar = tqdm(desc='Parsing Species')
+            self.sp_pbar.update()
+        elif tag == "{http://orthoXML.org/2011/}orthologGroup":
+            if not hasattr(self, 'hog_pbar'):
+                if hasattr(self, 'sp_pbar'):
+                    self.sp_pbar.close()
+                    logger.info("Parsing Species completed.")
+                    delattr(self, 'sp_pbar')
+                self.hog_pbar = tqdm(desc='Parsing HOGs')
+            self.hog_pbar.update()
+        elif tag == "{http://orthoXML.org/2011/}groups":
+            if hasattr(self, 'hog_pbar'):
+                self.hog_pbar.close()
+                delattr(self, 'hog_pbar')
+            logger.info("Parsing completed.")
+
+    def _assign_ancestral_genome(self, hog):
+        """This method determines the ancestral genome for a HOG based on its children."""
+        child_genomes = [child.genome for child in hog.children]
+        tax_node = None
+        if hog.taxon_id is not None:
+            # If the HOG has a taxon_id, we can directly assign the ancestral genome based on the taxon.
+            tax_nodes = list(self.taxonomy.nodes_by_attr(taxon_id=hog.taxon_id))
+            if len(tax_nodes) == 1:
+                tax_node = tax_nodes[0]
+                if len(set(child_genomes)) == 1 and child_genomes[0].taxon == tax_node:
+                    raise abstractgene.SameLevelHOGError(f"HOG '{hog.hog_id}' at {tax_node.name} has child at same level: {hog.children[0]}.")
+        # if not, let's try with the children genomes
+        if tax_node is None:
+            if len(set(child_genomes)) == 1:
+                try:
+                    tax_range = hog['TaxRange']
+                    if hog['TaxRange'] == hog.children[0].genome.name:
+                        raise abstractgene.SameLevelHOGError(f"HOG '{hog.hog_id}' at {tax_range} has child at same level: {hog.children[0]}.")
+                except (KeyError, AttributeError):
+                    pass
+                tax_node = child_genomes[0].taxon.up
+            else:
+                tax_node = self.taxonomy.get_mrca_taxnode(*(g.taxon for g in child_genomes))
+        genome = self.taxonomy.get_genome_from_taxnode(tax_node)
+        genome.add_gene(hog)
+        logger.debug(f"Added {hog} to ancestral genome {genome.name}")
 
     def start(self, tag, attrib):
         if tag == "{http://orthoXML.org/2011/}species":
-            self.current_species = self.ham_object._get_extant_genome_by_name(**attrib)
+            self.current_species = ExtantGenome(**attrib)
+            if self.taxonomy is not None:
+                taxon = self.taxonomy.get_extant_taxa_by_name(self.current_species.name)
+                self.taxonomy.add_genome_to_node(taxon, self.current_species)
+            else:
+                self._genomes_to_add.append(self.current_species)
 
-        elif tag == "{http://orthoXML.org/2011/}gene" and self.filterObj is None:
+        elif tag == "{http://orthoXML.org/2011/}gene" and (self.filterObj is None or attrib["id"] in self.filterObj.geneUniqueId):
             self._build_gene(attrib)
-
-        elif tag == "{http://orthoXML.org/2011/}gene" and self.filterObj is not None:
-            if attrib["id"] in self.filterObj.geneUniqueId:
-                self._build_gene(attrib)
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
             cur_depth = len(self.hog_stack)
-            if len(self.paralog_stack)>0 and self.paralog_stack[-1]['depth'] == cur_depth:
+            if len(self.paralog_stack) > 0 and self.paralog_stack[-1]['depth'] == cur_depth:
                 # we have a directly nested paralog group. use the same DuplicationNode
                 dNode = self.paralog_stack[-1]['node']
             else:
@@ -124,31 +170,19 @@ class OrthoXMLParser(object):
             if self.in_paralogGroup == len(self.hog_stack):
                 self.paralogyNode.add_child(gene)
 
-        elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is False:
-            if "id" in attrib:
+        elif tag == "{http://orthoXML.org/2011/}orthologGroup":
+            if len(self.hog_stack) == 0:
+                # a new roothog
                 if self.with_progress:
-                    if hasattr(self, 'sp_pbar'):
-                        self.sp_pbar.close()
-                        delattr(self, 'sp_pbar')
-                        self.hog_pbar = tqdm(desc='Parsing HOGs')
-                    self.hog_pbar.update()
+                    self._update_progress_bar(tag)
 
-            if len(self.hog_stack) == 0 and self.filterObj is not None:
-
-                if str(attrib["id"]) in self.filterObj.hogsId:
-                    self.skip_this_hog = False
-                    self._build_hog(attrib)
-                else:
+                if self.filterObj is not None and not attrib.get("id", None) in self.filterObj.hogsId:
                     self.skip_this_hog = True
-                    self.hog_stack.append(0)
-
+            # create HOG and add it to the stack (or a dummy value if we skip this hog)
+            if self.skip_this_hog:
+                self.hog_stack.append(0)
             else:
                 self._build_hog(attrib)
-
-
-
-        elif tag == "{http://orthoXML.org/2011/}orthologGroup" and self.skip_this_hog is True:
-            self.hog_stack.append(0)
 
         elif tag == "{http://orthoXML.org/2011/}property" and not self.skip_this_hog:
             self.hog_stack[-1].add_property(attrib["name"], attrib["value"])
@@ -161,26 +195,32 @@ class OrthoXMLParser(object):
             self.taxon_stack.append(taxon)
             if len(self.taxon_stack) > 1:
                 self.taxon_stack[-2].add_child(child=taxon)
-                logger.debug("Taxon {} added to {}".format(taxon.name, self.taxon_stack[-2].name))
+
+        elif tag == "{http://orthoXML.org/2011/}groups":
+            if self.taxonomy is None:
+                raise ValueError("Cannot parse this OrthoXML file without an explicit taxonomy tree. Please provide one.")
 
     def end(self, tag):
 
         if tag == "{http://orthoXML.org/2011/}species":
-            logger.info("Species {} created. ".format(self.current_species.name))
-            self.current_species = None
-
             if self.with_progress:
-                if not hasattr(self, 'sp_pbar'):
-                    self.sp_pbar = tqdm(desc='Parsing Species')
-                self.sp_pbar.update()
+                self._update_progress_bar(tag)
+            logger.info(f"Species {self.current_species.name} created.")
+            self.current_species = None
 
         elif tag == "{http://orthoXML.org/2011/}taxon":
             taxonomy = self.taxon_stack.pop()
             if len(self.taxon_stack) == 0:
-                # we have now the full taxonomy tree. Add it to the ham object.
-                #self.ham_object.taxonomy = Taxonomy(taxonomy)
-                pass
-
+                # we are at the root of the taxonomy tree. if no taxonomy is provided upfront, we create it.
+                if self.taxonomy is None:
+                    self.taxonomy = Taxonomy(taxonomy)
+                    # add all extant genomes to the taxonomy tree
+                    for genome in self._genomes_to_add:
+                        taxon = self.taxonomy.get_extant_taxa_by_name(genome.name)
+                        self.taxonomy.add_genome_to_node(taxon, genome)
+                    logger.info("Taxonomy tree created from OrthoXML taxonomy. All extant genomes added to the tree.")
+                else:
+                    logger.info("OrthoXML taxonomy not used, using provided taxonomy tree instead.")
 
         elif tag == "{http://orthoXML.org/2011/}paralogGroup" and self.skip_this_hog is False:
 
@@ -198,105 +238,94 @@ class OrthoXMLParser(object):
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             # get the latest hog
             hog = self.hog_stack.pop()
-
             if self.skip_this_hog:
                 if len(self.hog_stack) == 0:
                     self.skip_this_hog = False
-            else:
-                try:
-                    # get the ancestral genome related to this hog based on it's children
-                    if len(set([child.genome for child in hog.children])) == 1:
-                        try:
-                            if hog['TaxRange'] == hog.children[0].genome.name:
-                                # remove this hog structure.
-                                for child in hog.children:
-                                    child.parent = hog.parent
-                                hog.parent.children.remove(hog)
-                                hog.parent.children.extend(hog.children)
-                                if hog.arose_by_duplication != False:
-                                    dupl_node = hog.arose_by_duplication
-                                    dupl_node.remove_child(hog)
-                                    for child in hog.children:
-                                        dupl_node.add_child(child)
-                                    self.paralog_stack[-1]['depth'] -= 1
-                                return
-                        except KeyError:
-                            pass
-                        ancestral_genome = self.ham_object._get_ancestral_genome_by_taxon(hog.children[0].genome.taxon.up)
-                    else:
-                        ancestral_genome = self.ham_object._get_ancestral_genome_by_mrca_of_hog_children_genomes(hog)
+                return
 
-                    hog.set_genome(ancestral_genome)
-                    ancestral_genome.add_gene(hog)
-
-                    # get all child clustered by dup if any
-                    child_by_duplication = defaultdict(list)
+            try:
+                # assign the ancestral genome to this hog
+                self._assign_ancestral_genome(hog)
+            except abstractgene.SameLevelHOGError as e:
+                logger.info(str(e))
+                # remove this hog structure.
+                for child in hog.children:
+                    child.parent = hog.parent
+                hog.parent.children.remove(hog)
+                hog.parent.children.extend(hog.children)
+                if hog.arose_by_duplication:
+                    dupl_node = hog.arose_by_duplication
+                    dupl_node.remove_child(hog)
                     for child in hog.children:
-                        if child.arose_by_duplication != False:
-                            child_by_duplication[child.arose_by_duplication].append(child)
+                        dupl_node.add_child(child)
+                return
 
-                    # For each duplication
-                    for duplication, children in child_by_duplication.items():
+            # get all child clustered by dup if any
+            child_by_duplication = defaultdict(list)
+            for child in hog.children:
+                if child.arose_by_duplication != False:
+                    child_by_duplication[child.arose_by_duplication].append(child)
 
-                        # add MRCA hog if its missing
-                        if duplication.MRCA != hog.genome and self.ham_object.taxonomy.is_child_recursive(duplication.MRCA.taxon, hog.genome.taxon):
-                            # create the MRCA hog
-                            mrcahog = abstractgene.HOG(id=hog.hog_id)
-                            mrcahog.set_genome(duplication.MRCA)
-                            duplication.MRCA.add_gene(mrcahog)
+            # For each duplication
+            for duplication, children in child_by_duplication.items():
 
-                            hog.add_child(mrcahog)
+                # add MRCA hog if its missing
+                if duplication.MRCA != hog.genome and self.ham_object.taxonomy.is_child_recursive(duplication.MRCA.taxon, hog.genome.taxon):
+                    # create the MRCA hog
+                    mrcahog = abstractgene.HOG(id=hog.hog_id)
+                    mrcahog.set_genome(duplication.MRCA)
+                    duplication.MRCA.add_gene(mrcahog)
 
-                            # add missing level down (from mrcaHOG to duplicated child)
-                            for child in children:
-                                hog.remove_child(child)
-                                mrcahog.add_child(child)
+                    hog.add_child(mrcahog)
 
-                                change = self.ham_object.taxonomy.get_path_up(child.genome.taxon, mrcahog.genome.taxon)
-                                self.ham_object._add_missing_taxon(child, mrcahog, change)
+                    # add missing level down (from mrcaHOG to duplicated child)
+                    for child in children:
+                        hog.remove_child(child)
+                        mrcahog.add_child(child)
 
-                            duplication.set_parent(mrcahog)
-                            for x in list(duplication.children):
-                                duplication.remove_child(x)
-                            for y in list(mrcahog.children):
-                                duplication.add_child(y)
+                        change = self.ham_object.taxonomy.get_path_up(child.genome.taxon, mrcahog.genome.taxon)
+                        self.ham_object._add_missing_taxon(child, mrcahog, change)
 
-                        # Otherwise simply add missing taxa between hog and duplicated child
-                        else:
-                            duplication.MRCA = self.ham_object._get_ancestral_genome_by_taxon(hog.genome.taxon)
-                            duplication.set_parent(hog)
-                            for child_direct in children:
-                                change = self.ham_object.taxonomy.get_path_up(child_direct.genome.taxon, hog.genome.taxon)
-                                self.ham_object._add_missing_taxon(child_direct, hog, change)
+                    duplication.set_parent(mrcahog)
+                    for x in list(duplication.children):
+                        duplication.remove_child(x)
+                    for y in list(mrcahog.children):
+                        duplication.add_child(y)
 
-                                duplication.remove_child(child_direct)
-                                duplication.add_child(hog.children[-1])
+                # Otherwise simply add missing taxa between hog and duplicated child
+                else:
+                    duplication.MRCA = self.ham_object._get_ancestral_genome_by_taxon(hog.genome.taxon)
+                    duplication.set_parent(hog)
+                    for child_direct in children:
+                        change = self.ham_object.taxonomy.get_path_up(child_direct.genome.taxon, hog.genome.taxon)
+                        self.ham_object._add_missing_taxon(child_direct, hog, change)
 
-                    hog_genome = hog.genome
-                    change = {} # {child -> [intermediate level]}
+                        duplication.remove_child(child_direct)
+                        duplication.add_child(hog.children[-1])
 
-                    # for all children of this hog find missing level
-                    for child in hog.children:
-                        child_genome = child.genome
-                        if hog_genome.taxon.props["depth"] != child_genome.taxon.props["depth"] - 1:
-                            change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
+            hog_genome = hog.genome
+            change = {} # {child -> [intermediate level]}
 
-                    # and add them if required
-                    for hog_child, missing in change.items():
-                        self.ham_object._add_missing_taxon(hog_child, hog, missing)
+            # for all children of this hog find missing level
+            for child in hog.children:
+                child_genome = child.genome
+                if hog_genome.taxon.props["depth"] != child_genome.taxon.props["depth"] - 1:
+                    change[child] = self.ham_object.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
 
-                    if len(self.hog_stack) == 0:
-                        self.toplevel_hogs[hog.hog_id] = hog
-                        self.cpt += 1
-                        if self.cpt % 500 == 0:
-                            logger.info("{} HOGs parsed. ".format(self.cpt))
-                except Exception as e:
-                    logger.error("cannot parse HOG '{}': {}".format(hog.hog_id, e))
-                    raise
+            # and add them if required
+            for hog_child, missing in change.items():
+                self.ham_object._add_missing_taxon(hog_child, hog, missing)
+
+            if len(self.hog_stack) == 0:
+                self.toplevel_hogs[hog.hog_id] = hog
+                self.cpt += 1
+                if self.cpt % 500 == 0:
+                    logger.info("{} HOGs parsed. ".format(self.cpt))
+
+
         elif tag == "{http://orthoXML.org/2011/}groups":
             if self.with_progress:
-                self.hog_pbar.close()
-                delattr(self, 'hog_pbar')
+                self._update_progress_bar(tag)
 
     def data(self, data):
         # Ignore data inside nodes

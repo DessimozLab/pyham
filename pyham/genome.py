@@ -1,6 +1,5 @@
-import ete4
 import abc
-
+from ete4 import Tree
 
 
 class Genome(metaclass=abc.ABCMeta):
@@ -9,7 +8,7 @@ class Genome(metaclass=abc.ABCMeta):
     in the Taxonomy.tree.
 
     Attributes:
-        | taxon (:obj:`ete4.Tree` of the :obj:`pyham.taxonomy`.tree): corresponding taxon.
+        | taxon (:obj:`ete3.TreeNode` of the :obj:`pyham.taxonomy`.tree): corresponding taxon.
         | name (:obj:`str`): Name of the Genome. Get from the newick tree if specified otherwise build it by concatenating all children genome names.
         | genes (:obj:`list`): list of :obj:`pyham.abstractgene.AbstractGene` related to this Genome.
 
@@ -23,7 +22,7 @@ class Genome(metaclass=abc.ABCMeta):
     def add_gene(self, gene):
 
         """  
-        This method add an AbstractGene to the genes attributes and update the AbstractGene.genome attribute. 
+        This method adds an AbstractGene to the genes attributes and updates the AbstractGene.genome attribute.
 
         Attributes:
             | taxon (Taxonomy.tree node): corresponding taxon.
@@ -45,22 +44,22 @@ class Genome(metaclass=abc.ABCMeta):
     def set_taxon(self, taxon):
 
         """  
-        This method add an Taxon to the taxon attribute.
+        This method sets the taxon of the Genome.
 
         Attributes:
             taxon (Taxonomy.tree node): corresponding taxon.
 
         Raises:
             TypeError: if taxon is not an ete4.Tree.
-            EvolutionaryConceptError: if genome already have a taxon set.
+            EvolutionaryConceptError: if the genome already has a taxon set.
         """
 
-        if not isinstance(taxon, ete4.Tree):
+        if not isinstance(taxon, Tree):
             raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(ete4.Tree.__name__,
+                            .format(Tree.__name__,
                                     type(taxon).__name__))
         if self.taxon is not None and taxon != self.taxon:
-            raise EvolutionaryConceptError("only one taxon can refers to one genome")
+            raise EvolutionaryConceptError("only one taxon can refer to one genome")
         self.taxon = taxon
 
     @abc.abstractmethod
@@ -121,10 +120,11 @@ class ExtantGenome(Genome):
         super(ExtantGenome, self).__init__()
         self.name = name
         self.taxid = NCBITaxId
+        self.taxon_id = kwargs.get('taxon_id', None)
 
     def get_number_genes(self, singleton=True): #  TODO: UT
 
-        """ Get the number of this of this ExtantGenome.
+        """ Get the number of genes of this ExtantGenome.
         
             Args:
                 | singleton (:obj:`Bool`): boolean to take into account singleton or not.

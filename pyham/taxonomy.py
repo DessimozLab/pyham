@@ -1,6 +1,7 @@
 import logging
 import warnings
 import gzip
+import re
 from os import PathLike
 from typing import Union, Optional
 from xml.etree.ElementTree import XMLParser
@@ -154,6 +155,46 @@ class Taxonomy(object):
     def tree_str(self):
         return self.tree.write(parser=8, format_root_node=True)
 
+    def nodes_by_attr(self, **kwargs):
+        yield from self.tree.search_nodes(**kwargs)
+
+    def get_node_by_name(self, name):
+        """Return the node with the given name.
+
+            Args:
+                | name (:obj:`str`): name of the node to search.
+
+            Returns:
+                :obj:`ete4.TreeNode`: node with the given name.
+        """
+        node = list(self.tree.search_nodes(name=name))
+        if not node:
+            raise KeyError("Node with name '{}' not found in the taxonomy".format(name))
+        if len(node) > 1:
+            raise KeyError("Multiple nodes with name '{}' found in the taxonomy".format(name))
+        return node[0]
+
+    def get_extant_taxa_by_name(self, name):
+        """Return the extant taxa with the given name.
+
+            Args:
+                | name (:obj:`str`): name of the node to search.
+
+            Returns:
+                :obj:`ete4.TreeNode`: node with the given name.
+        """
+        node = self.get_node_by_name(name=name)
+        if len(node.children) > 0:
+            cand = []
+            for child in node.children:
+                if len(child.name) == 5 and re.match(r'[A-Z][A-Z0-9]{4}', child.name) is not None:
+                    cand.append(child)
+            if len(cand) == 1:
+                node = cand[0]
+            else:
+                raise KeyError(f"Node with name '{name}' is not an extant taxon, it has multiple children or no children.")
+        return node
+
     def add_genome_to_node(self, node, genome):
         """  add the given genome to the node attribute "genome".
 
@@ -162,19 +203,42 @@ class Taxonomy(object):
                 | genome (:obj:`Genome`): :obj:`Genome` to attach.
 
         """
+        existing_genome = node.get_prop("genome", None)
+        if existing_genome is not None and existing_genome != genome:
+            raise ValueError("Node {} already has a genome attached: {}".format(node, existing_genome))
 
         node.add_prop("genome", genome)
         genome.set_taxon(node)
 
         if isinstance(genome, ExtantGenome):
             self.leaves.add(node)
-
         elif isinstance(genome, AncestralGenome):
             genome.name = node.name
-
             self.internal_nodes.add(node)
         else:
             raise TypeError("expect class obj of '{}', got {}".format(type(Genome).__name__,type(genome).__name__))
+
+    def get_genome_from_taxnode(self, node):
+        """  return the genome attached to the node.
+
+            Args:
+                | node (:obj:`node`): node to get the genome from.
+
+            Returns:
+                :obj:`Genome`: genome attached to the node.
+        """
+        genome = node.get_prop("genome", None)
+        if genome is not None:
+            return genome
+
+        genome_cls = ExtantGenome if node.is_leaf else AncestralGenome
+        genome = genome_cls()
+        self.add_genome_to_node(node, genome)
+        return genome
+
+    def get_mrca_taxnode(self, *tax_nodes):
+        """  return the most recent common ancestor of the given tax nodes."""
+        return self.tree.common_ancestor(tax_nodes)
 
     def get_path_up(self, lowest_node, ancestor_node):
         """  return the internal node in between two nodes sorted by recentness.

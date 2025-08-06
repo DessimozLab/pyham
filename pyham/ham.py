@@ -215,7 +215,10 @@ class Ham(object):
         if phyloxml_leaf_name_tag not in accepted_tag_phyloxml or phyloxml_internal_name_tag not in accepted_tag_phyloxml:
             raise TypeError("{} is an invalid type phyloxml tag name")
         self.species_resolve_mode = species_resolve_mode
-        self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_leaf_name_tag=phyloxml_leaf_name_tag, phyloxml_internal_name_tag=phyloxml_internal_name_tag)
+        if self.tree_file is not None:
+            self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_leaf_name_tag=phyloxml_leaf_name_tag, phyloxml_internal_name_tag=phyloxml_internal_name_tag)
+        else:
+            self.taxonomy = None
         logger.info('Build taxonomy: completed.')
 
         # Misc. information
@@ -810,6 +813,8 @@ class Ham(object):
 
         for line in file_object:
             parser.feed(line)
+        if self.taxonomy is None:
+            self.taxonomy = factory.taxonomy
 
         return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 

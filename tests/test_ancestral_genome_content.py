@@ -31,6 +31,27 @@ class AncestralTomatoGenomeContentTest(unittest.TestCase):
         self.assertIsNone(root_hog.parent, "Root HOG should not have a parent")
 
 
+class PyHAMInitWithDifferentTaxonomyTests(unittest.TestCase):
+    def setUp(self):
+        self.nwk_path = os.path.join(os.path.dirname(__file__), './data/tomato.nwk')
+        self.tree_str = utils.get_newick_string(self.nwk_path, type="nwk")
+        self.orthoxml_path = os.path.join(os.path.dirname(__file__), './data/tom.orthoxml')
+
+    def test_init_with_newick_taxonomy(self):
+        analysis = ham.Ham(tree_file=self.tree_str, hog_file=self.orthoxml_path)
+        self.assertIsNotNone(analysis.taxonomy, "Taxonomy should be initialized")
+
+    def test_init_with_orthoxml_taxonomy(self):
+        analysis = ham.Ham(hog_file=self.orthoxml_path)
+        self.assertIsNotNone(analysis.taxonomy, "Taxonomy should be initialized with internal names")
+
+    def test_taxonomy_from_newick_identical(self):
+        analysis_newick = ham.Ham(tree_file=self.tree_str, hog_file=self.orthoxml_path)
+        analysis_orthoxml = ham.Ham(hog_file=self.orthoxml_path)
+        self.assertEqual(analysis_newick.taxonomy, analysis_orthoxml.taxonomy,
+                         "Taxonomy from Newick and Orthoxml should be identical")
+
+
 class AncestralMetazoaGenomeContentTest(unittest.TestCase):
     def setUp(self):
         data = Path(__file__).parent / 'data'

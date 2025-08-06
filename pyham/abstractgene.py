@@ -155,6 +155,7 @@ class HOG(AbstractGene):
         if id is None:
             self.hog_id = kwargs.get('og', id) # If we have the gene named in og tag, use this.
         self.og = kwargs.get('og')
+        self.taxon_id = kwargs.get('taxon_id', None)
         self.children = []
         self.hogvis = None
         self.duplications = []
@@ -477,6 +478,10 @@ class Gene(AbstractGene):
 
 
 class EvolutionaryConceptError(Exception):
+    pass
+
+
+class SameLevelHOGError(Exception):
     pass
 
 
