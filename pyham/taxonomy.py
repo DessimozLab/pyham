@@ -2,6 +2,7 @@ import logging
 import warnings
 import gzip
 import re
+import collections
 from os import PathLike
 from typing import Union, Optional
 from xml.etree.ElementTree import XMLParser
@@ -88,7 +89,7 @@ class Taxonomy(object):
         Args:
             | tree_file (:obj:`str`): Path to the file that contained the taxonomy information.
             | tree_format (:obj:`str`): type of inputted tree file. Defaults to newick_string. Can be 'newick', 'phyloxml, 'newick_string'.
-            | use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the 
+            | use_internal_name (:obj:`Boolean`, optional): Specify wheter using the given internal node name or use the
             | concatenatation of the children name. Defaults to False.
             | quoted_node_names (:obj:'Boolean', optional): Specify whether newick file has quoted node names.
         """
@@ -115,6 +116,9 @@ class Taxonomy(object):
         else:
             # new style API: tree is already an Tree object
             self.tree = tree
+
+        # lookup table for attr, value pairs
+        self._node_lookup = {}
 
         # check unicity of leaves name.
         self._check_consistency_names()
@@ -156,7 +160,15 @@ class Taxonomy(object):
         return self.tree.write(parser=8, format_root_node=True)
 
     def nodes_by_attr(self, **kwargs):
-        yield from self.tree.search_nodes(**kwargs)
+        nodes = None
+        for key, val in kwargs.items():
+            if (key, val) not in self._node_lookup:
+                self._node_lookup[(key, val)] = set(self.tree.search_nodes(**{key: val}))
+            if nodes is None:
+                nodes = self._node_lookup[(key, val)].copy()
+            else:
+                nodes &= self._node_lookup[(key, val)]
+        yield from nodes
 
     def get_node_by_name(self, name):
         """Return the node with the given name.
@@ -167,7 +179,7 @@ class Taxonomy(object):
             Returns:
                 :obj:`ete4.TreeNode`: node with the given name.
         """
-        node = list(self.tree.search_nodes(name=name))
+        node = list(self.nodes_by_attr(name=name))
         if not node:
             raise KeyError("Node with name '{}' not found in the taxonomy".format(name))
         if len(node) > 1:
@@ -241,7 +253,9 @@ class Taxonomy(object):
         return self.tree.common_ancestor(tax_nodes)
 
     def get_path_up(self, lowest_node, ancestor_node):
-        """  return the internal node in between two nodes sorted by recentness.
+        """
+        Return the internal node in between two nodes sorted by recentness.
+        The query nodes are not included.
 
             Args:
                 | lowest_node (:obj:`node`): Youngest node.
@@ -251,14 +265,13 @@ class Taxonomy(object):
                 list of node sorted from most recent to oldest.
 
         """
-
         intermediate_level = []
-
         for tax in lowest_node.ancestors():
             if tax == ancestor_node:
                 break
             intermediate_level.append(tax)
-
+        else:
+            raise ValueError(f"lowest_node ({lowest_node} is not a child of {ancestor_node}")
         return intermediate_level
 
     def is_child_recursive(self, node, ancestor_node):
@@ -269,7 +282,7 @@ class Taxonomy(object):
                 | ancestor_node (:obj:`node`): ancestor node.
 
             Returns:
-                :obj:`bool` True if the node is a child of the ancestor node.
+                obj:`bool` True if the node is a child of the ancestor node.
         """
         for tax in node.ancestors():
             if tax == ancestor_node:
@@ -285,7 +298,6 @@ class Taxonomy(object):
              Returns:
                  :obj:`str` of the subtree.
          """
-
         return node.write(parser=8, format_root_node=True)
 
     def _check_consistency_names(self):
@@ -306,13 +318,22 @@ class Taxonomy(object):
             else:
                 int_names.append(node.name)
 
-        # check for leaves name
+            self._node_lookup[('name', node.name)] = {node}
+            if 'id' in node.props:
+                self._node_lookup[('id', node.props['id'])] = {node}
+
+
+        # check for leave names
         if len(leaf_names) != len(set(leaf_names)):
-            raise KeyError("Leaves names are not unique ! Leaves founded: {}".format(int_names))
+            dupl = collections.Counter(leaf_names)
+            dupl = [k for k, c in dupl.items() if c > 1]
+            raise KeyError(f"Leaves names are not unique! The following leaves appear multiple times: {dupl}")
 
         # Check for internal names
         if len(int_names) != len(set(int_names)):
-            raise KeyError("Internal Names are not unique. Internal names founded: {}. If you specify use_internal_name=False, please report the bug to us.".format(int_names))
+            dupl = collections.Counter(int_names)
+            dupl = [k for k, c in dupl.items() if c > 1]
+            raise KeyError(f"Internal Names are not unique. The following internal names appear multiple times: {dupl}.")
 
     def _add_depth(self, node:Tree, depth=0):
         """  
@@ -324,5 +345,5 @@ class Taxonomy(object):
 
 
 def build_taxon_node(id, name=None, **kwargs):
-    node = Tree({"name": name, "taxon_id": id})
+    node = Tree({"name": name, "id": int(id)})
     return node

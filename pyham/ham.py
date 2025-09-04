@@ -613,13 +613,10 @@ class Ham(object):
                 :obj:`pyham.genome.AncestralGenome` or raise KeyError
 
         """
-
-        for taxon in self.taxonomy.internal_nodes:
-            if taxon.name == name:
-                if "genome" in taxon.props:
-                    return taxon.props['genome']
-
-        raise KeyError('No ancestral genomes match the query name: {}'.format(name))
+        taxon = self.taxonomy.get_node_by_name(name)
+        if taxon.is_leaf:
+            raise KeyError(f"query name {name} is an extant genome, not an ancestral one.")
+        return self.taxonomy.get_genome_from_taxnode(taxon)
 
     def get_ancestral_genome_by_mrca_of_genome_set(self, genome_set):
 
@@ -675,60 +672,6 @@ class Ham(object):
 
     # ... PRIVATE METHODS ... #
 
-    def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons):
-
-        """  
-        Add intermediate :obj:`HOG` in between two :obj:`HOG` if their taxon are not direct parent and child in the 
-        taxonomy. E.g. if a rodent HOG is connected with a vertebrate HOG it will add an mammal hog in between.
-
-            Args:
-                child_hog (:obj:`HOG`): child :obj:`HOG`.
-                oldest_hog (:obj:`HOG`): parent :obj:`HOG`.
-                missing_taxons (:obj:`HOG`): list of intermediate taxNode between child_hog and oldest_hog sorted 
-                from youngest to oldest.
-
-        """
-
-        if not isinstance(child_hog, abstractgene.AbstractGene):
-            raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(abstractgene.AbstractGene.__name__,
-                                    type(child_hog).__name__))
-
-        if not isinstance(oldest_hog, abstractgene.AbstractGene):
-            raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(abstractgene.AbstractGene.__name__,
-                                    type(oldest_hog).__name__))
-
-        if oldest_hog == child_hog:
-            raise TypeError("Cannot add missing level between an HOG and it self.")
-
-        # the youngest hog is removed from the oldest hog children.
-        oldest_hog.remove_child(child_hog)
-
-        # Then for each intermediate level in between the two hogs...
-        current_child = child_hog
-        hog_id = child_hog.hog_id if hasattr(child_hog, 'hog_id') else oldest_hog.hog_id
-        for tax in missing_taxons:
-
-            # ... we get the related ancestral genome of this level...
-            ancestral_genome = self._get_ancestral_genome_by_taxon(tax)
-
-            # ... we create the related hog and add it to the ancestral genome...
-            hog = abstractgene.HOG(id=hog_id)
-            setattr(hog, '_missing_in_xml', oldest_hog.genome)
-            hog.set_genome(ancestral_genome)
-            ancestral_genome.add_gene(hog)
-
-            # ... we check if taxon correspond to child parent taxon ...
-            if ancestral_genome.taxon is not current_child.genome.taxon.up:
-                raise TypeError("HOG taxon {} is different than child parent taxon {}".format(ancestral_genome.taxon,
-                                                                                              current_child.genome.taxon.up))
-
-            # ... we add the child if everything is fine.
-            hog.add_child(current_child)
-            current_child = hog
-
-        oldest_hog.add_child(current_child)
 
     def _get_oldest_from_genome_pair(self, g1, g2):
 

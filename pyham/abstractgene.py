@@ -155,7 +155,7 @@ class HOG(AbstractGene):
         if id is None:
             self.hog_id = kwargs.get('og', id) # If we have the gene named in og tag, use this.
         self.og = kwargs.get('og')
-        self.taxon_id = kwargs.get('taxon_id', None)
+        self.taxon_id = int(kwargs['taxonId']) if 'taxonId' in kwargs else None
         self.children = []
         self.hogvis = None
         self.duplications = []
@@ -498,8 +498,8 @@ class DuplicationNode(object):
             
     """
 
-    def __init__(self, ham_object, id=None):
-        self.ham = ham_object
+    def __init__(self, parser, id=None):
+        self.parser = parser
         self.MRCA = None
         self.children = []
         self.parent = None
@@ -523,16 +523,23 @@ class DuplicationNode(object):
     def set_MRCA(self):
         """
             Compute the MRCA of all genes genomes.
+
+            It is always defined as the level of the genome which is the parent
+            of the branch on which the duplication event occured. E.g. if the
+            duplication event on the branch between Mammalia and Euchontoglires,
+            the MRCA is set to Mammalia.
+
         """
 
-        children_genomes = set([child.genome for child in self.children])
-
-        if len(children_genomes) < 2:
-            self.MRCA = self.ham._get_ancestral_genome_by_taxon(list(children_genomes)[0].taxon.up)
-
+        children_taxa = set([child.genome.taxon for child in self.children])
+        if len(children_taxa) < 2:
+            mrca = children_taxa.pop().up
         else:
-            self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
-            self.MRCA = self.ham._get_ancestral_genome_by_taxon(self.MRCA.taxon.up)
+            mrca = self.parser.taxonomy.get_mrca_taxnode(*children_taxa)
+            if mrca.up is None:
+                raise EvolutionaryConceptError("MRCA of {} is prior to taxonomy root".format(self.id))
+            mrca = mrca.up
+        self.MRCA = self.parser.taxonomy.get_genome_from_taxnode(mrca)
 
     def add_child(self, child):
         """

@@ -551,8 +551,10 @@ class TestParsingMultipleDuplicationExample(unittest.TestCase):
         self.assertEqual(1, len(hogs))
         hog = hogs[0]
         self.assertEqual(5, len(hog.children))
-        self.assertFalse(hog.children[0].arose_by_duplication)
-        dup_events = {g.arose_by_duplication for g in hog.children[1:]}
+        expected_non_dupl_genes = [g for g in hog.children if g.unique_id == "705198"]
+        self.assertEqual(1, len(expected_non_dupl_genes))
+        self.assertFalse(any(g.arose_by_duplication for g in expected_non_dupl_genes))
+        dup_events = {g.arose_by_duplication for g in hog.children[1:] if g.unique_id != "705198"}
         self.assertEqual(1, len(dup_events))
 
 

@@ -485,9 +485,9 @@ class HAMTestQuery(unittest.TestCase):
         ###############
         # With filter #
         ###############
-
-        with self.assertRaises(KeyError):
-            self.hf.get_ancestral_genome_by_name("Vertebrata")
+        vertebrate = self.hf.get_ancestral_genome_by_name("Vertebrata")
+        self.assertEqual(vertebrate.name, "Vertebrata")
+        self.assertEqual(vertebrate.genes, [])
 
     def test_get_list_ancestral_genomes(self):
 
