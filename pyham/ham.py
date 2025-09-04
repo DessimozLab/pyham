@@ -487,6 +487,36 @@ class Ham(object):
         """
 
         hog_id = str(hog_id)
+        if hog_id in self.top_level_hogs:
+            return self.top_level_hogs[hog_id]
+
+        m = re.match(r"^(?P<fam>(HOG:)?(\d+))(?P<subhog>[0-9a-z.]*)(_(?P<taxid>-?\d+))?$", hog_id)
+        if not m:
+            raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
+
+        if m:
+            fam = m.group('fam')
+            subhog = m.group('subhog')
+            taxid = m.group('taxid')
+
+            if fam in self.top_level_hogs:
+                roothog = self.top_level_hogs[fam]
+            elif fam[4:] in self.top_level_hogs:
+                fam = fam[4:]
+                roothog = self.top_level_hogs[fam]
+            else:
+                raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
+
+            if subhog:
+                hog = roothog.find_by_id(hog_id=fam + subhog, taxid=int(taxid))
+                if hog is not None:
+                    return hog
+                else:
+                    raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
+            return roothog
+
+
+
 
         if hog_id in self.top_level_hogs.keys():
             return self.top_level_hogs[hog_id]

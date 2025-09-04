@@ -378,6 +378,32 @@ class HOG(AbstractGene):
     def is_singleton(self):
         return False
 
+    def find_by_id(self, hog_id: str, taxid: int = None):
+        """
+        Recursive function to find a HOG by its id and optionally its taxid.
+
+            Args:
+                | hog_id (:obj:`str`): HOG id to be found.
+                | taxid (optional, :obj:`int`): taxid of the genome of the HOG to be found.
+
+            Returns:
+                :obj:`pyham.abstractgene.HOG` if found otherwise None.
+        """
+
+        cur_hog_without_taxid = self.hog_id.split('_')[0]
+        if cur_hog_without_taxid == hog_id and (taxid is None or self.taxon_id == taxid or self.hog_id == f"{hog_id}_{taxid}"):
+            return self
+        elif not hog_id.startswith(cur_hog_without_taxid):
+            return None
+
+        for child in getattr(self, 'children', []):
+            if isinstance(child, HOG):
+                found = child.find_by_id(hog_id, taxid)
+                if found is not None:
+                    return found
+        return None
+
+
     def __repr__(self):
         ids = []
         if self.hog_id is not None:
