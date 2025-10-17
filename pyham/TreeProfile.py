@@ -11,7 +11,6 @@ import json
 
 logger = logging.getLogger(__name__)
 
-
 class TreeProfile(object):
     """
     Object that map on each node of the Ham species tree the related evolutionary information such as the number of
@@ -164,6 +163,7 @@ class TreeProfile(object):
         else:
             treeMap = self.ham.taxonomy.tree.copy(method="newick")
 
+        '''
         for node in treeMap.traverse():
             if node.is_root():
                 node_genome = self.ham.get_ancestral_genome_by_name(node.name)
@@ -189,7 +189,34 @@ class TreeProfile(object):
                 nbr_ev = hogmap.number_duplication + len(hogmap.LOSS) + len(hogmap.GAIN)
 
                 _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.RETAINED.keys()), hogmap.number_duplication, nbr_ev)
+        '''
 
+
+        for node in treeMap.traverse():
+            if node.is_root():
+                node_genome = self.ham.get_ancestral_genome_by_node(node)
+                _add_annot(node, len(node_genome.genes), None, None, None, None, None, None)
+
+            else:
+                node_genome_up = self.ham._get_ancestral_genome_by_node(node.up)
+
+                if node.is_leaf():
+                    node_genome = self.ham._get_extant_genome_by_name(name=node.name)
+                    nbr = node_genome.get_number_genes(singleton=True)
+
+                else:
+                    node_genome = self.ham._get_ancestral_genome_by_node(node)
+                    nbr = node_genome.get_number_genes()
+
+                hogmap = self.ham._get_HOGMap({node_genome, node_genome_up})
+
+                nbr_duplicate = 0
+                for gs in hogmap.DUPLICATE.values():
+                    nbr_duplicate += len(gs)
+
+                nbr_ev = hogmap.number_duplication + len(hogmap.LOSS) + len(hogmap.GAIN)
+
+                _add_annot(node, nbr, nbr_duplicate, len(hogmap.LOSS), len(hogmap.GAIN), len(hogmap.RETAINED.keys()), hogmap.number_duplication, nbr_ev)
         return treeMap
 
     def export(self, output, layout_function=None, display_internal_histogram=True):
