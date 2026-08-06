@@ -3,7 +3,7 @@ from .genome import ExtantGenome
 from .taxonomy import build_taxon_node, Taxonomy
 import logging
 logger = logging.getLogger(__name__)
-from collections import defaultdict, Counter
+from collections import defaultdict
 from tqdm.auto import tqdm
 import numpy as np
 
@@ -187,6 +187,41 @@ class OrthoXMLParser:
         logger.debug(f"Created {len(missing_taxons)} missing HOGs between {child} and {parent}.")
         return current_child if len(missing_taxons) > 0 else child
 
+    def _resolve_missing_levels(self, parent: abstractgene.HOG, children: list):
+        """Insert missing intermediate HOG levels between `parent` and `children`.
+
+        If several children are missing the same intermediate taxon (i.e. the
+        reference species tree resolves this part of the taxonomy more finely
+        than the HOGs were built/augmented at), a single shared ancestral HOG is
+        created for all of them instead of one redundant HOG per child. Children
+        that are missing no shared level are delegated to `_create_missing_hogs`.
+        """
+        change = {}
+        for child in children:
+            if parent.genome.taxon.props["depth"] != child.genome.taxon.props["depth"] - 1:
+                change[child] = self.taxonomy.get_path_up(child.genome.taxon, parent.genome.taxon)
+        if not change:
+            return
+
+        groups = defaultdict(list)
+        for child, missing in change.items():
+            # missing[-1] is the taxon immediately below `parent`; children sharing
+            # any ancestor on the path back to `parent` necessarily share this one too.
+            groups[missing[-1]].append(child)
+
+        for tax_node, group_children in groups.items():
+            if len(group_children) == 1:
+                self._create_missing_hogs(group_children[0], parent)
+            else:
+                shared_genome = self.taxonomy.get_genome_from_taxnode(tax_node)
+                shared_hog = abstractgene.HOG(id=parent.hog_id)
+                setattr(shared_hog, "_missing_in_xml", parent.genome)
+                shared_genome.add_gene(shared_hog)
+                parent.add_child(shared_hog)
+                for child in group_children:
+                    parent.remove_child(child)
+                    shared_hog.add_child(child)
+                self._resolve_missing_levels(shared_hog, group_children)
 
     def start(self, tag, attrib):
         if tag == "{http://orthoXML.org/2011/}species":
@@ -343,8 +378,9 @@ class OrthoXMLParser:
                         hog.remove_child(child)
                         mrca_hog.add_child(child)
 
-                        # add missing levels if any
-                        self._create_missing_hogs(child, mrca_hog)
+                    # add missing levels if any, grouping children that are
+                    # missing the same intermediate ancestor under one shared HOG
+                    self._resolve_missing_levels(mrca_hog, children)
 
                     duplication.set_parent(mrca_hog)
                     for x in list(duplication.children):
@@ -361,24 +397,9 @@ class OrthoXMLParser:
                         duplication.remove_child(child_direct)
                         duplication.add_child(new_direct_child)
 
-            hog_genome = hog.genome
-            change = {} # {child -> [intermediate level]}
-
-            # for all children of this hog find missing level
-            for child in hog.children:
-                child_genome = child.genome
-                if hog_genome.taxon.props["depth"] != child_genome.taxon.props["depth"] - 1:
-                    change[child] = self.taxonomy.get_path_up(child_genome.taxon, hog_genome.taxon)
-
-            # assert that no change is shared among children (this wouled mean that a duplication is missing)
-            tax_counter = Counter((tax for missing in change.values() for tax in missing))
-            if any(v > 1 for v in tax_counter.values()):
-                duplicates = [tax for tax, v in tax_counter.items() if v > 1]
-                raise ValueError(f"HOG {hog.hog_id} has children with missing levels that are shared: {duplicates}. This usually means that a duplication node is missing from the OrthoXML.")
-
-            # and add them if required
-            for hog_child, missing in change.items():
-                self._create_missing_hogs(hog_child, hog)
+            # insert any remaining missing intermediate levels, grouping children
+            # that are missing the same intermediate ancestor under one shared HOG
+            self._resolve_missing_levels(hog, list(hog.children))
 
             if len(self.hog_stack) == 0:
                 hog_id = hog.hog_id.split('_')[0]

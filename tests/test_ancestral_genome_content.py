@@ -77,6 +77,53 @@ def test_hog_follow_species_tree(hog_1074943_ham):
             hog = hog.parent
 
 
+####
+# tests for HOG children that share a missing intermediate taxonomic level, i.e.
+# the reference species tree resolves part of the taxonomy more finely than the
+# orthoxml's own HOG structure (regression test for the shared_missing_level fixture)
+@pytest.fixture
+def shared_missing_level_ham():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/shared_missing_level.orthoxml')
+    tree_path = os.path.join(os.path.dirname(__file__), './data/shared_missing_level.nwk')
+    return ham.Ham(tree_file=tree_path, hog_file=orthoxml_path, tree_format="newick", use_internal_name=True)
+
+
+def test_shared_missing_level_creates_single_shared_hog(shared_missing_level_ham):
+    h = shared_missing_level_ham
+
+    family_hog = h.get_list_top_level_hogs()[0]
+    assert {c.genome.name for c in family_hog.children} == {"SP6", "DeepA"}
+
+    deep_a = h.get_ancestral_genome_by_name("DeepA")
+    assert len(deep_a.genes) == 1, "DeepA should hold exactly one HOG for this family, not one per child"
+    deep_a_hog = deep_a.genes[0]
+    assert deep_a_hog.parent is family_hog
+    assert {c.genome.name for c in deep_a_hog.children} == {"SP4", "Clade", "DeepB"}
+    assert deep_a_hog._missing_in_xml.name == "Family"
+
+    clade = h.get_ancestral_genome_by_name("Clade")
+    assert len(clade.genes) == 1, "Clade should hold exactly one HOG for this family, not one per child"
+    clade_hog = clade.genes[0]
+    assert clade_hog.parent is deep_a_hog
+    assert {c.genome.name for c in clade_hog.children} == {"SP1", "SP2", "SP3"}
+    assert clade_hog._missing_in_xml.name == "DeepA"
+
+    deep_b = h.get_ancestral_genome_by_name("DeepB")
+    assert len(deep_b.genes) == 1
+    deep_b_hog = deep_b.genes[0]
+    assert deep_b_hog.parent is deep_a_hog
+    assert len(deep_b_hog.children) == 1 and deep_b_hog.children[0].genome.name == "SP5"
+    assert deep_b_hog._missing_in_xml.name == "DeepA"
+
+
+def test_shared_missing_level_follows_species_tree(shared_missing_level_ham):
+    for gene in shared_missing_level_ham.get_list_extant_genes():
+        hog = gene
+        while hog.parent:
+            assert hog.genome.taxon.parent == hog.parent.genome.taxon, "HOG should follow species tree"
+            hog = hog.parent
+
+
 class PyHAMInitWithDifferentTaxonomyTests(unittest.TestCase):
     def setUp(self):
         self.nwk_path = os.path.join(os.path.dirname(__file__), './data/tomato.nwk')
