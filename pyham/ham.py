@@ -125,7 +125,7 @@ class Ham(object):
     def __init__(self, tree_file=None, hog_file=None, type_hog_file="orthoxml", filter_object=None, use_internal_name=False,\
                  orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', \
                  phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None,
-                 species_resolve_mode=None, with_parser_progress=False):
+                 species_resolve_mode=None, with_parser_progress=False, fail_fast=False):
         """
 
         Args:
@@ -142,9 +142,15 @@ class Ham(object):
             | use_data_from (:obj:`str`) if specified,  use data from a remote databaseto populate pyHam. Defaults to None. Options: 'oma'.
             | query_database (:obj:`str`) if use_data_from is specified, use this as a query to fetch the orthoxml and \
             tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
-            | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file. 
+            | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file.
+            | fail_fast (:obj:`Boolean`, optional) if a HOG's claimed taxonomic level (TaxRange/taxid) conflicts
+            with the given species tree, raise :obj:`pyham.abstractgene.TaxonomicConflictError` immediately at
+            the first conflict found. If False (default), keep parsing and collect every conflict found across
+            the whole file, raising a single combined error (with all conflicts available via its `conflicts`
+            attribute) once parsing completes.
         """
         self.with_parser_progress = with_parser_progress
+        self.fail_fast = fail_fast
 
         if use_data_from is not None:
             if query_database is None:
@@ -794,11 +800,21 @@ class Ham(object):
 
         """
 
-        factory = parsers.OrthoXMLParser(self, filterObject=filter_object, with_progress=self.with_parser_progress)
+        factory = parsers.OrthoXMLParser(self, filterObject=filter_object, with_progress=self.with_parser_progress,
+                                          fail_fast=self.fail_fast)
         parser = XMLParser(target=factory)
 
         for line in file_object:
             parser.feed(line)
+
+        if factory.taxonomic_conflicts:
+            # fail_fast=True would already have raised inside the parser itself; reaching here means
+            # fail_fast=False, so every conflict found across the whole file is reported together.
+            raise abstractgene.TaxonomicConflictError(
+                parsers.format_taxonomic_conflicts(factory.taxonomic_conflicts),
+                factory.taxonomic_conflicts,
+            )
+
         if self.taxonomy is None:
             self.taxonomy = factory.taxonomy
 

@@ -1,4 +1,5 @@
 import numbers
+import dataclasses
 from .genome import ExtantGenome, AncestralGenome, Genome
 from .iham import IHAM
 import abc
@@ -509,6 +510,47 @@ class EvolutionaryConceptError(Exception):
 
 class SameLevelHOGError(Exception):
     pass
+
+
+@dataclasses.dataclass
+class TaxonomicConflict:
+    """One HOG whose claimed taxonomic level conflicts with the given species tree.
+
+    Attributes:
+        | family_id (:obj:`str`): top-level HOG id this conflict was found in.
+        | hog_id (:obj:`str`): the HOG whose TaxRange/taxid claim is in question.
+        | claim_property (:obj:`str`): "TaxRange" or "taxid".
+        | claim_value (:obj:`str`): the raw property value that was claimed.
+        | resolved_level (:obj:`str`): name of the taxon node actually used. Equal to
+        claim_value at present (this only fires once the claim itself resolved to a
+        node), kept as a separate field for forward-compatibility rather than as a
+        redundant duplicate.
+        | kind (:obj:`str`): "same_rank" (a child collapses onto the same level as
+        its own parent), "disjoint" (a child sits in an unrelated branch), or
+        "inverted" (the claimed level is itself a descendant of the child).
+        | offending_members (:obj:`list`): list of (label, species, detail) tuples
+        describing each child that doesn't fit under the claimed level.
+        | sibling_members (:obj:`list`): list of (label, species) tuples describing
+        this HOG's other children, for context on what else is present at this level.
+    """
+    family_id: str
+    hog_id: str
+    claim_property: str
+    claim_value: str
+    resolved_level: str
+    kind: str
+    offending_members: list
+    sibling_members: list
+
+
+class TaxonomicConflictError(Exception):
+    """Raised when one or more HOGs' claimed taxonomic level conflicts with the
+    given species tree. Carries the full list of :obj:`TaxonomicConflict` records
+    found (possibly just one, in fail_fast mode) in the `conflicts` attribute."""
+
+    def __init__(self, message: str, conflicts: list):
+        super().__init__(message)
+        self.conflicts = conflicts
 
 
 class DuplicationNode(object):

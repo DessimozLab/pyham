@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orthoXML xmlns="http://orthoXML.org/2011/" version="0.3" origin="pyham test fixture" originVersion="0.1">
+ <species name="SP1" NCBITaxId="1">
+  <database name="SP1fake" version="0.1">
+   <genes>
+    <gene id="1" protId="SP1_1" geneId="SP1g1" />
+   </genes>
+  </database>
+ </species>
+ <species name="SP2" NCBITaxId="2">
+  <database name="SP2fake" version="0.1">
+   <genes>
+    <gene id="2" protId="SP2_1" geneId="SP2g1" />
+   </genes>
+  </database>
+ </species>
+ <species name="SP3" NCBITaxId="3">
+  <database name="SP3fake" version="0.1">
+   <genes>
+    <gene id="3" protId="SP3_1" geneId="SP3g1" />
+   </genes>
+  </database>
+ </species>
+ <groups>
+  <orthologGroup id="HOG:0000001_sub">
+   <property name="TaxRange" value="Sub"/>
+   <geneRef id="1"/>
+   <geneRef id="2"/>
+   <orthologGroup id="HOG:0000001_family_inner">
+    <property name="TaxRange" value="Family"/>
+    <geneRef id="3"/>
+   </orthologGroup>
+  </orthologGroup>
+ </groups>
+</orthoXML>

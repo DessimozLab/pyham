@@ -8,6 +8,57 @@ from tqdm.auto import tqdm
 import numpy as np
 
 
+def _label_and_species(node):
+    """Return a (label, species_names) pair describing an AbstractGene for conflict reporting."""
+    if isinstance(node, abstractgene.HOG):
+        species = [g.genome.name for g in node.get_all_descendant_genes()]
+        return node.hog_id, species
+    label = node.prot_id or node.gene_id or node.unique_id
+    return label, [node.genome.name]
+
+
+def _format_one_conflict(conflict, index=None, total=None):
+    header = f"Family {conflict.family_id} — {conflict.hog_id} claims level \"{conflict.resolved_level}\" ({conflict.claim_property})"
+    if index is not None:
+        header = f"[{index}/{total}] {header}"
+
+    lines = [header]
+    for label, species, detail in conflict.offending_members:
+        species_str = ", ".join(species)
+        if conflict.kind == "same_rank":
+            lines.append(f"      conflict: {label} ({species_str}) resolves to that SAME level.")
+        elif conflict.kind == "inverted":
+            lines.append(f"      conflict: \"{conflict.resolved_level}\" (claimed level) is itself a descendant of {label} ({species_str}) in the given tree.")
+        else:  # disjoint
+            lines.append(f"      conflict: {label} ({species_str}) is not below that level in the given tree.")
+        if detail:
+            lines.append(f"      reason:   {detail}")
+
+    if conflict.sibling_members:
+        sibling_str = "; ".join(f"{label} ({', '.join(species)})" for label, species in conflict.sibling_members)
+        lines.append(f"      also at \"{conflict.resolved_level}\" in this family: {sibling_str}")
+
+    return "\n".join(lines)
+
+
+def format_taxonomic_conflicts(conflicts: list, cap: int = 20) -> str:
+    """Render a list of :obj:`abstractgene.TaxonomicConflict` records into a human-readable report."""
+    if not conflicts:
+        return "No taxonomic conflicts."
+
+    if len(conflicts) == 1:
+        return _format_one_conflict(conflicts[0])
+
+    total = len(conflicts)
+    shown = conflicts[:cap]
+    blocks = [_format_one_conflict(c, i, total) for i, c in enumerate(shown, start=1)]
+    report = "\n\n".join(blocks)
+    if total > cap:
+        report += f"\n\n... and {total - cap} more conflict(s) not shown here; see the .conflicts attribute for the complete list."
+    report += f"\n\n{total} conflicts total." if total != 1 else f"\n\n{total} conflict total."
+    return report
+
+
 class OrthoXMLParser:
 
     """
@@ -38,7 +89,8 @@ class OrthoXMLParser:
         skip_this_hog (:obj:`Boolean`): Boolean to skip the current hog or not (used when filtering option is set).     
     """
 
-    def __init__(self, ham_object, taxonomy=None, filterObject=None, id_schema: str = None, with_progress: bool = False):
+    def __init__(self, ham_object, taxonomy=None, filterObject=None, id_schema: str = None, with_progress: bool = False,
+                 fail_fast: bool = False):
 
         """
         Args:
@@ -46,6 +98,9 @@ class OrthoXMLParser:
             filterObject (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information.
             with_progress (:bool:, optional): Whether to display a tqdm progress bar whilst parsing.
             Defaults to None.
+            fail_fast (:bool:, optional): If True, raise :obj:`abstractgene.TaxonomicConflictError` immediately at the
+            first taxonomic conflict found. If False (default), keep parsing and collect every conflict found across
+            the whole file, raising a single combined error once parsing completes.
         """
         self.ham_object = ham_object
         self.filterObj = filterObject
@@ -66,6 +121,11 @@ class OrthoXMLParser:
         self.paralogyNode = None
         self.skip_this_hog = False
         self._genomes_to_add = []
+
+        # taxonomic conflict tracking
+        self.fail_fast = fail_fast
+        self.taxonomic_conflicts = []
+        self._conflicted_children = set()
 
         # save progress bar option
         self.with_progress = with_progress
@@ -127,15 +187,21 @@ class OrthoXMLParser:
                 except (KeyError, AttributeError):
                     pass
                 else:
-                    try:
-                        for child_genome in child_genomes:
-                            if not self.taxonomy.is_child_recursive(child_genome.taxon, tax_node):
-                                raise abstractgene.EvolutionaryConceptError(f"HOG '{hog.hog_id}' at {tax_node.name} has child not below: {child_genome}.")
+                    failing = [(child, child.genome) for child in hog.children
+                               if not self.taxonomy.is_child_recursive(child.genome.taxon, tax_node)]
+                    if not failing:
                         break
-                    except abstractgene.EvolutionaryConceptError:
-                        if len(set(child_genomes)) == 1 and child_genome.taxon == tax_node:
-                            raise abstractgene.SameLevelHOGError(f"HOG '{hog.hog_id}' at {tax_node.name} has child at same level: {child_genome}.")
-                        raise
+
+                    if len(set(child_genomes)) == 1 and failing[0][1].taxon == tax_node:
+                        raise abstractgene.SameLevelHOGError(f"HOG '{hog.hog_id}' at {tax_node.name} has child at same level: {failing[0][1]}.")
+
+                    for conflict in self._build_taxonomic_conflicts(hog, key, tax_value, tax_node, failing):
+                        if self.fail_fast:
+                            raise abstractgene.TaxonomicConflictError(format_taxonomic_conflicts([conflict]), [conflict])
+                        self.taxonomic_conflicts.append(conflict)
+                    for child, _ in failing:
+                        self._conflicted_children.add(child)
+                    break
 
         # if not, let's try with the children genomes
         if tax_node is None:
@@ -152,6 +218,65 @@ class OrthoXMLParser:
         genome = self.taxonomy.get_genome_from_taxnode(tax_node)
         genome.add_gene(hog)
         logger.debug(f"Added {hog} to ancestral genome {genome.name}")
+
+    def _classify_conflict(self, child, child_node, tax_node):
+        """Classify why `child_node` doesn't sit below `tax_node`, and build a human-readable reason.
+
+        Returns a (kind, detail) pair where kind is one of "same_rank" (child collapses onto the
+        same node as `tax_node`), "inverted" (tax_node is itself a descendant of child_node), or
+        "disjoint" (the two sit in unrelated branches of the given tree).
+        """
+        if child_node == tax_node:
+            own_claim_prop, own_claim_val = None, None
+            for key in ('TaxRange', 'taxid'):
+                try:
+                    own_claim_val = child[key]
+                    own_claim_prop = key
+                    break
+                except (KeyError, AttributeError):
+                    continue
+            if own_claim_val is not None:
+                detail = (f"its own claimed {own_claim_prop}=\"{own_claim_val}\" is not a taxon in the given tree; "
+                          f"the common ancestor of its members there is \"{tax_node.name}\" itself.")
+            else:
+                detail = f"the common ancestor of its members there is \"{tax_node.name}\" itself, the same level as its own parent."
+            return "same_rank", detail
+
+        if self.taxonomy.is_child_recursive(tax_node, child_node):
+            return "inverted", None
+
+        common = self.taxonomy.get_mrca_taxnode(child_node, tax_node)
+        intermediate = [n.name for n in reversed(self.taxonomy.get_path_up(child_node, common))]
+        chain = " > ".join([common.name] + intermediate + [child_node.name])
+        return "disjoint", f"its lineage there runs {chain}."
+
+    def _build_taxonomic_conflicts(self, hog, claim_property, claim_value, tax_node, failing):
+        """Build one :obj:`abstractgene.TaxonomicConflict` per distinct conflict kind found among
+        `hog`'s failing children (in the overwhelmingly common case, all failing children share one
+        kind and this returns a single-element list)."""
+        failing_children = {child for child, _ in failing}
+        sibling_members = [_label_and_species(c) for c in hog.children if c not in failing_children]
+
+        by_kind = defaultdict(list)
+        for child, child_genome in failing:
+            kind, detail = self._classify_conflict(child, child_genome.taxon, tax_node)
+            label, species = _label_and_species(child)
+            by_kind[kind].append((label, species, detail))
+
+        family_id = (self.hog_stack[0].hog_id if self.hog_stack else hog.hog_id).split('_')[0]
+        return [
+            abstractgene.TaxonomicConflict(
+                family_id=family_id,
+                hog_id=hog.hog_id,
+                claim_property=claim_property,
+                claim_value=str(claim_value),
+                resolved_level=tax_node.name,
+                kind=kind,
+                offending_members=members,
+                sibling_members=sibling_members,
+            )
+            for kind, members in by_kind.items()
+        ]
 
     def _create_missing_hogs(self, child: abstractgene.AbstractGene, parent: abstractgene.HOG):
         """Create missing HOGs between a child and a parent genome.
@@ -195,7 +320,12 @@ class OrthoXMLParser:
         than the HOGs were built/augmented at), a single shared ancestral HOG is
         created for all of them instead of one redundant HOG per child. Children
         that are missing no shared level are delegated to `_create_missing_hogs`.
+
+        Children already flagged as a taxonomic conflict are skipped entirely:
+        their genome doesn't actually sit below `parent` in the given tree, so
+        there is no valid path to insert missing levels along.
         """
+        children = [c for c in children if c not in self._conflicted_children]
         change = {}
         for child in children:
             if parent.genome.taxon.props["depth"] != child.genome.taxon.props["depth"] - 1:
@@ -347,9 +477,13 @@ class OrthoXMLParser:
                         dupl_node.add_child(child)
                 return
 
-            # get all child clustered by dup if any
+            # get all child clustered by dup if any (skip children already flagged as a taxonomic
+            # conflict -- their genome doesn't reliably sit below hog.genome in the given tree, so
+            # the MRCA-below-hog assertion below can't be trusted for them)
             child_by_duplication = defaultdict(list)
             for child in hog.children:
+                if child in self._conflicted_children:
+                    continue
                 if child.arose_by_duplication:
                     child_by_duplication[child.arose_by_duplication].append(child)
 

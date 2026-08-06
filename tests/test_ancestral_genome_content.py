@@ -2,6 +2,7 @@ import unittest
 import pytest
 from pyham import utils
 from pyham import ham
+from pyham.abstractgene import TaxonomicConflictError
 from pathlib import Path
 import os
 
@@ -51,15 +52,10 @@ def test_tomato_hog_follow_species_tree(tomato_ham):
 
 ####
 # tests on hog_1074943 (that failed while building edgehog)
-@pytest.fixture(params=[
-    ("hog_1074943.augmented.orthoxml", None),
-    ("hog_1074943.augmented.orthoxml", "hog_1074943.nwk")
-])
-def hog_1074943_ham(request):
-    oxml, nwk = request.param
-    orthoxml_path = os.path.join(os.path.dirname(__file__), './data', oxml)
-    tree_path = os.path.join(os.path.dirname(__file__), './data', nwk) if nwk else None
-    return ham.Ham(tree_file=tree_path, hog_file=orthoxml_path, tree_format="newick", use_internal_name=True)
+@pytest.fixture
+def hog_1074943_ham():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/hog_1074943.augmented.orthoxml')
+    return ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
 
 
 def test_root_level(hog_1074943_ham):
@@ -75,6 +71,69 @@ def test_hog_follow_species_tree(hog_1074943_ham):
         while hog.parent:
             assert hog.genome.taxon.parent == hog.parent.genome.taxon, "HOG should follow species tree"
             hog = hog.parent
+
+
+####
+# hog_1074943 against the external, more finely-resolved species tree: this exposes two
+# real taxonomic conflicts between the orthoxml's own TaxRange claims and the given tree
+# (see pyham/parsers.py's TaxonomicConflict machinery).
+def _hog_1074943_with_external_tree(**kwargs):
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/hog_1074943.augmented.orthoxml')
+    tree_path = os.path.join(os.path.dirname(__file__), './data/hog_1074943.nwk')
+    return ham.Ham(tree_file=tree_path, hog_file=orthoxml_path, tree_format="newick", use_internal_name=True, **kwargs)
+
+
+def test_hog_1074943_conflicts_collected_by_default():
+    with pytest.raises(TaxonomicConflictError) as exc:
+        _hog_1074943_with_external_tree()
+
+    conflicts = exc.value.conflicts
+    assert len(conflicts) == 2
+    assert {c.kind for c in conflicts} == {"same_rank", "disjoint"}
+
+    same_rank = next(c for c in conflicts if c.kind == "same_rank")
+    assert same_rank.family_id == "HOG:1074943"
+    assert same_rank.hog_id == "HOG:1074943.2a.7b.4a_35718"
+    assert same_rank.resolved_level == "Chaetomiaceae"
+    assert [label for label, species, detail in same_rank.offending_members] == ["HOG:1074943.2a.7b.4a_5149"]
+    assert [label for label, species in same_rank.sibling_members] == ["HOG:1074943.2a.7b.4a_78579"]
+
+    disjoint = next(c for c in conflicts if c.kind == "disjoint")
+    assert disjoint.family_id == "HOG:1074943"
+    assert disjoint.resolved_level == "Aspergillus subgen. Circumdati"
+    assert [label for label, species, detail in disjoint.offending_members] == ["ASPPS06251"]
+
+
+def test_hog_1074943_fail_fast_stops_at_first_conflict():
+    with pytest.raises(TaxonomicConflictError) as exc:
+        _hog_1074943_with_external_tree(fail_fast=True)
+
+    conflicts = exc.value.conflicts
+    assert len(conflicts) == 1
+    assert conflicts[0].kind == "same_rank"
+    assert conflicts[0].hog_id == "HOG:1074943.2a.7b.4a_35718"
+
+
+####
+# a small synthetic fixture for the "inverted" conflict kind (a HOG's claimed level is
+# itself a descendant of one of its children's claimed level) -- no real example of this
+# is known, unlike "same_rank" and "disjoint" above.
+def test_inverted_level_conflict():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/inverted_level.orthoxml')
+    tree_path = os.path.join(os.path.dirname(__file__), './data/inverted_level.nwk')
+
+    with pytest.raises(TaxonomicConflictError) as exc:
+        ham.Ham(tree_file=tree_path, hog_file=orthoxml_path, tree_format="newick", use_internal_name=True)
+
+    conflicts = exc.value.conflicts
+    assert len(conflicts) == 1
+    conflict = conflicts[0]
+    assert conflict.kind == "inverted"
+    assert conflict.family_id == "HOG:0000001"
+    assert conflict.hog_id == "HOG:0000001_sub"
+    assert conflict.resolved_level == "Sub"
+    assert conflict.offending_members == [("HOG:0000001_family_inner", ["SP3"], None)]
+    assert {label for label, species in conflict.sibling_members} == {"SP1_1", "SP2_1"}
 
 
 ####
