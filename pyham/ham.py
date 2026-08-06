@@ -158,10 +158,23 @@ class Ham(object):
                 if not res.ok:
                     res.raise_for_status()
                 gene = res.json()
+                if not gene['is_main_isoform']:
+                    res = requests.get(gene['isoforms'])
+                    res.raise_for_status()
+                    isoforms = res.json()
+                    for gene in isoforms:
+                        if gene['is_main_isoform']:
+                            break
+                    else:
+                        raise ValueError("No main isoform found for query gene: {}".format(query_database))
+                    res = requests.get(gene['entry_url'])
+                    res.raise_for_status()
+                    gene = res.json()
                 top_level = gene['hog_levels'][-1]
 
                 rep_tax = requests.get("https://omabrowser.org/api/taxonomy/{}/".format(top_level),
-                                       params={"type": "phyloxml"})
+                                       params={"type": "phyloxml"},
+                                       headers={"Accept": "application/xml"})
                 if not rep_tax.ok:
                     rep_tax.raise_for_status()
 
