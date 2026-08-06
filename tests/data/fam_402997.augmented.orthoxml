@@ -1,0 +1,251 @@
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="May 2025" version="0.5">
+  <species name="Trichosporon asahii var. asahii (strain CBS 8904)" NCBITaxId="1220162" taxonId="1220162">
+    <database name="Trichosporon asahii var. asahii CBS 8904 from Ensembl Fungi 51" version="Ensembl Fungi 51; ASM29921v2">
+      <genes>
+        <gene id="13488853" protId="TRIAC07326"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Laccaria bicolor" NCBITaxId="29883" taxonId="29883">
+    <database name="Laccaria bicolor complete genome from JGI" version="Version 1.0 (May 22, 2006)">
+      <genes>
+        <gene id="13808488" protId="LACBI05266"/>
+        <gene id="13820925" protId="LACBI17703"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Armillaria gallica" NCBITaxId="47427" taxonId="47427">
+    <database name="Armillaria gallica str. Ar21-2 from Ensembl Fungi 48" version="Ensembl Fungi 48; Armga1">
+      <genes>
+        <gene id="13852483" protId="ARMGA15650"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Armillaria ostoyae" NCBITaxId="47428" taxonId="47428">
+    <database name="Armillaria ostoyae from Ensembl Fungi 51" version="Ensembl Fungi 51; version_2">
+      <genes>
+        <gene id="13874833" protId="ARMOS12305"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Serpula lacrymans var. lacrymans (strain S7.3)" NCBITaxId="936435" taxonId="936435">
+    <database name="Serpula lacrymans var. lacrymans S7.3 from Ensembl Fungi 50" version="Ensembl Fungi 50; v1.0">
+      <genes>
+        <gene id="13945611" protId="SERL304797"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Dacryopinax primogenitus (strain DJM 731)" NCBITaxId="1858805" taxonId="1858805">
+    <database name="Dacryopinax primogenitus str. DJM-731 SS1 from Ensembl Fungi 51" version="Ensembl Fungi 51; Dacryopinax_sp._DJM_731_SSP1_v1.0">
+      <genes>
+        <gene id="13958722" protId="DACPD03427"/>
+        <gene id="13960413" protId="DACPD05118"/>
+      </genes>
+    </database>
+  </species>
+  <taxonomy>
+    <taxon id="5302" name="Agaricomycotina">
+      <taxon id="1858805" name="Dacryopinax primogenitus (strain DJM 731)"/>
+      <taxon id="155616" name="Tremellomycetes">
+        <taxon id="1220162" name="Trichosporon asahii var. asahii (strain CBS 8904)"/>
+        <taxon id="5234" name="Tremellales">
+          <taxon id="5217" name="Tremella mesenterica"/>
+          <taxon id="5206" name="Cryptococcus">
+            <taxon id="214684" name="Cryptococcus neoformans var. neoformans serotype D (strain JEC21 / ATCC MYA-565)"/>
+            <taxon id="1884637" name="Cryptococcus gattii species complex">
+              <taxon id="552467" name="Cryptococcus gattii"/>
+              <taxon id="294750" name="Cryptococcus gattii serotype B (strain R265)"/>
+            </taxon>
+          </taxon>
+        </taxon>
+      </taxon>
+      <taxon id="155619" name="Agaricomycetes">
+        <taxon id="452333" name="Agaricomycetidae">
+          <taxon id="227334" name="Coniophorineae">
+            <taxon id="741705" name="Coniophora puteana (strain RWD-64-598)"/>
+            <taxon id="936435" name="Serpula lacrymans var. lacrymans (strain S7.3)"/>
+          </taxon>
+          <taxon id="5338" name="Agaricales">
+            <taxon id="554373" name="Moniliophthora perniciosa (strain FA553 / isolate CP02)"/>
+            <taxon id="5323" name="Pleurotus eryngii"/>
+            <taxon id="945553" name="Hypholoma sublateritium (strain FD-334 SS-4)"/>
+            <taxon id="29883" name="Laccaria bicolor"/>
+            <taxon id="5341" name="Agaricus bisporus">
+              <taxon id="192523" name="Agaricus bisporus var. bisporus"/>
+              <taxon id="597362" name="Agaricus bisporus var. burnettii (strain JB137-S8 / ATCC MYA-4627 / FGSC 10392)"/>
+            </taxon>
+            <taxon id="47424" name="Armillaria">
+              <taxon id="47427" name="Armillaria gallica"/>
+              <taxon id="47428" name="Armillaria ostoyae"/>
+            </taxon>
+            <taxon id="5346" name="Coprinopsis cinerea">
+              <taxon id="-2383" name="Coprinopsis cinerea - COPCI"/>
+              <taxon id="240176" name="Coprinopsis cinerea (strain Okayama-7 / 130 / ATCC MYA-4618 / FGSC 9003)"/>
+            </taxon>
+            <taxon id="5334" name="Schizophyllum commune">
+              <taxon id="-2385" name="Schizophyllum commune - SCHCO"/>
+              <taxon id="578458" name="Schizophyllum commune (strain H4-8 / FGSC 9210)"/>
+            </taxon>
+          </taxon>
+        </taxon>
+        <taxon id="355688" name="Agaricomycetes incertae sedis">
+          <taxon id="717982" name="Auricularia subglabra (strain TFB-10046 / SS5)"/>
+          <taxon id="983506" name="Thanatephorus cucumeris (strain AG1-IA)"/>
+          <taxon id="741275" name="Punctularia strigosozonata (strain HHB-11173)"/>
+          <taxon id="694068" name="Fomitiporia mediterranea (strain MF3/22)"/>
+          <taxon id="1109443" name="Serendipita indica (strain DSM 11827)"/>
+          <taxon id="104355" name="Gloeophyllum trabeum">
+            <taxon id="-2361" name="Gloeophyllum trabeum - GLOTR"/>
+            <taxon id="670483" name="Gloeophyllum trabeum (strain ATCC 11539 / FP-39264 / Madison 617)"/>
+          </taxon>
+          <taxon id="452342" name="Russulales">
+            <taxon id="13563" name="Heterobasidion annosum"/>
+            <taxon id="721885" name="Stereum hirsutum (strain FP-91666)"/>
+          </taxon>
+          <taxon id="5303" name="Polyporales">
+            <taxon id="561896" name="Postia placenta (strain ATCC 44394 / Madison 698-R)"/>
+            <taxon id="743788" name="Fomitopsis pinicola (strain FP-58527)"/>
+            <taxon id="5627" name="Grifola frondosa"/>
+            <taxon id="742152" name="Wolfiporia cocos (strain MD-104)"/>
+            <taxon id="396331" name="Phanerochaetaceae">
+              <taxon id="2822231" name="Phanerochaete chrysosporium"/>
+              <taxon id="82310" name="Phlebiopsis gigantea"/>
+            </taxon>
+            <taxon id="5317" name="Polyporaceae">
+              <taxon id="732165" name="Dichomitus squalens (strain LYAD-421)"/>
+              <taxon id="5324" name="Trametes">
+                <taxon id="5643" name="Pycnoporus cinnabarinus"/>
+                <taxon id="154538" name="Trametes pubescens"/>
+                <taxon id="717944" name="Trametes versicolor (strain FP-101664)"/>
+              </taxon>
+            </taxon>
+          </taxon>
+        </taxon>
+      </taxon>
+    </taxon>
+  </taxonomy>
+  <scores>
+    <scoreDef id="CompletenessScore" desc="Fraction of expected species genes in the HOG"/>
+  </scores>
+  <groups>
+    <orthologGroup taxonId="5302" id="HOG:0402997_5302">
+      <score id="CompletenessScore" value="0.154"/>
+      <property name="TaxRange" value="Agaricomycotina"/>
+      <property name="NrMemberGenes" value="8"/>
+      <paralogGroup>
+        <orthologGroup taxonId="1858805" id="HOG:0402997.1a_1858805">
+          <score id="CompletenessScore" value="1.000"/>
+          <property name="TaxRange" value="Dacryopinax primogenitus (strain DJM 731)"/>
+          <property name="taxid" value="1858805"/>
+          <property name="NrMemberGenes" value="1"/>
+          <geneRef id="13960413" LOFT="HOG:0402997.1a"/>
+        </orthologGroup>
+        <orthologGroup taxonId="1858805" id="HOG:0402997.1b_1858805">
+          <score id="CompletenessScore" value="1.000"/>
+          <property name="TaxRange" value="Dacryopinax primogenitus (strain DJM 731)"/>
+          <property name="taxid" value="1858805"/>
+          <property name="NrMemberGenes" value="1"/>
+          <geneRef id="13958722" LOFT="HOG:0402997.1b"/>
+        </orthologGroup>
+      </paralogGroup>
+      <orthologGroup taxonId="155619" id="HOG:0402997_155619">
+        <score id="CompletenessScore" value="0.121"/>
+        <property name="TaxRange" value="Agaricomycetes"/>
+        <property name="taxid" value="155619"/>
+        <property name="NrMemberGenes" value="5"/>
+        <paralogGroup>
+          <orthologGroup taxonId="452333" id="HOG:0402997.2a_452333">
+            <score id="CompletenessScore" value="0.071"/>
+            <property name="TaxRange" value="Agaricomycetidae"/>
+            <property name="taxid" value="452333"/>
+            <property name="NrMemberGenes" value="1"/>
+            <orthologGroup taxonId="5338" id="HOG:0402997.2a_5338">
+              <score id="CompletenessScore" value="0.083"/>
+              <property name="TaxRange" value="Agaricales"/>
+              <property name="taxid" value="5338"/>
+              <property name="NrMemberGenes" value="1"/>
+              <orthologGroup taxonId="29883" id="HOG:0402997.2a_29883">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Laccaria bicolor"/>
+                <property name="taxid" value="29883"/>
+                <property name="NrMemberGenes" value="1"/>
+                <geneRef id="13808488" LOFT="HOG:0402997.2a"/>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+          <orthologGroup taxonId="452333" id="HOG:0402997.2b_452333">
+            <score id="CompletenessScore" value="0.286"/>
+            <property name="TaxRange" value="Agaricomycetidae"/>
+            <property name="NrMemberGenes" value="4"/>
+            <paralogGroup>
+              <orthologGroup taxonId="5338" id="HOG:0402997.2b.1a_5338">
+                <score id="CompletenessScore" value="0.167"/>
+                <property name="TaxRange" value="Agaricales"/>
+                <property name="taxid" value="5338"/>
+                <property name="NrMemberGenes" value="2"/>
+                <orthologGroup taxonId="47424" id="HOG:0402997.2b.1a_47424">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Armillaria"/>
+                  <property name="NrMemberGenes" value="2"/>
+                  <orthologGroup taxonId="47427" id="HOG:0402997.2b.1a_47427">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Armillaria gallica"/>
+                    <property name="taxid" value="47427"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="13852483" LOFT="HOG:0402997.2b.1a"/>
+                  </orthologGroup>
+                  <orthologGroup taxonId="47428" id="HOG:0402997.2b.1a_47428">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Armillaria ostoyae"/>
+                    <property name="taxid" value="47428"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="13874833" LOFT="HOG:0402997.2b.1a"/>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+              <orthologGroup taxonId="5338" id="HOG:0402997.2b.1b_5338">
+                <score id="CompletenessScore" value="0.083"/>
+                <property name="TaxRange" value="Agaricales"/>
+                <property name="taxid" value="5338"/>
+                <property name="NrMemberGenes" value="1"/>
+                <orthologGroup taxonId="29883" id="HOG:0402997.2b.1b_29883">
+                  <score id="CompletenessScore" value="1.000"/>
+                  <property name="TaxRange" value="Laccaria bicolor"/>
+                  <property name="taxid" value="29883"/>
+                  <property name="NrMemberGenes" value="1"/>
+                  <geneRef id="13820925" LOFT="HOG:0402997.2b.1b"/>
+                </orthologGroup>
+              </orthologGroup>
+            </paralogGroup>
+            <orthologGroup taxonId="227334" id="HOG:0402997.2b_227334">
+              <score id="CompletenessScore" value="0.500"/>
+              <property name="TaxRange" value="Coniophorineae"/>
+              <property name="taxid" value="227334"/>
+              <property name="NrMemberGenes" value="1"/>
+              <orthologGroup taxonId="936435" id="HOG:0402997.2b_936435">
+                <score id="CompletenessScore" value="1.000"/>
+                <property name="TaxRange" value="Serpula lacrymans var. lacrymans (strain S7.3)"/>
+                <property name="taxid" value="936435"/>
+                <property name="NrMemberGenes" value="1"/>
+                <geneRef id="13945611" LOFT="HOG:0402997.2b"/>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+        </paralogGroup>
+      </orthologGroup>
+      <orthologGroup taxonId="155616" id="HOG:0402997_155616">
+        <score id="CompletenessScore" value="0.200"/>
+        <property name="TaxRange" value="Tremellomycetes"/>
+        <property name="taxid" value="155616"/>
+        <property name="NrMemberGenes" value="1"/>
+        <orthologGroup taxonId="1220162" id="HOG:0402997_1220162">
+          <score id="CompletenessScore" value="1.000"/>
+          <property name="TaxRange" value="Trichosporon asahii var. asahii (strain CBS 8904)"/>
+          <property name="taxid" value="1220162"/>
+          <property name="NrMemberGenes" value="1"/>
+          <geneRef id="13488853" LOFT="HOG:0402997"/>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>

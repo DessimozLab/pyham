@@ -50,6 +50,28 @@ def test_tomato_hog_follow_species_tree(tomato_ham):
             hog = hog.parent
 
 
+@pytest.fixture(params=[
+     ("fam_402997.augmented.orthoxml", None, "HOG:0402997_5302", "Agaricomycotina"),
+     ("fam_402997.augmented.orthoxml", "fam_402997.nwk", "HOG:0402997_5302", "Agaricomycotina"),
+     ("fam_800112.augmented.orthoxml", None, "HOG:0800112_7711", "Chordata"),
+     ("fam_800112.augmented.orthoxml", "fam_402997.nwk", "HOG:0800112_7711", "Chordata"),
+ ])
+def hog_fam_ham(request):
+     oxml, nwk, toplevel_hogid, root_level = request.param
+     orthoxml_path = os.path.join(os.path.dirname(__file__), './data', oxml)
+     tree_path = os.path.join(os.path.dirname(__file__), './data', nwk) if nwk else None
+     ham_obj = ham.Ham(tree_file=tree_path, hog_file=orthoxml_path, tree_format="newick", use_internal_name=True)
+     return ham_obj, toplevel_hogid, root_level
+
+
+def test_root_level_as_expected(hog_fam_ham):
+     ham_obj, toplevel_hogid, root_level = hog_fam_ham
+     assert len(ham_obj.get_list_top_level_hogs()) == 1, "HOG 1074943 should have one top level hog"
+     hog = ham_obj.get_list_top_level_hogs()[0]
+     assert hog.hog_id == toplevel_hogid, "Top level HOG ID should match"
+     assert hog.genome.name == root_level, f"Top level HOG level should be {root_level}"
+
+
 ####
 # tests on hog_1074943 (that failed while building edgehog)
 @pytest.fixture

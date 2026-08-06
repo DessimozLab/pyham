@@ -1,0 +1,648 @@
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="May 2025" version="0.5">
+  <species name="Ciona intestinalis" NCBITaxId="7719" taxonId="7719">
+    <database name="Ciona intestinalis from ENSEMBL v70" version="Ensembl 70; KH; 11-DEC-2012">
+      <genes>
+        <gene id="18368283" protId="CIOIN09689"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Branchiostoma floridae" NCBITaxId="7739" taxonId="7739">
+    <database name="Branchiostoma floridae from Refseq" version="Refseq; Bfl_VNyyK; GCF_000003815.2; 13-AUG-2020">
+      <genes>
+        <gene id="18423903" protId="BRAFL34873"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Scyliorhinus torazame" NCBITaxId="75743" taxonId="75743">
+    <database name="Scyliorhinus torazame from ENA" version="ENA; Storazame_v1.0; GCA_003427355.1">
+      <genes>
+        <gene id="18525034" protId="SCYTO18071"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Myotis lucifugus" NCBITaxId="59463" taxonId="59463">
+    <database name="Myotis lucifugus from ENSEMBL v80" version="Ensembl 80; Myoluc2.0; 15-MAY-2015">
+      <genes>
+        <gene id="22577243" protId="MYOLU03682"/>
+      </genes>
+    </database>
+  </species>
+  <taxonomy>
+    <taxon id="7711" name="Chordata">
+      <taxon id="7737" name="Branchiostoma">
+        <taxon id="7739" name="Branchiostoma floridae"/>
+        <taxon id="7740" name="Branchiostoma lanceolatum"/>
+      </taxon>
+      <taxon id="7718" name="Ciona">
+        <taxon id="7719" name="Ciona intestinalis"/>
+        <taxon id="51511" name="Ciona savignyi"/>
+      </taxon>
+      <taxon id="7742" name="Vertebrata">
+        <taxon id="1476529" name="Cyclostomata">
+          <taxon id="7757" name="Petromyzon marinus"/>
+          <taxon id="7764" name="Eptatretus burgeri"/>
+        </taxon>
+        <taxon id="7776" name="Gnathostomata">
+          <taxon id="7777" name="Chondrichthyes">
+            <taxon id="7868" name="Callorhinchus milii"/>
+            <taxon id="7778" name="Elasmobranchii">
+              <taxon id="386614" name="Amblyraja radiata"/>
+              <taxon id="119195" name="Galeoidea">
+                <taxon id="75743" name="Scyliorhinus torazame"/>
+                <taxon id="137246" name="Chiloscyllium punctatum"/>
+              </taxon>
+            </taxon>
+          </taxon>
+          <taxon id="117571" name="Euteleostomi">
+            <taxon id="41665" name="Neopterygii">
+              <taxon id="7918" name="Lepisosteus oculatus"/>
+              <taxon id="32443" name="Teleostei">
+                <taxon id="7936" name="Anguilla anguilla"/>
+                <taxon id="186625" name="Clupeocephala">
+                  <taxon id="186626" name="Otophysi">
+                    <taxon id="30727" name="Cyprinoidei">
+                      <taxon id="7955" name="Danio rerio"/>
+                      <taxon id="2743694" name="Cyprininae">
+                        <taxon id="630221" name="Cyprinus carpio carpio"/>
+                        <taxon id="75366" name="Sinocyclocheilus grahami"/>
+                      </taxon>
+                    </taxon>
+                    <taxon id="186628" name="Characiphysae">
+                      <taxon id="8005" name="Electrophorus electricus"/>
+                      <taxon id="1489739" name="Characoidei">
+                        <taxon id="7994" name="Astyanax mexicanus"/>
+                        <taxon id="42514" name="Pygocentrus nattereri"/>
+                      </taxon>
+                      <taxon id="1489793" name="Siluroidei">
+                        <taxon id="1234273" name="Tachysurus fulvidraco"/>
+                        <taxon id="1594786" name="Clarias magur"/>
+                        <taxon id="7996" name="Ictaluridae">
+                          <taxon id="219545" name="Ameiurus melas"/>
+                          <taxon id="7998" name="Ictalurus punctatus"/>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                  <taxon id="1489388" name="Euteleosteomorpha">
+                    <taxon id="41705" name="Protacanthopterygii">
+                      <taxon id="8010" name="Esox lucius"/>
+                      <taxon id="8028" name="Salmo">
+                        <taxon id="8030" name="Salmo salar"/>
+                        <taxon id="8032" name="Salmo trutta"/>
+                      </taxon>
+                    </taxon>
+                    <taxon id="123368" name="Acanthomorphata">
+                      <taxon id="8049" name="Gadus morhua"/>
+                      <taxon id="1489872" name="Percomorphaceae">
+                        <taxon id="64144" name="Anabas testudineus"/>
+                        <taxon id="109280" name="Hippocampus comes"/>
+                        <taxon id="1489904" name="Carangaria">
+                          <taxon id="1489907" name="Carangiformes">
+                            <taxon id="41447" name="Seriola dumerili"/>
+                            <taxon id="173247" name="Echeneis naucrates"/>
+                          </taxon>
+                          <taxon id="30942" name="Pleuronectoidei">
+                            <taxon id="244447" name="Cynoglossus semilaevis"/>
+                            <taxon id="52904" name="Scophthalmus maximus"/>
+                          </taxon>
+                        </taxon>
+                        <taxon id="1489922" name="Eupercaria">
+                          <taxon id="13489" name="Dicentrarchus labrax"/>
+                          <taxon id="69293" name="Gasterosteus aculeatus"/>
+                          <taxon id="8175" name="Sparus aurata"/>
+                          <taxon id="31022" name="Tetraodontiformes">
+                            <taxon id="94237" name="Mola mola"/>
+                            <taxon id="31031" name="Tetraodontidae">
+                              <taxon id="31033" name="Takifugu rubripes"/>
+                              <taxon id="99883" name="Tetraodon nigroviridis"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                        <taxon id="1489908" name="Ovalentaria">
+                          <taxon id="181472" name="Salarias fasciatus"/>
+                          <taxon id="80969" name="Amphiprion">
+                            <taxon id="80972" name="Amphiprion ocellaris"/>
+                            <taxon id="161767" name="Amphiprion percula"/>
+                          </taxon>
+                          <taxon id="8113" name="Cichlidae">
+                            <taxon id="61819" name="Amphilophus citrinellus"/>
+                            <taxon id="318546" name="Pseudocrenilabrinae">
+                              <taxon id="32507" name="Neolamprologus brichardi"/>
+                              <taxon id="319058" name="Haplochromini">
+                                <taxon id="8154" name="Astatotilapia calliptera"/>
+                                <taxon id="8153" name="Haplochromis burtoni"/>
+                              </taxon>
+                              <taxon id="8139" name="Oreochromis">
+                                <taxon id="47969" name="Oreochromis aureus"/>
+                                <taxon id="8128" name="Oreochromis niloticus"/>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                          <taxon id="1489913" name="Atherinomorphae">
+                            <taxon id="8089" name="Oryzias">
+                              <taxon id="123683" name="Oryzias javanicus"/>
+                              <taxon id="8090" name="Oryzias latipes"/>
+                              <taxon id="30732" name="Oryzias melastigma"/>
+                            </taxon>
+                            <taxon id="28738" name="Cyprinodontiformes">
+                              <taxon id="45443" name="Aplocheiloidei">
+                                <taxon id="105023" name="Nothobranchius furzeri"/>
+                                <taxon id="37003" name="Kryptolebias marmoratus"/>
+                              </taxon>
+                              <taxon id="8087" name="Cyprinodontoidei">
+                                <taxon id="28743" name="Cyprinodon variegatus"/>
+                                <taxon id="586240" name="Poeciliinae">
+                                  <taxon id="33528" name="Gambusia affinis"/>
+                                  <taxon id="8083" name="Xiphophorus maculatus"/>
+                                  <taxon id="8080" name="Poecilia">
+                                    <taxon id="48698" name="Poecilia formosa"/>
+                                    <taxon id="8081" name="Poecilia reticulata"/>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+            <taxon id="8287" name="Sarcopterygii">
+              <taxon id="7897" name="Latimeria chalumnae"/>
+              <taxon id="32523" name="Tetrapoda">
+                <taxon id="8342" name="Anura">
+                  <taxon id="8417" name="Hyloidea">
+                    <taxon id="8384" name="Bufo bufo"/>
+                    <taxon id="57060" name="Eleutherodactylus coqui"/>
+                  </taxon>
+                  <taxon id="8353" name="Xenopus">
+                    <taxon id="8364" name="Xenopus tropicalis"/>
+                    <taxon id="8355" name="Xenopus laevis"/>
+                  </taxon>
+                </taxon>
+                <taxon id="32524" name="Amniota">
+                  <taxon id="32561" name="Sauria">
+                    <taxon id="8504" name="Lepidosauria">
+                      <taxon id="8508" name="Sphenodon punctatus"/>
+                      <taxon id="1329961" name="Bifurcata">
+                        <taxon id="481883" name="Eublepharis macularius"/>
+                        <taxon id="1329912" name="Episquamata">
+                          <taxon id="1329976" name="Laterata">
+                            <taxon id="96440" name="Salvator merianae"/>
+                            <taxon id="162266" name="Lacertinae">
+                              <taxon id="80427" name="Lacerta agilis"/>
+                              <taxon id="64176" name="Podarcis muralis"/>
+                              <taxon id="8524" name="Zootoca vivipara"/>
+                            </taxon>
+                          </taxon>
+                          <taxon id="1329911" name="Toxicofera">
+                            <taxon id="61221" name="Varanus komodoensis"/>
+                            <taxon id="8511" name="Iguania">
+                              <taxon id="28377" name="Anolis carolinensis"/>
+                              <taxon id="42425" name="Phrynosomatinae">
+                                <taxon id="52577" name="Phrynosoma platyrhinos"/>
+                                <taxon id="8520" name="Sceloporus undulatus"/>
+                              </taxon>
+                            </taxon>
+                            <taxon id="8570" name="Serpentes">
+                              <taxon id="176946" name="Python bivittatus"/>
+                              <taxon id="34989" name="Colubroidea">
+                                <taxon id="8578" name="Colubridae">
+                                  <taxon id="94885" name="Pantherophis guttatus"/>
+                                  <taxon id="35005" name="Thamnophis elegans"/>
+                                </taxon>
+                                <taxon id="8710" name="Crotalinae">
+                                  <taxon id="88082" name="Crotalus tigris"/>
+                                  <taxon id="103944" name="Protobothrops mucrosquamatus"/>
+                                </taxon>
+                                <taxon id="8602" name="Elapidae">
+                                  <taxon id="8673" name="Pseudonaja textilis"/>
+                                  <taxon id="42168" name="Elapinae">
+                                    <taxon id="35670" name="Naja naja"/>
+                                    <taxon id="8665" name="Ophiophagus hannah"/>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                    <taxon id="1329799" name="Archelosauria">
+                      <taxon id="8464" name="Cryptodira">
+                        <taxon id="13735" name="Pelodiscus sinensis"/>
+                        <taxon id="8486" name="Testudinoidea">
+                          <taxon id="8478" name="Chrysemys picta bellii"/>
+                          <taxon id="106734" name="Chelonoidis abingdonii"/>
+                        </taxon>
+                      </taxon>
+                      <taxon id="8492" name="Archosauria">
+                        <taxon id="8502" name="Crocodylus porosus"/>
+                        <taxon id="8825" name="Neognathae">
+                          <taxon id="52644" name="Haliaeetus leucocephalus"/>
+                          <taxon id="100819" name="Falco tinnunculus"/>
+                          <taxon id="9223" name="Psittaciformes">
+                            <taxon id="2489341" name="Strigops habroptila"/>
+                            <taxon id="13146" name="Melopsittacus undulatus"/>
+                          </taxon>
+                          <taxon id="30458" name="Strigiformes">
+                            <taxon id="194338" name="Athene cunicularia"/>
+                            <taxon id="56313" name="Tyto alba"/>
+                          </taxon>
+                          <taxon id="1549675" name="Galloanserae">
+                            <taxon id="8839" name="Anas platyrhynchos">
+                              <taxon id="-2589" name="Anas platyrhynchos - ANAPL"/>
+                              <taxon id="8840" name="Anas platyrhynchos platyrhynchos"/>
+                            </taxon>
+                            <taxon id="9005" name="Phasianidae">
+                              <taxon id="9103" name="Meleagris gallopavo"/>
+                              <taxon id="9072" name="Phasianinae">
+                                <taxon id="9031" name="Gallus gallus"/>
+                                <taxon id="9054" name="Phasianus colchicus"/>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                          <taxon id="9126" name="Passeriformes">
+                            <taxon id="1196302" name="Corvus moneduloides"/>
+                            <taxon id="59894" name="Ficedula albicollis"/>
+                            <taxon id="9157" name="Parus major"/>
+                            <taxon id="40217" name="Junco hyemalis"/>
+                            <taxon id="175121" name="Passeroidea">
+                              <taxon id="59729" name="Taeniopygia guttata"/>
+                              <taxon id="9135" name="Serinus canaria"/>
+                              <taxon id="44316" name="Chloebia gouldiae"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                  <taxon id="40674" name="Mammalia">
+                    <taxon id="9255" name="Monotremata">
+                      <taxon id="9258" name="Ornithorhynchus anatinus"/>
+                      <taxon id="9261" name="Tachyglossus aculeatus"/>
+                    </taxon>
+                    <taxon id="32525" name="Theria">
+                      <taxon id="9263" name="Metatheria">
+                        <taxon id="9305" name="Sarcophilus harrisii"/>
+                        <taxon id="126287" name="Didelphinae">
+                          <taxon id="191870" name="Gracilinanus agilis"/>
+                          <taxon id="13616" name="Monodelphis domestica"/>
+                        </taxon>
+                        <taxon id="38609" name="Diprotodontia">
+                          <taxon id="9315" name="Notamacropus eugenii"/>
+                          <taxon id="38626" name="Phascolarctos cinereus"/>
+                          <taxon id="29139" name="Vombatus ursinus"/>
+                        </taxon>
+                      </taxon>
+                      <taxon id="9347" name="Eutheria">
+                        <taxon id="9348" name="Xenarthra">
+                          <taxon id="9361" name="Dasypus novemcinctus"/>
+                          <taxon id="9358" name="Choloepus hoffmanni"/>
+                        </taxon>
+                        <taxon id="311790" name="Afrotheria">
+                          <taxon id="9813" name="Procavia capensis"/>
+                          <taxon id="9785" name="Loxodonta africana"/>
+                          <taxon id="9371" name="Echinops telfairi"/>
+                        </taxon>
+                        <taxon id="1437010" name="Boreoeutheria">
+                          <taxon id="314145" name="Laurasiatheria">
+                            <taxon id="9974" name="Manis javanica"/>
+                            <taxon id="9362" name="Eulipotyphla">
+                              <taxon id="9365" name="Erinaceus europaeus"/>
+                              <taxon id="42254" name="Sorex araneus"/>
+                            </taxon>
+                            <taxon id="9787" name="Perissodactyla">
+                              <taxon id="73337" name="Ceratotherium simum simum"/>
+                              <taxon id="9789" name="Equus">
+                                <taxon id="83772" name="Equus asinus asinus"/>
+                                <taxon id="9796" name="Equus caballus"/>
+                              </taxon>
+                            </taxon>
+                            <taxon id="9397" name="Chiroptera">
+                              <taxon id="132908" name="Pteropus vampyrus"/>
+                              <taxon id="59479" name="Rhinolophus ferrumequinum"/>
+                              <taxon id="186990" name="Hipposideros armiger"/>
+                              <taxon id="9431" name="Vespertilionidae">
+                                <taxon id="59463" name="Myotis lucifugus"/>
+                                <taxon id="59472" name="Pipistrellus kuhlii"/>
+                              </taxon>
+                            </taxon>
+                            <taxon id="91561" name="Artiodactyla">
+                              <taxon id="9823" name="Sus scrofa"/>
+                              <taxon id="30538" name="Vicugna pacos"/>
+                              <taxon id="9721" name="Cetacea">
+                                <taxon id="9771" name="Balaenoptera musculus"/>
+                                <taxon id="9739" name="Tursiops truncatus"/>
+                              </taxon>
+                              <taxon id="9895" name="Bovidae">
+                                <taxon id="9903" name="Bos">
+                                  <taxon id="30522" name="Bos indicus x Bos taurus"/>
+                                  <taxon id="9913" name="Bos taurus"/>
+                                </taxon>
+                                <taxon id="9963" name="Caprinae">
+                                  <taxon id="9925" name="Capra hircus"/>
+                                  <taxon id="9940" name="Ovis aries"/>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                            <taxon id="33554" name="Carnivora">
+                              <taxon id="379583" name="Feliformia">
+                                <taxon id="37032" name="Suricata suricatta"/>
+                                <taxon id="9681" name="Felidae">
+                                  <taxon id="9689" name="Panthera leo"/>
+                                  <taxon id="338152" name="Felinae">
+                                    <taxon id="9685" name="Felis catus"/>
+                                    <taxon id="61384" name="Lynx rufus"/>
+                                    <taxon id="1608482" name="Puma yagouaroundi"/>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                              <taxon id="379584" name="Caniformia">
+                                <taxon id="9608" name="Canidae">
+                                  <taxon id="9615" name="Canis lupus familiaris"/>
+                                  <taxon id="9627" name="Vulpes vulpes"/>
+                                </taxon>
+                                <taxon id="9655" name="Mustelidae">
+                                  <taxon id="9662" name="Meles meles"/>
+                                  <taxon id="9669" name="Mustela putorius furo"/>
+                                </taxon>
+                                <taxon id="9632" name="Ursidae">
+                                  <taxon id="9646" name="Ailuropoda melanoleuca"/>
+                                  <taxon id="9639" name="Ursus">
+                                    <taxon id="9643" name="Ursus americanus"/>
+                                    <taxon id="29073" name="Ursus maritimus"/>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                          <taxon id="314146" name="Euarchontoglires">
+                            <taxon id="37347" name="Tupaia belangeri"/>
+                            <taxon id="314147" name="Glires">
+                              <taxon id="9975" name="Lagomorpha">
+                                <taxon id="9986" name="Oryctolagus cuniculus"/>
+                                <taxon id="9978" name="Ochotona princeps"/>
+                              </taxon>
+                              <taxon id="9989" name="Rodentia">
+                                <taxon id="10020" name="Dipodomys ordii"/>
+                                <taxon id="43179" name="Ictidomys tridecemlineatus"/>
+                                <taxon id="33550" name="Hystricomorpha">
+                                  <taxon id="34839" name="Chinchilla lanigera"/>
+                                  <taxon id="10160" name="Octodon degus"/>
+                                  <taxon id="10167" name="Bathyergidae">
+                                    <taxon id="885580" name="Fukomys damarensis"/>
+                                    <taxon id="10181" name="Heterocephalus glaber"/>
+                                  </taxon>
+                                  <taxon id="10140" name="Cavia">
+                                    <taxon id="37548" name="Cavia aperea"/>
+                                    <taxon id="10141" name="Cavia porcellus"/>
+                                  </taxon>
+                                </taxon>
+                                <taxon id="1963758" name="Myomorpha">
+                                  <taxon id="51337" name="Jaculus jaculus"/>
+                                  <taxon id="337687" name="Muroidea">
+                                    <taxon id="1026970" name="Nannospalax galili"/>
+                                    <taxon id="337677" name="Cricetidae">
+                                      <taxon id="79684" name="Microtus ochrogaster"/>
+                                      <taxon id="10029" name="Cricetulus griseus"/>
+                                    </taxon>
+                                    <taxon id="39107" name="Murinae">
+                                      <taxon id="10090" name="Mus musculus"/>
+                                      <taxon id="10114" name="Rattus">
+                                        <taxon id="10116" name="Rattus norvegicus"/>
+                                        <taxon id="10117" name="Rattus rattus"/>
+                                      </taxon>
+                                    </taxon>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                            <taxon id="9443" name="Primates">
+                              <taxon id="376911" name="Strepsirrhini">
+                                <taxon id="30611" name="Otolemur garnettii"/>
+                                <taxon id="376915" name="Lemuriformes">
+                                  <taxon id="30608" name="Microcebus murinus"/>
+                                  <taxon id="379532" name="Propithecus coquereli"/>
+                                </taxon>
+                              </taxon>
+                              <taxon id="376913" name="Haplorrhini">
+                                <taxon id="1868482" name="Carlito syrichta"/>
+                                <taxon id="314293" name="Simiiformes">
+                                  <taxon id="9479" name="Platyrrhini">
+                                    <taxon id="37293" name="Aotus nancymaae"/>
+                                    <taxon id="9498" name="Cebidae">
+                                      <taxon id="9483" name="Callithrix jacchus"/>
+                                      <taxon id="2715852" name="Cebus imitator"/>
+                                      <taxon id="39432" name="Saimiri boliviensis boliviensis"/>
+                                    </taxon>
+                                  </taxon>
+                                  <taxon id="9526" name="Catarrhini">
+                                    <taxon id="314295" name="Hominoidea">
+                                      <taxon id="61853" name="Nomascus leucogenys"/>
+                                      <taxon id="9604" name="Hominidae">
+                                        <taxon id="9601" name="Pongo abelii"/>
+                                        <taxon id="207598" name="Homininae">
+                                          <taxon id="9595" name="Gorilla gorilla gorilla"/>
+                                          <taxon id="9606" name="Homo sapiens"/>
+                                          <taxon id="9596" name="Pan">
+                                            <taxon id="9597" name="Pan paniscus"/>
+                                            <taxon id="9598" name="Pan troglodytes"/>
+                                          </taxon>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                    <taxon id="9527" name="Cercopithecidae">
+                                      <taxon id="9569" name="Colobinae">
+                                        <taxon id="336983" name="Colobus angolensis palliatus"/>
+                                        <taxon id="542827" name="Rhinopithecus">
+                                          <taxon id="61621" name="Rhinopithecus bieti"/>
+                                          <taxon id="61622" name="Rhinopithecus roxellana"/>
+                                        </taxon>
+                                      </taxon>
+                                      <taxon id="9528" name="Cercopithecinae">
+                                        <taxon id="9531" name="Cercocebus atys"/>
+                                        <taxon id="60711" name="Chlorocebus sabaeus"/>
+                                        <taxon id="9568" name="Mandrillus leucophaeus"/>
+                                        <taxon id="9555" name="Papio anubis"/>
+                                        <taxon id="9539" name="Macaca">
+                                          <taxon id="9541" name="Macaca fascicularis"/>
+                                          <taxon id="9544" name="Macaca mulatta"/>
+                                          <taxon id="9545" name="Macaca nemestrina"/>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+          </taxon>
+        </taxon>
+      </taxon>
+    </taxon>
+  </taxonomy>
+  <scores>
+    <scoreDef id="CompletenessScore" desc="Fraction of expected species genes in the HOG"/>
+  </scores>
+  <groups>
+    <orthologGroup taxonId="7711" id="HOG:0800112_7711">
+      <score id="CompletenessScore" value="0.021"/>
+      <property name="TaxRange" value="Chordata"/>
+      <property name="NrMemberGenes" value="4"/>
+      <orthologGroup taxonId="7742" id="HOG:0800112_7742">
+        <score id="CompletenessScore" value="0.011"/>
+        <property name="TaxRange" value="Vertebrata"/>
+        <property name="taxid" value="7742"/>
+        <property name="NrMemberGenes" value="2"/>
+        <paralogGroup>
+          <orthologGroup taxonId="7776" id="HOG:0800112.1a_7776">
+            <score id="CompletenessScore" value="0.005"/>
+            <property name="TaxRange" value="Gnathostomata"/>
+            <property name="taxid" value="7776"/>
+            <property name="NrMemberGenes" value="1"/>
+            <orthologGroup taxonId="117571" id="HOG:0800112.1a_117571">
+              <score id="CompletenessScore" value="0.006"/>
+              <property name="TaxRange" value="Euteleostomi"/>
+              <property name="taxid" value="117571"/>
+              <property name="NrMemberGenes" value="1"/>
+              <orthologGroup taxonId="8287" id="HOG:0800112.1a_8287">
+                <score id="CompletenessScore" value="0.008"/>
+                <property name="TaxRange" value="Sarcopterygii"/>
+                <property name="taxid" value="8287"/>
+                <property name="NrMemberGenes" value="1"/>
+                <orthologGroup taxonId="32523" id="HOG:0800112.1a_32523">
+                  <score id="CompletenessScore" value="0.008"/>
+                  <property name="TaxRange" value="Tetrapoda"/>
+                  <property name="taxid" value="32523"/>
+                  <property name="NrMemberGenes" value="1"/>
+                  <orthologGroup taxonId="32524" id="HOG:0800112.1a_32524">
+                    <score id="CompletenessScore" value="0.008"/>
+                    <property name="TaxRange" value="Amniota"/>
+                    <property name="taxid" value="32524"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <orthologGroup taxonId="40674" id="HOG:0800112.1a_40674">
+                      <score id="CompletenessScore" value="0.012"/>
+                      <property name="TaxRange" value="Mammalia"/>
+                      <property name="taxid" value="40674"/>
+                      <property name="NrMemberGenes" value="1"/>
+                      <orthologGroup taxonId="32525" id="HOG:0800112.1a_32525">
+                        <score id="CompletenessScore" value="0.012"/>
+                        <property name="TaxRange" value="Theria"/>
+                        <property name="taxid" value="32525"/>
+                        <property name="NrMemberGenes" value="1"/>
+                        <orthologGroup taxonId="9347" id="HOG:0800112.1a_9347">
+                          <score id="CompletenessScore" value="0.013"/>
+                          <property name="TaxRange" value="Eutheria"/>
+                          <property name="taxid" value="9347"/>
+                          <property name="NrMemberGenes" value="1"/>
+                          <orthologGroup taxonId="1437010" id="HOG:0800112.1a_1437010">
+                            <score id="CompletenessScore" value="0.014"/>
+                            <property name="TaxRange" value="Boreoeutheria"/>
+                            <property name="taxid" value="1437010"/>
+                            <property name="NrMemberGenes" value="1"/>
+                            <orthologGroup taxonId="314145" id="HOG:0800112.1a_314145">
+                              <score id="CompletenessScore" value="0.032"/>
+                              <property name="TaxRange" value="Laurasiatheria"/>
+                              <property name="taxid" value="314145"/>
+                              <property name="NrMemberGenes" value="1"/>
+                              <orthologGroup taxonId="9397" id="HOG:0800112.1a_9397">
+                                <score id="CompletenessScore" value="0.200"/>
+                                <property name="TaxRange" value="Chiroptera"/>
+                                <property name="taxid" value="9397"/>
+                                <property name="NrMemberGenes" value="1"/>
+                                <orthologGroup taxonId="9431" id="HOG:0800112.1a_9431">
+                                  <score id="CompletenessScore" value="0.500"/>
+                                  <property name="TaxRange" value="Vespertilionidae"/>
+                                  <property name="taxid" value="9431"/>
+                                  <property name="NrMemberGenes" value="1"/>
+                                  <orthologGroup taxonId="59463" id="HOG:0800112.1a_59463">
+                                    <score id="CompletenessScore" value="1.000"/>
+                                    <property name="TaxRange" value="Myotis lucifugus"/>
+                                    <property name="taxid" value="59463"/>
+                                    <property name="NrMemberGenes" value="1"/>
+                                    <geneRef id="22577243" LOFT="HOG:0800112.1a"/>
+                                  </orthologGroup>
+                                </orthologGroup>
+                              </orthologGroup>
+                            </orthologGroup>
+                          </orthologGroup>
+                        </orthologGroup>
+                      </orthologGroup>
+                    </orthologGroup>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+          <orthologGroup taxonId="7776" id="HOG:0800112.1b_7776">
+            <score id="CompletenessScore" value="0.005"/>
+            <property name="TaxRange" value="Gnathostomata"/>
+            <property name="taxid" value="7776"/>
+            <property name="NrMemberGenes" value="1"/>
+            <orthologGroup taxonId="7777" id="HOG:0800112.1b_7777">
+              <score id="CompletenessScore" value="0.250"/>
+              <property name="TaxRange" value="Chondrichthyes"/>
+              <property name="taxid" value="7777"/>
+              <property name="NrMemberGenes" value="1"/>
+              <orthologGroup taxonId="7778" id="HOG:0800112.1b_7778">
+                <score id="CompletenessScore" value="0.333"/>
+                <property name="TaxRange" value="Elasmobranchii"/>
+                <property name="taxid" value="7778"/>
+                <property name="NrMemberGenes" value="1"/>
+                <orthologGroup taxonId="119195" id="HOG:0800112.1b_119195">
+                  <score id="CompletenessScore" value="0.500"/>
+                  <property name="TaxRange" value="Galeoidea"/>
+                  <property name="taxid" value="119195"/>
+                  <property name="NrMemberGenes" value="1"/>
+                  <orthologGroup taxonId="75743" id="HOG:0800112.1b_75743">
+                    <score id="CompletenessScore" value="1.000"/>
+                    <property name="TaxRange" value="Scyliorhinus torazame"/>
+                    <property name="taxid" value="75743"/>
+                    <property name="NrMemberGenes" value="1"/>
+                    <geneRef id="18525034" LOFT="HOG:0800112.1b"/>
+                  </orthologGroup>
+                </orthologGroup>
+              </orthologGroup>
+            </orthologGroup>
+          </orthologGroup>
+        </paralogGroup>
+      </orthologGroup>
+      <orthologGroup taxonId="7737" id="HOG:0800112_7737">
+        <score id="CompletenessScore" value="0.500"/>
+        <property name="TaxRange" value="Branchiostoma"/>
+        <property name="taxid" value="7737"/>
+        <property name="NrMemberGenes" value="1"/>
+        <orthologGroup taxonId="7739" id="HOG:0800112_7739">
+          <score id="CompletenessScore" value="1.000"/>
+          <property name="TaxRange" value="Branchiostoma floridae"/>
+          <property name="taxid" value="7739"/>
+          <property name="NrMemberGenes" value="1"/>
+          <geneRef id="18423903" LOFT="HOG:0800112"/>
+        </orthologGroup>
+      </orthologGroup>
+      <orthologGroup taxonId="7718" id="HOG:0800112_7718">
+        <score id="CompletenessScore" value="0.500"/>
+        <property name="TaxRange" value="Ciona"/>
+        <property name="taxid" value="7718"/>
+        <property name="NrMemberGenes" value="1"/>
+        <orthologGroup taxonId="7719" id="HOG:0800112_7719">
+          <score id="CompletenessScore" value="1.000"/>
+          <property name="TaxRange" value="Ciona intestinalis"/>
+          <property name="taxid" value="7719"/>
+          <property name="NrMemberGenes" value="1"/>
+          <geneRef id="18368283" LOFT="HOG:0800112"/>
+        </orthologGroup>
+      </orthologGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>
