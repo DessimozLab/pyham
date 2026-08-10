@@ -6,6 +6,7 @@ from .genome import Genome,AncestralGenome, ExtantGenome
 from . import parsers
 from . import mapper
 from . import abstractgene
+from . import id_formats
 from .TreeProfile import TreeProfile
 import logging
 import copy
@@ -125,7 +126,7 @@ class Ham(object):
     def __init__(self, tree_file=None, hog_file=None, type_hog_file="orthoxml", filter_object=None, use_internal_name=False,\
                  orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', \
                  phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None,
-                 species_resolve_mode=None, with_parser_progress=False, fail_fast=False):
+                 species_resolve_mode=None, with_parser_progress=False, fail_fast=False, id_schema='auto'):
         """
 
         Args:
@@ -148,9 +149,20 @@ class Ham(object):
             the first conflict found. If False (default), keep parsing and collect every conflict found across
             the whole file, raising a single combined error (with all conflicts available via its `conflicts`
             attribute) once parsing completes.
+            | id_schema (:obj:`str`, optional) the HOG id scheme used by the orthoxml file, one of 'LOFT',
+            'LOFT_TAXID', 'GENERIC' (see :obj:`pyham.id_formats`), used to synthesize ids for HOG levels
+            the species tree implies but the file doesn't explicitly encode. Defaults to 'auto', which
+            samples the first few families of the file to detect the scheme automatically. The resolved
+            value is available afterwards as `self.id_schema`.
         """
         self.with_parser_progress = with_parser_progress
         self.fail_fast = fail_fast
+
+        if id_schema != 'auto' and id_schema not in id_formats.SCHEMES:
+            raise TypeError("{} is not a valid option for id_schema. Available options: 'auto', {}."
+                             .format(id_schema, ', '.join(sorted(id_formats.SCHEMES))))
+        self._requested_id_schema = id_schema
+        self.id_schema = id_schema if id_schema != 'auto' else id_formats.GENERIC
 
         if use_data_from is not None:
             if query_database is None:
@@ -251,29 +263,39 @@ class Ham(object):
 
             #  If filter_object specified, pyham parse a first time to collect required information
             if self.filter_obj is not None:
-
-                if self.orthoXML_as_string == True:
-                    with io.StringIO(self.hog_file)  as orthoxml_file:
-                        self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
-
-                else:
-                    open_ = gzip.open if self.hog_file.endswith('.gz') else open
-                    with open_(self.hog_file, 'rt') as orthoxml_file:
-                        self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
+                with self._open_hog_file() as orthoxml_file:
+                    self.filter_obj.buildFilter(orthoxml_file, self.hog_file_type)
 
                 logger.info('Filtering Indexing of Orthoxml done: {} top level hogs and {} extant genes will be extract.'.format(
                                 len(self.filter_obj.hogsId),
                                 len(self.filter_obj.geneUniqueId)))
 
-            if self.orthoXML_as_string == True:
-                with io.StringIO(self.hog_file) as orthoxml_file:
-                    self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
+            #  If id_schema='auto' (default), sample the first few families to detect the HOG id scheme
+            if self._requested_id_schema == 'auto':
+                sniffer = parsers.IDSchemeSniffer()
+                sniff_parser = XMLParser(target=sniffer)
+                # <species>/<taxonomy> can dwarf <groups> in size (e.g. for large exports with
+                # a big embedded taxonomy); skip straight to <groups> via a cheap text search
+                # instead of XML-parsing that whole preamble just to sample a few HOG ids.
+                sniff_parser.feed('<orthoXML xmlns="http://orthoXML.org/2011/">')
+                with self._open_hog_file() as orthoxml_file:
+                    seen_groups = False
+                    for line in orthoxml_file:
+                        if not seen_groups:
+                            idx = line.find('<groups')
+                            if idx == -1:
+                                continue
+                            line = line[idx:]
+                            seen_groups = True
+                        sniff_parser.feed(line)
+                        if sniffer.done:
+                            break
+                self.id_schema = id_formats.detect_id_scheme(sniffer.samples)
+                logger.info('Auto-detected HOG id scheme: {}'.format(self.id_schema))
 
-            else:
+            with self._open_hog_file() as orthoxml_file:
                 # This is the actual parser to build HOG/Gene and related Genomes.
-                open_ = gzip.open if str(self.hog_file).endswith('.gz') else open
-                with open_(self.hog_file, 'rt') as orthoxml_file:
-                    self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
+                self.top_level_hogs, self.extant_gene_map, self.external_id_mapper = self._build_hogs_and_genes(orthoxml_file, filter_object=self.filter_obj)
 
             logger.info('Parse Orthoxml: {} top level hogs and {} extant genes extract.'.format(len(self.top_level_hogs),len(self.extant_gene_map)))
 
@@ -509,7 +531,7 @@ class Ham(object):
         if hog_id in self.top_level_hogs:
             return self.top_level_hogs[hog_id]
 
-        m = re.match(r"^(?P<fam>(HOG:)?(\d+))(?P<subhog>[0-9a-z.]*)(_(?P<taxid>-?\d+))?$", hog_id)
+        m = id_formats.HOG_ID_RE.match(hog_id)
         if not m:
             raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
 
@@ -785,6 +807,14 @@ class Ham(object):
             self.HOGMaps[f] = mapper.HOGsMap(self, list(genome_pair_set)[0], list(genome_pair_set)[1])
             return self.HOGMaps[f]
 
+    def _open_hog_file(self):
+        """Return a context manager yielding a fresh, from-the-start file object for `self.hog_file`
+        (a `StringIO` if the orthoxml was given as a string, else a plain/gzip-decompressed file)."""
+        if self.orthoXML_as_string:
+            return io.StringIO(self.hog_file)
+        open_ = gzip.open if str(self.hog_file).endswith('.gz') else open
+        return open_(self.hog_file, 'rt')
+
     def _build_hogs_and_genes(self, file_object, filter_object):
 
         """ This function build from an orthoxml file all data that is required to build this Ham object (using the Ham
@@ -801,7 +831,7 @@ class Ham(object):
         """
 
         factory = parsers.OrthoXMLParser(self, filterObject=filter_object, with_progress=self.with_parser_progress,
-                                          fail_fast=self.fail_fast)
+                                          fail_fast=self.fail_fast, id_schema=self.id_schema)
         parser = XMLParser(target=factory)
 
         for line in file_object:
