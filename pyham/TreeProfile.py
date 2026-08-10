@@ -1,6 +1,7 @@
 from .abstractgene import HOG
 import logging
 import json
+from ete4 import Tree
 
 logger = logging.getLogger(__name__)
 
@@ -46,16 +47,7 @@ class TreeProfile(object):
         """
 
         # copy the required taxonomy using query hog as root level
-        if self.ham.taxonomy.tree_format == 'phyloxml':
-            # Rebuild full tree from input data and annotate it with name if required
-            tree_copy = self.ham.taxonomy._build_tree(self.ham.taxonomy.tree_file, self.ham.taxonomy.tree_format)
-            self.ham.taxonomy._generate_internal_node_name(tree_copy)
-
-            # Prune at root hog level
-            hog_taxon_in_copy = tree_copy.search_nodes(name=hog.genome.taxon.name)[0]
-            treeMap = hog_taxon_in_copy.detach()
-        else:
-            treeMap = hog.genome.taxon.copy(method="newick")
+        treeMap = hog.genome.taxon.copy()
 
 
         # create a dictionary that map node with related hogs/genes
@@ -69,7 +61,7 @@ class TreeProfile(object):
                 levelGroups[subhog.genome.name].append(subhog)
 
         # add empty extant genome to levelGroups
-        for extantGenome in treeMap.get_leaves():
+        for extantGenome in treeMap.leaves():
             levelGroups[extantGenome.name] = []
 
         # add genes to related extant genome in levelGroups
@@ -77,10 +69,10 @@ class TreeProfile(object):
             levelGroups[species.name] = genes
 
         for lvl in treeMap.traverse():
-            lvl.add_feature("nbr_genes", len(levelGroups[lvl.name]))
-            lvl.add_feature("gain", None)
+            lvl.add_prop("nbr_genes", len(levelGroups[lvl.name]))
+            lvl.add_prop("gain", None)
 
-            if not lvl.is_root():
+            if not lvl.is_root:
                 cpt_dupl = 0
                 cpt_ident = 0
                 set_dup_parent = set()
@@ -115,11 +107,11 @@ class TreeProfile(object):
                 cpt_duplication = None
                 nbr_ev = None
 
-            lvl.add_feature("dupl", cpt_dupl)
-            lvl.add_feature("lost", cpt_lost)
-            lvl.add_feature("retained", cpt_ident)
-            lvl.add_feature("nbr_events", nbr_ev)
-            lvl.add_feature("duplication", cpt_duplication)
+            lvl.add_prop("dupl", cpt_dupl)
+            lvl.add_prop("lost", cpt_lost)
+            lvl.add_prop("retained", cpt_ident)
+            lvl.add_prop("nbr_events", nbr_ev)
+            lvl.add_prop("duplication", cpt_duplication)
 
         return treeMap
 
@@ -140,32 +132,26 @@ class TreeProfile(object):
             TreeMap
         """
 
-        def _add_annot(node, nbr, dupl, lost, gain, retained, duplication, nbr_ev):
-            node.add_feature("nbr_genes", nbr)
-            node.add_feature("nbr_events", nbr_ev)
-            node.add_feature("dupl", dupl)
-            node.add_feature("lost", lost)
-            node.add_feature("gain", gain)
-            node.add_feature("retained", retained)
-            node.add_feature("duplication", duplication)
+        def _add_annot(node: Tree, nbr, dupl, lost, gain, retained, duplication, nbr_ev):
+            node.add_prop("nbr_genes", nbr)
+            node.add_prop("nbr_events", nbr_ev)
+            node.add_prop("dupl", dupl)
+            node.add_prop("lost", lost)
+            node.add_prop("gain", gain)
+            node.add_prop("retained", retained)
+            node.add_prop("duplication", duplication)
 
 
-        if self.ham.taxonomy.tree_format == 'phyloxml':
-            # Rebuild full tree from input data and annotate it with name if required
-            treeMap = self.ham.taxonomy._build_tree(self.ham.taxonomy.tree_file, self.ham.taxonomy.tree_format)
-            self.ham.taxonomy._generate_internal_node_name(treeMap)
-        else:
-            treeMap = self.ham.taxonomy.tree.copy(method="newick")
-
+        treeMap = self.ham.taxonomy.tree.copy()
         for node in treeMap.traverse():
-            if node.is_root():
+            if node.is_root:
                 node_genome = self.ham.get_ancestral_genome_by_name(node.name)
                 _add_annot(node, len(node_genome.genes), None, None, None, None, None, None)
 
             else:
                 node_genome_up = self.ham._get_ancestral_genome_by_name(node.up.name)
 
-                if node.is_leaf():
+                if node.is_leaf:
                     node_genome = self.ham._get_extant_genome_by_name(name=node.name)
                     nbr = node_genome.get_number_genes(singleton=True)
 
@@ -198,7 +184,7 @@ class TreeProfile(object):
             | display_internal_histogram (:obj:`Boolean`, optional): Display internal node as histogram or raw text with numbers. Defaults to True.
         """
 
-        from ete3 import TreeStyle, TextFace, NodeStyle, BarChartFace
+        from ete4 import TreeStyle, TextFace, NodeStyle, BarChartFace
 
         # maximum number of genes per node in this treeMap
         max_genes = max([d for d in self.treemap.traverse()], key=lambda x:x.nbr_genes).nbr_genes
@@ -240,7 +226,7 @@ class TreeProfile(object):
                 if node.lost is not None:
                     _add_face("#Lost", node.lost, cnum=cAttr, pos=posAtt)
 
-            if node.is_leaf():
+            if node.is_leaf:
                 if display_internal_histogram:
                     if self.hog is None:
                         values = [node.nbr_genes,node.retained,node.dupl,node.gain,node.lost]
@@ -255,7 +241,7 @@ class TreeProfile(object):
             else:
 
                 if display_internal_histogram:
-                    if node.is_root():
+                    if node.is_root:
                         node.add_face(BarChartFace([node.nbr_genes], deviations=None, width=10, height=25, colors=["#41c1c2"], labels=[str(node.nbr_genes)], min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0, position = "branch-bottom")
                     else:
                         if self.hog is None:
@@ -280,9 +266,9 @@ class TreeProfile(object):
             ts.legend.add_face(BarChartFace(_values_legend, deviations=None, width=w_legend, height=25, colors=_color_scheme, labels=_label_legend, min_value=0, max_value=max_genes, label_fsize=6, scale_fsize=6),column=0)
             ts.legend_position = 3
 
-        self.treemap.render(output,tree_style=ts)
+        self.treemap.render(output, tree_style=ts)
 
-    def export_as_html(self, output ):
+    def export_as_html(self, output):
 
         """
         Method to export the tree profile object as an interactive tool embedded into a html file.
@@ -295,9 +281,9 @@ class TreeProfile(object):
         def visit_custom(node, data):
 
             current = {
-                "name": node.name,
-                "numberGenes": node.nbr_genes,
-                "numberEvents": node.nbr_events,
+                "name": node.props['name'],
+                "numberGenes": node.props['nbr_genes'],
+                "numberEvents": node.props['nbr_events'],
 
                 "length": 0.01,
                 "collapsed": "false",
@@ -310,17 +296,17 @@ class TreeProfile(object):
                 }
             }
 
-            if node.is_root():
+            if node.is_root:
                 current['evolutionaryEvents'] = False
 
             else:
-                current['evolutionaryEvents']["retained"] = node.retained
-                current['evolutionaryEvents']["duplicated"] = node.dupl
-                current['evolutionaryEvents']["gained"] = node.gain
-                current['evolutionaryEvents']["lost"] = node.lost
-                current['evolutionaryEvents']["duplication"] = node.duplication
+                current['evolutionaryEvents']["retained"] = node.props['retained']
+                current['evolutionaryEvents']["duplicated"] = node.props['dupl']
+                current['evolutionaryEvents']["gained"] = node.props['gain']
+                current['evolutionaryEvents']["lost"] = node.props['lost']
+                current['evolutionaryEvents']["duplication"] = node.props['duplication']
 
-            if not node.is_leaf():
+            if not node.is_leaf:
                 current['children'] = []
 
             for child in node.children:

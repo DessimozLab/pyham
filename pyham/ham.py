@@ -125,7 +125,7 @@ class Ham(object):
     def __init__(self, tree_file=None, hog_file=None, type_hog_file="orthoxml", filter_object=None, use_internal_name=False,\
                  orthoXML_as_string=False, tree_format='newick_string', phyloxml_internal_name_tag='taxonomy_scientific_name', \
                  phyloxml_leaf_name_tag='taxonomy_scientific_name', use_data_from=None, query_database=None,
-                 species_resolve_mode=None, with_parser_progress=False):
+                 species_resolve_mode=None, with_parser_progress=False, fail_fast=False):
         """
 
         Args:
@@ -142,9 +142,15 @@ class Ham(object):
             | use_data_from (:obj:`str`) if specified,  use data from a remote databaseto populate pyHam. Defaults to None. Options: 'oma'.
             | query_database (:obj:`str`) if use_data_from is specified, use this as a query to fetch the orthoxml and \
             tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
-            | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file. 
+            | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file.
+            | fail_fast (:obj:`Boolean`, optional) if a HOG's claimed taxonomic level (TaxRange/taxid) conflicts
+            with the given species tree, raise :obj:`pyham.abstractgene.TaxonomicConflictError` immediately at
+            the first conflict found. If False (default), keep parsing and collect every conflict found across
+            the whole file, raising a single combined error (with all conflicts available via its `conflicts`
+            attribute) once parsing completes.
         """
         self.with_parser_progress = with_parser_progress
+        self.fail_fast = fail_fast
 
         if use_data_from is not None:
             if query_database is None:
@@ -158,10 +164,23 @@ class Ham(object):
                 if not res.ok:
                     res.raise_for_status()
                 gene = res.json()
+                if not gene['is_main_isoform']:
+                    res = requests.get(gene['isoforms'])
+                    res.raise_for_status()
+                    isoforms = res.json()
+                    for gene in isoforms:
+                        if gene['is_main_isoform']:
+                            break
+                    else:
+                        raise ValueError("No main isoform found for query gene: {}".format(query_database))
+                    res = requests.get(gene['entry_url'])
+                    res.raise_for_status()
+                    gene = res.json()
                 top_level = gene['hog_levels'][-1]
 
                 rep_tax = requests.get("https://omabrowser.org/api/taxonomy/{}/".format(top_level),
-                                       params={"type": "phyloxml"})
+                                       params={"type": "phyloxml"},
+                                       headers={"Accept": "application/xml"})
                 if not rep_tax.ok:
                     rep_tax.raise_for_status()
 
@@ -215,7 +234,10 @@ class Ham(object):
         if phyloxml_leaf_name_tag not in accepted_tag_phyloxml or phyloxml_internal_name_tag not in accepted_tag_phyloxml:
             raise TypeError("{} is an invalid type phyloxml tag name")
         self.species_resolve_mode = species_resolve_mode
-        self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_leaf_name_tag=phyloxml_leaf_name_tag, phyloxml_internal_name_tag=phyloxml_internal_name_tag)
+        if self.tree_file is not None:
+            self.taxonomy = tax.Taxonomy(self.tree_file, tree_format=tree_format, use_internal_name=use_internal_name, phyloxml_leaf_name_tag=phyloxml_leaf_name_tag, phyloxml_internal_name_tag=phyloxml_internal_name_tag)
+        else:
+            self.taxonomy = None
         logger.info('Build taxonomy: completed.')
 
         # Misc. information
@@ -484,6 +506,36 @@ class Ham(object):
         """
 
         hog_id = str(hog_id)
+        if hog_id in self.top_level_hogs:
+            return self.top_level_hogs[hog_id]
+
+        m = re.match(r"^(?P<fam>(HOG:)?(\d+))(?P<subhog>[0-9a-z.]*)(_(?P<taxid>-?\d+))?$", hog_id)
+        if not m:
+            raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
+
+        if m:
+            fam = m.group('fam')
+            subhog = m.group('subhog')
+            taxid = m.group('taxid')
+
+            if fam in self.top_level_hogs:
+                roothog = self.top_level_hogs[fam]
+            elif fam[4:] in self.top_level_hogs:
+                fam = fam[4:]
+                roothog = self.top_level_hogs[fam]
+            else:
+                raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
+
+            if subhog:
+                hog = roothog.find_by_id(hog_id=fam + subhog, taxid=int(taxid))
+                if hog is not None:
+                    return hog
+                else:
+                    raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
+            return roothog
+
+
+
 
         if hog_id in self.top_level_hogs.keys():
             return self.top_level_hogs[hog_id]
@@ -545,7 +597,7 @@ class Ham(object):
 
         """
 
-        return [leaf.genome for leaf in self.taxonomy.leaves]
+        return [leaf.props['genome'] for leaf in self.taxonomy.leaves]
 
     def get_extant_genome_by_name(self, name):
 
@@ -562,8 +614,8 @@ class Ham(object):
 
         for taxon in self.taxonomy.leaves:
             if taxon.name == name:
-                if "genome" in taxon.features:
-                    return taxon.genome
+                if "genome" in taxon.props:
+                    return taxon.props['genome']
 
         raise KeyError('No extant genomes match the query name: {}'.format(name))
 
@@ -578,7 +630,7 @@ class Ham(object):
                 a list of :obj:`pyham.genome.AncestralGenome`.
 
         """
-        return [internal_node.genome for internal_node in self.taxonomy.internal_nodes]
+        return [internal_node.props['genome'] for internal_node in self.taxonomy.internal_nodes]
 
     def get_ancestral_genome_by_taxon(self, taxon):
 
@@ -593,8 +645,8 @@ class Ham(object):
 
         """
 
-        if taxon in self.taxonomy.internal_nodes and "genome" in taxon.features:
-                return taxon.genome
+        if taxon in self.taxonomy.internal_nodes and "genome" in taxon.props:
+                return taxon.props['genome']
 
         raise KeyError("Taxon {} doesn't have a genome attached to it.".format(taxon))
 
@@ -610,13 +662,10 @@ class Ham(object):
                 :obj:`pyham.genome.AncestralGenome` or raise KeyError
 
         """
-
-        for taxon in self.taxonomy.internal_nodes:
-            if taxon.name == name:
-                if "genome" in taxon.features:
-                    return taxon.genome
-
-        raise KeyError('No ancestral genomes match the query name: {}'.format(name))
+        taxon = self.taxonomy.get_node_by_name(name)
+        if taxon.is_leaf:
+            raise KeyError(f"query name {name} is an extant genome, not an ancestral one.")
+        return self.taxonomy.get_genome_from_taxnode(taxon)
 
     def get_ancestral_genome_by_mrca_of_genome_set(self, genome_set):
 
@@ -642,7 +691,7 @@ class Ham(object):
 
         genome_nodes = set([geno.taxon for geno in genome_set])
 
-        mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
+        mrca_node = self.taxonomy.tree.common_ancestor(*genome_nodes)
 
         return self.get_ancestral_genome_by_taxon(mrca_node)
 
@@ -672,60 +721,6 @@ class Ham(object):
 
     # ... PRIVATE METHODS ... #
 
-    def _add_missing_taxon(self, child_hog, oldest_hog, missing_taxons):
-
-        """  
-        Add intermediate :obj:`HOG` in between two :obj:`HOG` if their taxon are not direct parent and child in the 
-        taxonomy. E.g. if a rodent HOG is connected with a vertebrate HOG it will add an mammal hog in between.
-
-            Args:
-                child_hog (:obj:`HOG`): child :obj:`HOG`.
-                oldest_hog (:obj:`HOG`): parent :obj:`HOG`.
-                missing_taxons (:obj:`HOG`): list of intermediate taxNode between child_hog and oldest_hog sorted 
-                from youngest to oldest.
-
-        """
-
-        if not isinstance(child_hog, abstractgene.AbstractGene):
-            raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(abstractgene.AbstractGene.__name__,
-                                    type(child_hog).__name__))
-
-        if not isinstance(oldest_hog, abstractgene.AbstractGene):
-            raise TypeError("expect subclass obj of '{}', got {}"
-                            .format(abstractgene.AbstractGene.__name__,
-                                    type(oldest_hog).__name__))
-
-        if oldest_hog == child_hog:
-            raise TypeError("Cannot add missing level between an HOG and it self.")
-
-        # the youngest hog is removed from the oldest hog children.
-        oldest_hog.remove_child(child_hog)
-
-        # Then for each intermediate level in between the two hogs...
-        current_child = child_hog
-        hog_id = child_hog.hog_id if hasattr(child_hog, 'hog_id') else oldest_hog.hog_id
-        for tax in missing_taxons:
-
-            # ... we get the related ancestral genome of this level...
-            ancestral_genome = self._get_ancestral_genome_by_taxon(tax)
-
-            # ... we create the related hog and add it to the ancestral genome...
-            hog = abstractgene.HOG(id=hog_id)
-            setattr(hog, '_missing_in_xml', oldest_hog.genome)
-            hog.set_genome(ancestral_genome)
-            ancestral_genome.add_gene(hog)
-
-            # ... we check if taxon correspond to child parent taxon ...
-            if ancestral_genome.taxon is not current_child.genome.taxon.up:
-                raise TypeError("HOG taxon {} is different than child parent taxon {}".format(ancestral_genome.taxon,
-                                                                                              current_child.genome.taxon.up))
-
-            # ... we add the child if everything is fine.
-            hog.add_child(current_child)
-            current_child = hog
-
-        oldest_hog.add_child(current_child)
 
     def _get_oldest_from_genome_pair(self, g1, g2):
 
@@ -741,7 +736,7 @@ class Ham(object):
 
         """
 
-        mrca = self.taxonomy.tree.get_common_ancestor({g1.taxon,g2.taxon})
+        mrca = self.taxonomy.tree.common_ancestor(g1.taxon,g2.taxon)
 
         if g1.taxon == mrca:
             return g1, g2
@@ -805,11 +800,23 @@ class Ham(object):
 
         """
 
-        factory = parsers.OrthoXMLParser(self, filterObject=filter_object, with_progress=self.with_parser_progress)
+        factory = parsers.OrthoXMLParser(self, filterObject=filter_object, with_progress=self.with_parser_progress,
+                                          fail_fast=self.fail_fast)
         parser = XMLParser(target=factory)
 
         for line in file_object:
             parser.feed(line)
+
+        if factory.taxonomic_conflicts:
+            # fail_fast=True would already have raised inside the parser itself; reaching here means
+            # fail_fast=False, so every conflict found across the whole file is reported together.
+            raise abstractgene.TaxonomicConflictError(
+                parsers.format_taxonomic_conflicts(factory.taxonomic_conflicts),
+                factory.taxonomic_conflicts,
+            )
+
+        if self.taxonomy is None:
+            self.taxonomy = factory.taxonomy
 
         return factory.toplevel_hogs, factory.extant_gene_map, factory.external_id_mapper
 
@@ -832,8 +839,8 @@ class Ham(object):
 
             node = nodes_found[0]
 
-            if "genome" in node.features:
-                return node.genome
+            if "genome" in node.props:
+                return node.props['genome']
 
             else:
                 ancestral_genome = AncestralGenome()
@@ -873,8 +880,8 @@ class Ham(object):
                 raise TypeError("species name '{}' maps to an ancestral name, not a leaf of the taxonomy"
                                 .format(kwargs["name"]))
 
-            if "genome" in node.features:
-                return node.genome
+            if "genome" in node.props:
+                return node.props['genome']
 
             else:
                 extant_genome = ExtantGenome(**kwargs)
@@ -897,8 +904,8 @@ class Ham(object):
 
         """
 
-        if "genome" in tax_node.features:
-            return tax_node.genome
+        if "genome" in tax_node.props:
+            return tax_node.props['genome']
 
         else:
             ancestral_genome = AncestralGenome()
@@ -947,6 +954,6 @@ class Ham(object):
 
         genome_nodes = set([gen.taxon for gen in genome_set])
 
-        mrca_node = self.taxonomy.tree.get_common_ancestor(genome_nodes)
+        mrca_node = self.taxonomy.tree.common_ancestor(*genome_nodes)
 
         return self._get_ancestral_genome_by_taxon(mrca_node)

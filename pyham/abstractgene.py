@@ -1,4 +1,5 @@
 import numbers
+import dataclasses
 from .genome import ExtantGenome, AncestralGenome, Genome
 from .iham import IHAM
 import abc
@@ -155,6 +156,7 @@ class HOG(AbstractGene):
         if id is None:
             self.hog_id = kwargs.get('og', id) # If we have the gene named in og tag, use this.
         self.og = kwargs.get('og')
+        self.taxon_id = int(kwargs['taxonId']) if 'taxonId' in kwargs else None
         self.children = []
         self.hogvis = None
         self.duplications = []
@@ -377,6 +379,32 @@ class HOG(AbstractGene):
     def is_singleton(self):
         return False
 
+    def find_by_id(self, hog_id: str, taxid: int = None):
+        """
+        Recursive function to find a HOG by its id and optionally its taxid.
+
+            Args:
+                | hog_id (:obj:`str`): HOG id to be found.
+                | taxid (optional, :obj:`int`): taxid of the genome of the HOG to be found.
+
+            Returns:
+                :obj:`pyham.abstractgene.HOG` if found otherwise None.
+        """
+
+        cur_hog_without_taxid = self.hog_id.split('_')[0]
+        if cur_hog_without_taxid == hog_id and (taxid is None or self.taxon_id == taxid or self.hog_id == f"{hog_id}_{taxid}"):
+            return self
+        elif not hog_id.startswith(cur_hog_without_taxid):
+            return None
+
+        for child in getattr(self, 'children', []):
+            if isinstance(child, HOG):
+                found = child.find_by_id(hog_id, taxid)
+                if found is not None:
+                    return found
+        return None
+
+
     def __repr__(self):
         ids = []
         if self.hog_id is not None:
@@ -480,6 +508,51 @@ class EvolutionaryConceptError(Exception):
     pass
 
 
+class SameLevelHOGError(Exception):
+    pass
+
+
+@dataclasses.dataclass
+class TaxonomicConflict:
+    """One HOG whose claimed taxonomic level conflicts with the given species tree.
+
+    Attributes:
+        | family_id (:obj:`str`): top-level HOG id this conflict was found in.
+        | hog_id (:obj:`str`): the HOG whose TaxRange/taxid claim is in question.
+        | claim_property (:obj:`str`): "TaxRange" or "taxid".
+        | claim_value (:obj:`str`): the raw property value that was claimed.
+        | resolved_level (:obj:`str`): name of the taxon node actually used. Equal to
+        claim_value at present (this only fires once the claim itself resolved to a
+        node), kept as a separate field for forward-compatibility rather than as a
+        redundant duplicate.
+        | kind (:obj:`str`): "same_rank" (a child collapses onto the same level as
+        its own parent), "disjoint" (a child sits in an unrelated branch), or
+        "inverted" (the claimed level is itself a descendant of the child).
+        | offending_members (:obj:`list`): list of (label, species, detail) tuples
+        describing each child that doesn't fit under the claimed level.
+        | sibling_members (:obj:`list`): list of (label, species) tuples describing
+        this HOG's other children, for context on what else is present at this level.
+    """
+    family_id: str
+    hog_id: str
+    claim_property: str
+    claim_value: str
+    resolved_level: str
+    kind: str
+    offending_members: list
+    sibling_members: list
+
+
+class TaxonomicConflictError(Exception):
+    """Raised when one or more HOGs' claimed taxonomic level conflicts with the
+    given species tree. Carries the full list of :obj:`TaxonomicConflict` records
+    found (possibly just one, in fail_fast mode) in the `conflicts` attribute."""
+
+    def __init__(self, message: str, conflicts: list):
+        super().__init__(message)
+        self.conflicts = conflicts
+
+
 class DuplicationNode(object):
     """
         This object link together all abstract genes that emerges from the same duplication event. Its composed of a set of genes
@@ -493,8 +566,8 @@ class DuplicationNode(object):
             
     """
 
-    def __init__(self,ham_object, id=None):
-        self.ham = ham_object
+    def __init__(self, parser, id=None):
+        self.parser = parser
         self.MRCA = None
         self.children = []
         self.parent = None
@@ -518,16 +591,23 @@ class DuplicationNode(object):
     def set_MRCA(self):
         """
             Compute the MRCA of all genes genomes.
+
+            It is always defined as the level of the genome which is the parent
+            of the branch on which the duplication event occured. E.g. if the
+            duplication event on the branch between Mammalia and Euchontoglires,
+            the MRCA is set to Mammalia.
+
         """
 
-        children_genomes = set([child.genome for child in self.children])
-
-        if len(children_genomes) < 2:
-            self.MRCA = self.ham._get_ancestral_genome_by_taxon(list(children_genomes)[0].taxon.up)
-
+        children_taxa = set([child.genome.taxon for child in self.children])
+        if len(children_taxa) < 2:
+            mrca = children_taxa.pop().up
         else:
-            self.MRCA = self.ham._get_ancestral_genome_by_mrca_of_genome_set(children_genomes)
-            self.MRCA = self.ham._get_ancestral_genome_by_taxon(self.MRCA.taxon.up)
+            mrca = self.parser.taxonomy.get_mrca_taxnode(*children_taxa)
+            if mrca.up is None:
+                raise EvolutionaryConceptError("MRCA of {} is prior to taxonomy root".format(self.id))
+            mrca = mrca.up
+        self.MRCA = self.parser.taxonomy.get_genome_from_taxnode(mrca)
 
     def add_child(self, child):
         """

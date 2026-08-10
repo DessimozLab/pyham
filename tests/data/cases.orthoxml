@@ -1,0 +1,74 @@
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="newick_tree_import" version="0.5" originVersion="orthoxml-tools:1.2.0">
+  <species name="human" NCBITaxId="1">
+    <database name="human" version="n/a">
+      <genes>
+        <gene id="1" protId="Hum1"/>
+        <gene id="5" protId="Hum3"/>
+      </genes>
+    </database>
+  </species>
+  <species name="chimp" NCBITaxId="2">
+    <database name="chimp" version="n/a">
+      <genes>
+        <gene id="2" protId="Chimp1"/>
+      </genes>
+    </database>
+  </species>
+  <species name="mus musculus" NCBITaxId="3">
+    <database name="mus musculus" version="n/a">
+      <genes>
+        <gene id="3" protId="Mus2"/>
+        <gene id="6" protId="Mus3"/>
+      </genes>
+    </database>
+  </species>
+  <species name="rat" NCBITaxId="4">
+    <database name="rat" version="n/a">
+      <genes>
+        <gene id="4" protId="Rat2"/>
+      </genes>
+    </database>
+  </species>
+  <species name="dog" NCBITaxId="5">
+    <database name="dog" version="n/a">
+      <genes>
+        <gene id="7" protId="DogA"/>
+        <gene id="9" protId="DogB"/>
+      </genes>
+    </database>
+  </species>
+  <species name="cow" NCBITaxId="6">
+    <database name="cow" version="n/a">
+      <genes>
+        <gene id="8" protId="CowA"/>
+      </genes>
+    </database>
+  </species>
+  <groups>
+    <orthologGroup id="HOG:00000001">
+      <paralogGroup>
+        <paralogGroup>
+          <orthologGroup id="HOG:00000001.1a.1a">
+            <geneRef id="1"/>
+            <geneRef id="2"/>
+          </orthologGroup>
+          <orthologGroup id="HOG:00000001.1a.1b">
+            <geneRef id="3"/>
+            <geneRef id="4"/>
+          </orthologGroup>
+        </paralogGroup>
+        <orthologGroup id="HOG:00000001.1b">
+          <geneRef id="5"/>
+          <geneRef id="6"/>
+        </orthologGroup>
+      </paralogGroup>
+      <paralogGroup>
+        <orthologGroup id="HOG:00000001.2a">
+          <geneRef id="7"/>
+          <geneRef id="8"/>
+        </orthologGroup>
+        <geneRef id="9"/>
+      </paralogGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>

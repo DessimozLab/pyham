@@ -23,22 +23,6 @@ def get_newick_string(source_path, type="nwk"):
         pass
 
 
-def previsualize_taxonomy(newick_str):
-    """
-    This function help to previsualyse before running Ham what the topology will looked like and what will be the
-    internal node naming.
-    Args:
-        | tree_str:
-    """
-
-    t = tax.Taxonomy(newick_str)
-
-    for node in t.tree.traverse("postorder"):
-        t.set_taxon_name(node)
-
-    return t.tree.get_ascii()
-
-
 
 
 
