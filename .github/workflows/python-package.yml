@@ -11,9 +11,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental || false }}
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        experimental: [false]
+        include:
+          - python-version: "3.15-dev"
+            experimental: true
 
     steps:
     - uses: actions/checkout@v7
@@ -21,6 +27,12 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
+    - name: Install libxml2/libxslt headers (no lxml wheel yet for this Python build)
+      if: matrix.experimental
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libxml2-dev libxslt-dev
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
