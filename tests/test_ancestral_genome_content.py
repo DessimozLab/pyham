@@ -247,9 +247,38 @@ def test_loft_taxid_missing_levels_get_distinct_resolvable_ids():
     # both duplication branches are missing "Root"; each gets its own synthesized hog
     assert by_level["Root"] in ("HOG:0000005.1a_100", "HOG:0000005_100")
 
-    # ids with a LOFT dot-chain resolve through the public lookup API
-    for hog_id in ("HOG:0000005.1a_300", "HOG:0000005.1a_350", "HOG:0000005.1a_100", "HOG:0000005.1a_200"):
+    # every real or synthesized id -- including a bare "<fam>_<taxid>" id with no
+    # dot-chain -- resolves through the public lookup API to the matching HOG.
+    for hog_id in ids:
         assert h.get_hog_by_id(hog_id).hog_id == hog_id
+
+
+def test_get_hog_by_id_resolves_bare_fam_taxid_id():
+    # regression test: get_hog_by_id used to only delegate to the taxid-aware
+    # HOG.find_by_id when the queried id had a dot-chain (`subhog`); a bare
+    # "<fam>_<taxid>" id (no dot-chain, e.g. a synthesized level with no
+    # duplication above it) silently fell through to `return roothog`, ignoring
+    # the taxid entirely and returning the wrong HOG.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    hog = h.get_hog_by_id("HOG:0000005_100")
+    assert hog.hog_id == "HOG:0000005_100"
+    assert hog.genome.name == "Root"
+
+    root_hog = h.get_hog_by_id("HOG:0000005_50")
+    assert root_hog.genome.name == "GrandRoot"
+    assert root_hog is not hog
+
+
+def test_get_hog_by_id_with_dot_chain_but_no_taxid_does_not_crash():
+    # regression test: querying a dot-chain id with no taxid suffix used to crash
+    # with TypeError (int(None)) instead of doing a best-effort, taxid-less lookup.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    hog = h.get_hog_by_id("HOG:0000005.1a")
+    assert hog.hog_id.startswith("HOG:0000005.1a")
 
 
 def test_generic_scheme_reproduces_old_colliding_behavior():

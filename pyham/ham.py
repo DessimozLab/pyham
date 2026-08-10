@@ -548,8 +548,8 @@ class Ham(object):
             else:
                 raise KeyError(f"No HOG with id \"{hog_id}\" can be found.")
 
-            if subhog:
-                hog = roothog.find_by_id(hog_id=fam + subhog, taxid=int(taxid))
+            if subhog or taxid is not None:
+                hog = roothog.find_by_id(hog_id=fam + subhog, taxid=int(taxid) if taxid is not None else None)
                 if hog is not None:
                     return hog
                 else:
