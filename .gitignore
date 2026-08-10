@@ -1,8 +1,9 @@
 build
 dist
 */__pycache__
-familyanalyzer.egg-info
+*.egg-info
 *.pyc
 .ropeproject
 .idea
 .ipynb_checkpoints
+pyham/_version.py

@@ -8,4 +8,12 @@ from .mapper import *
 from .TreeProfile import *
 from .iham import *
 
-__version__ = "1.2.0"
+try:
+    from ._version import version as __version__
+except ImportError:
+    from importlib.metadata import version, PackageNotFoundError
+
+    try:
+        __version__ = version("pyham")
+    except PackageNotFoundError:
+        __version__ = "unknown"

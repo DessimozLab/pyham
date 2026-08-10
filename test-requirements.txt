@@ -1,5 +1,0 @@
-Sphinx
-noise
-fabric
-fabric3
-twine
