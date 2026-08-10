@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 from collections import defaultdict
 from tqdm.auto import tqdm
-import numpy as np
+from . import id_formats
 
 
 def _label_and_species(node):
@@ -101,10 +101,15 @@ class OrthoXMLParser:
             fail_fast (:bool:, optional): If True, raise :obj:`abstractgene.TaxonomicConflictError` immediately at the
             first taxonomic conflict found. If False (default), keep parsing and collect every conflict found across
             the whole file, raising a single combined error once parsing completes.
+            id_schema (:obj:`str`, optional): the HOG id scheme used by the orthoxml file (one of
+            :obj:`pyham.id_formats.SCHEMES`), used to synthesize ids for HOG levels inserted because the
+            species tree implies them but the file doesn't. Defaults to :obj:`pyham.id_formats.GENERIC`
+            (no synthesis) if not given.
         """
         self.ham_object = ham_object
         self.filterObj = filterObject
         self.taxonomy = ham_object.taxonomy
+        self._id_schema = id_schema if id_schema is not None else id_formats.GENERIC
 
         # usefull information
         self.extant_gene_map = {}
@@ -290,12 +295,13 @@ class OrthoXMLParser:
             parent.remove_child(child)
             # Then for each intermediate level in between the two hogs...
             current_child = child
-            hog_id = child.hog_id if hasattr(child, 'hog_id') else parent.hog_id
+            anchor_id = child.hog_id if hasattr(child, 'hog_id') else parent.hog_id
             for tax in missing_taxons:
                 # ... we get the related ancestral genome of this level...
                 ancestral_genome = self.taxonomy.get_genome_from_taxnode(tax)
 
                 # ... we create the related hog and add it to the ancestral genome...
+                hog_id = id_formats.make_missing_hog_id(self._id_schema, anchor_id, ancestral_genome.taxon)
                 hog = abstractgene.HOG(id=hog_id)
                 setattr(hog, '_missing_in_xml', parent.genome)
                 ancestral_genome.add_gene(hog)
@@ -344,7 +350,8 @@ class OrthoXMLParser:
                 self._create_missing_hogs(group_children[0], parent)
             else:
                 shared_genome = self.taxonomy.get_genome_from_taxnode(tax_node)
-                shared_hog = abstractgene.HOG(id=parent.hog_id)
+                shared_hog_id = id_formats.make_missing_hog_id(self._id_schema, parent.hog_id, tax_node)
+                shared_hog = abstractgene.HOG(id=shared_hog_id)
                 setattr(shared_hog, "_missing_in_xml", parent.genome)
                 shared_genome.add_gene(shared_hog)
                 parent.add_child(shared_hog)
@@ -499,7 +506,8 @@ class OrthoXMLParser:
                 if duplication.MRCA != hog.genome and self.taxonomy.is_child_recursive(duplication.MRCA.taxon, hog.genome.taxon):
                     # create the MRCA hog
                     mrca_genome = duplication.MRCA
-                    mrca_hog = abstractgene.HOG(id=hog.hog_id)
+                    mrca_hog_id = id_formats.make_missing_hog_id(self._id_schema, hog.hog_id, mrca_genome.taxon)
+                    mrca_hog = abstractgene.HOG(id=mrca_hog_id)
                     setattr(mrca_hog, "_missing_in_xml", hog.genome)
                     mrca_genome.add_gene(mrca_hog)
 
@@ -552,6 +560,49 @@ class OrthoXMLParser:
 
     def close(self):
         # Nothing special to do here
+        return
+
+
+class IDSchemeSniffer:
+    """Lightweight OrthoXML parser target used to sample HOG ids for id-scheme
+    auto-detection (see :obj:`pyham.id_formats.detect_id_scheme`), without paying for a
+    full parse of the file.
+
+    Collects the `id` attribute of every `orthologGroup` element seen, and flips `done`
+    to True once a bounded number of top-level families or ids has been sampled -- the
+    caller is expected to stop feeding lines once `done` is True.
+    """
+
+    MAX_FAMILIES = 3
+    MAX_IDS = 300
+    _TAG = "{http://orthoXML.org/2011/}orthologGroup"
+
+    def __init__(self):
+        self.samples = []
+        self.families_seen = 0
+        self._depth = 0
+        self.done = False
+
+    def start(self, tag, attrib):
+        if tag == self._TAG:
+            self._depth += 1
+            if 'id' in attrib:
+                self.samples.append(attrib['id'])
+                if len(self.samples) >= self.MAX_IDS:
+                    self.done = True
+
+    def end(self, tag):
+        if tag == self._TAG:
+            self._depth -= 1
+            if self._depth == 0:
+                self.families_seen += 1
+                if self.families_seen >= self.MAX_FAMILIES:
+                    self.done = True
+
+    def data(self, data):
+        pass
+
+    def close(self):
         return
 
 

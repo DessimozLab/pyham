@@ -205,6 +205,94 @@ def test_shared_missing_level_follows_species_tree(shared_missing_level_ham):
             hog = hog.parent
 
 
+####
+# tests for HOG id scheme auto-detection and missing-level id synthesis under LOFT_TAXID
+# (regression test for pyham/id_formats.py). `loft_taxid_gap.orthoxml` embeds its own
+# taxonomy (GrandRoot > Root > Mid > SubMid > SubSubMid > SP1/SP2, with SP3 a sibling of
+# Mid under Root) and a single duplicated family whose HOGs only explicitly claim
+# GrandRoot and Mid -- so both the "several stacked missing levels" gap (Mid -> SubMid ->
+# SubSubMid) and the "two duplication branches missing the same level" gap (both branches
+# missing Root) get synthesized.
+def _all_hogs(ham_obj):
+    from pyham import abstractgene
+    hogs = []
+    for taxon in ham_obj.taxonomy.tree.traverse():
+        genome = taxon.props.get('genome')
+        if genome is None:
+            continue
+        hogs.extend(g for g in genome.genes if isinstance(g, abstractgene.HOG))
+    return hogs
+
+
+def test_loft_taxid_scheme_is_auto_detected():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+    assert h.id_schema == "LOFT_TAXID"
+
+
+def test_loft_taxid_missing_levels_get_distinct_resolvable_ids():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    hogs = _all_hogs(h)
+    ids = [hog.hog_id for hog in hogs]
+    assert len(ids) == len(set(ids)), "every HOG (real or synthesized) should have a unique id"
+
+    by_level = {hog.genome.name: hog.hog_id for hog in hogs}
+    assert by_level["GrandRoot"] == "HOG:0000005_50"
+    assert by_level["Mid"] == "HOG:0000005.1a_200"
+    # stacked missing levels below Mid each get their own distinct, taxid-suffixed id
+    assert by_level["SubMid"] == "HOG:0000005.1a_300"
+    assert by_level["SubSubMid"] == "HOG:0000005.1a_350"
+    # both duplication branches are missing "Root"; each gets its own synthesized hog
+    assert by_level["Root"] in ("HOG:0000005.1a_100", "HOG:0000005_100")
+
+    # every real or synthesized id -- including a bare "<fam>_<taxid>" id with no
+    # dot-chain -- resolves through the public lookup API to the matching HOG.
+    for hog_id in ids:
+        assert h.get_hog_by_id(hog_id).hog_id == hog_id
+
+
+def test_get_hog_by_id_resolves_bare_fam_taxid_id():
+    # regression test: get_hog_by_id used to only delegate to the taxid-aware
+    # HOG.find_by_id when the queried id had a dot-chain (`subhog`); a bare
+    # "<fam>_<taxid>" id (no dot-chain, e.g. a synthesized level with no
+    # duplication above it) silently fell through to `return roothog`, ignoring
+    # the taxid entirely and returning the wrong HOG.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    hog = h.get_hog_by_id("HOG:0000005_100")
+    assert hog.hog_id == "HOG:0000005_100"
+    assert hog.genome.name == "Root"
+
+    root_hog = h.get_hog_by_id("HOG:0000005_50")
+    assert root_hog.genome.name == "GrandRoot"
+    assert root_hog is not hog
+
+
+def test_get_hog_by_id_with_dot_chain_but_no_taxid_does_not_crash():
+    # regression test: querying a dot-chain id with no taxid suffix used to crash
+    # with TypeError (int(None)) instead of doing a best-effort, taxid-less lookup.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    hog = h.get_hog_by_id("HOG:0000005.1a")
+    assert hog.hog_id.startswith("HOG:0000005.1a")
+
+
+def test_generic_scheme_reproduces_old_colliding_behavior():
+    # id_schema='GENERIC' (today's pre-existing "no adjustment" behavior) collapses the
+    # same gaps down to just 2 distinct ids across 6 HOGs -- the exact bug this feature
+    # fixes for files that actually use LOFT_TAXID.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True, id_schema="GENERIC")
+
+    ids = [hog.hog_id for hog in _all_hogs(h)]
+    assert len(ids) == 6
+    assert len(set(ids)) == 2
+
+
 class PyHAMInitWithDifferentTaxonomyTests(unittest.TestCase):
     def setUp(self):
         self.nwk_path = os.path.join(os.path.dirname(__file__), './data/tomato.nwk')
