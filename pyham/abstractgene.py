@@ -1,5 +1,6 @@
 import numbers
 import dataclasses
+from ete4 import Tree
 from .genome import ExtantGenome, AncestralGenome, Genome
 from .iham import IHAM
 import abc
@@ -378,6 +379,50 @@ class HOG(AbstractGene):
 
     def is_singleton(self):
         return False
+
+    def to_ete_tree(self):
+        """
+        Convert this :obj:`HOG` and its nested sub-HOGs into an :obj:`ete4.Tree`.
+
+        Each nested :obj:`HOG` becomes an internal node named after its hog_id
+        (also stored as the "hog_id" prop), and each terminal :obj:`Gene` becomes
+        a leaf named after its external gene id (geneId, protId or transcriptId,
+        in that order of preference, falling back to its internal unique_id),
+        with all available external ids attached as leaf props.
+
+            Returns:
+                :obj:`ete4.Tree`: tree representation of this HOG hierarchy, rooted at self.
+        """
+
+        def leaf_name(gene):
+            xref = gene.get_dict_xref()
+            for key in ("geneId", "protId", "transcriptId", "id"):
+                if key in xref:
+                    return str(xref[key])
+            return str(gene.unique_id)
+
+        def build(hog):
+            node = Tree({"name": hog.hog_id})
+            node.add_prop("hog_id", hog.hog_id)
+            node.add_prop("taxon", hog.genome.name)
+            node.add_prop("duplicate", bool(hog.arose_by_duplication))
+            if hog.arose_by_duplication:
+                # identifies which sibling nodes share the same duplication event
+                # (hog.arose_by_duplication is a shared DuplicationNode instance);
+                # a plain object id is enough since this only needs to be stable
+                # within one export, not meaningful across separate runs.
+                node.add_prop("duplication_id", id(hog.arose_by_duplication))
+            for child in hog.children:
+                if isinstance(child, Gene):
+                    leaf = node.add_child(name=leaf_name(child))
+                    for key, value in child.get_dict_xref().items():
+                        leaf.add_prop(key, value)
+                    leaf.add_prop("taxon", child.genome.name)
+                else:
+                    node.add_child(build(child))
+            return node
+
+        return build(self)
 
     def find_by_id(self, hog_id: str, taxid: int = None):
         """
