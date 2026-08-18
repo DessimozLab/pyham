@@ -358,6 +358,33 @@ class HOG(AbstractGene):
 
         return self.visit([], function_prefix=append_current_genome)
 
+    def get_number_losses(self):
+
+        """
+        Compute the number of implied gene losses within this HOG's hierarchy, following the
+        Dollo parsimony principle: once a gene lineage is lost it cannot be regained, so a
+        whole clade lacking any representative under this HOG is explained by a single loss
+        event placed on the branch leading to that clade, rather than one loss per missing
+        descendant leaf.
+
+        For every ancestral level in this HOG's subtree (starting at self), each immediate
+        child taxon in the species tree that has no matching child :obj:`HOG`/:obj:`Gene` here
+        contributes one loss; that clade is not explored further since it is already fully
+        accounted for by this single event.
+
+            Returns:
+                :obj:`int`: number of implied Dollo loss events in this HOG's subtree.
+        """
+
+        present_children_taxa = {child.genome.taxon for child in self.children}
+        losses = sum(1 for taxon in self.genome.taxon.children if taxon not in present_children_taxa)
+
+        for child in self.children:
+            if isinstance(child, HOG):
+                losses += child.get_number_losses()
+
+        return losses
+
     def get_hog_vis(self, newick_str):
 
         """ Lazy getter of the :obj:`pyham.abstractgene.HOG` IHAM.

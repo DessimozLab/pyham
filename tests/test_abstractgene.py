@@ -195,6 +195,25 @@ class AbstractGeneTest(unittest.TestCase):
         gal_2 = hog3.get_at_level(euarch)
         self.assertEqual(len(gal_2), 2)
 
+    def test_get_number_losses(self):
+        hog1 = self.h.get_hog_by_id("1")
+        hog2 = self.h.get_hog_by_id("2")
+        hog3 = self.h.get_hog_by_id("3")
+
+        # family 1 is present in every species: no implied loss.
+        self.assertEqual(hog1.get_number_losses(), 0)
+
+        # family 2 is missing in RATNO only: a single loss on the Rodents->RATNO branch.
+        self.assertEqual(hog2.get_number_losses(), 1)
+
+        # family 3 duplicated at Euarchontoglires; one paralog lost in RATNO, the other
+        # lost in both HUMAN and RATNO: 3 implied losses in total.
+        self.assertEqual(hog3.get_number_losses(), 3)
+
+        # a leaf-level sub-HOG has no taxonomic children left to lose.
+        rodents_subhog = hog1.get_at_level(self.h.get_ancestral_genome_by_name("Rodents"))[0]
+        self.assertEqual(rodents_subhog.get_number_losses(), 0)
+
 
 if __name__ == "__main__":
     unittest.main()
