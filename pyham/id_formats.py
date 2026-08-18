@@ -12,6 +12,7 @@ Three schemes are recognised:
 """
 
 import re
+import string
 
 LOFT = "LOFT"
 LOFT_TAXID = "LOFT_TAXID"
@@ -52,7 +53,7 @@ def detect_id_scheme(sample_ids):
     return LOFT
 
 
-def _taxid_for_taxon(taxon):
+def taxid_for_taxon(taxon):
     """Best-effort numeric/string id for an ete4 taxonomy node.
 
     Newick-derived trees carry no id props at all; phyloxml-derived trees store it
@@ -88,9 +89,49 @@ def make_missing_hog_id(scheme, anchor_id, taxon):
     if not m:
         return anchor_id
 
-    taxid = _taxid_for_taxon(taxon)
+    taxid = taxid_for_taxon(taxon)
     if taxid is None:
         return anchor_id
 
     base = m.group('fam') + m.group('subhog')
     return f"{base}_{taxid}"
+
+
+# The first ".<idx><letters>" segment immediately following a known parent prefix.
+_BRANCH_SEGMENT_RE = re.compile(r"^\.(?P<idx>\d+)(?P<letters>[a-zA-Z]+)")
+
+
+def encode_paralog_branch(nr):
+    """0-indexed bijective base-26 branch letter: 0->'a', 25->'z', 26->'aa', 51->'az', 52->'ba', ...
+
+    Ported from the LOFT id-generation script's `_encodeParalogClusterId`.
+    """
+    letters = []
+    while nr // 26 > 0:
+        letters.append(string.ascii_lowercase[nr % 26])
+        nr = nr // 26 - 1
+    letters.append(string.ascii_lowercase[nr % 26])
+    return ''.join(letters[::-1])
+
+
+def decode_paralog_branch(letters):
+    """Inverse of `encode_paralog_branch`."""
+    nr = 0
+    for ch in letters:
+        nr = nr * 26 + (ord(ch.lower()) - ord('a') + 1)
+    return nr - 1
+
+
+def parse_branch_segment(hog_id, parent_prefix):
+    """Parse the `(idx, letters)` of the branch segment a real sibling's `hog_id` adds
+    immediately after `parent_prefix` (the enclosing hog's own `fam + subhog`).
+
+    Returns None if `hog_id` is None or doesn't extend `parent_prefix` with a proper
+    ".<digits><letters>" segment (e.g. a bare id, or one that doesn't share the prefix).
+    """
+    if hog_id is None or not hog_id.startswith(parent_prefix):
+        return None
+    m = _BRANCH_SEGMENT_RE.match(hog_id[len(parent_prefix):])
+    if not m:
+        return None
+    return int(m.group('idx')), m.group('letters')

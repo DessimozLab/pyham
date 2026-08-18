@@ -132,6 +132,12 @@ class OrthoXMLParser:
         self.taxonomic_conflicts = []
         self._conflicted_children = set()
 
+        # counter for freshly-minted duplication-branch indices (see
+        # _assign_duplication_branch_ids) -- seeded far above any realistic real index so
+        # it can never collide with one; only needs to be distinct from other
+        # freshly-minted indices, which a monotonic counter guarantees.
+        self._next_synthetic_dup_idx = 10 ** 4
+
         # save progress bar option
         self.with_progress = with_progress
 
@@ -360,6 +366,91 @@ class OrthoXMLParser:
                     shared_hog.add_child(child)
                 self._resolve_missing_levels(shared_hog, group_children)
 
+    def _assign_duplication_branch_ids(self, parent_hog: abstractgene.HOG, duplication, children: list):
+        """Give every duplication branch in `children` (direct children of `parent_hog`,
+        all flagged as arising from `duplication`) its own distinguishing LOFT dot-chain
+        segment when it lacks a real id of its own -- instead of every id-less sibling
+        falling back to `parent_hog`'s own id unchanged, which collapses distinct paralog
+        lineages onto the same synthesized id (e.g. two independent post-duplication
+        genes both becoming "HOG:X.3a_71" instead of "HOG:X.3a.1a_71"/"HOG:X.3a.1b_71").
+
+        Real ids already present on some siblings are never touched, and their
+        (idx, letter) are reused/avoided when assigning the missing ones. If none of
+        `children` reveal a real index at all, a fresh one is minted from a counter that
+        only needs to be distinct from other freshly-minted indices (any synthesized id
+        is already uniquely prefixed by `parent_hog`'s own -- already unique -- id).
+
+        Returns the subset of `children` that got moved under a freshly-created wrapper
+        HOG, so the caller can exclude them from any further, generic gap-filling over
+        `parent_hog`'s direct children (they're no longer among them).
+        """
+        if self._id_schema not in (id_formats.LOFT, id_formats.LOFT_TAXID):
+            return set()
+
+        needs_assignment = [c for c in children if getattr(c, 'hog_id', None) is None]
+        if not needs_assignment:
+            return set()
+
+        m = id_formats.HOG_ID_RE.match(parent_hog.hog_id) if parent_hog.hog_id else None
+        if not m:
+            return set()
+        prefix = m.group('fam') + m.group('subhog')
+
+        real_segments = [seg for seg in
+                         (id_formats.parse_branch_segment(getattr(c, 'hog_id', None), prefix) for c in children)
+                         if seg is not None]
+        if real_segments:
+            idx = real_segments[0][0]
+            used_numbers = {id_formats.decode_paralog_branch(letters)
+                             for seg_idx, letters in real_segments if seg_idx == idx}
+        else:
+            idx = self._next_synthetic_dup_idx
+            self._next_synthetic_dup_idx += 1
+            used_numbers = set()
+
+        use_taxid = self._id_schema == id_formats.LOFT_TAXID
+        wrapped = set()
+        next_number = 0
+        for child in needs_assignment:
+            while next_number in used_numbers:
+                next_number += 1
+            used_numbers.add(next_number)
+            branch_chain = f".{idx}{id_formats.encode_paralog_branch(next_number)}"
+
+            if isinstance(child, abstractgene.HOG):
+                # a real orthologGroup element with no id attribute: relabel in place.
+                taxid = id_formats.taxid_for_taxon(child.genome.taxon) if use_taxid else None
+                child.hog_id = f"{prefix}{branch_chain}_{taxid}" if taxid is not None else f"{prefix}{branch_chain}"
+                continue
+
+            # bare gene: only worth a wrapper HOG if there's real vertical distance
+            # between the duplication and its species -- a real LOFT="..." geneRef
+            # attribute never carries a taxid either, so a wrapper-less label matches
+            # that same convention.
+            missing_taxons = self.taxonomy.get_path_up(child.genome.taxon, parent_hog.genome.taxon)
+            if not missing_taxons:
+                child.set_LOFT(branch_chain)
+                continue
+
+            branch_taxon = missing_taxons[-1]
+            ancestral_genome = self.taxonomy.get_genome_from_taxnode(branch_taxon)
+            taxid = id_formats.taxid_for_taxon(branch_taxon) if use_taxid else None
+            branch_id = f"{prefix}{branch_chain}_{taxid}" if taxid is not None else f"{prefix}{branch_chain}"
+            wrapper = abstractgene.HOG(id=branch_id)
+            setattr(wrapper, "_missing_in_xml", parent_hog.genome)
+            ancestral_genome.add_gene(wrapper)
+
+            parent_hog.remove_child(child)
+            wrapper.add_child(child)
+            parent_hog.add_child(wrapper)
+            self._create_missing_hogs(child, wrapper)
+
+            duplication.remove_child(child)
+            duplication.add_child(wrapper)
+            wrapped.add(child)
+
+        return wrapped
+
     def start(self, tag, attrib):
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = ExtantGenome(**attrib)
@@ -520,9 +611,14 @@ class OrthoXMLParser:
                         hog.remove_child(child)
                         mrca_hog.add_child(child)
 
+                    # give any duplication branch lacking its own real id a proper,
+                    # distinguishing LOFT segment before filling any remaining gaps
+                    wrapped = self._assign_duplication_branch_ids(mrca_hog, duplication, children)
+                    remaining = [c for c in children if c not in wrapped]
+
                     # add missing levels if any, grouping children that are
                     # missing the same intermediate ancestor under one shared HOG
-                    self._resolve_missing_levels(mrca_hog, children)
+                    self._resolve_missing_levels(mrca_hog, remaining)
 
                     duplication.set_parent(mrca_hog)
                     for x in list(duplication.children):
@@ -534,7 +630,14 @@ class OrthoXMLParser:
                 else:
                     duplication.MRCA = self.taxonomy.get_genome_from_taxnode(hog.genome.taxon)
                     duplication.set_parent(hog)
+
+                    # give any duplication branch lacking its own real id a proper,
+                    # distinguishing LOFT segment before filling any remaining gaps
+                    wrapped = self._assign_duplication_branch_ids(hog, duplication, children)
+
                     for child_direct in children:
+                        if child_direct in wrapped:
+                            continue
                         new_direct_child = self._create_missing_hogs(child_direct, hog)
                         duplication.remove_child(child_direct)
                         duplication.add_child(new_direct_child)

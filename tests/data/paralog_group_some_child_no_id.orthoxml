@@ -1,0 +1,1069 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="FastOMA 0.5.1" originVersion="2026-07-10 19:43:27" version="0.5">
+  <species name="AEGTA" taxonId="100" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1001027392" protId="AEGTA27392"/>
+      </genes>
+    </database>
+  </species>
+  <species name="AEGTS" taxonId="101" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1002028621" protId="AEGTS37005"/>
+        <gene id="1002040624" protId="AEGTS52236"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ASPOF" taxonId="61" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1009015113" protId="ASPOF15113"/>
+        <gene id="1009021332" protId="ASPOF21332"/>
+        <gene id="1009024035" protId="ASPOF24035"/>
+      </genes>
+    </database>
+  </species>
+  <species name="BRADI" taxonId="94" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1011017279" protId="BRADI17433"/>
+        <gene id="1011022606" protId="BRADI22804"/>
+      </genes>
+    </database>
+  </species>
+  <species name="BRASY" taxonId="95" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1015011328" protId="BRASY19763"/>
+        <gene id="1015019203" protId="BRASY33205"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ERATE" taxonId="66" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1031006415" protId="ERATE06420"/>
+        <gene id="1031016465" protId="ERATE16472"/>
+      </genes>
+    </database>
+  </species>
+  <species name="HORVV" taxonId="97" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1040032276" protId="HORVV171434"/>
+      </genes>
+    </database>
+  </species>
+  <species name="MAIZE" taxonId="72" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1051005698" protId="MAIZE14629"/>
+        <gene id="1051011750" protId="MAIZE29583"/>
+        <gene id="1051020597" protId="MAIZE52071"/>
+        <gene id="1051030952" protId="MAIZE78311"/>
+      </genes>
+    </database>
+  </species>
+  <species name="MISSI" taxonId="74" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1059012451" protId="MISSI16736"/>
+        <gene id="1059016277" protId="MISSI21832"/>
+        <gene id="1059028631" protId="MISSI38270"/>
+      </genes>
+    </database>
+  </species>
+  <species name="MUSAM" taxonId="63" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1060017513" protId="MUSAM22784"/>
+        <gene id="1060020995" protId="MUSAM27357"/>
+        <gene id="1060024425" protId="MUSAM31833"/>
+        <gene id="1060030268" protId="MUSAM39403"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYBR" taxonId="78" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1064028493" protId="ORYBR28494"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYGL" taxonId="84" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1065026961" protId="ORYGL26961"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYLO" taxonId="82" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1066000517" protId="ORYLO00522"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYNI" taxonId="87" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1067033388" protId="ORYNI35002"/>
+        <gene id="1067035388" protId="ORYNI37102"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYPU" taxonId="80" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1068028865" protId="ORYPU29980"/>
+        <gene id="1068030540" protId="ORYPU31728"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYRU" taxonId="90" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1069011153" protId="ORYRU11648"/>
+        <gene id="1069036238" protId="ORYRU37667"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYSI" taxonId="88" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1070034879" protId="ORYSI34879"/>
+        <gene id="1070036855" protId="ORYSI36855"/>
+      </genes>
+    </database>
+  </species>
+  <species name="ORYSJ" taxonId="91" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1071030747" protId="ORYSJ31807"/>
+        <gene id="1071032439" protId="ORYSJ33566"/>
+      </genes>
+    </database>
+  </species>
+  <species name="SETIT" taxonId="69" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1090022425" protId="SETIT22632"/>
+      </genes>
+    </database>
+  </species>
+  <species name="SETVI" taxonId="70" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1091011956" protId="SETVI16491"/>
+        <gene id="1091018227" protId="SETVI25107"/>
+      </genes>
+    </database>
+  </species>
+  <species name="SORBI" taxonId="75" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1094011144" protId="SORBI13650"/>
+        <gene id="1094029229" protId="SORBI35567"/>
+      </genes>
+    </database>
+  </species>
+  <species name="TRITD" taxonId="104" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1101027135" protId="TRITD78912"/>
+        <gene id="1101030750" protId="TRITD89194"/>
+        <gene id="1101038404" protId="TRITD111796"/>
+        <gene id="1101054799" protId="TRITD160079"/>
+      </genes>
+    </database>
+  </species>
+  <species name="TRIUA" taxonId="105" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1102005915" protId="TRIUA05915"/>
+      </genes>
+    </database>
+  </species>
+  <species name="WHEAT" taxonId="103" NCBITaxId="0">
+    <database name="database" version="2023">
+      <genes>
+        <gene id="1106064292" protId="WHEAT80336"/>
+        <gene id="1106069875" protId="WHEAT87167"/>
+        <gene id="1106075700" protId="WHEAT94356"/>
+        <gene id="1106094180" protId="WHEAT116845"/>
+        <gene id="1106098835" protId="WHEAT122577"/>
+        <gene id="1106104879" protId="WHEAT129979"/>
+      </genes>
+    </database>
+  </species>
+  <taxonomy>
+    <taxon id="1" name="NODE_1">
+      <taxon id="2" name="NODE_2">
+        <taxon id="3" name="NODE_4">
+          <taxon id="4" name="NODE_8">
+            <taxon id="5" name="OSTTA"/>
+            <taxon id="6" name="OSTLU"/>
+          </taxon>
+          <taxon id="7" name="NODE_9">
+            <taxon id="8" name="MICCC"/>
+            <taxon id="9" name="MICPC"/>
+          </taxon>
+        </taxon>
+        <taxon id="10" name="NODE_5">
+          <taxon id="11" name="NODE_10">
+            <taxon id="12" name="CHLRE"/>
+            <taxon id="13" name="VOLCA"/>
+          </taxon>
+          <taxon id="14" name="CHLVA"/>
+        </taxon>
+      </taxon>
+      <taxon id="15" name="NODE_3">
+        <taxon id="16" name="NODE_6">
+          <taxon id="17" name="KLEFL"/>
+          <taxon id="18" name="KLENI"/>
+        </taxon>
+        <taxon id="19" name="NODE_7">
+          <taxon id="20" name="CHABU"/>
+          <taxon id="21" name="NODE_11">
+            <taxon id="22" name="NODE_12">
+              <taxon id="23" name="MARPO"/>
+              <taxon id="24" name="PHYPA"/>
+            </taxon>
+            <taxon id="25" name="NODE_13">
+              <taxon id="26" name="NODE_14">
+                <taxon id="27" name="DIPCM"/>
+                <taxon id="28" name="SELML"/>
+              </taxon>
+              <taxon id="29" name="NODE_15">
+                <taxon id="30" name="NODE_16">
+                  <taxon id="31" name="CERRI"/>
+                  <taxon id="32" name="MARVE"/>
+                </taxon>
+                <taxon id="33" name="NODE_17">
+                  <taxon id="34" name="NODE_18">
+                    <taxon id="35" name="GINBI"/>
+                    <taxon id="36" name="NODE_20">
+                      <taxon id="37" name="WELMI"/>
+                      <taxon id="38" name="NODE_22">
+                        <taxon id="39" name="TAXCH"/>
+                        <taxon id="40" name="NODE_24">
+                          <taxon id="41" name="PINTA"/>
+                          <taxon id="42" name="NODE_27">
+                            <taxon id="43" name="PICGL"/>
+                            <taxon id="44" name="PICSI"/>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                  <taxon id="45" name="NODE_19">
+                    <taxon id="46" name="AMBTC"/>
+                    <taxon id="47" name="NODE_21">
+                      <taxon id="48" name="NYMNZ"/>
+                      <taxon id="49" name="NODE_23">
+                        <taxon id="50" name="NODE_25">
+                          <taxon id="51" name="ARIFI"/>
+                          <taxon id="52" name="NODE_28">
+                            <taxon id="53" name="PERAE"/>
+                            <taxon id="54" name="NODE_31">
+                              <taxon id="55" name="ANNCH"/>
+                              <taxon id="56" name="MAGSI"/>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                        <taxon id="57" name="NODE_26">
+                          <taxon id="58" name="NODE_29">
+                            <taxon id="59" name="ZOSMR"/>
+                            <taxon id="60" name="NODE_32">
+                              <taxon id="61" name="ASPOF"/>
+                              <taxon id="62" name="NODE_35">
+                                <taxon id="63" name="MUSAM"/>
+                                <taxon id="64" name="NODE_38">
+                                  <taxon id="65" name="NODE_40">
+                                    <taxon id="66" name="ERATE"/>
+                                    <taxon id="67" name="NODE_44">
+                                      <taxon id="68" name="NODE_50">
+                                        <taxon id="69" name="SETIT"/>
+                                        <taxon id="70" name="SETVI"/>
+                                      </taxon>
+                                      <taxon id="71" name="NODE_51">
+                                        <taxon id="72" name="MAIZE"/>
+                                        <taxon id="73" name="NODE_57">
+                                          <taxon id="74" name="MISSI"/>
+                                          <taxon id="75" name="SORBI"/>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                  </taxon>
+                                  <taxon id="76" name="NODE_41">
+                                    <taxon id="77" name="NODE_45">
+                                      <taxon id="78" name="ORYBR"/>
+                                      <taxon id="79" name="NODE_52">
+                                        <taxon id="80" name="ORYPU"/>
+                                        <taxon id="81" name="NODE_58">
+                                          <taxon id="82" name="ORYLO"/>
+                                          <taxon id="83" name="NODE_64">
+                                            <taxon id="84" name="ORYGL"/>
+                                            <taxon id="85" name="NODE_72">
+                                              <taxon id="86" name="NODE_80">
+                                                <taxon id="87" name="ORYNI"/>
+                                                <taxon id="88" name="ORYSI"/>
+                                              </taxon>
+                                              <taxon id="89" name="NODE_81">
+                                                <taxon id="90" name="ORYRU"/>
+                                                <taxon id="91" name="ORYSJ"/>
+                                              </taxon>
+                                            </taxon>
+                                          </taxon>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                    <taxon id="92" name="NODE_46">
+                                      <taxon id="93" name="NODE_53">
+                                        <taxon id="94" name="BRADI"/>
+                                        <taxon id="95" name="BRASY"/>
+                                      </taxon>
+                                      <taxon id="96" name="NODE_54">
+                                        <taxon id="97" name="HORVV"/>
+                                        <taxon id="98" name="NODE_59">
+                                          <taxon id="99" name="NODE_65">
+                                            <taxon id="100" name="AEGTA"/>
+                                            <taxon id="101" name="AEGTS"/>
+                                          </taxon>
+                                          <taxon id="102" name="NODE_66">
+                                            <taxon id="103" name="WHEAT"/>
+                                            <taxon id="104" name="TRITD"/>
+                                            <taxon id="105" name="TRIUA"/>
+                                          </taxon>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                          <taxon id="106" name="NODE_30">
+                            <taxon id="107" name="NODE_33">
+                              <taxon id="108" name="MACCD"/>
+                              <taxon id="109" name="PAPSO"/>
+                            </taxon>
+                            <taxon id="110" name="NODE_34">
+                              <taxon id="111" name="NODE_36">
+                                <taxon id="112" name="NELNU"/>
+                                <taxon id="113" name="MACIN"/>
+                              </taxon>
+                              <taxon id="114" name="NODE_37">
+                                <taxon id="115" name="TETSI"/>
+                                <taxon id="116" name="NODE_39">
+                                  <taxon id="117" name="NODE_42">
+                                    <taxon id="118" name="NODE_47">
+                                      <taxon id="119" name="BETVV"/>
+                                      <taxon id="120" name="CHEQI"/>
+                                    </taxon>
+                                    <taxon id="121" name="NODE_48">
+                                      <taxon id="122" name="ACTCC"/>
+                                      <taxon id="123" name="NODE_55">
+                                        <taxon id="124" name="NODE_60">
+                                          <taxon id="125" name="DAUCS"/>
+                                          <taxon id="126" name="NODE_67">
+                                            <taxon id="127" name="CYNCS"/>
+                                            <taxon id="128" name="NODE_73">
+                                              <taxon id="129" name="HELAN"/>
+                                              <taxon id="130" name="LACSA"/>
+                                            </taxon>
+                                          </taxon>
+                                        </taxon>
+                                        <taxon id="131" name="NODE_61">
+                                          <taxon id="132" name="COFCA"/>
+                                          <taxon id="133" name="NODE_68">
+                                            <taxon id="134" name="ERYGU"/>
+                                            <taxon id="135" name="NODE_74">
+                                              <taxon id="136" name="NODE_82">
+                                                <taxon id="137" name="NICAT"/>
+                                                <taxon id="138" name="TOBAC"/>
+                                              </taxon>
+                                              <taxon id="139" name="NODE_83">
+                                                <taxon id="140" name="CAPAN"/>
+                                                <taxon id="141" name="NODE_90">
+                                                  <taxon id="142" name="SOLLC"/>
+                                                  <taxon id="143" name="SOLTU"/>
+                                                </taxon>
+                                              </taxon>
+                                            </taxon>
+                                          </taxon>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                  </taxon>
+                                  <taxon id="144" name="NODE_43">
+                                    <taxon id="145" name="KALFE"/>
+                                    <taxon id="146" name="NODE_49">
+                                      <taxon id="147" name="VITVI"/>
+                                      <taxon id="148" name="NODE_56">
+                                        <taxon id="149" name="NODE_62">
+                                          <taxon id="150" name="NODE_69">
+                                            <taxon id="151" name="POPTR"/>
+                                            <taxon id="152" name="NODE_75">
+                                              <taxon id="153" name="RICCO"/>
+                                              <taxon id="154" name="MANES"/>
+                                            </taxon>
+                                          </taxon>
+                                          <taxon id="155" name="NODE_70">
+                                            <taxon id="156" name="NODE_76">
+                                              <taxon id="157" name="NODE_84">
+                                                <taxon id="158" name="CUCSA"/>
+                                                <taxon id="159" name="NODE_91">
+                                                  <taxon id="160" name="QUELO"/>
+                                                  <taxon id="161" name="JUGRE"/>
+                                                </taxon>
+                                              </taxon>
+                                              <taxon id="162" name="NODE_85">
+                                                <taxon id="163" name="CANSA"/>
+                                                <taxon id="164" name="NODE_92">
+                                                  <taxon id="165" name="ROSCH"/>
+                                                  <taxon id="166" name="NODE_99">
+                                                    <taxon id="167" name="PRUDU"/>
+                                                    <taxon id="168" name="PRUPE"/>
+                                                  </taxon>
+                                                </taxon>
+                                              </taxon>
+                                            </taxon>
+                                            <taxon id="169" name="NODE_77">
+                                              <taxon id="170" name="LUPAN"/>
+                                              <taxon id="171" name="NODE_86">
+                                                <taxon id="172" name="NODE_93">
+                                                  <taxon id="173" name="NODE_100">
+                                                    <taxon id="174" name="MEDTR"/>
+                                                    <taxon id="175" name="TRIPR"/>
+                                                  </taxon>
+                                                  <taxon id="176" name="LOTJA"/>
+                                                </taxon>
+                                                <taxon id="177" name="NODE_94">
+                                                  <taxon id="178" name="CAJCA"/>
+                                                  <taxon id="179" name="NODE_101">
+                                                    <taxon id="180" name="SOYBN"/>
+                                                    <taxon id="181" name="NODE_104">
+                                                      <taxon id="182" name="PHAVU"/>
+                                                      <taxon id="183" name="PHAAN"/>
+                                                    </taxon>
+                                                  </taxon>
+                                                </taxon>
+                                              </taxon>
+                                            </taxon>
+                                          </taxon>
+                                        </taxon>
+                                        <taxon id="184" name="NODE_63">
+                                          <taxon id="185" name="EUCGR"/>
+                                          <taxon id="186" name="NODE_71">
+                                            <taxon id="187" name="NODE_78">
+                                              <taxon id="188" name="CITCL"/>
+                                              <taxon id="189" name="NODE_87">
+                                                <taxon id="190" name="MANIN"/>
+                                                <taxon id="191" name="PISVE"/>
+                                              </taxon>
+                                            </taxon>
+                                            <taxon id="192" name="NODE_79">
+                                              <taxon id="193" name="NODE_88">
+                                                <taxon id="194" name="NODE_95">
+                                                  <taxon id="195" name="ARALY"/>
+                                                  <taxon id="196" name="ARATH"/>
+                                                </taxon>
+                                                <taxon id="197" name="NODE_96">
+                                                  <taxon id="198" name="ARAAL"/>
+                                                  <taxon id="199" name="NODE_102">
+                                                    <taxon id="200" name="EUTSA"/>
+                                                    <taxon id="201" name="NODE_105">
+                                                      <taxon id="202" name="BRAOL"/>
+                                                      <taxon id="203" name="NODE_106">
+                                                        <taxon id="204" name="BRARP"/>
+                                                        <taxon id="205" name="BRANA"/>
+                                                      </taxon>
+                                                    </taxon>
+                                                  </taxon>
+                                                </taxon>
+                                              </taxon>
+                                              <taxon id="206" name="NODE_89">
+                                                <taxon id="207" name="NODE_97">
+                                                  <taxon id="208" name="THECC"/>
+                                                  <taxon id="209" name="COCAP"/>
+                                                </taxon>
+                                                <taxon id="210" name="NODE_98">
+                                                  <taxon id="211" name="GOSRA"/>
+                                                  <taxon id="212" name="NODE_103">
+                                                    <taxon id="213" name="GOSAR"/>
+                                                    <taxon id="214" name="GOSHI"/>
+                                                  </taxon>
+                                                </taxon>
+                                              </taxon>
+                                            </taxon>
+                                          </taxon>
+                                        </taxon>
+                                      </taxon>
+                                    </taxon>
+                                  </taxon>
+                                </taxon>
+                              </taxon>
+                            </taxon>
+                          </taxon>
+                        </taxon>
+                      </taxon>
+                    </taxon>
+                  </taxon>
+                </taxon>
+              </taxon>
+            </taxon>
+          </taxon>
+        </taxon>
+      </taxon>
+    </taxon>
+  </taxonomy>
+  <scores>
+    <scoreDef id="CompletenessScore" desc="Fraction of expected species with genes in the (Sub)HOG"/>
+    <scoreDef id="BranchLength" desc="Fitted distance between orthologGroup / paralogGroup / geneRef nodes (i.e., ancestral and extant genes) in implied gene tree."/>
+  </scores>
+  <groups>
+    <orthologGroup id="HOG:0000001_60" taxonId="60">
+      <score id="CompletenessScore" value="1.0"/>
+      <property name="OMAmerRootHOG" value="HOG:F0224294"/>
+      <property name="TaxRange" value="NODE_32"/>
+      <paralogGroup>
+        <geneRef id="1009021332">
+          <score id="BranchLength3" value="0.110"/>
+          <score id="BranchLength6" value="0.110"/>
+          <score id="BranchLength9" value="0.110"/>
+        </geneRef>
+        <geneRef id="1009015113">
+          <score id="BranchLength3" value="0.117"/>
+          <score id="BranchLength6" value="0.117"/>
+          <score id="BranchLength9" value="0.117"/>
+        </geneRef>
+        <geneRef id="1009024035">
+          <score id="BranchLength3" value="0.292"/>
+          <score id="BranchLength6" value="0.292"/>
+          <score id="BranchLength9" value="0.292"/>
+        </geneRef>
+        <score id="BranchLength3" value="0.000"/>
+        <score id="BranchLength6" value="0.000"/>
+        <score id="BranchLength9" value="0.000"/>
+      </paralogGroup>
+      <orthologGroup id="HOG:0000001_62" taxonId="62">
+        <score id="CompletenessScore" value="1.0"/>
+        <property name="TaxRange" value="NODE_35"/>
+        <paralogGroup>
+          <geneRef id="1060017513">
+            <score id="BranchLength3" value="0.087"/>
+            <score id="BranchLength6" value="0.087"/>
+            <score id="BranchLength9" value="0.087"/>
+          </geneRef>
+          <geneRef id="1060024425">
+            <score id="BranchLength3" value="0.010"/>
+            <score id="BranchLength6" value="0.010"/>
+            <score id="BranchLength9" value="0.010"/>
+          </geneRef>
+          <geneRef id="1060030268">
+            <score id="BranchLength3" value="0.034"/>
+            <score id="BranchLength6" value="0.034"/>
+            <score id="BranchLength9" value="0.034"/>
+          </geneRef>
+          <geneRef id="1060020995">
+            <score id="BranchLength3" value="0.048"/>
+            <score id="BranchLength6" value="0.048"/>
+            <score id="BranchLength9" value="0.048"/>
+          </geneRef>
+          <score id="BranchLength3" value="0.163"/>
+          <score id="BranchLength6" value="0.163"/>
+          <score id="BranchLength9" value="0.163"/>
+        </paralogGroup>
+        <orthologGroup id="HOG:0000001_64" taxonId="64">
+          <score id="CompletenessScore" value="1.0"/>
+          <property name="TaxRange" value="NODE_38"/>
+          <paralogGroup>
+            <orthologGroup id="HOG:0000001.3a_65" taxonId="65">
+              <score id="CompletenessScore" value="1.0"/>
+              <property name="TaxRange" value="NODE_40"/>
+              <geneRef id="1031006415">
+                <score id="BranchLength3" value="0.228"/>
+                <score id="BranchLength6" value="0.228"/>
+                <score id="BranchLength9" value="0.228"/>
+              </geneRef>
+              <orthologGroup id="HOG:0000001.3a_67" taxonId="67">
+                <score id="CompletenessScore" value="1.0"/>
+                <property name="TaxRange" value="NODE_44"/>
+                <orthologGroup id="HOG:0000001.3a_68" taxonId="68">
+                  <score id="CompletenessScore" value="1.0"/>
+                  <property name="TaxRange" value="NODE_50"/>
+                  <geneRef id="1090022425">
+                    <score id="BranchLength3" value="0.040"/>
+                    <score id="BranchLength6" value="0.040"/>
+                    <score id="BranchLength9" value="0.040"/>
+                  </geneRef>
+                  <geneRef id="1091018227">
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </geneRef>
+                  <score id="BranchLength3" value="0.058"/>
+                  <score id="BranchLength6" value="0.058"/>
+                  <score id="BranchLength9" value="0.058"/>
+                </orthologGroup>
+                <paralogGroup>
+                  <orthologGroup id="HOG:0000001.3a.1a_71" taxonId="71">
+                    <score id="CompletenessScore" value="1.0"/>
+                    <property name="TaxRange" value="NODE_51"/>
+                    <geneRef id="1051005698">
+                      <score id="BranchLength3" value="0.027"/>
+                      <score id="BranchLength6" value="0.027"/>
+                      <score id="BranchLength9" value="0.027"/>
+                    </geneRef>
+                    <orthologGroup id="HOG:0000001.3a.1a_73" taxonId="73">
+                      <score id="CompletenessScore" value="1.0"/>
+                      <property name="TaxRange" value="NODE_57"/>
+                      <geneRef id="1059028631">
+                        <score id="BranchLength3" value="0.024"/>
+                        <score id="BranchLength6" value="0.024"/>
+                        <score id="BranchLength9" value="0.024"/>
+                      </geneRef>
+                      <geneRef id="1094029229">
+                        <score id="BranchLength3" value="0.007"/>
+                        <score id="BranchLength6" value="0.007"/>
+                        <score id="BranchLength9" value="0.007"/>
+                      </geneRef>
+                      <score id="BranchLength3" value="0.002"/>
+                      <score id="BranchLength6" value="0.002"/>
+                      <score id="BranchLength9" value="0.002"/>
+                    </orthologGroup>
+                    <score id="BranchLength3" value="0.008"/>
+                    <score id="BranchLength6" value="0.008"/>
+                    <score id="BranchLength9" value="0.008"/>
+                  </orthologGroup>
+                  <geneRef id="1051020597">
+                    <score id="BranchLength3" value="0.098"/>
+                    <score id="BranchLength6" value="0.098"/>
+                    <score id="BranchLength9" value="0.098"/>
+                  </geneRef>
+                  <score id="BranchLength3" value="0.063"/>
+                  <score id="BranchLength6" value="0.063"/>
+                  <score id="BranchLength9" value="0.063"/>
+                </paralogGroup>
+                <score id="BranchLength3" value="0.033"/>
+                <score id="BranchLength6" value="0.033"/>
+                <score id="BranchLength9" value="0.033"/>
+              </orthologGroup>
+              <score id="BranchLength3" value="0.047"/>
+              <score id="BranchLength6" value="0.047"/>
+              <score id="BranchLength9" value="0.047"/>
+            </orthologGroup>
+            <geneRef id="1051030952">
+              <score id="BranchLength3" value="0.035"/>
+              <score id="BranchLength6" value="0.035"/>
+              <score id="BranchLength9" value="0.035"/>
+            </geneRef>
+            <orthologGroup id="HOG:0000001.3c_67" taxonId="67">
+              <score id="CompletenessScore" value="0.6"/>
+              <property name="TaxRange" value="NODE_44"/>
+              <geneRef id="1091011956">
+                <score id="BranchLength3" value="0.002"/>
+                <score id="BranchLength6" value="0.002"/>
+                <score id="BranchLength9" value="0.002"/>
+              </geneRef>
+              <orthologGroup id="HOG:0000001.3c_73" taxonId="73">
+                <score id="CompletenessScore" value="1.0"/>
+                <property name="TaxRange" value="NODE_57"/>
+                <geneRef id="1059012451">
+                  <score id="BranchLength3" value="0.008"/>
+                  <score id="BranchLength6" value="0.008"/>
+                  <score id="BranchLength9" value="0.008"/>
+                </geneRef>
+                <geneRef id="1094011144">
+                  <score id="BranchLength3" value="0.001"/>
+                  <score id="BranchLength6" value="0.001"/>
+                  <score id="BranchLength9" value="0.001"/>
+                </geneRef>
+                <score id="BranchLength3" value="0.001"/>
+                <score id="BranchLength6" value="0.001"/>
+                <score id="BranchLength9" value="0.001"/>
+              </orthologGroup>
+              <score id="BranchLength3" value="0.011"/>
+              <score id="BranchLength6" value="0.011"/>
+              <score id="BranchLength9" value="0.011"/>
+            </orthologGroup>
+            <geneRef id="1059016277">
+              <score id="BranchLength3" value="0.023"/>
+              <score id="BranchLength6" value="0.023"/>
+              <score id="BranchLength9" value="0.023"/>
+            </geneRef>
+            <geneRef id="1051011750">
+              <score id="BranchLength3" value="0.353"/>
+              <score id="BranchLength6" value="0.353"/>
+              <score id="BranchLength9" value="0.353"/>
+            </geneRef>
+            <geneRef id="1031016465">
+              <score id="BranchLength3" value="0.052"/>
+              <score id="BranchLength6" value="0.052"/>
+              <score id="BranchLength9" value="0.052"/>
+            </geneRef>
+            <score id="BranchLength3" value="0.000"/>
+            <score id="BranchLength6" value="0.000"/>
+            <score id="BranchLength9" value="0.000"/>
+          </paralogGroup>
+          <orthologGroup id="HOG:0000001_76" taxonId="76">
+            <score id="CompletenessScore" value="1.0"/>
+            <property name="TaxRange" value="NODE_41"/>
+            <paralogGroup>
+              <orthologGroup id="HOG:0000001.4a_79" taxonId="79">
+                <score id="CompletenessScore" value="0.7143"/>
+                <property name="TaxRange" value="NODE_52"/>
+                <orthologGroup id="HOG:0000001.4a_85" taxonId="85">
+                  <score id="CompletenessScore" value="1.0"/>
+                  <property name="TaxRange" value="NODE_72"/>
+                  <orthologGroup id="HOG:0000001.4a_86" taxonId="86">
+                    <score id="CompletenessScore" value="1.0"/>
+                    <property name="TaxRange" value="NODE_80"/>
+                    <geneRef id="1067035388">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <geneRef id="1070036855">
+                      <score id="BranchLength3" value="0.011"/>
+                      <score id="BranchLength6" value="0.011"/>
+                      <score id="BranchLength9" value="0.011"/>
+                    </geneRef>
+                    <score id="BranchLength3" value="0.023"/>
+                    <score id="BranchLength6" value="0.023"/>
+                    <score id="BranchLength9" value="0.023"/>
+                  </orthologGroup>
+                  <orthologGroup id="HOG:0000001.4a_89" taxonId="89">
+                    <score id="CompletenessScore" value="1.0"/>
+                    <property name="TaxRange" value="NODE_81"/>
+                    <geneRef id="1069036238">
+                      <score id="BranchLength3" value="0.123"/>
+                      <score id="BranchLength6" value="0.123"/>
+                      <score id="BranchLength9" value="0.123"/>
+                    </geneRef>
+                    <paralogGroup>
+                      <geneRef id="1071032439">
+                        <score id="BranchLength3" value="0.054"/>
+                        <score id="BranchLength6" value="0.054"/>
+                        <score id="BranchLength9" value="0.054"/>
+                      </geneRef>
+                      <geneRef id="1071030747">
+                        <score id="BranchLength3" value="0.077"/>
+                        <score id="BranchLength6" value="0.077"/>
+                        <score id="BranchLength9" value="0.077"/>
+                      </geneRef>
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </paralogGroup>
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </orthologGroup>
+                  <score id="BranchLength3" value="0.000"/>
+                  <score id="BranchLength6" value="0.000"/>
+                  <score id="BranchLength9" value="0.000"/>
+                </orthologGroup>
+                <geneRef id="1068030540">
+                  <score id="BranchLength3" value="0.021"/>
+                  <score id="BranchLength6" value="0.021"/>
+                  <score id="BranchLength9" value="0.021"/>
+                </geneRef>
+                <score id="BranchLength3" value="0.033"/>
+                <score id="BranchLength6" value="0.033"/>
+                <score id="BranchLength9" value="0.033"/>
+              </orthologGroup>
+              <orthologGroup id="HOG:0000001.4b_77" taxonId="77">
+                <score id="CompletenessScore" value="0.75"/>
+                <property name="TaxRange" value="NODE_45"/>
+                <orthologGroup id="HOG:0000001.4b_79" taxonId="79">
+                  <score id="CompletenessScore" value="0.7143"/>
+                  <property name="TaxRange" value="NODE_52"/>
+                  <orthologGroup id="HOG:0000001.4b_81" taxonId="81">
+                    <score id="CompletenessScore" value="0.6667"/>
+                    <property name="TaxRange" value="NODE_58"/>
+                    <orthologGroup id="HOG:0000001.4b_83" taxonId="83">
+                      <score id="CompletenessScore" value="0.6"/>
+                      <property name="TaxRange" value="NODE_64"/>
+                      <orthologGroup id="HOG:0000001.4b_86" taxonId="86">
+                        <score id="CompletenessScore" value="1.0"/>
+                        <property name="TaxRange" value="NODE_80"/>
+                        <geneRef id="1067033388">
+                          <score id="BranchLength3" value="0.027"/>
+                          <score id="BranchLength6" value="0.027"/>
+                          <score id="BranchLength9" value="0.027"/>
+                        </geneRef>
+                        <geneRef id="1070034879">
+                          <score id="BranchLength3" value="0.000"/>
+                          <score id="BranchLength6" value="0.000"/>
+                          <score id="BranchLength9" value="0.000"/>
+                        </geneRef>
+                        <score id="BranchLength3" value="0.000"/>
+                        <score id="BranchLength6" value="0.000"/>
+                        <score id="BranchLength9" value="0.000"/>
+                      </orthologGroup>
+                      <geneRef id="1065026961">
+                        <score id="BranchLength3" value="0.015"/>
+                        <score id="BranchLength6" value="0.015"/>
+                        <score id="BranchLength9" value="0.015"/>
+                      </geneRef>
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </orthologGroup>
+                    <geneRef id="1066000517">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </orthologGroup>
+                  <geneRef id="1068028865">
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </geneRef>
+                  <score id="BranchLength3" value="0.000"/>
+                  <score id="BranchLength6" value="0.000"/>
+                  <score id="BranchLength9" value="0.000"/>
+                </orthologGroup>
+                <geneRef id="1064028493">
+                  <score id="BranchLength3" value="0.022"/>
+                  <score id="BranchLength6" value="0.022"/>
+                  <score id="BranchLength9" value="0.022"/>
+                </geneRef>
+                <score id="BranchLength3" value="0.060"/>
+                <score id="BranchLength6" value="0.060"/>
+                <score id="BranchLength9" value="0.060"/>
+              </orthologGroup>
+              <geneRef id="1069011153">
+                <score id="BranchLength3" value="1.118"/>
+                <score id="BranchLength6" value="1.118"/>
+                <score id="BranchLength9" value="1.118"/>
+              </geneRef>
+              <score id="BranchLength3" value="0.000"/>
+              <score id="BranchLength6" value="0.000"/>
+              <score id="BranchLength9" value="0.000"/>
+            </paralogGroup>
+            <paralogGroup>
+              <orthologGroup id="HOG:0000001.5a_92" taxonId="92">
+                <score id="CompletenessScore" value="1.0"/>
+                <property name="TaxRange" value="NODE_46"/>
+                <orthologGroup id="HOG:0000001.5a_93" taxonId="93">
+                  <score id="CompletenessScore" value="1.0"/>
+                  <property name="TaxRange" value="NODE_53"/>
+                  <geneRef id="1011017279">
+                    <score id="BranchLength3" value="0.010"/>
+                    <score id="BranchLength6" value="0.010"/>
+                    <score id="BranchLength9" value="0.010"/>
+                  </geneRef>
+                  <geneRef id="1015011328">
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </geneRef>
+                  <score id="BranchLength3" value="0.029"/>
+                  <score id="BranchLength6" value="0.029"/>
+                  <score id="BranchLength9" value="0.029"/>
+                </orthologGroup>
+                <paralogGroup>
+                  <orthologGroup id="HOG:0000001.5a.3a_98" taxonId="98">
+                    <score id="CompletenessScore" value="0.8"/>
+                    <property name="TaxRange" value="NODE_59"/>
+                    <geneRef id="1001027392">
+                      <score id="BranchLength3" value="0.096"/>
+                      <score id="BranchLength6" value="0.096"/>
+                      <score id="BranchLength9" value="0.096"/>
+                    </geneRef>
+                    <orthologGroup id="HOG:0000001.5a.3a_102" taxonId="102">
+                      <score id="CompletenessScore" value="1.0"/>
+                      <property name="TaxRange" value="NODE_66"/>
+                      <geneRef id="1101027135">
+                        <score id="BranchLength3" value="0.000"/>
+                        <score id="BranchLength6" value="0.000"/>
+                        <score id="BranchLength9" value="0.000"/>
+                      </geneRef>
+                      <geneRef id="1102005915">
+                        <score id="BranchLength3" value="0.037"/>
+                        <score id="BranchLength6" value="0.037"/>
+                        <score id="BranchLength9" value="0.037"/>
+                      </geneRef>
+                      <geneRef id="1106094180">
+                        <score id="BranchLength3" value="0.000"/>
+                        <score id="BranchLength6" value="0.000"/>
+                        <score id="BranchLength9" value="0.000"/>
+                      </geneRef>
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </orthologGroup>
+                    <score id="BranchLength3" value="0.007"/>
+                    <score id="BranchLength6" value="0.007"/>
+                    <score id="BranchLength9" value="0.007"/>
+                  </orthologGroup>
+                  <orthologGroup id="HOG:0000001.5a.3b_102" taxonId="102">
+                    <score id="CompletenessScore" value="0.6667"/>
+                    <property name="TaxRange" value="NODE_66"/>
+                    <geneRef id="1101030750">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <geneRef id="1106098835">
+                      <score id="BranchLength3" value="0.001"/>
+                      <score id="BranchLength6" value="0.001"/>
+                      <score id="BranchLength9" value="0.001"/>
+                    </geneRef>
+                    <score id="BranchLength3" value="0.005"/>
+                    <score id="BranchLength6" value="0.005"/>
+                    <score id="BranchLength9" value="0.005"/>
+                  </orthologGroup>
+                  <orthologGroup id="HOG:0000001.5a.3c_96" taxonId="96">
+                    <score id="CompletenessScore" value="0.5"/>
+                    <property name="TaxRange" value="NODE_54"/>
+                    <geneRef id="1040032276">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <orthologGroup id="HOG:0000001.5a.3c_98" taxonId="98">
+                      <score id="CompletenessScore" value="0.4"/>
+                      <property name="TaxRange" value="NODE_59"/>
+                      <geneRef id="1002040624">
+                        <score id="BranchLength3" value="0.000"/>
+                        <score id="BranchLength6" value="0.000"/>
+                        <score id="BranchLength9" value="0.000"/>
+                      </geneRef>
+                      <geneRef id="1106104879">
+                        <score id="BranchLength3" value="0.005"/>
+                        <score id="BranchLength6" value="0.005"/>
+                        <score id="BranchLength9" value="0.005"/>
+                      </geneRef>
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </orthologGroup>
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </orthologGroup>
+                  <score id="BranchLength3" value="0.021"/>
+                  <score id="BranchLength6" value="0.021"/>
+                  <score id="BranchLength9" value="0.021"/>
+                </paralogGroup>
+                <score id="BranchLength3" value="0.058"/>
+                <score id="BranchLength6" value="0.058"/>
+                <score id="BranchLength9" value="0.058"/>
+              </orthologGroup>
+              <orthologGroup id="HOG:0000001.5b_92" taxonId="92">
+                <score id="CompletenessScore" value="0.625"/>
+                <property name="TaxRange" value="NODE_46"/>
+                <orthologGroup id="HOG:0000001.5b_93" taxonId="93">
+                  <score id="CompletenessScore" value="1.0"/>
+                  <property name="TaxRange" value="NODE_53"/>
+                  <geneRef id="1011022606">
+                    <score id="BranchLength3" value="0.004"/>
+                    <score id="BranchLength6" value="0.004"/>
+                    <score id="BranchLength9" value="0.004"/>
+                  </geneRef>
+                  <geneRef id="1015019203">
+                    <score id="BranchLength3" value="0.017"/>
+                    <score id="BranchLength6" value="0.017"/>
+                    <score id="BranchLength9" value="0.017"/>
+                  </geneRef>
+                  <score id="BranchLength3" value="0.041"/>
+                  <score id="BranchLength6" value="0.041"/>
+                  <score id="BranchLength9" value="0.041"/>
+                </orthologGroup>
+                <paralogGroup>
+                  <orthologGroup id="HOG:0000001.5b.4a_102" taxonId="102">
+                    <score id="CompletenessScore" value="0.6667"/>
+                    <property name="TaxRange" value="NODE_66"/>
+                    <geneRef id="1101054799">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <geneRef id="1106064292">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <score id="BranchLength3" value="0.008"/>
+                    <score id="BranchLength6" value="0.008"/>
+                    <score id="BranchLength9" value="0.008"/>
+                  </orthologGroup>
+                  <orthologGroup id="HOG:0000001.5b.4b_102" taxonId="102">
+                    <score id="CompletenessScore" value="0.6667"/>
+                    <property name="TaxRange" value="NODE_66"/>
+                    <geneRef id="1101038404">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <geneRef id="1106069875">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <score id="BranchLength3" value="0.000"/>
+                    <score id="BranchLength6" value="0.000"/>
+                    <score id="BranchLength9" value="0.000"/>
+                  </orthologGroup>
+                  <orthologGroup id="HOG:0000001.5b.4c_98" taxonId="98">
+                    <score id="CompletenessScore" value="0.4"/>
+                    <property name="TaxRange" value="NODE_59"/>
+                    <geneRef id="1002028621">
+                      <score id="BranchLength3" value="0.000"/>
+                      <score id="BranchLength6" value="0.000"/>
+                      <score id="BranchLength9" value="0.000"/>
+                    </geneRef>
+                    <geneRef id="1106075700">
+                      <score id="BranchLength3" value="0.007"/>
+                      <score id="BranchLength6" value="0.007"/>
+                      <score id="BranchLength9" value="0.007"/>
+                    </geneRef>
+                    <score id="BranchLength3" value="0.005"/>
+                    <score id="BranchLength6" value="0.005"/>
+                    <score id="BranchLength9" value="0.005"/>
+                  </orthologGroup>
+                  <score id="BranchLength3" value="0.034"/>
+                  <score id="BranchLength6" value="0.034"/>
+                  <score id="BranchLength9" value="0.034"/>
+                </paralogGroup>
+                <score id="BranchLength3" value="0.008"/>
+                <score id="BranchLength6" value="0.008"/>
+                <score id="BranchLength9" value="0.008"/>
+              </orthologGroup>
+              <score id="BranchLength3" value="0.000"/>
+              <score id="BranchLength6" value="0.000"/>
+              <score id="BranchLength9" value="0.000"/>
+            </paralogGroup>
+            <score id="BranchLength3" value="0.000"/>
+            <score id="BranchLength6" value="0.000"/>
+            <score id="BranchLength9" value="0.000"/>
+          </orthologGroup>
+          <score id="BranchLength3" value="0.138"/>
+          <score id="BranchLength6" value="0.138"/>
+          <score id="BranchLength9" value="0.138"/>
+        </orthologGroup>
+        <score id="BranchLength3" value="0.000"/>
+        <score id="BranchLength6" value="0.000"/>
+        <score id="BranchLength9" value="0.000"/>
+      </orthologGroup>
+      <score id="BranchLength3_NrIter" value="92"/>
+      <score id="BranchLength3_Resid" value="2.9898810884058075e-05"/>
+      <score id="BranchLength3_SolveTime" value="0.007747"/>
+      <score id="BranchLength6_NrIter" value="184"/>
+      <score id="BranchLength6_Resid" value="1.22438738720968e-07"/>
+      <score id="BranchLength6_SolveTime" value="0.014899"/>
+      <score id="BranchLength9_NrIter" value="276"/>
+      <score id="BranchLength9_Resid" value="5.239341742309105e-10"/>
+      <score id="BranchLength9_SolveTime" value="0.0223"/>
+    </orthologGroup>
+  </groups>
+</orthoXML>

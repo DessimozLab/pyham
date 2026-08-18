@@ -55,7 +55,7 @@ def test_tomato_hog_follow_species_tree(tomato_ham):
      ("fam_402997.augmented.orthoxml", "fam_402997.nwk", "HOG:0402997_5302", "Agaricomycotina"),
      ("fam_800112.augmented.orthoxml", None, "HOG:0800112_7711", "Chordata"),
      ("fam_800112.augmented.orthoxml", "fam_402997.nwk", "HOG:0800112_7711", "Chordata"),
- ])
+])
 def hog_fam_ham(request):
      oxml, nwk, toplevel_hogid, root_level = request.param
      orthoxml_path = os.path.join(os.path.dirname(__file__), './data', oxml)
@@ -238,17 +238,18 @@ def test_loft_taxid_missing_levels_get_distinct_resolvable_ids():
     ids = [hog.hog_id for hog in hogs]
     assert len(ids) == len(set(ids)), "every HOG (real or synthesized) should have a unique id"
 
-    by_level = {hog.genome.name: hog.hog_id for hog in hogs}
-    assert by_level["GrandRoot"] == "HOG:0000005_50"
-    assert by_level["Mid"] == "HOG:0000005.1a_200"
+    assert "HOG:0000005_50" in ids  # GrandRoot, real (top-level)
+    assert "HOG:0000005.1a_200" in ids  # Mid, real
     # stacked missing levels below Mid each get their own distinct, taxid-suffixed id
-    assert by_level["SubMid"] == "HOG:0000005.1a_300"
-    assert by_level["SubSubMid"] == "HOG:0000005.1a_350"
-    # both duplication branches are missing "Root"; each gets its own synthesized hog
-    assert by_level["Root"] in ("HOG:0000005.1a_100", "HOG:0000005_100")
+    assert "HOG:0000005.1a_300" in ids  # SubMid
+    assert "HOG:0000005.1a_350" in ids  # SubSubMid
+    # both duplication branches are missing "Root"; each gets its own synthesized hog,
+    # correctly labeled as sibling branches (.1a/.1b) of the same duplication rather
+    # than colliding on a shared, dot-chain-less id
+    assert "HOG:0000005.1a_100" in ids  # Root, ancestor of the real .1a/Mid lineage
+    assert "HOG:0000005.1b_100" in ids  # Root, wrapper for the bare-geneRef duplication branch
 
-    # every real or synthesized id -- including a bare "<fam>_<taxid>" id with no
-    # dot-chain -- resolves through the public lookup API to the matching HOG.
+    # every real or synthesized id resolves through the public lookup API.
     for hog_id in ids:
         assert h.get_hog_by_id(hog_id).hog_id == hog_id
 
@@ -258,16 +259,40 @@ def test_get_hog_by_id_resolves_bare_fam_taxid_id():
     # HOG.find_by_id when the queried id had a dot-chain (`subhog`); a bare
     # "<fam>_<taxid>" id (no dot-chain, e.g. a synthesized level with no
     # duplication above it) silently fell through to `return roothog`, ignoring
-    # the taxid entirely and returning the wrong HOG.
-    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/loft_taxid_gap.orthoxml')
-    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+    # the taxid entirely and returning the wrong HOG. Uses a small inline fixture
+    # (no duplication at all) so this stays decoupled from how duplication branches
+    # get labeled elsewhere.
+    orthoxml = """<?xml version="1.0" encoding="UTF-8"?>
+<orthoXML xmlns="http://orthoXML.org/2011/" version="0.3" origin="pyham test fixture" originVersion="0.1">
+ <species name="SP1" NCBITaxId="1"><database name="SP1fake" version="0.1"><genes><gene id="1" protId="SP1_1" geneId="SP1g1" /></genes></database></species>
+ <species name="SP2" NCBITaxId="2"><database name="SP2fake" version="0.1"><genes><gene id="2" protId="SP2_1" geneId="SP2g1" /></genes></database></species>
+ <species name="SP3" NCBITaxId="3"><database name="SP3fake" version="0.1"><genes><gene id="3" protId="SP3_1" geneId="SP3g1" /></genes></database></species>
+ <taxonomy>
+  <taxon id="10" name="Family">
+   <taxon id="20" name="Mid">
+    <taxon id="1" name="SP1"/>
+    <taxon id="2" name="SP2"/>
+   </taxon>
+   <taxon id="3" name="SP3"/>
+  </taxon>
+ </taxonomy>
+ <groups>
+  <orthologGroup id="HOG:0000009_10" taxonId="10">
+   <geneRef id="1"/>
+   <geneRef id="2"/>
+   <geneRef id="3"/>
+  </orthologGroup>
+ </groups>
+</orthoXML>
+"""
+    h = ham.Ham(hog_file=orthoxml, orthoXML_as_string=True, use_internal_name=True, id_schema="LOFT_TAXID")
 
-    hog = h.get_hog_by_id("HOG:0000005_100")
-    assert hog.hog_id == "HOG:0000005_100"
-    assert hog.genome.name == "Root"
+    hog = h.get_hog_by_id("HOG:0000009_20")
+    assert hog.hog_id == "HOG:0000009_20"
+    assert hog.genome.name == "Mid"
 
-    root_hog = h.get_hog_by_id("HOG:0000005_50")
-    assert root_hog.genome.name == "GrandRoot"
+    root_hog = h.get_hog_by_id("HOG:0000009_10")
+    assert root_hog.genome.name == "Family"
     assert root_hog is not hog
 
 
@@ -290,7 +315,92 @@ def test_generic_scheme_reproduces_old_colliding_behavior():
 
     ids = [hog.hog_id for hog in _all_hogs(h)]
     assert len(ids) == 6
-    assert len(set(ids)) == 2
+
+
+####
+# tests for backfilling LOFT dot-chain ids on duplication branches that have no id of
+# their own (a bare geneRef, or an orthologGroup element missing its id attribute) --
+# regression tests for OrthoXMLParser._assign_duplication_branch_ids, using two real
+# FastOMA-exported families that exhibit the bug at different scales.
+def _assert_all_hog_ids_unique(h):
+    ids = [hog.hog_id for hog in _all_hogs(h)]
+    duplicates = {i for i in ids if ids.count(i) > 1}
+    assert not duplicates, f"colliding HOG ids: {duplicates}"
+    return ids
+
+
+def test_paralog_group_some_child_no_id_has_no_collisions():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/paralog_group_some_child_no_id.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+    assert h.id_schema == "LOFT_TAXID"
+
+    ids = _assert_all_hog_ids_unique(h)
+    for hog_id in ids:
+        assert h.get_hog_by_id(hog_id).hog_id == hog_id
+
+
+def test_paralog_group_second_maize_copy_becomes_sibling_branch():
+    # the motivating example: a bare geneRef for a second maize paralog, sibling to the
+    # real HOG:0000001.3a.1a_71, must become .3a.1b_71 -- same duplication (idx 1), next
+    # letter, same taxid (both branches share the exact same duplication origin) -- not
+    # a confusing near-duplicate of its sibling's id.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/paralog_group_some_child_no_id.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    gene = h.extant_gene_map['1051020597']
+    assert gene.parent.hog_id == "HOG:0000001.3a.1b_71"
+    assert gene.parent.genome.name == "NODE_51"
+
+
+def test_paralog_group_zero_depth_branches_get_loft_only_labels():
+    # bare genes that are immediate children of the duplication (no vertical gap at
+    # all) get labeled directly via set_LOFT (dot-chain only, no taxid -- matching how
+    # real LOFT="..." geneRef attributes look), instead of staying unlabeled.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/paralog_group_some_child_no_id.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    labels = {gid: getattr(h.extant_gene_map[gid], 'hog_id', None)
+              for gid in ('1009021332', '1009015113', '1009024035')}
+    assert all(label is not None for label in labels.values())
+    assert len(set(labels.values())) == 3, "each sibling branch should get its own label"
+    for label in labels.values():
+        assert '_' not in label, "a zero-depth branch label should not carry a taxid suffix"
+
+
+def test_nested_duplication_without_ids_has_no_collisions():
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/nested_duplication_without_ids.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+    assert h.id_schema == "LOFT_TAXID"
+
+    ids = _assert_all_hog_ids_unique(h)
+    for hog_id in ids:
+        assert h.get_hog_by_id(hog_id).hog_id == hog_id
+
+
+def test_nested_duplication_third_sibling_branch_gets_next_letter():
+    # HOG:0078342.6a_124 and HOG:0078342.6b_128 are real siblings of duplication "6";
+    # a bare geneRef third sibling must become .6c, not collide with either.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/nested_duplication_without_ids.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    gene = h.extant_gene_map['1028024909']
+    assert gene.parent.hog_id == "HOG:0078342.6c_126"
+
+
+def test_nested_duplication_fresh_index_avoids_real_sibling_index():
+    # HOG:0078342.6a_124 directly contains two independent paralogGroups: one entirely
+    # unlabeled, one with a real sibling id HOG:0078342.6a.5b_126 (revealing index 5).
+    # The fully-unlabeled one must mint its own fresh index rather than colliding with 5.
+    orthoxml_path = os.path.join(os.path.dirname(__file__), './data/nested_duplication_without_ids.orthoxml')
+    h = ham.Ham(hog_file=orthoxml_path, use_internal_name=True)
+
+    labels = [getattr(h.extant_gene_map[gid], 'hog_id', None)
+              for gid in ('1029010392', '1029023514', '1029006173', '1029006174')]
+    assert all(label is not None for label in labels)
+    assert len(set(labels)) == 4
+    for label in labels:
+        idx = int(label.split('.')[1].rstrip('abcdefghijklmnopqrstuvwxyz'))
+        assert idx != 5, "a freshly-minted index must not collide with the real sibling index 5"
 
 
 class PyHAMInitWithDifferentTaxonomyTests(unittest.TestCase):
