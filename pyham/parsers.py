@@ -98,7 +98,8 @@ class OrthoXMLParser:
         Args:
             ham_object (:obj:`Ham`): Ham object to feed with created objects.
             filterObject (:obj:`FilterParser`, optional): FilterParser object used to restrict the parsed information.
-            with_progress (:bool:, optional): Whether to display a tqdm progress bar whilst parsing.
+            with_progress (:bool:, optional): Whether to display a tqdm progress bar whilst parsing. Per-species
+                and per-500-HOGs messages are logged at DEBUG level so they don't garble the bar at INFO.
             Defaults to None.
             fail_fast (:bool:, optional): If True, raise :obj:`abstractgene.TaxonomicConflictError` immediately at the
             first taxonomic conflict found. If False (default), keep parsing and collect every conflict found across
@@ -179,6 +180,13 @@ class OrthoXMLParser:
                 self.hog_pbar.close()
                 delattr(self, 'hog_pbar')
             logger.info("Parsing completed.")
+
+    def close_progress_bars(self):
+        """Close any progress bar left open, e.g. when parsing aborted before reaching </groups>."""
+        for attr in ('sp_pbar', 'hog_pbar'):
+            if hasattr(self, attr):
+                getattr(self, attr).close()
+                delattr(self, attr)
 
     def _assign_ancestral_genome(self, hog):
         """This method determines the ancestral genome for a HOG based on its children."""
@@ -524,7 +532,7 @@ class OrthoXMLParser:
         if tag == "{http://orthoXML.org/2011/}species":
             if self.with_progress:
                 self._update_progress_bar(tag)
-            logger.info(f"Species {self.current_species.name} created.")
+            logger.debug(f"Species {self.current_species.name} created.")
             self.current_species = None
 
         elif tag == "{http://orthoXML.org/2011/}taxon":
@@ -653,7 +661,7 @@ class OrthoXMLParser:
                 self.toplevel_hogs[hog_id] = hog
                 self.cpt += 1
                 if self.cpt % 500 == 0:
-                    logger.info("{} HOGs parsed. ".format(self.cpt))
+                    logger.debug("{} HOGs parsed. ".format(self.cpt))
 
         elif tag == "{http://orthoXML.org/2011/}groups":
             if self.with_progress:

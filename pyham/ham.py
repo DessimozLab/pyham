@@ -144,6 +144,8 @@ class Ham(object):
             | query_database (:obj:`str`) if use_data_from is specified, use this as a query to fetch the orthoxml and \
             tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
             | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file.
+            In a terminal, log messages emitted during parsing can garble the bar; to interleave them cleanly,
+            wrap the call in ``tqdm.contrib.logging.logging_redirect_tqdm()``.
             | fail_fast (:obj:`Boolean`, optional) if a HOG's claimed taxonomic level (TaxRange/taxid) conflicts
             with the given species tree, raise :obj:`pyham.abstractgene.TaxonomicConflictError` immediately at
             the first conflict found. If False (default), keep parsing and collect every conflict found across
@@ -834,8 +836,11 @@ class Ham(object):
                                           fail_fast=self.fail_fast, id_schema=self.id_schema)
         parser = XMLParser(target=factory)
 
-        for line in file_object:
-            parser.feed(line)
+        try:
+            for line in file_object:
+                parser.feed(line)
+        finally:
+            factory.close_progress_bars()
 
         if factory.taxonomic_conflicts:
             # fail_fast=True would already have raised inside the parser itself; reaching here means
