@@ -1,11 +1,13 @@
+import logging
+from collections import defaultdict
+from tqdm.auto import tqdm
+
 from . import abstractgene
 from .genome import ExtantGenome
 from .taxonomy import build_taxon_node, Taxonomy
-import logging
-logger = logging.getLogger(__name__)
-from collections import defaultdict
-from tqdm.auto import tqdm
 from . import id_formats
+
+logger = logging.getLogger(__name__)
 
 
 def _label_and_species(node):
