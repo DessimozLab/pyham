@@ -178,6 +178,13 @@ class OrthoXMLParser:
                 delattr(self, 'hog_pbar')
             logger.info("Parsing completed.")
 
+    def close_progress_bars(self):
+        """Close any progress bar left open, e.g. when parsing aborted before reaching </groups>."""
+        for attr in ('sp_pbar', 'hog_pbar'):
+            if hasattr(self, attr):
+                getattr(self, attr).close()
+                delattr(self, attr)
+
     def _assign_ancestral_genome(self, hog):
         """This method determines the ancestral genome for a HOG based on its children."""
         child_genomes = [child.genome for child in hog.children]

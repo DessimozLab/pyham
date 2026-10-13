@@ -834,8 +834,11 @@ class Ham(object):
                                           fail_fast=self.fail_fast, id_schema=self.id_schema)
         parser = XMLParser(target=factory)
 
-        for line in file_object:
-            parser.feed(line)
+        try:
+            for line in file_object:
+                parser.feed(line)
+        finally:
+            factory.close_progress_bars()
 
         if factory.taxonomic_conflicts:
             # fail_fast=True would already have raised inside the parser itself; reaching here means
