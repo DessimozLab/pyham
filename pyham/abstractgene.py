@@ -580,6 +580,14 @@ class EvolutionaryConceptError(Exception):
     pass
 
 
+def short_level_name(name, max_len=60):
+    """Abbreviate a level name synthesized from its children's names (``A/B/C/...``) for messages."""
+    if name is None or len(name) <= max_len or "/" not in name:
+        return name
+    parts = name.split("/")
+    return f"{parts[0]}/.../{parts[-1]} ({len(parts)} species)"
+
+
 class SameLevelHOGError(Exception):
     pass
 
@@ -677,7 +685,14 @@ class DuplicationNode(object):
         else:
             mrca = self.parser.taxonomy.get_mrca_taxnode(*children_taxa)
             if mrca.up is None:
-                raise EvolutionaryConceptError("MRCA of {} is prior to taxonomy root".format(self.id))
+                copies = ", ".join(
+                    f"{c.hog_id if isinstance(c, HOG) else (c.prot_id or c.gene_id or c.unique_id)} "
+                    f"at \"{short_level_name(c.genome.name)}\"" for c in self.children)
+                raise EvolutionaryConceptError(
+                    f"The copies of {'duplication ' + str(self.id) if self.id is not None else 'a duplication'} "
+                    f"({copies}) only meet at the root of the species tree (\"{short_level_name(mrca.name)}\"), "
+                    f"so the duplication would predate the tree. The species tree probably lacks levels the "
+                    f"OrthoXML was built with, e.g. because it is pruned.")
             mrca = mrca.up
         self.MRCA = self.parser.taxonomy.get_genome_from_taxnode(mrca)
 

@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<orthoXML xmlns="http://orthoXML.org/2011/" origin="OMA" originVersion="Nov 2021" version="0.3">
+  <species name="Mucor_lusitanicus_CBS_27749" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="1451008603" protId="tr|A0A162QM34|A0A162QM34_MUCCL"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mucor_ambiguus" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="2947003929" protId="tr|A0A0C9M7K1|A0A0C9M7K1_9FUNG"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Thamnidium_elegans" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="2662003874" protId="tr|A0A8H7VSK7|A0A8H7VSK7_9FUNG"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mucor_circinelloides_f_circinelloides_10" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="3061001867" protId="tr|S2JT98|S2JT98_MUCC1"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhizopus_azygosporus" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="1554011360" protId="tr|A0A367JX34|A0A367JX34_RHIAZ"/>
+        <gene id="1554009993" protId="tr|A0A367KEK2|A0A367KEK2_RHIAZ"/>
+        <gene id="1554012580" protId="tr|A0A367K330|A0A367K330_RHIAZ"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhizopus_microsporus_ATCC_52813" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="1287008517" protId="tr|A0A2G4SHZ3|A0A2G4SHZ3_RHIZD"/>
+        <gene id="1287001139" protId="tr|A0A2G4SQY1|A0A2G4SQY1_RHIZD"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhizopus_microsporus_" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="2853003885" protId="tr|A0A1X0SCU4|A0A1X0SCU4_RHIZD"/>
+        <gene id="2853010059" protId="tr|A0A1X0S1X8|A0A1X0S1X8_RHIZD"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Parasitella_parasitica" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="1321004387" protId="tr|A0A0B7NNM0|A0A0B7NNM0_9FUNG"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Rhizopus_delemar_RA_99880_ATCC_MYA4621_F" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="1774011524" protId="tr|I1BXD3|I1BXD3_RHIO9"/>
+        <gene id="1774005679" protId="tr|I1CJQ9|I1CJQ9_RHIO9"/>
+        <gene id="1774002837" protId="tr|I1C2J9|I1C2J9_RHIO9"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Mucor_plumbeus" NCBITaxId="1">
+    <database name="QFO database " version="2020">
+      <genes>
+        <gene id="2858002010" protId="tr|A0A8H7QGW5|A0A8H7QGW5_9FUNG"/>
+      </genes>
+    </database>
+  </species>
+  <species name="Syncephalastrum_racemosum" NCBITaxId="1">
+    <database name="dummy" version="0">
+      <genes>
+        <gene id="111" protId="fake-protein-to-test" />
+      </genes>
+    </database>
+  </species>
+  <groups>
+    <orthologGroup id="HOG_0281032_sub14387">
+      <property name="TaxRange" value="Mucorales"/>
+      <geneRef id="111" />
+      <paralogGroup>
+        <orthologGroup id="HOG_0281032_sub14378">
+          <score id="CompletenessScore" value="1.0"/>
+          <property name="TaxRange" value="Mucorineae"/>
+          <orthologGroup id="HOG_0281032_sub14363">
+            <score id="CompletenessScore" value="1.0"/>
+            <property name="TaxRange" value="Mucoraceae"/>
+            <orthologGroup id="HOG_0281032_sub14360">
+              <score id="CompletenessScore" value="1.0"/>
+              <property name="TaxRange" value="Mucor"/>
+              <geneRef id="3061001867"/>
+              <geneRef id="2947003929"/>
+              <geneRef id="1451008603"/>
+              <geneRef id="2858002010"/>
+            </orthologGroup>
+            <geneRef id="1321004387"/>
+            <geneRef id="2662003874"/>
+          </orthologGroup>
+          <orthologGroup id="HOG_0281032_sub14377">
+            <score id="CompletenessScore" value="1.0"/>
+            <property name="TaxRange" value="Rhizopus"/>
+            <orthologGroup id="HOG_0281032_sub14368">
+              <score id="CompletenessScore" value="1.0"/>
+              <property name="TaxRange" value="Rhizopus_microsporus"/>
+              <geneRef id="1287001139"/>
+              <geneRef id="2853003885"/>
+            </orthologGroup>
+            <geneRef id="1774011524"/>
+            <paralogGroup>
+              <geneRef id="1554011360"/>
+              <geneRef id="1554012580"/>
+            </paralogGroup>
+          </orthologGroup>
+        </orthologGroup>
+        <paralogGroup>
+          <geneRef id="1774005679"/>
+          <orthologGroup id="HOG_0281032_sub14376">
+            <score id="CompletenessScore" value="1.0"/>
+            <property name="TaxRange" value="Rhizopus"/>
+            <orthologGroup id="HOG_0281032_sub14369">
+              <score id="CompletenessScore" value="1.0"/>
+              <property name="TaxRange" value="Rhizopus_microsporus"/>
+              <geneRef id="1287008517"/>
+              <geneRef id="2853010059"/>
+            </orthologGroup>
+            <geneRef id="1774002837"/>
+            <geneRef id="1554009993"/>
+          </orthologGroup>
+        </paralogGroup>
+      </paralogGroup>
+    </orthologGroup>
+  </groups>
+</orthoXML>

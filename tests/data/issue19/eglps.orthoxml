@@ -1,0 +1,1138 @@
+<orthoXML xmlns="http://orthoXML.org/2011/">"
+    <species name="XVES1">
+        <database name="">
+            <genes>
+                <gene protId="XVES1_DN6789_c0_g1_i1.p1" id="0"/>
+            </genes>
+        </database>
+    </species>
+    <species name="MGAL1">
+        <database name="">
+            <genes>
+                <gene protId="MGAL1_DN3137_c0_g1_i1.p1" id="1"/>
+                <gene protId="MGAL1_DN4144_c0_g1_i3.p1" id="5"/>
+                <gene protId="MGAL1_DN3936_c0_g1_i1.p1" id="115"/>
+                <gene protId="MGAL1_DN3936_c0_g2_i1.p1" id="116"/>
+            </genes>
+        </database>
+    </species>
+    <species name="OTAU1">
+        <database name="">
+            <genes>
+                <gene protId="OTAU1_DN0_c0_g1735_i1.p1" id="2"/>
+                <gene protId="OTAU1_DN0_c0_g1722_i1.p1" id="75"/>
+                <gene protId="OTAU1_DN0_c0_g14014_i1.p1" id="79"/>
+                <gene protId="OTAU1_DN0_c0_g1774_i1.p1" id="87"/>
+                <gene protId="OTAU1_DN0_c0_g1777_i1.p1" id="88"/>
+                <gene protId="OTAU1_DN0_c0_g10397_i1.p1" id="89"/>
+                <gene protId="OTAU1_DN0_c0_g13098_i1.p1" id="90"/>
+            </genes>
+        </database>
+    </species>
+    <species name="EBRI1">
+        <database name="">
+            <genes>
+                <gene protId="EBRI1_DN3187_c0_g1_i7.p1" id="3"/>
+                <gene protId="EBRI1_DN722_c0_g1_i1.p1" id="112"/>
+                <gene protId="EBRI1_DN2630_c0_g1_i16.p1" id="114"/>
+            </genes>
+        </database>
+    </species>
+    <species name="PHUM1">
+        <database name="">
+            <genes>
+                <gene protId="PHUM1_DN522_c2_g1_i1.p1" id="4"/>
+            </genes>
+        </database>
+    </species>
+    <species name="LIPO1">
+        <database name="">
+            <genes>
+                <gene protId="LIPO1_DN8315_c0_g1_i1.p1" id="6"/>
+                <gene protId="LIPO1_DN11265_c0_g1_i8.p1" id="7"/>
+                <gene protId="LIPO1_DN577_c0_g1_i14.p1" id="113"/>
+            </genes>
+        </database>
+    </species>
+    <species name="RPRO1">
+        <database name="">
+            <genes>
+                <gene protId="RPRO1_DN17334_c0_g1_i2.p1" id="8"/>
+                <gene protId="RPRO1_DN29675_c0_g1_i1.p1" id="9"/>
+                <gene protId="RPRO1_DN925_c0_g1_i7.p1" id="99"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CLEC1">
+        <database name="">
+            <genes>
+                <gene protId="CLEC1_DN0_c0_g9413_i1.p1" id="10"/>
+                <gene protId="CLEC1_DN0_c0_g9410_i1.p1" id="11"/>
+                <gene protId="CLEC1_DN0_c0_g10977_i1.p1" id="20"/>
+                <gene protId="CLEC1_DN0_c0_g8308_i1.p1" id="101"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TPAL2">
+        <database name="">
+            <genes>
+                <gene protId="TPAL2_DN0_c0_g11260_i1.p1" id="12"/>
+                <gene protId="TPAL2_DN0_c0_g1043_i1.p1" id="124"/>
+                <gene protId="TPAL2_DN0_c0_g7212_i1.p1" id="130"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CVUL1">
+        <database name="">
+            <genes>
+                <gene protId="CVUL1_DN2827_c0_g1_i1.p1" id="13"/>
+                <gene protId="CVUL1_DN33177_c0_g1_i1.p1" id="103"/>
+                <gene protId="CVUL1_DN2575_c0_g1_i1.p1" id="104"/>
+                <gene protId="CVUL1_DN957_c0_g1_i1.p1" id="105"/>
+                <gene protId="CVUL1_DN3091_c2_g2_i1.p1" id="106"/>
+            </genes>
+        </database>
+    </species>
+    <species name="NLUG1">
+        <database name="">
+            <genes>
+                <gene protId="NLUG1_DN33097_c0_g1_i1.p1" id="14"/>
+                <gene protId="NLUG1_DN12703_c0_g1_i9.p1" id="15"/>
+                <gene protId="NLUG1_DN2028_c0_g1_i8.p1" id="95"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TRCA1">
+        <database name="">
+            <genes>
+                <gene protId="TRCA1_DN2908_c2_g1_i4.p1" id="16"/>
+                <gene protId="TRCA1_DN3994_c0_g1_i1.p1" id="96"/>
+                <gene protId="TRCA1_DN3994_c0_g2_i2.p1" id="97"/>
+            </genes>
+        </database>
+    </species>
+    <species name="GBUE1">
+        <database name="">
+            <genes>
+                <gene protId="GBUE1_DN19227_c0_g1_i1.p1" id="17"/>
+                <gene protId="GBUE1_DN8758_c0_g2_i1.p1" id="21"/>
+                <gene protId="GBUE1_DN3820_c0_g1_i4.p1" id="98"/>
+            </genes>
+        </database>
+    </species>
+    <species name="NELO1">
+        <database name="">
+            <genes>
+                <gene protId="NELO1_DN1789_c0_g1_i5.p1" id="18"/>
+                <gene protId="NELO1_DN42576_c0_g1_i1.p1" id="91"/>
+                <gene protId="NELO1_DN7438_c0_g1_i2.p1" id="102"/>
+            </genes>
+        </database>
+    </species>
+    <species name="PSIM1">
+        <database name="">
+            <genes>
+                <gene protId="PSIM1_DN37359_c0_g1_i1.p1" id="19"/>
+                <gene protId="PSIM1_DN21857_c0_g1_i1.p1" id="83"/>
+                <gene protId="PSIM1_DN37249_c0_g1_i1.p1" id="100"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TDOM1">
+        <database name="">
+            <genes>
+                <gene protId="TDOM1_DN6496_c0_g1_i2.p1" id="22"/>
+                <gene protId="TDOM1_DN30160_c0_g1_i1.p1" id="110"/>
+                <gene protId="TDOM1_DN4152_c0_g1_i1.p1" id="111"/>
+            </genes>
+        </database>
+    </species>
+    <species name="FARI1">
+        <database name="">
+            <genes>
+                <gene protId="FARI1_DN4751_c0_g1_i2.p1" id="23"/>
+                <gene protId="FARI1_DN4541_c0_g1_i1.p1" id="28"/>
+                <gene protId="FARI1_DN2162_c0_g1_i13.p1" id="29"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AMEL3">
+        <database name="">
+            <genes>
+                <gene protId="AMEL3_DN0_c0_g1107_i1.p1" id="24"/>
+                <gene protId="AMEL3_DN0_c0_g9857_i1.p1" id="31"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CVIR1">
+        <database name="">
+            <genes>
+                <gene protId="CVIR1_DN5960_c0_g1_i1.p1" id="25"/>
+                <gene protId="CVIR1_DN772_c0_g1_i3.p1" id="26"/>
+                <gene protId="CVIR1_DN92_c0_g1_i11.p1" id="30"/>
+            </genes>
+        </database>
+    </species>
+    <species name="NFUL1">
+        <database name="">
+            <genes>
+                <gene protId="NFUL1_DN0_c0_g15178_i2.p1" id="27"/>
+                <gene protId="NFUL1_DN0_c0_g15179_i1.p1" id="32"/>
+            </genes>
+        </database>
+    </species>
+    <species name="NVIT1">
+        <database name="">
+            <genes>
+                <gene protId="NVIT1_DN471_c1_g1_i2.p1" id="33"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CNIP1">
+        <database name="">
+            <genes>
+                <gene protId="CNIP1_DN12254_c0_g1_i2.p1" id="34"/>
+                <gene protId="CNIP1_DN11774_c0_g1_i1.p1" id="35"/>
+                <gene protId="CNIP1_DN2554_c0_g1_i1.p1" id="36"/>
+                <gene protId="CNIP1_DN30706_c0_g1_i4.p1" id="37"/>
+                <gene protId="CNIP1_DN8881_c0_g1_i2.p1" id="38"/>
+                <gene protId="CNIP1_DN726_c14_g1_i1.p1" id="39"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CSIM1">
+        <database name="">
+            <genes>
+                <gene protId="CSIM1_DN238_c0_g1_i2.p1" id="40"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CCOR1">
+        <database name="">
+            <genes>
+                <gene protId="CCOR1_DN2542_c0_g1_i2.p1" id="41"/>
+            </genes>
+        </database>
+    </species>
+    <species name="SSTA1">
+        <database name="">
+            <genes>
+                <gene protId="SSTA1_DN1925_c0_g1_i3.p1" id="42"/>
+                <gene protId="SSTA1_DN247_c2_g1_i1.p1" id="45"/>
+                <gene protId="SSTA1_DN8790_c0_g1_i1.p1" id="48"/>
+                <gene protId="SSTA1_DN1710_c0_g1_i1.p1" id="49"/>
+                <gene protId="SSTA1_DN5933_c0_g1_i1.p1" id="64"/>
+                <gene protId="SSTA1_DN101398_c0_g1_i1.p1" id="71"/>
+            </genes>
+        </database>
+    </species>
+    <species name="EHIA1">
+        <database name="">
+            <genes>
+                <gene protId="EHIA1_DN765_c0_g1_i2.p1" id="43"/>
+                <gene protId="EHIA1_DN537_c0_g1_i1.p1" id="44"/>
+                <gene protId="EHIA1_DN3450_c0_g1_i1.p1" id="47"/>
+                <gene protId="EHIA1_DN9708_c0_g1_i4.p1" id="61"/>
+            </genes>
+        </database>
+    </species>
+    <species name="LLUC1">
+        <database name="">
+            <genes>
+                <gene protId="LLUC1_DN41036_c0_g1_i1.p1" id="46"/>
+                <gene protId="LLUC1_DN5263_c0_g1_i2.p1" id="60"/>
+            </genes>
+        </database>
+    </species>
+    <species name="DMEL1">
+        <database name="">
+            <genes>
+                <gene protId="DMEL1_DN0_c0_g4491_i1.p1" id="50"/>
+                <gene protId="DMEL1_DN0_c0_g6602_i1.p1" id="56"/>
+                <gene protId="DMEL1_DN0_c0_g1994_i1.p1" id="58"/>
+                <gene protId="DMEL1_DN0_c0_g10103_i1.p1" id="62"/>
+            </genes>
+        </database>
+    </species>
+    <species name="DPSE1">
+        <database name="">
+            <genes>
+                <gene protId="DPSE1_DN0_c0_g10166_i1.p1" id="51"/>
+                <gene protId="DPSE1_DN0_c0_g10532_i1.p1" id="57"/>
+                <gene protId="DPSE1_DN0_c0_g10531_i1.p1" id="59"/>
+                <gene protId="DPSE1_DN0_c0_g6993_i1.p1" id="63"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AAEG1">
+        <database name="">
+            <genes>
+                <gene protId="AAEG1_DN0_c0_g986_i1.p1" id="52"/>
+                <gene protId="AAEG1_DN0_c0_g987_i2.p1" id="65"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AGAM2">
+        <database name="">
+            <genes>
+                <gene protId="AGAM2_DN0_c0_g4145_i1.p1" id="53"/>
+                <gene protId="AGAM2_DN0_c0_g2221_i1.p1" id="55"/>
+                <gene protId="AGAM2_DN0_c0_g5332_i1.p1" id="66"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AMER1">
+        <database name="">
+            <genes>
+                <gene protId="AMER1_DN6723_c0_g1_i1.p1" id="54"/>
+            </genes>
+        </database>
+    </species>
+    <species name="BHYE1">
+        <database name="">
+            <genes>
+                <gene protId="BHYE1_DN326_c0_g1_i2.p1" id="67"/>
+            </genes>
+        </database>
+    </species>
+    <species name="BCOP1">
+        <database name="">
+            <genes>
+                <gene protId="BCOP1_DN0_c0_g13926_i1.p1" id="68"/>
+                <gene protId="BCOP1_DN0_c0_g11957_i1.p1" id="69"/>
+                <gene protId="BCOP1_DN0_c0_g483_i1.p1" id="70"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CGAL1">
+        <database name="">
+            <genes>
+                <gene protId="CGAL1_DN5823_c0_g1_i5.p1" id="72"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CFEL1">
+        <database name="">
+            <genes>
+                <gene protId="CFEL1_DN0_c0_g2180_i1.p1" id="73"/>
+            </genes>
+        </database>
+    </species>
+    <species name="PPYR3">
+        <database name="">
+            <genes>
+                <gene protId="PPYR3_DN0_c0_g1314_i1.p1" id="74"/>
+                <gene protId="PPYR3_DN0_c0_g567_i1.p1" id="77"/>
+                <gene protId="PPYR3_DN0_c0_g10463_i1.p1" id="78"/>
+                <gene protId="PPYR3_DN0_c0_g3817_i1.p1" id="86"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TCAS1">
+        <database name="">
+            <genes>
+                <gene protId="TCAS1_DN0_c0_g6094_i1.p1" id="76"/>
+                <gene protId="TCAS1_DN0_c0_g7399_i1.p1" id="92"/>
+                <gene protId="TCAS1_DN0_c0_g11007_i1.p1" id="93"/>
+                <gene protId="TCAS1_DN0_c0_g7475_i1.p1" id="94"/>
+            </genes>
+        </database>
+    </species>
+    <species name="GMAR2">
+        <database name="">
+            <genes>
+                <gene protId="GMAR2_DN518_c0_g1_i4.p1" id="80"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AINS1">
+        <database name="">
+            <genes>
+                <gene protId="AINS1_DN1297_c0_g1_i1.p1" id="81"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CJAP1">
+        <database name="">
+            <genes>
+                <gene protId="CJAP1_DN3334_c0_g1_i1.p1" id="82"/>
+            </genes>
+        </database>
+    </species>
+    <species name="LEPI1">
+        <database name="">
+            <genes>
+                <gene protId="LEPI1_DN1535_c0_g1_i2.p1" id="84"/>
+                <gene protId="LEPI1_DN1535_c0_g2_i5.p1" id="85"/>
+            </genes>
+        </database>
+    </species>
+    <species name="APIS2">
+        <database name="">
+            <genes>
+                <gene protId="APIS2_DN0_c0_g29126_i1.p1" id="107"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TGER1">
+        <database name="">
+            <genes>
+                <gene protId="TGER1_DN26058_c0_g2_i1.p1" id="108"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AFOR1">
+        <database name="">
+            <genes>
+                <gene protId="AFOR1_DN15794_c0_g1_i2.p1" id="109"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CBOL1">
+        <database name="">
+            <genes>
+                <gene protId="CBOL1_DN1947_c0_g1_i13.p1" id="117"/>
+            </genes>
+        </database>
+    </species>
+    <species name="ISEN1">
+        <database name="">
+            <genes>
+                <gene protId="ISEN1_DN4364_c0_g1_i3.p1" id="118"/>
+            </genes>
+        </database>
+    </species>
+    <species name="BAET1">
+        <database name="">
+            <genes>
+                <gene protId="BAET1_DN10196_c0_g1_i1.p1" id="119"/>
+                <gene protId="BAET1_DN1543_c0_g1_i9.p1" id="120"/>
+                <gene protId="BAET1_DN9670_c0_g1_i7.p1" id="121"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CDIP1">
+        <database name="">
+            <genes>
+                <gene protId="CDIP1_DN0_c0_g12951_i1.p1" id="122"/>
+                <gene protId="CDIP1_DN0_c0_g12950_i1.p1" id="123"/>
+            </genes>
+        </database>
+    </species>
+    <species name="GRYL1">
+        <database name="">
+            <genes>
+                <gene protId="GRYL1_DN1548_c0_g1_i1.p1" id="125"/>
+            </genes>
+        </database>
+    </species>
+    <species name="FLAV1">
+        <database name="">
+            <genes>
+                <gene protId="FLAV1_DN842_c0_g1_i4.p1" id="126"/>
+            </genes>
+        </database>
+    </species>
+    <species name="LMIG1">
+        <database name="">
+            <genes>
+                <gene protId="LMIG1_DN2326_c1_g1_i12.p1" id="127"/>
+                <gene protId="LMIG1_DN505_c0_g1_i3.p1" id="128"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TSUB1">
+        <database name="">
+            <genes>
+                <gene protId="TSUB1_DN3149_c0_g1_i1.p1" id="129"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AASP1">
+        <database name="">
+            <genes>
+                <gene protId="AASP1_DN49215_c0_g1_i1.p2" id="131"/>
+                <gene protId="AASP1_DN24442_c0_g1_i1.p1" id="132"/>
+                <gene protId="AASP1_DN1211_c0_g2_i4.p1" id="133"/>
+                <gene protId="AASP1_DN7339_c0_g1_i1.p1" id="134"/>
+                <gene protId="AASP1_DN262_c1_g1_i3.p1" id="137"/>
+            </genes>
+        </database>
+    </species>
+    <species name="AJAP1">
+        <database name="">
+            <genes>
+                <gene protId="AJAP1_DN50143_c0_g1_i1.p1" id="135"/>
+                <gene protId="AJAP1_DN528_c0_g1_i2.p1" id="139"/>
+            </genes>
+        </database>
+    </species>
+    <species name="TCAL1">
+        <database name="">
+            <genes>
+                <gene protId="TCAL1_DN107445_c0_g1_i1.p1" id="136"/>
+                <gene protId="TCAL1_DN34012_c0_g1_i10.p1" id="138"/>
+            </genes>
+        </database>
+    </species>
+    <species name="ZNEV1">
+        <database name="">
+            <genes>
+                <gene protId="ZNEV1_DN0_c0_g2122_i1.p1" id="140"/>
+                <gene protId="ZNEV1_DN0_c0_g10664_i1.p1" id="148"/>
+            </genes>
+        </database>
+    </species>
+    <species name="PAME3">
+        <database name="">
+            <genes>
+                <gene protId="PAME3_DN10518_c0_g1_i2.p1" id="141"/>
+                <gene protId="PAME3_DN2750_c0_g1_i1.p1" id="147"/>
+            </genes>
+        </database>
+    </species>
+    <species name="BGER4">
+        <database name="">
+            <genes>
+                <gene protId="BGER4_DN0_c0_g20009_i1.p1" id="142"/>
+                <gene protId="BGER4_DN0_c0_g13150_i1.p1" id="146"/>
+            </genes>
+        </database>
+    </species>
+    <species name="HFOR1">
+        <database name="">
+            <genes>
+                <gene protId="HFOR1_DN12_c6_g1_i1.p1" id="143"/>
+                <gene protId="HFOR1_DN12_c1_g1_i2.p1" id="144"/>
+            </genes>
+        </database>
+    </species>
+    <species name="BATR1">
+        <database name="">
+            <genes>
+                <gene protId="BATR1_DN659_c0_g1_i1.p1" id="145"/>
+            </genes>
+        </database>
+    </species>
+    <species name="CSEC1">
+        <database name="">
+            <genes>
+                <gene protId="CSEC1_DN0_c0_g145_i1.p1" id="149"/>
+            </genes>
+        </database>
+    </species>
+    <species name="HYDR1">
+        <database name="">
+            <genes>
+                <gene protId="HYDR1_DN17525_c0_g1_i1.p1" id="150"/>
+                <gene protId="HYDR1_DN1564_c0_g1_i1.p1" id="151"/>
+            </genes>
+        </database>
+    </species>
+    <species name="ACHA1">
+        <database name="">
+            <genes>
+                <gene protId="ACHA1_DN1319_c0_g1_i12.p1" id="152"/>
+            </genes>
+        </database>
+    </species>
+    <species name="FAUR1">
+        <database name="">
+            <genes>
+                <gene protId="FAUR1_DN22638_c0_g1_i1.p1" id="153"/>
+            </genes>
+        </database>
+    </species>
+    <species name="MHRA1">
+        <database name="">
+            <genes>
+                <gene protId="MHRA1_DN51487_c0_g1_i1.p1" id="154"/>
+            </genes>
+        </database>
+    </species>
+    <species name="NDEG1">
+        <database name="">
+            <genes>
+                <gene protId="NDEG1_DN132_c0_g1_i2.p1" id="155"/>
+            </genes>
+        </database>
+    </species>
+    <species name="BMOR1">
+        <database name="">
+            <genes>
+                <gene protId="BMOR1_DN0_c0_g1229_i1.p1" id="156"/>
+                <gene protId="BMOR1_DN0_c0_g10911_i1.p1" id="168"/>
+                <gene protId="BMOR1_DN0_c0_g10912_i1.p1" id="174"/>
+            </genes>
+        </database>
+    </species>
+    <species name="PEUR1">
+        <database name="">
+            <genes>
+                <gene protId="PEUR1_DN16583_c0_g1_i1.p1" id="157"/>
+                <gene protId="PEUR1_DN31090_c0_g1_i1.p1" id="160"/>
+                <gene protId="PEUR1_DN32261_c0_g1_i1.p1" id="161"/>
+                <gene protId="PEUR1_DN1066_c0_g1_i1.p3" id="169"/>
+                <gene protId="PEUR1_DN8364_c0_g1_i1.p2" id="175"/>
+            </genes>
+        </database>
+    </species>
+    <species name="DPLE1">
+        <database name="">
+            <genes>
+                <gene protId="DPLE1_DN0_c0_g1707_i1.p1" id="158"/>
+                <gene protId="DPLE1_DN0_c0_g11012_i1.p1" id="163"/>
+                <gene protId="DPLE1_DN0_c0_g2233_i1.p1" id="171"/>
+                <gene protId="DPLE1_DN0_c0_g2294_i2.p1" id="172"/>
+            </genes>
+        </database>
+    </species>
+    <species name="ZCES1">
+        <database name="">
+            <genes>
+                <gene protId="ZCES1_DN0_c0_g9574_i1.p1" id="159"/>
+                <gene protId="ZCES1_DN0_c0_g5633_i1.p1" id="162"/>
+                <gene protId="ZCES1_DN0_c0_g6248_i1.p1" id="170"/>
+                <gene protId="ZCES1_DN0_c0_g6249_i1.p1" id="173"/>
+            </genes>
+        </database>
+    </species>
+    <species name="SFRU1">
+        <database name="">
+            <genes>
+                <gene protId="SFRU1_DN0_c0_g6049_i1.p1" id="164"/>
+                <gene protId="SFRU1_DN0_c0_g6023_i1.p1" id="165"/>
+                <gene protId="SFRU1_DN0_c0_g6140_i1.p1" id="166"/>
+                <gene protId="SFRU1_DN0_c0_g6087_i1.p1" id="167"/>
+            </genes>
+        </database>
+    </species>
+    <groups>
+        <orthologGroup>
+            <geneRef id="0"/>
+            <paralogGroup>
+                <geneRef id="1"/>
+                <paralogGroup>
+                    <geneRef id="2"/>
+                    <paralogGroup>
+                        <orthologGroup>
+                            <paralogGroup>
+                                <orthologGroup>
+                                    <orthologGroup>
+                                        <geneRef id="3"/>
+                                        <orthologGroup>
+                                            <geneRef id="4"/>
+                                            <orthologGroup>
+                                                <geneRef id="5"/>
+                                                <paralogGroup>
+                                                    <geneRef id="6"/>
+                                                    <geneRef id="7"/>
+                                                </paralogGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                    </orthologGroup>
+                                    <orthologGroup>
+                                        <paralogGroup>
+                                            <geneRef id="8"/>
+                                            <geneRef id="9"/>
+                                        </paralogGroup>
+                                        <paralogGroup>
+                                            <geneRef id="10"/>
+                                            <geneRef id="11"/>
+                                        </paralogGroup>
+                                    </orthologGroup>
+                                </orthologGroup>
+                                <orthologGroup>
+                                    <geneRef id="22"/>
+                                    <orthologGroup>
+                                        <geneRef id="12"/>
+                                        <orthologGroup>
+                                            <paralogGroup>
+                                                <geneRef id="15"/>
+                                                <orthologGroup>
+                                                    <geneRef id="13"/>
+                                                    <geneRef id="14"/>
+                                                </orthologGroup>
+                                            </paralogGroup>
+                                            <paralogGroup>
+                                                <geneRef id="21"/>
+                                                <orthologGroup>
+                                                    <geneRef id="16"/>
+                                                    <orthologGroup>
+                                                        <geneRef id="17"/>
+                                                        <orthologGroup>
+                                                            <geneRef id="18"/>
+                                                            <orthologGroup>
+                                                                <geneRef id="19"/>
+                                                                <geneRef id="20"/>
+                                                            </orthologGroup>
+                                                        </orthologGroup>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                            </paralogGroup>
+                                        </orthologGroup>
+                                    </orthologGroup>
+                                </orthologGroup>
+                            </paralogGroup>
+                            <paralogGroup>
+                                <paralogGroup>
+                                    <paralogGroup>
+                                        <geneRef id="29"/>
+                                        <orthologGroup>
+                                            <geneRef id="28"/>
+                                            <orthologGroup>
+                                                <geneRef id="26"/>
+                                                <geneRef id="27"/>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                    </paralogGroup>
+                                    <orthologGroup>
+                                        <geneRef id="33"/>
+                                        <orthologGroup>
+                                            <geneRef id="32"/>
+                                            <orthologGroup>
+                                                <geneRef id="30"/>
+                                                <geneRef id="31"/>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                    </orthologGroup>
+                                </paralogGroup>
+                                <orthologGroup>
+                                    <geneRef id="23"/>
+                                    <orthologGroup>
+                                        <geneRef id="24"/>
+                                        <geneRef id="25"/>
+                                    </orthologGroup>
+                                </orthologGroup>
+                            </paralogGroup>
+                        </orthologGroup>
+                        <orthologGroup>
+                            <paralogGroup>
+                                <paralogGroup>
+                                    <paralogGroup>
+                                        <orthologGroup>
+                                            <paralogGroup>
+                                                <orthologGroup>
+                                                    <paralogGroup>
+                                                        <paralogGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="44"/>
+                                                                <geneRef id="45"/>
+                                                            </orthologGroup>
+                                                            <orthologGroup>
+                                                                <orthologGroup>
+                                                                    <geneRef id="46"/>
+                                                                    <orthologGroup>
+                                                                        <geneRef id="47"/>
+                                                                        <paralogGroup>
+                                                                            <geneRef id="48"/>
+                                                                            <geneRef id="49"/>
+                                                                        </paralogGroup>
+                                                                    </orthologGroup>
+                                                                </orthologGroup>
+                                                                <orthologGroup>
+                                                                    <geneRef id="50"/>
+                                                                    <geneRef id="51"/>
+                                                                </orthologGroup>
+                                                            </orthologGroup>
+                                                        </paralogGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="42"/>
+                                                            <geneRef id="43"/>
+                                                        </orthologGroup>
+                                                    </paralogGroup>
+                                                    <orthologGroup>
+                                                        <geneRef id="52"/>
+                                                        <paralogGroup>
+                                                            <geneRef id="53"/>
+                                                            <orthologGroup>
+                                                                <geneRef id="54"/>
+                                                                <geneRef id="55"/>
+                                                            </orthologGroup>
+                                                        </paralogGroup>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                                <orthologGroup>
+                                                    <paralogGroup>
+                                                        <paralogGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="56"/>
+                                                                <geneRef id="57"/>
+                                                            </orthologGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="58"/>
+                                                                <geneRef id="59"/>
+                                                            </orthologGroup>
+                                                        </paralogGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="60"/>
+                                                            <orthologGroup>
+                                                                <geneRef id="64"/>
+                                                                <orthologGroup>
+                                                                    <geneRef id="61"/>
+                                                                    <orthologGroup>
+                                                                        <geneRef id="62"/>
+                                                                        <geneRef id="63"/>
+                                                                    </orthologGroup>
+                                                                </orthologGroup>
+                                                            </orthologGroup>
+                                                        </orthologGroup>
+                                                    </paralogGroup>
+                                                    <orthologGroup>
+                                                        <geneRef id="65"/>
+                                                        <geneRef id="66"/>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                            </paralogGroup>
+                                            <orthologGroup>
+                                                <geneRef id="67"/>
+                                                <paralogGroup>
+                                                    <geneRef id="68"/>
+                                                    <paralogGroup>
+                                                        <geneRef id="69"/>
+                                                        <geneRef id="70"/>
+                                                    </paralogGroup>
+                                                </paralogGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                        <orthologGroup>
+                                            <geneRef id="71"/>
+                                            <orthologGroup>
+                                                <orthologGroup>
+                                                    <geneRef id="72"/>
+                                                    <geneRef id="73"/>
+                                                </orthologGroup>
+                                                <orthologGroup>
+                                                    <geneRef id="74"/>
+                                                    <geneRef id="75"/>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                    </paralogGroup>
+                                    <paralogGroup>
+                                        <orthologGroup>
+                                            <geneRef id="76"/>
+                                            <orthologGroup>
+                                                <geneRef id="79"/>
+                                                <paralogGroup>
+                                                    <geneRef id="77"/>
+                                                    <geneRef id="78"/>
+                                                </paralogGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                        <orthologGroup>
+                                            <orthologGroup>
+                                                <geneRef id="83"/>
+                                                <orthologGroup>
+                                                    <geneRef id="80"/>
+                                                    <orthologGroup>
+                                                        <geneRef id="81"/>
+                                                        <geneRef id="82"/>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                            <orthologGroup>
+                                                <paralogGroup>
+                                                    <geneRef id="84"/>
+                                                    <geneRef id="85"/>
+                                                </paralogGroup>
+                                                <paralogGroup>
+                                                    <paralogGroup>
+                                                        <geneRef id="93"/>
+                                                        <geneRef id="94"/>
+                                                    </paralogGroup>
+                                                    <orthologGroup>
+                                                        <paralogGroup>
+                                                            <paralogGroup>
+                                                                <geneRef id="88"/>
+                                                                <paralogGroup>
+                                                                    <geneRef id="89"/>
+                                                                    <geneRef id="90"/>
+                                                                </paralogGroup>
+                                                            </paralogGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="86"/>
+                                                                <geneRef id="87"/>
+                                                            </orthologGroup>
+                                                        </paralogGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="91"/>
+                                                            <geneRef id="92"/>
+                                                        </orthologGroup>
+                                                    </orthologGroup>
+                                                </paralogGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                    </paralogGroup>
+                                </paralogGroup>
+                                <orthologGroup>
+                                    <orthologGroup>
+                                        <orthologGroup>
+                                            <orthologGroup>
+                                                <geneRef id="107"/>
+                                                <orthologGroup>
+                                                    <geneRef id="95"/>
+                                                    <orthologGroup>
+                                                        <paralogGroup>
+                                                            <geneRef id="103"/>
+                                                            <paralogGroup>
+                                                                <geneRef id="104"/>
+                                                                <paralogGroup>
+                                                                    <geneRef id="105"/>
+                                                                    <geneRef id="106"/>
+                                                                </paralogGroup>
+                                                            </paralogGroup>
+                                                        </paralogGroup>
+                                                        <orthologGroup>
+                                                            <paralogGroup>
+                                                                <geneRef id="96"/>
+                                                                <geneRef id="97"/>
+                                                            </paralogGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="98"/>
+                                                                <orthologGroup>
+                                                                    <geneRef id="99"/>
+                                                                    <orthologGroup>
+                                                                        <geneRef id="102"/>
+                                                                        <orthologGroup>
+                                                                            <geneRef id="100"/>
+                                                                            <geneRef id="101"/>
+                                                                        </orthologGroup>
+                                                                    </orthologGroup>
+                                                                </orthologGroup>
+                                                            </orthologGroup>
+                                                        </orthologGroup>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                            <orthologGroup>
+                                                <orthologGroup>
+                                                    <orthologGroup>
+                                                        <geneRef id="108"/>
+                                                        <orthologGroup>
+                                                            <geneRef id="109"/>
+                                                            <paralogGroup>
+                                                                <geneRef id="110"/>
+                                                                <geneRef id="111"/>
+                                                            </paralogGroup>
+                                                        </orthologGroup>
+                                                    </orthologGroup>
+                                                    <orthologGroup>
+                                                        <paralogGroup>
+                                                            <geneRef id="112"/>
+                                                            <orthologGroup>
+                                                                <geneRef id="113"/>
+                                                                <geneRef id="114"/>
+                                                            </orthologGroup>
+                                                        </paralogGroup>
+                                                        <paralogGroup>
+                                                            <geneRef id="115"/>
+                                                            <geneRef id="116"/>
+                                                        </paralogGroup>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                                <orthologGroup>
+                                                    <paralogGroup>
+                                                        <paralogGroup>
+                                                            <geneRef id="119"/>
+                                                            <geneRef id="120"/>
+                                                        </paralogGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="121"/>
+                                                            <paralogGroup>
+                                                                <geneRef id="122"/>
+                                                                <geneRef id="123"/>
+                                                            </paralogGroup>
+                                                        </orthologGroup>
+                                                    </paralogGroup>
+                                                    <orthologGroup>
+                                                        <geneRef id="117"/>
+                                                        <geneRef id="118"/>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                        <orthologGroup>
+                                            <orthologGroup>
+                                                <paralogGroup>
+                                                    <geneRef id="130"/>
+                                                    <orthologGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="126"/>
+                                                            <orthologGroup>
+                                                                <geneRef id="124"/>
+                                                                <geneRef id="125"/>
+                                                            </orthologGroup>
+                                                        </orthologGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="129"/>
+                                                            <paralogGroup>
+                                                                <geneRef id="127"/>
+                                                                <geneRef id="128"/>
+                                                            </paralogGroup>
+                                                        </orthologGroup>
+                                                    </orthologGroup>
+                                                </paralogGroup>
+                                                <orthologGroup>
+                                                    <paralogGroup>
+                                                        <geneRef id="139"/>
+                                                        <paralogGroup>
+                                                            <geneRef id="138"/>
+                                                            <paralogGroup>
+                                                                <geneRef id="137"/>
+                                                                <orthologGroup>
+                                                                    <geneRef id="136"/>
+                                                                    <orthologGroup>
+                                                                        <geneRef id="135"/>
+                                                                        <paralogGroup>
+                                                                            <paralogGroup>
+                                                                                <geneRef id="131"/>
+                                                                                <geneRef id="132"/>
+                                                                            </paralogGroup>
+                                                                            <paralogGroup>
+                                                                                <geneRef id="133"/>
+                                                                                <geneRef id="134"/>
+                                                                            </paralogGroup>
+                                                                        </paralogGroup>
+                                                                    </orthologGroup>
+                                                                </orthologGroup>
+                                                            </paralogGroup>
+                                                        </paralogGroup>
+                                                    </paralogGroup>
+                                                    <paralogGroup>
+                                                        <orthologGroup>
+                                                            <paralogGroup>
+                                                                <geneRef id="143"/>
+                                                                <geneRef id="144"/>
+                                                            </paralogGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="140"/>
+                                                                <orthologGroup>
+                                                                    <geneRef id="141"/>
+                                                                    <geneRef id="142"/>
+                                                                </orthologGroup>
+                                                            </orthologGroup>
+                                                        </orthologGroup>
+                                                        <orthologGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="147"/>
+                                                                <orthologGroup>
+                                                                    <geneRef id="145"/>
+                                                                    <geneRef id="146"/>
+                                                                </orthologGroup>
+                                                            </orthologGroup>
+                                                            <orthologGroup>
+                                                                <geneRef id="148"/>
+                                                                <geneRef id="149"/>
+                                                            </orthologGroup>
+                                                        </orthologGroup>
+                                                    </paralogGroup>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                            <orthologGroup>
+                                                <paralogGroup>
+                                                    <geneRef id="150"/>
+                                                    <geneRef id="151"/>
+                                                </paralogGroup>
+                                                <orthologGroup>
+                                                    <geneRef id="152"/>
+                                                    <geneRef id="153"/>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                        </orthologGroup>
+                                    </orthologGroup>
+                                    <orthologGroup>
+                                        <geneRef id="154"/>
+                                        <paralogGroup>
+                                            <paralogGroup>
+                                                <orthologGroup>
+                                                    <geneRef id="155"/>
+                                                    <orthologGroup>
+                                                        <paralogGroup>
+                                                            <paralogGroup>
+                                                                <geneRef id="164"/>
+                                                                <geneRef id="165"/>
+                                                            </paralogGroup>
+                                                            <paralogGroup>
+                                                                <geneRef id="166"/>
+                                                                <geneRef id="167"/>
+                                                            </paralogGroup>
+                                                        </paralogGroup>
+                                                        <orthologGroup>
+                                                            <geneRef id="156"/>
+                                                            <paralogGroup>
+                                                                <paralogGroup>
+                                                                    <paralogGroup>
+                                                                        <geneRef id="160"/>
+                                                                        <geneRef id="161"/>
+                                                                    </paralogGroup>
+                                                                    <orthologGroup>
+                                                                        <geneRef id="157"/>
+                                                                        <orthologGroup>
+                                                                            <geneRef id="158"/>
+                                                                            <geneRef id="159"/>
+                                                                        </orthologGroup>
+                                                                    </orthologGroup>
+                                                                </paralogGroup>
+                                                                <orthologGroup>
+                                                                    <geneRef id="162"/>
+                                                                    <geneRef id="163"/>
+                                                                </orthologGroup>
+                                                            </paralogGroup>
+                                                        </orthologGroup>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                                <orthologGroup>
+                                                    <orthologGroup>
+                                                        <geneRef id="168"/>
+                                                        <geneRef id="169"/>
+                                                    </orthologGroup>
+                                                    <orthologGroup>
+                                                        <geneRef id="170"/>
+                                                        <geneRef id="171"/>
+                                                    </orthologGroup>
+                                                </orthologGroup>
+                                            </paralogGroup>
+                                            <orthologGroup>
+                                                <orthologGroup>
+                                                    <geneRef id="172"/>
+                                                    <geneRef id="173"/>
+                                                </orthologGroup>
+                                                <orthologGroup>
+                                                    <geneRef id="174"/>
+                                                    <geneRef id="175"/>
+                                                </orthologGroup>
+                                            </orthologGroup>
+                                        </paralogGroup>
+                                    </orthologGroup>
+                                </orthologGroup>
+                            </paralogGroup>
+                            <orthologGroup>
+                                <paralogGroup>
+                                    <geneRef id="39"/>
+                                    <paralogGroup>
+                                        <paralogGroup>
+                                            <geneRef id="34"/>
+                                            <geneRef id="35"/>
+                                        </paralogGroup>
+                                        <paralogGroup>
+                                            <geneRef id="36"/>
+                                            <paralogGroup>
+                                                <geneRef id="37"/>
+                                                <geneRef id="38"/>
+                                            </paralogGroup>
+                                        </paralogGroup>
+                                    </paralogGroup>
+                                </paralogGroup>
+                                <orthologGroup>
+                                    <geneRef id="40"/>
+                                    <geneRef id="41"/>
+                                </orthologGroup>
+                            </orthologGroup>
+                        </orthologGroup>
+                    </paralogGroup>
+                </paralogGroup>
+            </paralogGroup>
+        </orthologGroup>
+    </groups>
+</orthoXML>
