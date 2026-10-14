@@ -36,10 +36,11 @@ class TreeProfile(object):
         """
         Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
         each nodes (representing an AbstractGene):
+
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
             - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
             - retained: numbers of HOGs that have stay retained (in term of copy numbers) in between this node and
-            its parent.
+              its parent.
             - lost: numbers of HOGs that have been lost in between this node and its parent.
 
         Returns:
@@ -119,12 +120,13 @@ class TreeProfile(object):
         """
         Create the treeMap object (ete3 Etree object with annotated nodes) that contained the following features for
         each nodes (the root node contains only nbr_genes):
+
             - nbr_genes: numbers of HOG/Gene the genome contains. For leaves, it also counts the singletons.
             - dupl: numbers of HOGs that have arose by duplication in between this node and its parent.
             - lost: numbers of HOGs that have been lost in between this node and its parent.
             - gain: numbers of HOGs that have "emerged" at this node.
             - retained: numbers of HOGs that have stay retained (in term of copy numbers) in between this node and
-            its parent.
+              its parent.
 
         In order to get all those node informations, the HOGMap between each node and its parent is computed.
 

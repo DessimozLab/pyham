@@ -43,6 +43,7 @@ Homepage = "http://lab.dessimoz.org/ham"
 
 [project.optional-dependencies]
 test = ["pytest"]
+docs = ["sphinx>=7"]
 dev = ["pytest", "sphinx", "wheel", "twine"]
 
 [tool.setuptools.packages.find]

@@ -156,6 +156,6 @@ levels or families and, where it can tell, how to fix it. The most common proble
 
 Documentation
 -------------
-The full documentation of pyHam is available at http://zoo.cs.ucl.ac.uk/doc/pyham/index.html.
+The full documentation of pyHam, including the API reference, is available at https://pyham-dessimozlab.readthedocs.io.
 
 

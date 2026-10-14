@@ -64,7 +64,7 @@ class ParserFilter(object):
         self.GeneIntId_filter = self.GeneIntId_filter | set(map(lambda x: str(x), list_id))
 
     def buildFilter(self, file_object, type_hog_file="orthoxml"):
-        """ This function will use the FilterOrthoXMLParser with the *_filter queries to build geneUniqueId and
+        """ This function will use the FilterOrthoXMLParser with the ``*_filter`` queries to build geneUniqueId and
         hogsId.
 
         Args:
@@ -133,25 +133,25 @@ class Ham(object):
             | use_internal_name (:obj:`Boolean`, optional): Set to decide to use or not the internal naming of the given taxonomy. This should be set to False when support values are provided in the newick. Defaults to False.
             | tree_format (:obj:`str`): type of inputted tree file. Defaults to newick_string. Can be 'newick', 'phyloxml, 'newick_string'.
             | phyloxml_leaf_name_tag (:obj:`str`) tag to use in the phyloxml to name the extant species (leaves). Defaults tag is taxonomy.scientific_name to populate species names.
-            available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
+              available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
             | phyloxml_internal_name_tag (:obj:`str`) tag to use in the phyloxml to name the ancestral species (internal nodes). Defaults will use taxonomy.scientific_name to populate species names.
-            available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
+              available options: 'clade_name', 'taxonomy_scientific_name', 'taxonomy_code'. Beware than missing species names will stop pyham working.
             | use_data_from (:obj:`str`) if specified,  use data from a remote databaseto populate pyHam. Defaults to None. Options: 'oma'.
             | query_database (:obj:`str`) if use_data_from is specified, use this as a query to fetch the orthoxml and \
-            tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
+              tree information for the related query hog (gene family). For 'oma', this correspond to the oma gene id (e.g. 'HUMAN12' or 'CHIMP1435').
             | with_parser_progress (:bool:, optional) whether to show progress bar when parsing the XML file.
-            In a terminal, log messages emitted during parsing can garble the bar; to interleave them cleanly,
-            wrap the call in ``tqdm.contrib.logging.logging_redirect_tqdm()``.
+              In a terminal, log messages emitted during parsing can garble the bar; to interleave them cleanly,
+              wrap the call in ``tqdm.contrib.logging.logging_redirect_tqdm()``.
             | fail_fast (:obj:`Boolean`, optional) if a HOG's claimed taxonomic level (TaxRange/taxid) conflicts
-            with the given species tree, raise :obj:`pyham.abstractgene.TaxonomicConflictError` immediately at
-            the first conflict found. If False (default), keep parsing and collect every conflict found across
-            the whole file, raising a single combined error (with all conflicts available via its `conflicts`
-            attribute) once parsing completes.
+              with the given species tree, raise :obj:`pyham.abstractgene.TaxonomicConflictError` immediately at
+              the first conflict found. If False (default), keep parsing and collect every conflict found across
+              the whole file, raising a single combined error (with all conflicts available via its `conflicts`
+              attribute) once parsing completes.
             | id_schema (:obj:`str`, optional) the HOG id scheme used by the orthoxml file, one of 'LOFT',
-            'LOFT_TAXID', 'GENERIC' (see :obj:`pyham.id_formats`), used to synthesize ids for HOG levels
-            the species tree implies but the file doesn't explicitly encode. Defaults to 'auto', which
-            samples the first few families of the file to detect the scheme automatically. The resolved
-            value is available afterwards as `self.id_schema`.
+              'LOFT_TAXID', 'GENERIC' (see :obj:`pyham.id_formats`), used to synthesize ids for HOG levels
+              the species tree implies but the file doesn't explicitly encode. Defaults to 'auto', which
+              samples the first few families of the file to detect the scheme automatically. The resolved
+              value is available afterwards as `self.id_schema`.
         """
         self.with_parser_progress = with_parser_progress
         self.fail_fast = fail_fast
@@ -399,9 +399,9 @@ class Ham(object):
             | hog (:obj:`pyham.abstractgene.HOG`, optional): HOG use as template for the create_tree_profile.
             | outfile (:obj:`str`, optional): Path to the create_tree_profile output image file. valid extensions are .SVG, .PDF, .PNG.  
             | export_with_histogram (:obj:`Bool`, optional): If True, export image with histogram at each internal node otherwise 
-            | display internal node information as text.
+              display internal node information as text.
             | as_html (:obj:`Bool`, optional): If true, the tree profile will be exported as html file containing an 
-            interactive viewer to handle tree profile information.
+              interactive viewer to handle tree profile information.
 
         Returns:
             | :obj:`pyham.TreeProfile` 

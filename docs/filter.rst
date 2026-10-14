@@ -1,5 +1,5 @@
 ParserFilter
-====
+============
 
 
 .. autoclass:: pyham.ham.ParserFilter

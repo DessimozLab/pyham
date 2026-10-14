@@ -12,9 +12,9 @@ class AbstractGene(metaclass=abc.ABCMeta):
     
     Attributes:
         | parent (:obj:`pyham.abstractgene.HOG`): Direct parent HOG this gene is descendant to. For and only for top level HOG, parent
-        attribute is set to  None.
+          attribute is set to  None.
         | genome (:obj:`pyham.genome.Genome`): Related Genome object.
-        arose_by_duplication: pyham.abstractgene.DuplicationNode if this AbstractGene arose by a duplication from its parent otherwise False.
+        | arose_by_duplication: pyham.abstractgene.DuplicationNode if this AbstractGene arose by a duplication from its parent otherwise False.
         
     """
 
@@ -262,12 +262,13 @@ class HOG(AbstractGene):
         calls. 
         
         There is tree recursive state functions:
+
             - function_extant_gene: Function called at each ExtantGene child. Its take as argument the child ExtantGene
-             and the "elem" and return processed "elem".
+              and the "elem" and return processed "elem".
             - function_postfix: Function called after each HOG child visit(). Its take as argument the child HOG and 
-            the "elem" and return processed "elem".
+              the "elem" and return processed "elem".
             - function_prefix: First function called that take as argument the current HOG and the "elem" and return
-             processed "elem".
+              processed "elem".
 
         Attributes:
             | elem (arbitrary object): object that is pass through visit recursive and recursive state functions calls.

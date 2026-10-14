@@ -7,3 +7,4 @@ dist
 .idea
 .ipynb_checkpoints
 pyham/_version.py
+docs/_build

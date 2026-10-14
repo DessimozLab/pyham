@@ -13,7 +13,6 @@ Welcome to **pyHam**'s documentation !
 .. toctree::
    :maxdepth: 1
 
-   index
    api
 
 ---------------
