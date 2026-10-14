@@ -16,6 +16,7 @@ Here is the documentation for the Ham objects.
    utils
    treeprofile
    iHam
+   validation
 
 
 

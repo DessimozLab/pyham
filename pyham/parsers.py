@@ -1,5 +1,6 @@
 import logging
 from collections import defaultdict
+from xml.etree.ElementTree import XMLParser
 from tqdm.auto import tqdm
 
 from . import abstractgene
@@ -14,9 +15,14 @@ def _label_and_species(node):
     """Return a (label, species_names) pair describing an AbstractGene for conflict reporting."""
     if isinstance(node, abstractgene.HOG):
         species = [g.genome.name for g in node.get_all_descendant_genes()]
-        return node.hog_id, species
+        return node.hog_id if node.hog_id is not None else "<no id>", species
     label = node.prot_id or node.gene_id or node.unique_id
     return label, [node.genome.name]
+
+
+def short_level_name(genome):
+    """Name of a genome's level, abbreviated if it was synthesized from many child names."""
+    return abstractgene.short_level_name(genome.name)
 
 
 def _format_one_conflict(conflict, index=None, total=None):
@@ -130,6 +136,16 @@ class OrthoXMLParser:
         self.skip_this_hog = False
         self._genomes_to_add = []
 
+        # id of the top-level family being parsed (None between families), used to give errors context
+        self.current_family_id = None
+        self._family_index = 0
+        # OrthoXML species that couldn't be mapped onto the species tree, as (name, reason) pairs;
+        # collected over the whole <species> section and reported together before <groups>
+        self.unmapped_species = []
+        self.n_species = 0
+        # ids of HOGs collapsed into their parent because they sat at the same taxonomic level
+        self.collapsed_same_level_hogs = []
+
         # taxonomic conflict tracking
         self.fail_fast = fail_fast
         self.taxonomic_conflicts = []
@@ -187,6 +203,14 @@ class OrthoXMLParser:
             if hasattr(self, attr):
                 getattr(self, attr).close()
                 delattr(self, attr)
+
+    def _add_extant_genome_to_taxonomy(self, genome):
+        try:
+            taxon = self.taxonomy.get_extant_taxa_by_name(genome.name)
+        except KeyError as e:
+            self.unmapped_species.append((genome.name, e.args[0] if e.args else str(e)))
+            return
+        self.taxonomy.add_genome_to_node(taxon, genome)
 
     def _assign_ancestral_genome(self, hog):
         """This method determines the ancestral genome for a HOG based on its children."""
@@ -334,6 +358,21 @@ class OrthoXMLParser:
         logger.debug(f"Created {len(missing_taxons)} missing HOGs between {child} and {parent}.")
         return current_child if len(missing_taxons) > 0 else child
 
+    def _describe_child_not_below_parent(self, parent, child):
+        def describe(node):
+            label, species = _label_and_species(node)
+            species = sorted(set(species))
+            shown = ", ".join(species[:5]) + (f", ... ({len(species)} species)" if len(species) > 5 else "")
+            return f"{label} ({shown})"
+
+        others = "; ".join(describe(c) for c in parent.children if c is not child)
+        where = "the same level as" if child.genome.taxon == parent.genome.taxon else "a level above"
+        return (f"Group {describe(child)} resolves to \"{short_level_name(child.genome)}\", {where} its parent group "
+                f"{_label_and_species(parent)[0]}, but a nested group must sit below its parent. The parent also "
+                f"contains {others or 'nothing else'} as a separate lineage, which the species tree doesn't allow. "
+                f"The group nesting contradicts the species tree, e.g. because it comes from a gene tree that "
+                f"wasn't reconciled with this species tree.")
+
     def _resolve_missing_levels(self, parent: abstractgene.HOG, children: list):
         """Insert missing intermediate HOG levels between `parent` and `children`.
 
@@ -351,6 +390,8 @@ class OrthoXMLParser:
         change = {}
         for child in children:
             if parent.genome.taxon.props["depth"] != child.genome.taxon.props["depth"] - 1:
+                if not self.taxonomy.is_child_recursive(child.genome.taxon, parent.genome.taxon):
+                    raise abstractgene.EvolutionaryConceptError(self._describe_child_not_below_parent(parent, child))
                 change[child] = self.taxonomy.get_path_up(child.genome.taxon, parent.genome.taxon)
         if not change:
             return
@@ -464,9 +505,9 @@ class OrthoXMLParser:
     def start(self, tag, attrib):
         if tag == "{http://orthoXML.org/2011/}species":
             self.current_species = ExtantGenome(**attrib)
+            self.n_species += 1
             if self.taxonomy is not None:
-                taxon = self.taxonomy.get_extant_taxa_by_name(self.current_species.name)
-                self.taxonomy.add_genome_to_node(taxon, self.current_species)
+                self._add_extant_genome_to_taxonomy(self.current_species)
             else:
                 self._genomes_to_add.append(self.current_species)
 
@@ -500,6 +541,8 @@ class OrthoXMLParser:
         elif tag == "{http://orthoXML.org/2011/}orthologGroup":
             if len(self.hog_stack) == 0:
                 # a new roothog
+                self._family_index += 1
+                self.current_family_id = attrib.get("id") or "#{} (without id)".format(self._family_index)
                 if self.with_progress:
                     self._update_progress_bar(tag)
 
@@ -526,6 +569,9 @@ class OrthoXMLParser:
         elif tag == "{http://orthoXML.org/2011/}groups":
             if self.taxonomy is None:
                 raise ValueError("Cannot parse this OrthoXML file without an explicit taxonomy tree. Please provide one.")
+            if self.unmapped_species:
+                from .validation import species_not_in_tree_error
+                raise species_not_in_tree_error(self.unmapped_species, self.n_species, self.taxonomy)
 
     def end(self, tag):
 
@@ -543,8 +589,7 @@ class OrthoXMLParser:
                     self.taxonomy = Taxonomy(taxonomy)
                     # add all extant genomes to the taxonomy tree
                     for genome in self._genomes_to_add:
-                        taxon = self.taxonomy.get_extant_taxa_by_name(genome.name)
-                        self.taxonomy.add_genome_to_node(taxon, genome)
+                        self._add_extant_genome_to_taxonomy(genome)
                     logger.info("Taxonomy tree created from OrthoXML taxonomy. All extant genomes added to the tree.")
                 else:
                     logger.info("OrthoXML taxonomy not used, using provided taxonomy tree instead.")
@@ -565,6 +610,7 @@ class OrthoXMLParser:
             if self.skip_this_hog:
                 if len(self.hog_stack) == 0:
                     self.skip_this_hog = False
+                    self.current_family_id = None
                 return
 
             try:
@@ -573,6 +619,7 @@ class OrthoXMLParser:
             except abstractgene.SameLevelHOGError as e:
                 # this hog has children at the same level as its parent. Usually an 'augmented' HOG.
                 logger.info(str(e))
+                self.collapsed_same_level_hogs.append(hog.hog_id)
                 # remove this hog structure.
                 for child in hog.children:
                     child.parent = hog.parent
@@ -595,9 +642,17 @@ class OrthoXMLParser:
                 if child.arose_by_duplication:
                     child_by_duplication[child.arose_by_duplication].append(child)
 
-            # assert that all duplications are have MRCA equal to hog.genome or below
-            for duplication in child_by_duplication:
-                assert duplication.MRCA == hog.genome or self.taxonomy.is_child_recursive(duplication.MRCA.taxon, hog.genome.taxon), f"Duplication {duplication.MRCA} is not below {hog.genome}"
+            # all duplications must have their MRCA equal to hog.genome or below
+            for duplication, children in child_by_duplication.items():
+                if not (duplication.MRCA == hog.genome or self.taxonomy.is_child_recursive(duplication.MRCA.taxon, hog.genome.taxon)):
+                    copies = ", ".join(f"{_label_and_species(c)[0]} at \"{short_level_name(c.genome)}\""
+                                       for c in children)
+                    raise abstractgene.EvolutionaryConceptError(
+                        f"HOG {_label_and_species(hog)[0]} at \"{short_level_name(hog.genome)}\" contains a "
+                        f"duplication whose copies ({copies}) split before \"{short_level_name(duplication.MRCA)}\", "
+                        f"above the level of the HOG itself, but a HOG can't contain copies of a duplication older "
+                        f"than itself. Usually the HOG's level was inferred from its member species because its "
+                        f"TaxRange/taxid isn't a node of the species tree, or the group nesting contradicts the tree.")
 
 
             # For each duplication
@@ -659,6 +714,7 @@ class OrthoXMLParser:
             if len(self.hog_stack) == 0:
                 hog_id = hog.hog_id.split('_')[0]
                 self.toplevel_hogs[hog_id] = hog
+                self.current_family_id = None
                 self.cpt += 1
                 if self.cpt % 500 == 0:
                     logger.debug("{} HOGs parsed. ".format(self.cpt))
@@ -717,6 +773,29 @@ class IDSchemeSniffer:
 
     def close(self):
         return
+
+
+def sniff_id_schema(file_object):
+    """Sample the first few families of an OrthoXML file object and return the detected HOG id scheme
+    (see :obj:`pyham.id_formats.detect_id_scheme`)."""
+    sniffer = IDSchemeSniffer()
+    sniff_parser = XMLParser(target=sniffer)
+    # <species>/<taxonomy> can dwarf <groups> in size (e.g. for large exports with
+    # a big embedded taxonomy); skip straight to <groups> via a cheap text search
+    # instead of XML-parsing that whole preamble just to sample a few HOG ids.
+    sniff_parser.feed('<orthoXML xmlns="http://orthoXML.org/2011/">')
+    seen_groups = False
+    for line in file_object:
+        if not seen_groups:
+            idx = line.find('<groups')
+            if idx == -1:
+                continue
+            line = line[idx:]
+            seen_groups = True
+        sniff_parser.feed(line)
+        if sniffer.done:
+            break
+    return id_formats.detect_id_scheme(sniffer.samples)
 
 
 class FilterOrthoXMLParser(object):

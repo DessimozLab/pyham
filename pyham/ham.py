@@ -11,10 +11,6 @@ from .TreeProfile import TreeProfile
 import logging
 import copy
 import io
-
-
-
-
 logger = logging.getLogger(__name__)
 
 
@@ -274,25 +270,8 @@ class Ham(object):
 
             #  If id_schema='auto' (default), sample the first few families to detect the HOG id scheme
             if self._requested_id_schema == 'auto':
-                sniffer = parsers.IDSchemeSniffer()
-                sniff_parser = XMLParser(target=sniffer)
-                # <species>/<taxonomy> can dwarf <groups> in size (e.g. for large exports with
-                # a big embedded taxonomy); skip straight to <groups> via a cheap text search
-                # instead of XML-parsing that whole preamble just to sample a few HOG ids.
-                sniff_parser.feed('<orthoXML xmlns="http://orthoXML.org/2011/">')
                 with self._open_hog_file() as orthoxml_file:
-                    seen_groups = False
-                    for line in orthoxml_file:
-                        if not seen_groups:
-                            idx = line.find('<groups')
-                            if idx == -1:
-                                continue
-                            line = line[idx:]
-                            seen_groups = True
-                        sniff_parser.feed(line)
-                        if sniffer.done:
-                            break
-                self.id_schema = id_formats.detect_id_scheme(sniffer.samples)
+                    self.id_schema = parsers.sniff_id_schema(orthoxml_file)
                 logger.info('Auto-detected HOG id scheme: {}'.format(self.id_schema))
 
             with self._open_hog_file() as orthoxml_file:
@@ -839,6 +818,17 @@ class Ham(object):
         try:
             for line in file_object:
                 parser.feed(line)
+        except abstractgene.TaxonomicConflictError:
+            raise
+        except Exception as e:
+            if factory.current_family_id is not None:
+                note = ("pyHam: raised while building family {}. Run pyham.validate_input() with the same "
+                        "inputs for a report covering every family.".format(factory.current_family_id))
+                if hasattr(e, "add_note"):
+                    e.add_note(note)
+                else:
+                    logger.error(note)
+            raise
         finally:
             factory.close_progress_bars()
 

@@ -127,6 +127,15 @@ Support for pyHam by various HOG inference resources.
 Common input problems
 ---------------------
 Most errors when loading data come from a species tree that doesn't match the OrthoXML file.
+To check your inputs before analysing them, run:
+
+.. code-block:: sh
+
+   pyham-validate species_tree.nwk hogs.orthoxml
+
+or, from Python, ``print(pyham.validate_input(tree_file, hog_file, ...))``, which takes the same
+arguments as ``pyham.Ham``. It reports every problem it finds at once, each with the affected species,
+levels or families and, where it can tell, how to fix it. The most common problems are:
 
 - **Use the species tree the HOGs were inferred with.** pyHam maps each HOG onto the species
   tree, so the tree must contain every species in the OrthoXML file under the same name, and

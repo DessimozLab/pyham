@@ -35,6 +35,9 @@ dependencies = [
     "scipy",
 ]
 
+[project.scripts]
+pyham-validate = "pyham.validation:main"
+
 [project.urls]
 Homepage = "http://lab.dessimoz.org/ham"
 
