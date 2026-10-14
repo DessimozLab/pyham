@@ -1,5 +1,5 @@
 Mapper (genomes)
-==============
+================
 
 .. autoclass:: pyham.mapper.HOGsMap
     :members:
