@@ -4,8 +4,7 @@ import os
 import tempfile
 import unittest
 
-from pyham import Ham, utils
-from pyham.abstractgene import EvolutionaryConceptError
+from pyham import Ham, EvolutionaryConceptError, utils
 from pyham.validation import validate_input, InputValidationError, main
 
 
@@ -161,6 +160,7 @@ class TrialBuildTest(unittest.TestCase):
         self.assertIn("reconcile", failed.hint)
 
     def test_ham_names_family_and_explains(self):
+        # the package-level EvolutionaryConceptError must be the one the parser raises
         with self.assertRaises(EvolutionaryConceptError) as ctx:
             Ham(data('issue19', 'insecta.nwk'), data('issue19', 'eglps.orthoxml'), tree_format='newick')
         self.assertIn("contradicts the species tree", str(ctx.exception))

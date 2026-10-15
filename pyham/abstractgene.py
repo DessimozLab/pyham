@@ -1,7 +1,7 @@
 import numbers
 import dataclasses
 from ete4 import Tree
-from .genome import ExtantGenome, AncestralGenome, Genome
+from .genome import ExtantGenome, AncestralGenome, Genome, EvolutionaryConceptError
 from .iham import IHAM
 import abc
 
@@ -575,10 +575,6 @@ class Gene(AbstractGene):
 
     def __repr__(self):
         return "{}({})".format(self.__class__.__name__, self.unique_id)
-
-
-class EvolutionaryConceptError(Exception):
-    pass
 
 
 def short_level_name(name, max_len=60):
