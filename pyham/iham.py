@@ -50,8 +50,8 @@ class IHAM(object):
     <!-- Roboto font -->
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
-    <script src="https://cdn.jsdelivr.net/gh/DessimozLab/iHam@master/build/iHam.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/DessimozLab/iHam@master/build/iHam.css" type="text/css"/>
+    <script src="https://cdn.jsdelivr.net/gh/DessimozLab/iHam@v1.0.7/build/iHam.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/DessimozLab/iHam@v1.0.7/build/iHam.css" type="text/css"/>
 
     <style>
         body {
