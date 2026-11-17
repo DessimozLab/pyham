@@ -22,7 +22,7 @@ If you use pyHam in your work, please consider citing:
 
 Installation
 ------------
-pyHam requires Python 3.9 or newer. Its dependencies (ete4, lxml, requests, tqdm and scipy)
+pyHam requires Python 3.10 or newer. Its dependencies (ete4, lxml, requests, tqdm and scipy)
 are installed automatically by pip:
 
 .. code-block:: sh
